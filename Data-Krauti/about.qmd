@@ -8,4 +8,4 @@ Aenean fermentum elementum finibus. Fusce eget sodales sapien. Integer iaculis, 
 
 Nullam lacus elit, iaculis id enim vitae, tempor rutrum lacus. Nunc viverra lectus congue, lacinia lacus et, efficitur massa. Sed vitae auctor nunc. Ut id metus sit amet tellus vestibulum vehicula vitae pulvinar enim. Morbi sollicitudin risus dapibus dignissim commodo. Sed pretium erat ut sapien consequat scelerisque. Mauris accumsan tristique eros ac hendrerit. Curabitur eleifend imperdiet dolor nec lobortis. Fusce accumsan at ligula a viverra. Suspendisse non nisi diam. Integer risus ex, laoreet at auctor sit amet, dictum quis enim. Sed et tortor non libero volutpat sagittis quis sit amet ante.
 
-![cabbage](D:\Apache24\htdocs\ixmaps\deploy\rc-exp\ixmaps\app\Composer\img\cabbage.png)
+![cabbage](.\pics\cabbage.png)

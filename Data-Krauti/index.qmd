@@ -1,10 +1,10 @@
 
 
-# Welcome to Data-Krauti <img src="D:\Apache24\htdocs\ixmaps\deploy\rc-exp\ixmaps\app\Composer\img\cabbage.png" alt="cabbage" style="height:30px;vertical-align:-5%" />
+# Welcome to Data-Krauti <img src=".\pics\cabbage.png" alt="cabbage" style="height:30px;vertical-align:-5%" />
 
 **Data-Krauti** is a free tool to explore tabular data. It is based on **HTML5** and lives inside your browser without any other installation. It can load as well local as remote files in the formats **CSV, JSON, GeoJson** and **TopoJson**. You can **analyse** and filter **the** data with several tools. If the data contains **geographic information**, a **map** can be activated to explore the data in its geographic extension and relevance.
 
-![](D:\Apache24\htdocs\ixmaps\deploy\rc-exp\ixmaps\app\Quarto\Data-Krauti\pics\Screenshot_1.png)
+![](.\pics\Screenshot_1.png)
 
 # What can I do with Data-Krauti ?
 
