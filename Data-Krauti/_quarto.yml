@@ -1,6 +1,6 @@
 project:
   type: website
-  title: "Data-Krauti"
+  title: "Data-Krauti Doc"
   execute-dir: project
   output-dir: docs
   render: 
@@ -10,7 +10,7 @@ project:
       - getting_started.qmd
  
 website:
-  title: "Data-Krauti"
+  title: "Data-Krauti Doc"
   repo-actions: [issue]
   navbar:
     background: light
