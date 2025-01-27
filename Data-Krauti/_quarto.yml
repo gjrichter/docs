@@ -1,0 +1,42 @@
+project:
+  type: website
+  title: "Data-Krauti"
+  execute-dir: project
+  output-dir: docs
+  render: 
+      - index.qmd
+      - about.qmd
+      - why.qmd
+      - getting_started.qmd
+ 
+website:
+  title: "Data-Krauti"
+  repo-actions: [issue]
+  navbar:
+    background: light
+    left:
+      - href: index.qmd
+        text: Home
+      - about.qmd
+    right:
+      - icon: github
+  sidebar:
+    style: "docked"
+    search: true
+    contents:
+      - index.qmd
+      - why.qmd
+      - getting_started.qmd
+  page-navigation: true
+
+
+format:
+  html:
+    theme: cosmo
+    css: styles.css
+    toc: true
+
+callout-appearance: simple
+
+
+

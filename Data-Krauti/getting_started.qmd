@@ -1,0 +1,52 @@
+# Getting started
+
+**Data-Krauti** is a free tool to explore tabular data. It is based on **HTML5** and lives inside your browser without any other installation. It can load as well local as remote files in the formats **CSV, JSON, GeoJson** and **TopoJson**. You can **analyse** and filter **the** data with several tools. If the data contains **geographic information**, a **map** can be activated to explore the data in its geographic extension and relevance.
+
+![](D:\Apache24\htdocs\ixmaps\deploy\rc-exp\ixmaps\app\Quarto\Data-Krauti\pics\getting-started-1.png)
+
+# loading data
+
+At the end of the tutorial, participants will be able to:
+
+  - Identify the main features that make Julia an attractive language for Data Science
+  - Set up a Julia environment to run their data analysis
+  - Efficiently handle datasets (even across different languages) through Tables.jl and Arrow.jl
+  - Fit (generalized) linear mixed models with MixedModels.jl
+  - Communicate across languages (Julia, R, python)
+
+Intended audience and level:
+The tutorial is intended for any data scientist with experience in R and/or python who is interested in learning the attractive features of Julia for Data Science. No knowledge of Julia is required.
+
+## multiple data 
+
+
+
+# table view
+
+![](D:\Apache24\htdocs\ixmaps\deploy\rc-exp\ixmaps\app\Quarto\Data-Krauti\pics\tabella_1.png)
+
+# analyze
+
+![](D:\Apache24\htdocs\ixmaps\deploy\rc-exp\ixmaps\app\Quarto\Data-Krauti\pics\tabella_2.png)
+
+# facets
+
+![](D:\Apache24\htdocs\ixmaps\deploy\rc-exp\ixmaps\app\Quarto\Data-Krauti\pics\tabella_3a.png)
+
+![](D:\Apache24\htdocs\ixmaps\deploy\rc-exp\ixmaps\app\Quarto\Data-Krauti\pics\tabella_3b.png)
+
+# filter
+
+![](D:\Apache24\htdocs\ixmaps\deploy\rc-exp\ixmaps\app\Quarto\Data-Krauti\pics\filter.png)
+
+# process
+
+![](D:\Apache24\htdocs\ixmaps\deploy\rc-exp\ixmaps\app\Quarto\Data-Krauti\pics\pivot.png)
+
+![](D:\Apache24\htdocs\ixmaps\deploy\rc-exp\ixmaps\app\Quarto\Data-Krauti\pics\pivot_xy.png)
+
+# map
+
+![](D:\Apache24\htdocs\ixmaps\deploy\rc-exp\ixmaps\app\Quarto\Data-Krauti\pics\map.png)
+
+![](D:\Apache24\htdocs\ixmaps\deploy\rc-exp\ixmaps\app\Quarto\Data-Krauti\pics\map_config.png)
