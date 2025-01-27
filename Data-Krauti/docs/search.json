@@ -1,0 +1,53 @@
+[
+  {
+    "objectID": "getting_started.html",
+    "href": "getting_started.html",
+    "title": "Getting started",
+    "section": "",
+    "text": "Data-Krauti is a free tool to explore tabular data. It is based on HTML5 and lives inside your browser without any other installation. It can load as well local as remote files in the formats CSV, JSON, GeoJson and TopoJson. You can analyse and filter the data with several tools. If the data contains geographic information, a map can be activated to explore the data in its geographic extension and relevance.",
+    "crumbs": [
+      "Home",
+      "Getting started"
+    ]
+  },
+  {
+    "objectID": "getting_started.html#multiple-data",
+    "href": "getting_started.html#multiple-data",
+    "title": "Getting started",
+    "section": "multiple data",
+    "text": "multiple data",
+    "crumbs": [
+      "Home",
+      "Getting started"
+    ]
+  },
+  {
+    "objectID": "about.html",
+    "href": "about.html",
+    "title": "About",
+    "section": "",
+    "text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent mollis eu nunc at venenatis. Ut gravida nunc at enim hendrerit, eget suscipit massa rhoncus. Praesent in vestibulum enim. Nam ex sem, varius quis fringilla nec, maximus vel mauris. Sed fringilla tellus eget urna finibus pellentesque. Proin ac dolor ac mi convallis euismod et in felis. Pellentesque eu pellentesque sapien, et molestie mauris.\nAenean fermentum elementum finibus. Fusce eget sodales sapien. Integer iaculis, ligula ut interdum sodales, turpis arcu tempus nisl, ut rhoncus nulla nisi et sem. Maecenas sagittis semper mauris. Duis vestibulum et enim at volutpat. Quisque sodales sagittis nulla, quis tempus sapien sagittis id. Sed euismod, tortor at hendrerit sodales, elit nunc venenatis eros, sit amet congue felis quam id libero. Integer posuere euismod lacus, a porta libero iaculis eget. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Pellentesque vitae fermentum ipsum. Curabitur ante mauris, maximus vel leo ut, fermentum laoreet enim. Etiam sit amet diam euismod, faucibus ante at, sagittis felis. Nulla vel quam quis nulla tristique condimentum at sit amet felis. Suspendisse ultrices tempus diam sit amet eleifend. Ut cursus, ex id lobortis laoreet, diam massa aliquam orci, sed malesuada turpis risus vel mauris. Quisque congue lectus nunc, sit amet aliquet ligula finibus sit amet.\nNullam lacus elit, iaculis id enim vitae, tempor rutrum lacus. Nunc viverra lectus congue, lacinia lacus et, efficitur massa. Sed vitae auctor nunc. Ut id metus sit amet tellus vestibulum vehicula vitae pulvinar enim. Morbi sollicitudin risus dapibus dignissim commodo. Sed pretium erat ut sapien consequat scelerisque. Mauris accumsan tristique eros ac hendrerit. Curabitur eleifend imperdiet dolor nec lobortis. Fusce accumsan at ligula a viverra. Suspendisse non nisi diam. Integer risus ex, laoreet at auctor sit amet, dictum quis enim. Sed et tortor non libero volutpat sagittis quis sit amet ante.\n\n\n\ncabbage"
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Welcome to Data-Krauti ",
+    "section": "",
+    "text": "Welcome to Data-Krauti \nData-Krauti is a free tool to explore tabular data. It is based on HTML5 and lives inside your browser without any other installation. It can load as well local as remote files in the formats CSV, JSON, GeoJson and TopoJson. You can analyse and filter the data with several tools. If the data contains geographic information, a map can be activated to explore the data in its geographic extension and relevance.\n\n\n\nWhat can I do with Data-Krauti ?\nAt the end of the tutorial, participants will be able to:\n\nIdentify the main features that make Julia an attractive language for Data Science\nSet up a Julia environment to run their data analysis\nEfficiently handle datasets (even across different languages) through Tables.jl and Arrow.jl\nFit (generalized) linear mixed models with MixedModels.jl\nCommunicate across languages (Julia, R, python)\n\nIntended audience and level: The tutorial is intended for any data scientist with experience in R and/or python who is interested in learning the attractive features of Julia for Data Science. No knowledge of Julia is required.\n\n\nWhat is it not ?\n\nIdentify the main features that make Julia an attractive language for Data Science\nSet up a Julia environment to run their data analysis\nEfficiently handle datasets (even across different languages) through Tables.jl and Arrow.jl\nFit (generalized) linear mixed models with MixedModels.jl\nCommunicate across languages (Julia, R, python)\n\nIntended audience and level: The tutorial is intended for any data scientist with experience in R and/or python who is interested in learning the attractive features of Julia for Data Science. No knowledge of Julia is required.\n\n\nCredits\nParticipants are required to follow the next steps before the day of the workshop:\n\nGit clone the workshop repository: git clone https://github.com/crsl4/julia-workshop.git\nInstall Julia. The recommended option is to use JuliaUp:\n\n\nWindows: winget install julia -s msstore\nMac and Linux: curl -fsSL https://install.julialang.org | sh\nHomebrew users: brew install juliaup\n\nAfter JuliaUp is installed, you can install different Julia versions with:\njuliaup add release  ## installs release version\njuliaup add rc       ## installs release candidate version\njuliaup st           ## status of julia versions installed\njuliaup default rc   ## make release candidate version the default\n\nChoose a dataset along with a script to analyze it written in another language (R or python) as we will spend part of the workshop translating participants’ scripts to Julia.",
+    "crumbs": [
+      "Home",
+      "Welcome to Data-Krauti <img src=\".\\pics\\cabbage.png\" alt=\"cabbage\" style=\"height:30px;vertical-align:-5%\" />"
+    ]
+  },
+  {
+    "objectID": "why.html",
+    "href": "why.html",
+    "title": "Why Data-Krauti ?",
+    "section": "",
+    "text": "Why Data-Krauti ?\nData-Krauti is a free tool to explore tabular data. It is based on HTML5 and lives inside your browser without any other installation. It can load as well local as remote files in the formats CSV, JSON, GeoJson and TopoJson. You can analyse and filter the data with several tools. If the data contains geographic information, a map can be activated to explore the data in its geographic extension and relevance.\n\n\nWhat can I do with Data-Krauti ?\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent mollis eu nunc at venenatis. Ut gravida nunc at enim hendrerit, eget suscipit massa rhoncus. Praesent in vestibulum enim. Nam ex sem, varius quis fringilla nec, maximus vel mauris. Sed fringilla tellus eget urna finibus pellentesque. Proin ac dolor ac mi convallis euismod et in felis. Pellentesque eu pellentesque sapien, et molestie mauris.\nquis enim. Sed et tortor non libero volutpat sagittis quis sit amet ante.\n\n\nWhat is it not ?\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent mollis eu nunc at venenatis. Ut gravida nunc at enim hendrerit, eget suscipit massa rhoncus. Praesent in vestibulum enim. Nam ex sem, varius quis fringilla nec, maximus vel mauris. Sed fringilla tellus eget urna finibus pellentesque. Proin ac dolor ac mi convallis euismod et in felis. Pellentesque eu pellentesque sapien, et molestie mauris.\n\n\nCredits\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent mollis eu nunc at venenatis. Ut gravida nunc at enim hendrerit, eget suscipit massa rhoncus. Praesent in vestibulum enim. Nam ex sem, varius quis fringilla nec, maximus vel mauris. Sed fringilla tellus eget urna finibus pellentesque. Proin ac dolor ac mi convallis euismod et in felis. Pellentesque eu pellentesque sapien, et molestie mauris.",
+    "crumbs": [
+      "Home",
+      "Why Data-Krauti ?"
+    ]
+  }
+]
