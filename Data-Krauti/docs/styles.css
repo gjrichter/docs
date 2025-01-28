@@ -25,6 +25,11 @@ body {
     width: 250px;
 }
 
+.sidebar.sidebar-navigation>* {
+    padding-top: 0.5em;
+}
+
+
 .nav-page-previous {
     margin-left: 2em;
 }

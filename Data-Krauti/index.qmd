@@ -32,9 +32,12 @@ Data-Krauti is:
 
 # Credits
 
-**Data-Krauti** is open source and based on **data.js** to load and handle data.
+**Data-Krauti** is open source and based on **[data.js](https://github.com/gjrichter/data.js)** to load and handle data.
 
 It depends on the following JavaScript Libraries:
 
-- papparse
-- topojson
+- Papa Parse ([https://www.papaparse.com/](https://www.papaparse.com/))
+- TopoJSON ([https://github.com/topojson](https://github.com/topojson))
+- Bootstrap ([https://getbootstrap.com/](https://getbootstrap.com/))
+- jQery ([https://jquery.com/](https://jquery.com/))
+
