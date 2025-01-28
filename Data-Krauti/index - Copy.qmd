@@ -1,0 +1,56 @@
+
+
+# Welcome to Data-Krauti <img src=".\pics\cabbage.png" alt="cabbage" style="height:30px;vertical-align:-5%" />
+
+**Data-Krauti** is a free tool to explore tabular data. It is based on **HTML5** and lives inside your browser without any other installation. It can load as well local as remote files in the formats **CSV, JSON, GeoJson** and **TopoJson**. You can **analyse** and filter **the** data with several tools. If the data contains **geographic information**, a **map** can be activated to explore the data in its geographic extension and relevance.
+
+![](.\pics\Screenshot_1.png)
+
+# What can I do with Data-Krauti ?
+
+At the end of the tutorial, participants will be able to:
+
+  - Identify the main features that make Julia an attractive language for Data Science
+  - Set up a Julia environment to run their data analysis
+  - Efficiently handle datasets (even across different languages) through Tables.jl and Arrow.jl
+  - Fit (generalized) linear mixed models with MixedModels.jl
+  - Communicate across languages (Julia, R, python)
+
+Intended audience and level:
+The tutorial is intended for any data scientist with experience in R and/or python who is interested in learning the attractive features of Julia for Data Science. No knowledge of Julia is required.
+
+# What is it not ?
+
+  - Identify the main features that make Julia an attractive language for Data Science
+  - Set up a Julia environment to run their data analysis
+  - Efficiently handle datasets (even across different languages) through Tables.jl and Arrow.jl
+  - Fit (generalized) linear mixed models with MixedModels.jl
+  - Communicate across languages (Julia, R, python)
+
+Intended audience and level:
+The tutorial is intended for any data scientist with experience in R and/or python who is interested in learning the attractive features of Julia for Data Science. No knowledge of Julia is required.
+
+
+# Credits
+
+Participants are required to follow the next steps before the day of the workshop:
+
+ 1. Git clone the workshop repository: `git clone https://github.com/crsl4/julia-workshop.git`
+
+ 2. Install Julia. The recommended option is to use [JuliaUp](https://github.com/JuliaLang/juliaup):
+
+  - Windows: `winget install julia -s msstore`
+
+  - Mac and Linux: `curl -fsSL https://install.julialang.org | sh`
+  - Homebrew users: `brew install juliaup`
+
+After JuliaUp is installed, you can install different Julia versions with:
+
+```shell
+juliaup add release  ## installs release version
+juliaup add rc       ## installs release candidate version
+juliaup st           ## status of julia versions installed
+juliaup default rc   ## make release candidate version the default
+```
+
+ 3. Choose a dataset along with a script to analyze it written in another language (R or python) as we will spend part of the workshop translating participants' scripts to Julia.

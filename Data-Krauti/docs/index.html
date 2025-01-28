@@ -178,48 +178,38 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="what-can-i-do-with-data-krauti" class="level1">
 <h1>What Can I Do with Data-Krauti?</h1>
-<p>At the end of the tutorial, participants will be able to:</p>
+<p>You can load and view data in table formats like CSV, JSON, GeoJson and TopoJson and</p>
 <ul>
-<li>Identify the main features that make Julia an attractive language for Data Science.</li>
-<li>Set up a Julia environment to run their data analysis.</li>
-<li>Efficiently handle datasets (even across different languages) through Tables.jl and Arrow.jl.</li>
-<li>Fit (generalized) linear mixed models with MixedModels.jl.</li>
-<li>Communicate across languages (Julia, R, Python).</li>
+<li>get a quick view on the table structure</li>
+<li>see the first 100 rows of the data sort by table view by columns</li>
+<li>filter the table data by column values (regular expression are possible)</li>
+<li>generate data facets; one facet per column to understand the data and apply filters</li>
+<li>get a quick data analysis with data type, min/max/sum or unique values and missing values<br>
+</li>
+<li>generate pivot tables</li>
+<li>see the data on a map if geographic information is present in the data</li>
 </ul>
-<p><strong>Intended Audience and Level:</strong> The tutorial is intended for any data scientist with experience in R and/or Python who is interested in learning about the attractive features of Julia for Data Science. No prior knowledge of Julia is required.</p>
+<p><strong>Intended usage:</strong> Quick view and explore local and online data with a focus on data with geographic information. Create a basic iXMaps visualization from the data.</p>
+<p>Works well for small and medium size data (approximate &lt; 500 000 rows).</p>
 </section>
 <section id="what-is-it-not" class="level1">
 <h1>What Is It Not?</h1>
-<p>This tutorial does not cover:</p>
+<p>Data-Krauti is:</p>
 <ul>
-<li>The main features that make Julia an attractive language for Data Science.</li>
-<li>Setting up a Julia environment to run data analysis.</li>
-<li>Efficiently handling datasets (even across different languages) through Tables.jl and Arrow.jl.</li>
-<li>Fitting (generalized) linear mixed models with MixedModels.jl.</li>
-<li>Communicating across languages (Julia, R, Python).</li>
+<li>not a data editor</li>
+<li>not a dashboard</li>
+<li>not a notebook</li>
+<li>no database query</li>
 </ul>
-<p><strong>Intended Audience and Level:</strong> The tutorial is intended for any data scientist with experience in R and/or Python who is interested in learning about the attractive features of Julia for Data Science. No prior knowledge of Julia is required.</p>
 </section>
 <section id="credits" class="level1">
 <h1>Credits</h1>
-<p>Participants are required to follow these steps before the day of the workshop:</p>
-<ol type="1">
-<li><p>Clone the workshop repository: <code>git clone https://github.com/crsl4/julia-workshop.git</code>.</p></li>
-<li><p>Install Julia. The recommended option is to use <a href="https://github.com/JuliaLang/juliaup">JuliaUp</a>:</p>
+<p><strong>Data-Krauti</strong> is open source and based on <strong>data.js</strong> to load and handle data.</p>
+<p>It depends on the following JavaScript Libraries:</p>
 <ul>
-<li>Windows: <code>winget install julia -s msstore</code>.</li>
-<li>Mac and Linux: <code>curl -fsSL https://install.julialang.org | sh</code>.</li>
-<li>Homebrew users: <code>brew install juliaup</code>.</li>
-</ul></li>
-</ol>
-<p>After JuliaUp is installed, you can install different Julia versions with:</p>
-<pre class="shell"><code>juliaup add release  ## installs release version
-juliaup add rc       ## installs release candidate version
-juliaup st           ## status of julia versions installed
-juliaup default rc   ## make release candidate version the default</code></pre>
-<ol start="3" type="1">
-<li>Choose a dataset along with a script to analyze it written in another language (R or python) as we will spend part of the workshop translating participants’ scripts to Julia.</li>
-</ol>
+<li>papparse</li>
+<li>topojson</li>
+</ul>
 
 
 </section>
