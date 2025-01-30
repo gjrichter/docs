@@ -18,7 +18,7 @@ body {
 }
 .content {
     max-width: 720px;
-    margin: auto;
+    margin: 0 auto;
 }
 
 .sidebar {
@@ -36,4 +36,8 @@ body {
 
 .nav-page-next {
     margin-right: 2em;
+}
+
+.blockquote {
+    color: black;
 }

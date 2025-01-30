@@ -1,22 +1,8 @@
-
-
 # Why Data-Krauti ?
 
-**Data-Krauti** is a free tool to explore tabular data. It is based on **HTML5** and lives inside your browser without any other installation. It can load as well local as remote files in the formats **CSV, JSON, GeoJson** and **TopoJson**. You can **analyse** and filter **the** data with several tools. If the data contains **geographic information**, a **map** can be activated to explore the data in its geographic extension and relevance.
+**Data-Krauti** is for exploring data without having to install anything. It is inspired by mapshaper.org which gives everyone a tool to view and manipulate geographic data (.shp, geojson, topojson) n the browser.
 
-# What can I do with Data-Krauti ?
+It has also been created to easy to use basic configuration tool for iXMaps visualization projects if the analyzed data holds geographic information. 
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent mollis eu nunc at venenatis. Ut gravida nunc at enim hendrerit, eget suscipit massa rhoncus. Praesent in vestibulum enim. Nam ex sem, varius quis fringilla nec, maximus vel mauris. Sed fringilla tellus eget urna finibus pellentesque. Proin ac dolor ac mi convallis euismod et in felis. Pellentesque eu pellentesque sapien, et molestie mauris.
-
- quis enim. Sed et tortor non libero volutpat sagittis quis sit amet ante.
-
-# What is it not ?
-
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent mollis eu nunc at venenatis. Ut gravida nunc at enim hendrerit, eget suscipit massa rhoncus. Praesent in vestibulum enim. Nam ex sem, varius quis fringilla nec, maximus vel mauris. Sed fringilla tellus eget urna finibus pellentesque. Proin ac dolor ac mi convallis euismod et in felis. Pellentesque eu pellentesque sapien, et molestie mauris.
-
-
-# Credits
-
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent mollis eu nunc at venenatis. Ut gravida nunc at enim hendrerit, eget suscipit massa rhoncus. Praesent in vestibulum enim. Nam ex sem, varius quis fringilla nec, maximus vel mauris. Sed fringilla tellus eget urna finibus pellentesque. Proin ac dolor ac mi convallis euismod et in felis. Pellentesque eu pellentesque sapien, et molestie mauris.
 
 
