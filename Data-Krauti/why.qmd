@@ -2,7 +2,7 @@
 
 **Data-Krauti** is for exploring data without having to install anything. It is inspired by mapshaper.org which gives everyone a tool to view and manipulate geographic data (.shp, geojson, topojson) n the browser.
 
-It has also been created to easy to use basic configuration tool for iXMaps visualization projects if the analyzed data holds geographic information. 
+**Data-Krauti**  is also basic configuration tool for **iXMaps** visualization projects if the analyzed data holds geographic information. If you made a map with the data loaded, you can generate a HTML page with the JavaScript code to create the same map directly from data using the iXmaps embed API.
 
 
 

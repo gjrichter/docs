@@ -65,29 +65,54 @@ The **Analyze** feature uses a similar process to analyze the data but displays 
 
 The **Filter** feature displays an input field at the top of each column to define a column value filter.
 
+- the defined filter may be a **regular expression**
+- you can filter numeric values by > and < operators; example '> 1000'
+
 ![](.\pics\filter.png)
 
 # Process
 
-You can create a pivot table from the loaded data. The tool opens a sidebar where you must select the columns to be used to create the pivot table.
+Process offers tools to create a derivative table. Actually you can create a **pivot table** from the loaded data. The tool opens a sidebar where you must select the columns to be used to create the pivot table.
 
 ![](.\pics\pivot.png)
 
-| Field     | Description                                                                 |
+Every column of the original table can have a special role that you can select by the dropdown at the right. For a pivot table please select a least one column into the 'row' role.
+
+| Role  | Description                                                                 |
 | --------- | --------------------------------------------------------------------------- |
-| **Row**   | The column whose (unique) values will define the rows of the pivot table.    |
-| **Columns** | The column whose (unique) values will define the columns of the pivot table. |
-| **Values** | The column where the values to be aggregated by row and column are found.   |
-| **Keep**  | The column(s) to copy from the original table.                              |
+| **row**   | The column whose (unique) values will define the rows of the pivot table.    |
+| **columns** | The column whose (unique) values will define the columns of the pivot table. |
+| **values** | The column where the values to be aggregated by row and column are found.   |
+| **keep**  | The column(s) to copy from the original table.                              |
+
+A special 'role' is 'keep'. Values of this column(s) are copied to the pivot table. If the 'keep' column has different values for the same 'row' selector, the last value is copied.
+
+
 
 ![](.\pics\pivot_xy.png)
 
+In the upper example we copied the X and Y columns so we put the pivot table on a map.
+
+
+
 # Map
 
-**Data-Krauti** uses **iXMaps** to display the data on a map.
+**Data-Krauti** uses **iXMaps** to display the data on a map. By default you get a visualization with blue dots if positions are found in the data or blue lines shapes if the data contains GeoJSON or TopoJSON line or polygon elements.
+
+Data-Krauti tries to find geographic information in the data. If it cannot find appropriate data, an empty map is displayed. You can then try to define the geographic columns manually with the tool 'config. map'.
 
 ![](.\pics\map.png)
 
-You can customize the visualization.
+With the tool 'config.map' you can customize the visualization.
 
 ![](.\pics\map_config.png)
+
+## Now you can make the map yours!
+
+At any time Data-Krauti can generate a HTML code with embedded iXMaps and a configuration to produce the map you have configured by the button '**show embedding code (HTML)**'
+
+> You cannot create a functioning HTML map if you loaded local data.
+> But you can fix the data URL later in the HTML code
+
+
+![](.\pics\html-code-for-map.png)

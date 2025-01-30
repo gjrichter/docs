@@ -166,7 +166,10 @@ ul.task-list li input[type="checkbox"] {
   <li><a href="#analyze" id="toc-analyze" class="nav-link" data-scroll-target="#analyze">Analyze</a></li>
   <li><a href="#filter" id="toc-filter" class="nav-link" data-scroll-target="#filter">Filter</a></li>
   <li><a href="#process" id="toc-process" class="nav-link" data-scroll-target="#process">Process</a></li>
-  <li><a href="#map" id="toc-map" class="nav-link" data-scroll-target="#map">Map</a></li>
+  <li><a href="#map" id="toc-map" class="nav-link" data-scroll-target="#map">Map</a>
+  <ul class="collapse">
+  <li><a href="#now-you-can-make-the-map-yours" id="toc-now-you-can-make-the-map-yours" class="nav-link" data-scroll-target="#now-you-can-make-the-map-yours">Now you can make the map yours!</a></li>
+  </ul></li>
   </ul>
 </nav>
     </div>
@@ -261,12 +264,17 @@ ul.task-list li input[type="checkbox"] {
 <section id="filter" class="level1">
 <h1>Filter</h1>
 <p>The <strong>Filter</strong> feature displays an input field at the top of each column to define a column value filter.</p>
+<ul>
+<li>the defined filter may be a <strong>regular expression</strong></li>
+<li>you can filter numeric values by &gt; and &lt; operators; example ‘&gt; 1000’</li>
+</ul>
 <p><img src=".\pics\filter.png" class="img-fluid"></p>
 </section>
 <section id="process" class="level1">
 <h1>Process</h1>
-<p>You can create a pivot table from the loaded data. The tool opens a sidebar where you must select the columns to be used to create the pivot table.</p>
+<p>Process offers tools to create a derivative table. Actually you can create a <strong>pivot table</strong> from the loaded data. The tool opens a sidebar where you must select the columns to be used to create the pivot table.</p>
 <p><img src=".\pics\pivot.png" class="img-fluid"></p>
+<p>Every column of the original table can have a special role that you can select by the dropdown at the right. For a pivot table please select a least one column into the ‘row’ role.</p>
 <table class="caption-top table">
 <colgroup>
 <col style="width: 10%">
@@ -274,39 +282,50 @@ ul.task-list li input[type="checkbox"] {
 </colgroup>
 <thead>
 <tr class="header">
-<th>Field</th>
+<th>Role</th>
 <th>Description</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td><strong>Row</strong></td>
+<td><strong>row</strong></td>
 <td>The column whose (unique) values will define the rows of the pivot table.</td>
 </tr>
 <tr class="even">
-<td><strong>Columns</strong></td>
+<td><strong>columns</strong></td>
 <td>The column whose (unique) values will define the columns of the pivot table.</td>
 </tr>
 <tr class="odd">
-<td><strong>Values</strong></td>
+<td><strong>values</strong></td>
 <td>The column where the values to be aggregated by row and column are found.</td>
 </tr>
 <tr class="even">
-<td><strong>Keep</strong></td>
+<td><strong>keep</strong></td>
 <td>The column(s) to copy from the original table.</td>
 </tr>
 </tbody>
 </table>
+<p>A special ‘role’ is ‘keep’. Values of this column(s) are copied to the pivot table. If the ‘keep’ column has different values for the same ‘row’ selector, the last value is copied.</p>
 <p><img src=".\pics\pivot_xy.png" class="img-fluid"></p>
+<p>In the upper example we copied the X and Y columns so we put the pivot table on a map.</p>
 </section>
 <section id="map" class="level1">
 <h1>Map</h1>
-<p><strong>Data-Krauti</strong> uses <strong>iXMaps</strong> to display the data on a map.</p>
+<p><strong>Data-Krauti</strong> uses <strong>iXMaps</strong> to display the data on a map. By default you get a visualization with blue dots if positions are found in the data or blue lines shapes if the data contains GeoJSON or TopoJSON line or polygon elements.</p>
+<p>Data-Krauti tries to find geographic information in the data. If it cannot find appropriate data, an empty map is displayed. You can then try to define the geographic columns manually with the tool ‘config. map’.</p>
 <p><img src=".\pics\map.png" class="img-fluid"></p>
-<p>You can customize the visualization.</p>
+<p>With the tool ‘config.map’ you can customize the visualization.</p>
 <p><img src=".\pics\map_config.png" class="img-fluid"></p>
+<section id="now-you-can-make-the-map-yours" class="level2">
+<h2 class="anchored" data-anchor-id="now-you-can-make-the-map-yours">Now you can make the map yours!</h2>
+<p>At any time Data-Krauti can generate a HTML code with embedded iXMaps and a configuration to produce the map you have configured by the button ‘<strong>show embedding code (HTML)</strong>’</p>
+<blockquote class="blockquote">
+<p>You cannot create a functioning HTML map if you loaded local data. But you can fix the data URL later in the HTML code</p>
+</blockquote>
+<p><img src=".\pics\html-code-for-map.png" class="img-fluid"></p>
 
 
+</section>
 </section>
 
 </main> <!-- /main -->
