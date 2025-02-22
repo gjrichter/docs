@@ -1,0 +1,15 @@
+# Share a Data View
+
+**Data-Krauti** has a built-in function that allows you to **share a data view** with others.
+
+When you've loaded data from a publicly available data source, you can create a URL with the appropriate query parameters to easily reproduce the data view.
+
+By clicking the **share button**, you will see the following dialog, where you will find both the long and short forms of the URL to share:
+
+![](.\pics\share.png)
+
+> #### please note
+>
+> **You cannot share views of local data**. 
+
+

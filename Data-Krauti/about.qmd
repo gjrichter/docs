@@ -8,10 +8,11 @@ If the data contains geographic information Data-Krauti can create a  map  to ex
 
 **Data-Krauti** is open source and based on **[data.js](https://github.com/gjrichter/data.js)** to load and handle data.
 
-It depends on the following JavaScript Libraries:
+Further on it depends on the following JavaScript Libraries:
 
 - Papa Parse ([https://www.papaparse.com/](https://www.papaparse.com/))
 - TopoJSON ([https://github.com/topojson](https://github.com/topojson))
+- D3 (https://d3js.org/) (for word clouds in facets tool)
 - Bootstrap ([https://getbootstrap.com/](https://getbootstrap.com/))
 - jQery ([https://jquery.com/](https://jquery.com/))
 

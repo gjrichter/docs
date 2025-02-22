@@ -1,5 +1,45 @@
 [
   {
+    "objectID": "share.html",
+    "href": "share.html",
+    "title": "Share a Data View",
+    "section": "",
+    "text": "Share a Data View\nData-Krauti has a built-in function that allows you to share a data view with others.\nWhen you’ve loaded data from a publicly available data source, you can create a URL with the appropriate query parameters to easily reproduce the data view.\nBy clicking the share button, you will see the following dialog, where you will find both the long and short forms of the URL to share:\n\n\nplease note\nYou cannot share views of local data.",
+    "crumbs": [
+      "Home",
+      "Share a Data View"
+    ]
+  },
+  {
+    "objectID": "why.html",
+    "href": "why.html",
+    "title": "Why Data-Krauti ?",
+    "section": "",
+    "text": "Why Data-Krauti ?\nData-Krauti is for exploring data without having to install anything. It is inspired by mapshaper.org which gives everyone a tool to view and manipulate geographic data (.shp, geojson, topojson) n the browser.\nData-Krauti is also basic configuration tool for iXMaps visualization projects if the analyzed data holds geographic information. If you made a map with the data loaded, you can generate a HTML page with the JavaScript code to create the same map directly from data using the iXmaps embed API.",
+    "crumbs": [
+      "Home",
+      "Why Data-Krauti ?"
+    ]
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Welcome to Data-Krauti ",
+    "section": "",
+    "text": "Welcome to Data-Krauti \nData-Krauti is a free tool for exploring tabular data. It is based on HTML5 and operates directly in your browser without any additional installation. It can load both local and remote files in the formats CSV, JSON, GeoJSON, and TopoJSON. You can analyze and filter the data using several tools. If the data contains geographic information, a map can be activated to explore the data in its geographic context and relevance.\n\n\n\nWhat Can I Do with Data-Krauti?\nYou can load and view data in table formats like CSV, JSON, GeoJson and TopoJson and\n\nget a quick view on the table structure\nsee the first 100 rows of the data sort by table view by columns\nfilter the table data by column values (regular expression are possible)\ngenerate data facets; one facet per column to understand the data and apply filters\nget a quick data analysis with data type, min/max/sum or unique values and missing values\n\ngenerate pivot tables\nsee the data on a map if geographic information is present in the data\n\nIntended usage: Quick view and explore local and online data with a focus on data with geographic information. Create a basic iXMaps visualization from the data.\nWorks well for small and medium size data (approximate &lt; 500 000 rows).\n\n\nWhat Is It Not?\nData-Krauti is:\n\nnot a data editor\nnot a dashboard\nnot a notebook\nno database query\n\n\n\nCredits\nData-Krauti is open source and based on data.js to load and handle data.\nIt depends on the following JavaScript Libraries:\n\nPapa Parse (https://www.papaparse.com/)\nTopoJSON (https://github.com/topojson)\nBootstrap (https://getbootstrap.com/)\njQery (https://jquery.com/)",
+    "crumbs": [
+      "Home",
+      "Welcome to Data-Krauti <img src=\".\\pics\\cabbage.png\" alt=\"cabbage\" style=\"height:30px;vertical-align:-5%\" />"
+    ]
+  },
+  {
+    "objectID": "about.html",
+    "href": "about.html",
+    "title": "About",
+    "section": "",
+    "text": "About\nData-Krauti is a free tool for exploring tabular data. It is based on HTML5 and operates directly in your browser without any additional installation.\nIt can load both local and remote files in the formats CSV, JSON, GeoJSON, and TopoJSON and provides tools to explore and customize the data.\nIf the data contains geographic information Data-Krauti can create a map to explore the data in its geographic context and relevance.\nData-Krauti is open source and based on data.js to load and handle data.\nFurther on it depends on the following JavaScript Libraries:\n\nPapa Parse (https://www.papaparse.com/)\nTopoJSON (https://github.com/topojson)\nD3 (https://d3js.org/) (for word clouds in facets tool)\nBootstrap (https://getbootstrap.com/)\njQery (https://jquery.com/)\n\n\n\n\ncabbage"
+  },
+  {
     "objectID": "getting_started.html",
     "href": "getting_started.html",
     "title": "Getting Started",
@@ -19,35 +59,6 @@
     "crumbs": [
       "Home",
       "Getting Started"
-    ]
-  },
-  {
-    "objectID": "about.html",
-    "href": "about.html",
-    "title": "About",
-    "section": "",
-    "text": "About\nData-Krauti is a free tool for exploring tabular data. It is based on HTML5 and operates directly in your browser without any additional installation.\nIt can load both local and remote files in the formats CSV, JSON, GeoJSON, and TopoJSON and provides tools to explore and customize the data.\nIf the data contains geographic information Data-Krauti can create a map to explore the data in its geographic context and relevance.\nData-Krauti is open source and based on data.js to load and handle data.\nIt depends on the following JavaScript Libraries:\n\nPapa Parse (https://www.papaparse.com/)\nTopoJSON (https://github.com/topojson)\nBootstrap (https://getbootstrap.com/)\njQery (https://jquery.com/)\n\n\n\n\ncabbage"
-  },
-  {
-    "objectID": "index.html",
-    "href": "index.html",
-    "title": "Welcome to Data-Krauti ",
-    "section": "",
-    "text": "Welcome to Data-Krauti \nData-Krauti is a free tool for exploring tabular data. It is based on HTML5 and operates directly in your browser without any additional installation. It can load both local and remote files in the formats CSV, JSON, GeoJSON, and TopoJSON. You can analyze and filter the data using several tools. If the data contains geographic information, a map can be activated to explore the data in its geographic context and relevance.\n\n\n\nWhat Can I Do with Data-Krauti?\nYou can load and view data in table formats like CSV, JSON, GeoJson and TopoJson and\n\nget a quick view on the table structure\nsee the first 100 rows of the data sort by table view by columns\nfilter the table data by column values (regular expression are possible)\ngenerate data facets; one facet per column to understand the data and apply filters\nget a quick data analysis with data type, min/max/sum or unique values and missing values\n\ngenerate pivot tables\nsee the data on a map if geographic information is present in the data\n\nIntended usage: Quick view and explore local and online data with a focus on data with geographic information. Create a basic iXMaps visualization from the data.\nWorks well for small and medium size data (approximate &lt; 500 000 rows).\n\n\nWhat Is It Not?\nData-Krauti is:\n\nnot a data editor\nnot a dashboard\nnot a notebook\nno database query\n\n\n\nCredits\nData-Krauti is open source and based on data.js to load and handle data.\nIt depends on the following JavaScript Libraries:\n\nPapa Parse (https://www.papaparse.com/)\nTopoJSON (https://github.com/topojson)\nBootstrap (https://getbootstrap.com/)\njQery (https://jquery.com/)",
-    "crumbs": [
-      "Home",
-      "Welcome to Data-Krauti <img src=\".\\pics\\cabbage.png\" alt=\"cabbage\" style=\"height:30px;vertical-align:-5%\" />"
-    ]
-  },
-  {
-    "objectID": "why.html",
-    "href": "why.html",
-    "title": "Why Data-Krauti ?",
-    "section": "",
-    "text": "Why Data-Krauti ?\nData-Krauti is for exploring data without having to install anything. It is inspired by mapshaper.org which gives everyone a tool to view and manipulate geographic data (.shp, geojson, topojson) n the browser.\nData-Krauti is also basic configuration tool for iXMaps visualization projects if the analyzed data holds geographic information. If you made a map with the data loaded, you can generate a HTML page with the JavaScript code to create the same map directly from data using the iXmaps embed API.",
-    "crumbs": [
-      "Home",
-      "Why Data-Krauti ?"
     ]
   }
 ]

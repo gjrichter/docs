@@ -8,6 +8,7 @@ project:
       - about.qmd
       - why.qmd
       - getting_started.qmd
+      - share.qmd
  
 website:
   title: "Data-Krauti Doc"
@@ -27,6 +28,7 @@ website:
       - index.qmd
       - why.qmd
       - getting_started.qmd
+      - share.qmd
   page-navigation: true
 
 
