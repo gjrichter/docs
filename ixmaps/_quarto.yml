@@ -1,0 +1,78 @@
+project:
+  type: website
+  title: "ixMaps Documentation"
+  execute-dir: project
+  output-dir: docs
+  render:
+      - index.qmd
+      - getting_started.qmd
+      - api_documentation.qmd
+      - map_types.qmd
+      - theme_styles.qmd
+      - chart_scaling.qmd
+      - user_charts.qmd
+      - examples.qmd
+      - troubleshooting.qmd
+      - about.qmd
+
+website:
+  title: "ixMaps Documentation"
+  repo-url: https://github.com/gjrichter/ixmaps-flat
+  repo-actions: [issue]
+  favicon: pics/favicon.png
+  navbar:
+    background: primary
+    left:
+      - href: index.qmd
+        text: Home
+      - href: getting_started.qmd
+        text: Quick Start
+      - href: api_documentation.qmd
+        text: API
+    right:
+      - icon: github
+        href: https://github.com/gjrichter/ixmaps-flat
+  sidebar:
+    style: "docked"
+    background: light
+    search: true
+    contents:
+      - text: "Overview"
+        href: index.qmd
+      - text: "---"
+      - section: "Getting Started"
+        contents:
+          - href: getting_started.qmd
+            text: "Quick Start"
+      - text: "---"
+      - section: "Reference"
+        contents:
+          - href: api_documentation.qmd
+            text: "API Reference"
+          - href: map_types.qmd
+            text: "Map Types, Sizing & Colors"
+          - href: theme_styles.qmd
+            text: "Style Properties"
+          - href: chart_scaling.qmd
+            text: "Chart Scaling"
+          - href: user_charts.qmd
+            text: "User Charts"
+      - text: "---"
+      - href: examples.qmd
+        text: "Examples"
+      - text: "---"
+      - href: troubleshooting.qmd
+        text: "Troubleshooting"
+      - text: "---"
+      - href: about.qmd
+        text: "About"
+  page-navigation: true
+
+format:
+  html:
+    theme: cosmo
+    css: styles.css
+    toc: true
+    toc-depth: 3
+
+callout-appearance: simple

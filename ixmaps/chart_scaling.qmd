@@ -1,0 +1,196 @@
+---
+title: "Chart Scaling"
+---
+
+ixMaps provides several complementary mechanisms for controlling how symbols and charts are sized. Understanding how they interact helps you get the right visual density at every zoom level.
+
+---
+
+## The three sizing levers
+
+| Lever | Scope | Where | Effect |
+|-------|-------|-------|--------|
+| `normalSizeScale` | Map | `.options()` | Reference map scale denominator — sets the zoom level at which symbols appear at their "nominal" size |
+| `normalsizevalue` | Layer | `.style()` | Reference data value that maps to nominal size — higher value = smaller symbols |
+| `scale` | Layer | `.style()` | Direct multiplier applied on top of everything else |
+
+They multiply together. A symbol's screen size is approximately:
+
+```
+screen size ∝ (data value / normalsizevalue) * scale * f(currentZoom / normalSizeScale)
+```
+
+---
+
+## `normalSizeScale` — the zoom anchor
+
+Set in `.options()`. Tells ixMaps: "at this map scale denominator, render symbols at their nominal size."
+
+| Zoom level | Approximate `normalSizeScale` |
+|-----------|-------------------------------|
+| 4 (continent) | `"30000000"` |
+| 5 (large country) | `"15000000"` |
+| 6 (country, e.g. Italy) | `"8000000"` |
+| 8 (region) | `"2000000"` |
+| 10 (province) | `"500000"` |
+| 12 (city) | `"100000"` |
+| 14 (district) | `"25000"` |
+
+```javascript
+.options({
+    objectscaling:   "dynamic",
+    normalSizeScale: "8000000",   // zoom 6 = nominal size
+})
+```
+
+:::{.callout-warning}
+## Never set `normalSizeScale` below ~10 000
+Very small values (e.g. `"1"`) invert the scaling and produce wildly oversized or invisible symbols at all zoom levels. Always use a geographically meaningful scale denominator.
+:::
+
+---
+
+## `normalsizevalue` — the data anchor
+
+Set in `.style()`. Declares: "a data value equal to `normalsizevalue` renders at the nominal symbol size."
+
+Higher value → smaller symbols (because most real data values fall below it).
+
+```javascript
+// If your data has values up to 10 000 000:
+.style({ normalsizevalue: "5000000" })  // median-ish value → medium bubbles
+
+// If your values are small (0–100):
+.style({ normalsizevalue: "50" })       // smaller reference → larger bubbles
+```
+
+---
+
+## `scale` — direct multiplier
+
+The simplest lever. Applied after everything else. Start at `1` and adjust:
+
+```javascript
+.style({ scale: 0.5 })   // half size
+.style({ scale: 2.0 })   // double size
+.style({ scale: 0.32 })  // recommended with |GLOW (glow halo adds apparent size)
+```
+
+---
+
+## `sizepow` — power curve
+
+Controls how aggressively size contrasts between large and small data values.
+
+**Formula:**
+```
+Adjusted Size = BaseSize × (dataValue ^ (1/sizePow)) / (maxValue ^ (1/sizePow))
+```
+
+**Effect of different values:**
+
+| `sizepow` | Curve | Use case |
+|-----------|-------|----------|
+| `1` | Linear — size directly proportional to value | Equal-weight comparison |
+| `2` *(default)* | Square root — dampens extremes | Most bubble/symbol maps |
+| `0.5` | Quadratic — amplifies large values | When you want large values to dominate |
+| `3` | Cubic root — strongly dampens extremes | Very wide value ranges |
+| `10` | Near-logarithmic — almost equal visual size for all values | Revenue, orders-of-magnitude data |
+
+**Defaults set automatically by type modifier:**
+
+| Type modifier | Auto `sizepow` |
+|--------------|----------------|
+| `LINEAR` / `SIZEP1` | `1` |
+| `SIZEP1H` | `1.5` |
+| `SIZEP3` / `SIZEVOLUME` | `3` |
+| `SIZELOG` | `10` |
+| *(none of the above)* | `2` |
+
+```javascript
+.style({ sizepow: 2 })   // default — square root
+.style({ sizepow: 0.5 }) // amplify large values
+.style({ sizepow: 10 })  // near-logarithmic
+```
+
+---
+
+## `dynamicScalePow` — zoom rate
+
+Controls how quickly symbols grow or shrink as the user zooms. The default is `3` (cubic root), which provides smooth transitions without extreme size changes.
+
+**Formula:** `DynamicScale = (1 / scaleRatio) ^ (1 / dynamicScalePow)`
+
+```javascript
+.options({
+    objectscaling:   "dynamic",
+    normalSizeScale: "8000000",
+    dynamicScalePow: "3"    // default — cubic root, smooth transitions
+    // dynamicScalePow: "1.8"  // more aggressive growth on zoom-in (dense datasets)
+})
+```
+
+Higher values produce faster growth when zooming in. For dense point datasets where you want symbols to spread out noticeably on zoom, use `"1.8"`. For sparse data where continuity matters more, keep the default `"3"`.
+
+---
+
+## Urban trees preset
+
+A reliable starting point for street-level zoom (zoom 14–16) with species bubbles and `|GLOW`:
+
+```javascript
+.options({
+    objectscaling:   "dynamic",
+    normalSizeScale: "5000"      // street scale
+})
+.style({
+    normalsizevalue: "220",      // diameter in cm — controls relative sizing
+    scale:           0.32,       // reduce glow halo size
+    fillopacity:     0.8,
+    showdata:        "true"
+})
+.type("CHART|BUBBLE|CATEGORICAL|GLOW")
+```
+
+---
+
+## Scale-dependent visibility
+
+Hide a layer when the map is too zoomed out or too zoomed in:
+
+```javascript
+.style({
+    chartupper: "1:5000",   // hide when denominator > 5000 (zoomed out)
+    chartlower: "1:500"     // hide when denominator < 500 (zoomed in)
+})
+```
+
+Background boxes can also appear/disappear by scale:
+
+```javascript
+.style({
+    boxupper: "1:250000"    // box visible only at denominator ≤ 250 000
+})
+```
+
+:::{.callout-note}
+## Use `chartupper` / `chartlower`, not `clipupper` / `cliplower`
+`clipupper` and `cliplower` are not valid properties and are silently ignored.
+:::
+
+---
+
+## Runtime size adjustments
+
+Change size interactively after the map loads:
+
+```javascript
+// Set scale to 2x:
+myMap.then(api => api.changeThemeStyle("layerName", "scale:2.0", "set"));
+
+// Shrink by 10 %:
+myMap.then(api => api.changeThemeStyle("layerName", "scale:0.9", "factor"));
+
+// Grow grid cells by 10 %:
+myMap.then(api => api.changeThemeStyle("layerName", "gridwidthpx:1.1", "factor"));
+```

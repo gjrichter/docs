@@ -1,0 +1,477 @@
+---
+title: "API Reference"
+---
+
+Complete reference for the ixMaps JavaScript API.
+
+---
+
+## Map constructor
+
+### `ixmaps.Map(elementId, options)`
+
+Creates a new map instance. **Always assign the result to a `const`** — a discarded instance silently breaks all subsequent calls.
+
+```javascript
+const myMap = ixmaps.Map("map", {
+    mapType: "VT_TONER_LITE",
+    mode:    "info",
+    legend:  "closed",
+    tools:   true
+});
+```
+
+**Parameters:**
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `elementId` | string | ID of the HTML `<div>` that will contain the map |
+| `options` | object | Map configuration (see below) |
+
+**Options:**
+
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| `mapType` | string | `"VT_TONER_LITE"` | Basemap style — see [Map Types](map_types.qmd) |
+| `mapProjection` | string | *(web Mercator)* | Projection — `"lambert"`, `"equalearth"`, `"orthographic"`, etc. |
+| `mode` | string | `"pan"` | `"info"` enables tooltips on hover; `"pan"` pan/zoom only |
+| `legend` | string | `"closed"` | `"open"` or `"closed"` initial legend panel state |
+| `tools` | boolean | `false` | Show the map toolbar (zoom buttons, search) |
+| `projectionParams` | object | — | Albers-only: custom standard parallels / center |
+
+**Returns:** a `MapBuilder` instance — chainable.
+
+---
+
+## Map chain methods
+
+The map builder supports a fluent API. Call these methods immediately after `ixmaps.Map()`.
+
+### `.view(config)`
+
+Set the initial center and zoom.
+
+```javascript
+// Standard (Mercator / tile-based):
+.view({ center: { lat: 42.5, lng: 12.5 }, zoom: 6 })
+
+// Projection maps (MUST use array form):
+.view([42.5, 12.5], 6)
+```
+
+| Zoom | Scale | Coverage |
+|------|-------|----------|
+| 1–3 | world / continent | |
+| 4–6 | country | |
+| 7–10 | region / state | |
+| 11–14 | city | |
+| 15–18 | street / building | |
+
+### `.options(opts)`
+
+Configure rendering and behaviour.
+
+```javascript
+.options({
+    objectscaling:   "dynamic",   // symbols scale with zoom
+    normalSizeScale: "8000000",   // ⚠️ REQUIRED with objectscaling
+    basemapopacity:  0.6,
+    flushChartDraw:  1000000      // 1 000 000 = instant (no animation)
+})
+```
+
+| Option | Type | Description |
+|--------|------|-------------|
+| `objectscaling` | string | `"dynamic"` — symbols grow/shrink with zoom |
+| `normalSizeScale` | string | **Required** with `objectscaling`. Map scale denominator at which charts render at their nominal size. Zoom 6 ≈ `"8000000"`, zoom 12 ≈ `"100000"` |
+| `dynamicScalePow` | string | Exponent for zoom scaling. `"1.8"` recommended for dense point sets |
+| `featurescaling` | string | `"true"` — scale individual features relative to each other |
+| `basemapopacity` | number | Opacity of basemap tiles. `0` = invisible, `1` = fully opaque |
+| `flushChartDraw` | number | Rendering batch size. `1000000` = instant, `1` = animated one-by-one |
+| `flushPaintShape` | number | Set to `1000000` for large polygon datasets (municipalities) to prevent render hangs |
+| `zoomAnimation` | boolean | Smooth zoom transitions. `false` = snap |
+
+### `.on(events, handler)`
+
+Subscribe to map events. Multiple space-separated event names are accepted.
+
+```javascript
+myMap
+    .on("ready",     () => hideSpinner())
+    .on("layerdraw", e => console.log("drawn:", e.id))
+    .on("click",     e => showDetail(e.id))
+    .on("mouseover", e => highlight(e.id))
+    .on("mouseout",  () => clearHighlight())
+    .on("zoomend moveend", () => updateStats());
+```
+
+**View events:**
+
+| Event | Fires when |
+|-------|-----------|
+| `zoomend` | Zoom changed |
+| `moveend` | Map panned |
+| `viewchange` / `zoompan` | Any zoom or pan |
+
+**Item (feature) events:** handler receives `{ szId, id, theme, szMap }` where `id` = item key.
+
+| Event | Fires when |
+|-------|-----------|
+| `mouseover` / `itemover` | Pointer enters a feature |
+| `mouseout` / `itemout` | Pointer leaves a feature |
+| `click` / `itemclick` | Feature clicked |
+
+**Lifecycle events:**
+
+| Event | Fires when |
+|-------|-----------|
+| `ready` / `mapready` | SVG engine fully loaded |
+| `layerdraw` / `drawtheme` | A layer finishes drawing |
+| `layeradd` / `newtheme` | A layer is created |
+| `layerremove` / `removetheme` | A layer is removed |
+
+---
+
+## Layer chain
+
+Every data layer uses the same method chain:
+
+```javascript
+myMap.layer("layerName")
+    .data({...})       // ① data source
+    .binding({...})    // ② field mapping   ← required
+    .filter("...")     // ③ optional filter
+    .type("...")        // ④ visualization type
+    .style({...})      // ⑤ style properties
+    .meta({...})       // ⑥ tooltip / metadata
+    .title("...")       // ⑦ legend label
+    .define()          // ⑧ register (required — must close every chain)
+```
+
+### `.data(config)` — data source
+
+**Inline JSON:**
+```javascript
+.data({ obj: myArray, type: "json" })
+.data({ obj: myArray, type: "json", cache: "true" })  // reuse for multiple layers
+```
+
+**External file:**
+```javascript
+.data({ url: "https://example.com/data.csv",  type: "csv" })
+.data({ url: "https://example.com/geo.topojson", type: "topojson" })
+```
+
+**Supported `type` values:** `"json"` · `"jsonl"` · `"csv"` · `"geojson"` · `"topojson"` · `"parquet"` · `"geoparquet"` · `"geopackage"` / `"gpck"` · `"flatgeobuf"` / `"fgb"` · `"geobuf"` / `"pbf"`
+
+**Multi-source loading (Data.provider):**
+```javascript
+var loadData = function(themeObj, options) {
+    Data.provider()
+        .addSource("https://example.com/2022.csv.gz", "csv")
+        .addSource("https://example.com/2023.csv.gz", "csv")
+        .realize(function(dataA) {
+            dataA[0].append(dataA[1]);
+            options.type = "dbtable";
+            ixmaps.setExternalData(dataA[0], options);
+        });
+};
+
+myMap.layer("events")
+    .data({ name: "themeDataObj", query: loadData.toString(), cache: "true" })
+    // ...
+```
+
+:::{.callout-important}
+## Self-contained function required
+The function passed to `query:` is serialised with `.toString()`. It cannot reference outer-scope variables — make everything self-contained inside the function body.
+:::
+
+---
+
+### `.binding(config)` ⚠️ Required
+
+Maps data fields to map properties.
+
+**Point data (CSV / JSON with lat/lon columns):**
+```javascript
+.binding({ geo: "lat|lon",   value: "fieldname", title: "label" })
+.binding({ geo: "geometry",  value: "fieldname", title: "label" })  // GeoJSON Point geometry
+```
+
+**GeoJSON / TopoJSON with join:**
+```javascript
+.binding({ geo: "geometry", id: "CNTR_ID", title: "NAME_ENGL" })
+```
+
+**Choropleth overlay (joins to FEATURE base by id):**
+```javascript
+.binding({ lookup: "csv_code_col", value: "metric" })
+// "lookup" field must match the "id" field of the FEATURE base
+```
+
+**Multi-value (sparklines, stacked bars, flows):**
+```javascript
+.binding({ geo: "lat|lon", value: "val2020|val2021|val2022|val2023" })
+```
+
+**With size driven by a separate field (categorical color + numeric size):**
+```javascript
+.binding({ geo: "lat|lon", value: "category", title: "name", size: "numericField" })
+```
+
+**Time series:**
+```javascript
+.binding({ geo: "lat|lon", value: "metric", title: "name", timefield: "year" })
+```
+
+| Key | Purpose |
+|-----|---------|
+| `geo` | Coordinates: `"lat\|lon"` for columns, `"geometry"` for GeoJSON geometry |
+| `id` | Feature identifier for later joins (FEATURE base layers) |
+| `lookup` | Join key on the data side (must match `id` in the geometry) |
+| `value` | Field(s) to visualise — pipe-separated for multi-value |
+| `title` | Display name in tooltips |
+| `size` | Independent size field when using CATEGORICAL with numeric sizing |
+| `alpha` | Field for dynamic opacity (`DOPACITYMAX` / `DOPACITYMINMAX`) |
+| `timefield` | Time field for animated / time-slider maps |
+
+---
+
+### `.filter(expression)` — optional
+
+Filter rows before visualisation.
+
+```javascript
+.filter('WHERE country == "IT"')
+.filter('WHERE year == 2024')
+.filter('WHERE value > 100 AND category in (A,B,C)')
+```
+
+:::{.callout-warning}
+## String quoting in filters
+Use **double quotes** for string values — single quotes are not string delimiters and produce no matches. Use `AND` / `OR` not `&&` / `||`.
+:::
+
+---
+
+### `.type(vizType)` — visualization type
+
+The type string is composed by piping modifiers with `|`. See [Map Types, Sizing & Colors](map_types.qmd) for the full reference.
+
+**Quick reference:**
+
+| Type string | Renders |
+|-------------|---------|
+| `"FEATURE"` | Polygon or line boundaries only |
+| `"CHOROPLETH\|QUANTILE"` | Colour-coded polygons joined to a FEATURE base |
+| `"CHART\|DOT"` | Uniform dots at coordinates |
+| `"CHART\|BUBBLE\|SIZE\|VALUES"` | Sized bubbles with value labels |
+| `"CHART\|BUBBLE\|CATEGORICAL"` | Bubbles coloured by category |
+| `"CHART\|PIE"` | Pie charts at coordinates |
+| `"CHART\|BAR\|STACKED"` | Stacked / grouped bar charts |
+| `"CHART\|SYMBOL\|PLOT\|LINES"` | Sparklines (time-series curves) |
+| `"CHART\|VECTOR\|BEZIER\|POINTER"` | Flow arrows |
+
+---
+
+### `.style(props)` — visual properties
+
+See [Style Properties](theme_styles.qmd) for the complete reference. Minimum required for any layer:
+
+```javascript
+.style({ showdata: "true" })  // ⚠️ required — missing this = nothing renders
+```
+
+---
+
+### `.meta(config)` — tooltip and metadata
+
+```javascript
+.meta({ tooltip: "{{name}}: {{value}}" })
+.meta({ name: "myLayer", tooltip: "{{theme.item.chart}}{{theme.item.data}}" })
+```
+
+| Key | Purpose |
+|-----|---------|
+| `tooltip` | Mustache template for the hover tooltip |
+| `name` | Theme name — **required** for `changeThemeStyle`, `hideTheme`, `showTheme` |
+
+**Tooltip placeholders:**
+
+| Syntax | Result |
+|--------|--------|
+| `{{fieldname}}` | ixMaps-formatted value |
+| `{{raw.fieldname}}` | Raw unformatted value — bypasses all ixMaps formatting |
+| `{{theme.item.chart}}` | Built-in chart SVG for this item |
+| `{{theme.item.data}}` | Built-in data table for this item |
+
+---
+
+## Runtime API
+
+Access the live map instance through `myMap.then()`:
+
+```javascript
+myMap.then(function(api) {
+    // api is the live ixMaps map object
+    api.changeThemeStyle("layerName", "filter:WHERE year == 2024", "set");
+    api.removeTheme("prevTheme");
+    api.setBasemapOpacity(0.3, "absolute");
+});
+```
+
+### `api.changeThemeStyle(name, styleString, mode)`
+
+Modify a style property on a live layer and trigger re-render.
+
+```javascript
+myMap.then(api => {
+    api.changeThemeStyle("cities", "filter:WHERE pop > 500000", "set");
+    api.changeThemeStyle("cities", "filter", "remove");          // clear filter
+    api.changeThemeStyle("cities", "scale:1.2", "set");
+    api.changeThemeStyle("cities", "gridwidthpx:1.1", "factor"); // multiply by 1.1
+});
+```
+
+| Mode | Effect |
+|------|--------|
+| `"set"` | Replace the property value |
+| `"remove"` | Delete the property entirely |
+| `"factor"` | Multiply the current numeric value by the given factor |
+| `"set\|silent"` | Set without triggering a redraw |
+
+:::{.callout-important}
+## Requires `name` in `.meta()`
+`changeThemeStyle` finds themes by the `name` key in `.meta()`. Without it, the call silently has no effect.
+:::
+
+### `api.removeTheme(name)`
+
+Remove a layer by its `meta.name`. Use this before redefining an overlay to prevent stacking:
+
+```javascript
+let ACTIVE = null;
+
+function showYear(year) {
+    const themeName = "year-" + year;
+    const prev = ACTIVE;
+    myMap.then(api => {
+        if (prev) { try { api.removeTheme(prev); } catch(e) {} }
+        myMap.layer("countries")
+            .data({ obj: yearData[year], type: "json" })
+            .binding({ geo: "lat|lon", value: "metric" })
+            .type("CHART|BUBBLE|SIZE|VALUES")
+            .style({ colorscheme: ["#0066cc"], showdata: "true" })
+            .meta({ name: themeName, tooltip: "{{name}}: {{metric}}" })
+            .define();
+        ACTIVE = themeName;
+    });
+}
+```
+
+### `ixmaps.hideTheme(name)` / `ixmaps.showTheme(name)`
+
+Toggle layer visibility by `meta.name`. For initially hidden layers, use `visible: false` in `.style()`:
+
+```javascript
+myMap.layer("overlay")
+    .style({ ..., visible: false })
+    .meta({ name: "overlay" })
+    .define();
+
+// Later:
+ixmaps.showTheme("overlay");
+ixmaps.hideTheme("overlay");
+
+// Checkbox toggle:
+// <input type="checkbox" onchange="this.checked ? ixmaps.showTheme('overlay') : ixmaps.hideTheme('overlay')">
+```
+
+### `ixmaps.getZoom()` / `ixmaps.getCenter()`
+
+Global helpers — call directly without `.then()`:
+
+```javascript
+const z = ixmaps.getZoom();
+const c = ixmaps.getCenter();  // { lat, lng }
+```
+
+### `api.getBounds()`
+
+Returns a flat 4-element array `[swLat, swLng, neLat, neLng]`:
+
+```javascript
+myMap.then(function(m) {
+    const bounds = m.getBounds();
+    if (!bounds || bounds.length !== 4) return;
+    const [swLat, swLng, neLat, neLng] = bounds;
+});
+```
+
+---
+
+## Projections
+
+All projections use SVG-based rendering. Omit `mapProjection` for the default Web Mercator / Leaflet tile setup.
+
+| `mapProjection` | Alias | Projection |
+|---|---|---|
+| *(omit)* | — | Web Mercator (Leaflet tiles) |
+| `"mercator"` | — | Mercator (SVG, no tiles) |
+| `"winkel"` | — | Winkel Tripel |
+| `"equalearth"` | — | Equal Earth |
+| `"albersequalarea"` | `"albers"` | Albers Equal-Area Conic |
+| `"lambertazimuthalequalarea"` | `"lambert"` | Lambert Azimuthal Equal-Area (EPSG:3035) |
+| `"orthographic"` | — | Orthographic (globe) |
+
+- Lookup is **case-insensitive**
+- For any projection: `.view()` **must** use array syntax `.view([lat, lng], zoom)`
+- Set `mapType` to a hex color (`"#0a1929"`, `"white"`, `"dark"`) as background — do not use CSS `background` on `#map`
+
+**Lambert (Eurostat-style Europe):**
+```javascript
+const myMap = ixmaps.Map("map", {
+    mapType:       "white",
+    mapProjection: "lambert",
+    mode:          "info",
+    legend:        "closed",
+    tools:         false
+})
+.view([53.4, 16.9], 3.7)
+.options({ basemapopacity: 0, flushChartDraw: 1000000 });
+```
+
+---
+
+## Geometry sources (quick reference)
+
+**World countries (GISCO):**
+```javascript
+.data({ url: "https://gisco-services.ec.europa.eu/distribution/v2/countries/topojson/CNTR_RG_60M_2020_4326.json", type: "topojson" })
+.binding({ geo: "geometry", id: "CNTR_ID", title: "NAME_ENGL" })
+// Scales: 60M (world) · 20M · 10M · 3M · 1M (country)
+// ⚠️ Join field is CNTR_ID, NOT CNTR_CODE
+```
+
+**Italy municipalities (ISTAT 2024-compatible):**
+```javascript
+.data({ url: "https://raw.githubusercontent.com/gjrichter/geo/0153a0e14da5dae877b8c94d6deb11f210d4660a/italy/boundaries/italy_istat_municipalities_4326_500m.topojson", type: "topojson" })
+.binding({ geo: "geometry", id: "com_istat_code_num", title: "name" })
+// com_istat_code_num = integer 28001 (use for joins with ISTAT CSVs)
+// com_istat_code     = zero-padded string "028001"
+// ⚠️ Add flushPaintShape: 1000000 to .options() for all ~8000 polygons
+```
+
+**Germany LAU municipalities:**
+```javascript
+.data({ url: "https://cdn.jsdelivr.net/gh/gjrichter/geo@028b3fe/lau/germany_lau_2021_4326.topojson", type: "topojson" })
+.binding({ geo: "geometry", id: "LAU_ID", title: "LAU_NAME" })
+```
+
+**NUTS1–3 (Eurostat):**
+```javascript
+.data({ url: "https://gisco-services.ec.europa.eu/distribution/v2/nuts/topojson/NUTS_RG_60M_2021_4326_LEVL_1.json", type: "topojson" })
+.binding({ geo: "geometry", id: "NUTS_ID", title: "NUTS_NAME" })
+// For a single country: .filter('WHERE CNTR_CODE == "DE"')
+```

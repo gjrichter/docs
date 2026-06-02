@@ -1,0 +1,161 @@
+# Welcome to iXmaps Documentation 🗺️
+
+**iXmaps defines a high-level visualization grammar for thematic maps.** It provides a concise JSON syntax for supporting rapid generation of visualizations from raw data — operating directly in the browser with no installation and no build step.
+
+![ixMaps Framework Overview](pics/ixmaps-overview.png){fig-alt="ixMaps framework visualization example"}
+
+## What is iXmaps?
+
+At its core, **iXmaps theme specifications are JSON objects** that describe visualizations as mappings from data to properties of geographical map objects. The framework combines:
+
+- **Visualization grammar** - Declarative JSON layer definitions: data → binding → type → style
+- **Interactive Mapping** - SVG-based maps with zoom, pan, and search capabilities
+- **Data Processing** - Advanced data manipulation with Data.js library
+- **Visualization Themes** - Choropleth, bubble charts, symbols, and custom visualizations
+- **Real-time Data** - Support for live data feeds and dynamic updates
+- **Multiple Formats** - CSV, JSON, GeoJSON, TopoJSON, KML, RSS, and more
+
+## Key Features
+
+At the end of this documentation, you will be able to:
+
+- Set up an iXmaps environment to create interactive map visualizations
+- Load and process data from multiple sources efficiently
+- Create various types of data visualizations (choropleth, bubbles, symbols, charts)
+- Customize themes with styles, colors, and interactions
+- Implement advanced features like tooltips, legends, and data filtering
+- Integrate D3.js custom charts with map themes
+- Deploy interactive maps for web applications
+
+## Framework Components
+
+iXmaps consists of four main components:
+
+### 1. **Data.js Library**
+Data processing engine supporting:
+
+- Multiple formats: CSV, JSON, GeoJSON, KML, RSS, JSONstat, TopoJSON
+- Data transformation: filtering, pivoting, aggregation, calculated columns
+- Multi-source loading with broker pattern
+- Real-time updates and live data feeds
+
+### 2. **iXmaps Core**
+SVG-based interactive mapping framework:
+
+- Dynamic theme system for visualizations
+- Multi-layer support with geographic and data layers
+- Performance optimized for large datasets
+- Interactive features: zoom, pan, search, tooltips
+
+### 3. **Visualization grammar**
+
+A declarative, JSON-based layer definition system:
+
+- Each layer is described by **data** (source), **binding** (field→visual mapping), **type** (visualization method), and **style** (appearance)
+- iXmaps theme specifications are pure JSON objects — no imperative rendering code required
+- The same grammar drives choropleth maps, bubble charts, flow lines, sparklines, and custom D3 symbols
+
+### 4. **User API**
+The central Jacascript object ixmaps gives you the API to:
+
+- create and embed interactive maps
+- load themes or projects
+- change theme styles
+- get information about the actual visualization state
+
+### 5. **UI Components**
+
+  Rich HTML interface elements:
+
+  - Tooltip system with Mustache templating
+  - Automatic legend generation
+  - Search interface (normal and advanced)
+  - Data visualization controls
+
+## Who Should Use iXmaps?
+
+**iXmaps** is ideal for:
+
+- **Data Scientists** - Visualizing geographic data and patterns
+- **Web Developers** - Creating interactive map applications
+- **Journalists** - Building data-driven stories with maps
+- **Researchers** - Exploring and presenting spatial data
+- **Government Agencies** - Publishing open data visualizations
+
+## What is it NOT?
+
+iXmaps is **not**:
+
+- A tile-based mapping library like Leaflet or Google Maps (though it can work with them)
+- A GIS system for spatial analysis
+- A backend server or database system
+- A static map generator (it's designed for interactive visualizations)
+
+## Technology Stack
+
+iXmaps is built on:
+
+- **JavaScript** (ES6+) - Core programming language
+
+- **SVG** - Vector graphics for maps and visualization
+
+- **jQuery** (optional) - DOM manipulation and utilities
+
+- **Mustache** - Template engine for tooltips and labels
+
+- **Papaparse** - CSV parser
+
+- **Duckdb** WASM - for reading parquet and geoparquet and geo package
+
+- **flatgeobuf** - read .fgb files, also partially
+
+- **geobuf** - read geo buffer files
+
+  
+
+## License
+
+iXmaps is licensed under **CC-BY 4.0**, making it free for both personal and commercial use with attribution.
+
+## Credits
+
+iXmaps was created and is maintained by **Guenter Richter**.
+
+- **GitHub Repository**: [github.com/gjrichter/ixmaps](https://github.com/gjrichter/ixmaps)
+- **Live Examples**: [ixmaps.com](https://ixmaps.com)
+- **Data Viz Gallery**: [gjrichter.github.io/pages](https://gjrichter.github.io/pages)
+
+## Quick Links
+
+:::{.callout-tip}
+## New to ixMaps?
+Start with the [Quick Start Guide](getting_started.qmd) to create your first interactive map in minutes.
+:::
+
+:::{.callout-note}
+## Looking for API Reference?
+Check the [API Documentation](api_documentation.qmd) for the complete method reference, or [Style Properties](theme_styles.qmd) for all `.style()` options.
+:::
+
+:::{.callout-important}
+## Need examples?
+Browse [Examples](examples.qmd) for copy-paste working code for the most common use cases.
+:::
+
+## CDN
+
+Include ixMaps in any HTML page with a single `<script>` tag — no installation, no build step:
+
+```html
+<script src="https://cdn.jsdelivr.net/gh/gjrichter/ixmaps-flat@master/ixmaps.js"></script>
+```
+
+## Community and Support
+
+- **GitHub Repository**: [github.com/gjrichter/ixmaps-flat](https://github.com/gjrichter/ixmaps-flat)
+- **Issues and Questions**: [GitHub Issues](https://github.com/gjrichter/ixmaps-flat/issues)
+
+---
+
+Ready to start? Head over to the [Quick Start Guide](getting_started.qmd) to create your first map!
+

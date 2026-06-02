@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ixMaps Quick Start</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+        #map-container {
+            width: 100%;
+            height: 100vh;
+        }
+        .controls {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            z-index: 1000;
+            background: white;
+            padding: 10px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        .controls button {
+            margin: 5px;
+            padding: 5px 10px;
+            border: none;
+            background: #007cba;
+            color: white;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+        .controls button:hover {
+            background: #005a87;
+        }
+    </style>
+</head>
+<body>
+    <div class="controls">
+        <button onclick="zoomIn()">Zoom In</button>
+        <button onclick="zoomOut()">Zoom Out</button>
+        <button onclick="resetView()">Reset View</button>
+    </div>
+    
+    <div id="map-container"></div>
+
+    <script src="https://gjrichter.github.io/ixmaps-flat/ui/js/htmlgui_flat.js"></script>
+    
+    <script>
+        var mapInstance = null;
+        
+        // Embed the map
+        ixmaps.embed("map-container", {
+            name: "quickstart-map",
+            mapService: "leaflet",
+            mapType: "CartoDB - Positron",
+            width: "100%",
+            height: "100%",
+            legend: "true",
+            tools: "true"
+        }, function(map) {
+            mapInstance = map;
+            
+            // Set initial view
+            map.view([42.7954, 13.2083], 9);
+            
+            // Configure map options
+            map.options({
+                featurescaling: "true",
+                objectscaling: "dynamic",
+                basemapopacity: "0.8"
+            });
+            
+            // Add data layer
+            map.layer(ixmaps.layer("ITALIA_Comuni_2022")
+                .data({
+                    url: "https://s3.eu-west-1.amazonaws.com/data.ixmaps.com/sample/population.csv",
+                    type: "csv"
+                })
+                .binding({
+                    value: "population",
+                    position: "codice_comune",
+                    title: "nome_comune"
+                })
+                .type("CHOROPLETH|EQUIDISTANT")
+                .style({
+                    colorscheme: ["5", "#FFFDD8", "#B5284B"],
+                    fillopacity: "0.7"
+                })
+                .define()
+            );
+            
+            // Add tooltips
+            map.require("https://gjrichter.github.io/ixmaps/ui/js/tools/tooltip_basic.js");
+            
+            // Set attribution and legend
+            map.attribution("Data source: Sample Data");
+            map.legend("<h3>Population by Municipality</h3>");
+            
+            // Welcome message
+            map.message("ixMaps Quick Start - Use mouse wheel to zoom, drag to pan", 5000);
+        });
+        
+        // Control functions
+        function zoomIn() {
+            if (mapInstance) {
+                ixmaps.zoomIn();
+            }
+        }
+        
+        function zoomOut() {
+            if (mapInstance) {
+                ixmaps.zoomOut();
+            }
+        }
+        
+        function resetView() {
+            if (mapInstance) {
+                mapInstance.view([42.7954, 13.2083], 9);
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,577 @@
+---
+title: "Map Types, Sizing & Colors"
+---
+
+This chapter covers the three topics that most directly shape how a map looks: which basemap to use, how to choose a visualization type, and how to configure sizes and color schemes.
+
+---
+
+## Three map contexts
+
+Before choosing a basemap or visualization type, decide which map context you need. ixMaps supports three fundamentally different setups that affect both the visual result and what layers you must provide.
+
+### 1 · Tile-based Mercator (Leaflet)
+
+The default setup. A tile service (Stamen, CartoDB, OSM, …) renders the geographic background — streets, labels, terrain, water — and ixMaps draws your data layers on top as SVG. This is the **easiest starting point**: geographic context is provided automatically, so a bubble map with just lat/lon points already makes geographic sense.
+
+```javascript
+const myMap = ixmaps.Map("map", {
+    mapType: "VT_TONER_LITE",   // any tile basemap
+    mode:    "info",
+    legend:  "closed"
+})
+.view({ center: { lat: 42.5, lng: 12.5 }, zoom: 6 })
+.options({ basemapopacity: 0.6 });
+```
+
+Use this for: city-level detail, regional maps, any situation where street-level context matters. Tile maps are always Mercator.
+
+---
+
+### 2 · SVG Mercator (no tiles)
+
+Mercator projection rendered entirely in SVG, with no tile background. The map canvas is a plain color. Like tile-based maps this is Mercator, so data-driven symbols and graphs can be positioned by lat/lon — but **you must provide geographic context yourself** by loading at least one geometry layer (countries, regions, or coastlines) as a `FEATURE` layer.
+
+```javascript
+const myMap = ixmaps.Map("map", {
+    mapType:       "white",       // canvas color — no tile layer
+    mapProjection: "mercator"     // explicit SVG Mercator
+})
+.view({ center: { lat: 48, lng: 10 }, zoom: 4 })
+.options({ basemapopacity: 0 });
+
+// Geographic context must be explicit:
+myMap.layer("countries")
+    .data({ url: COUNTRIES_TOPOJSON_URL, type: "topojson" })
+    .binding({ geo: "geometry" })
+    .type("FEATURE|SILENT")
+    .style({ colorscheme: ["#e8e8e8"], linecolor: "#fff", linewidth: 0.5 })
+    .define();
+```
+
+Use this for: Europe, continental maps, or any Mercator-based visualization where tile textures interfere with the data.
+
+---
+
+### 3 · Alternative projection (no basemap)
+
+Lambert, Equal Earth, Winkel Tripel, Albers, Orthographic — all SVG-only. Tile layers do not exist for these projections; **all geographic context must come from data-driven layers**. Load at minimum a country or coastline geometry before adding any thematic data.
+
+```javascript
+const myMap = ixmaps.Map("map", {
+    mapType:       "#0a1929",     // ocean / background color
+    mapProjection: "equalearth"
+})
+.view([0, 0], 1)
+.options({ basemapopacity: 0, flushChartDraw: 1000000 });
+
+// Mandatory: geography as a data layer
+myMap.layer("countries")
+    .data({ url: WORLD_COUNTRIES_URL, type: "topojson" })
+    .binding({ geo: "geometry" })
+    .type("FEATURE|SILENT")
+    .style({ colorscheme: ["#1c3a52"], linecolor: "#2a5a7a", linewidth: 0.4 })
+    .define();
+
+// Only then add thematic data:
+myMap.layer("countries")
+    .data({ url: DATA_URL, type: "csv" })
+    .binding({ lookup: "iso_a3", value: "gdp_per_capita" })
+    .type("CHOROPLETH|QUANTILE")
+    .style({ colorscheme: ["#ffffb2","#fd8d3c","#bd0026"], showdata: "true" })
+    .meta({ name: "gdp", tooltip: "{{name}}: {{gdp_per_capita}}" })
+    .define();
+```
+
+Use this for: world maps, Eurostat-style Europe maps, thematic atlases where equal-area or minimal-distortion projections matter.
+
+#### Available projections
+
+| `mapProjection` | Also accepted | Projection | Best for |
+|----------------|--------------|------------|---------|
+| *(omit)* | — | Web Mercator + tiles | Default tile-based maps |
+| `"mercator"` | — | Mercator SVG, no tiles | Clean Mercator, no tile texture |
+| `"lambert"` | `"lambertazimuthalequalarea"` | Lambert Azimuthal Equal-Area (EPSG:3035) | Europe (Eurostat style) |
+| `"equalearth"` | — | Equal Earth | World maps |
+| `"winkel"` | — | Winkel Tripel | World maps (minimal distortion) |
+| `"albers"` | `"albersequalarea"` | Albers Equal-Area Conic | Continental US, large regions |
+| `"orthographic"` | — | Orthographic | Globe view |
+
+**Lambert — Europe (Eurostat style):**
+```javascript
+const myMap = ixmaps.Map("map", {
+    mapType:       "white",
+    mapProjection: "lambert",
+    mode:          "pan",
+    legend:        "closed",
+    tools:         false
+})
+.view([53.4, 16.9], 3.7)
+.options({ basemapopacity: 0, flushChartDraw: 1000000 });
+```
+
+**Equal Earth — world map:**
+```javascript
+const myMap = ixmaps.Map("map", {
+    mapType:       "#0a1929",
+    mapProjection: "equalearth",
+    mode:          "info",
+    legend:        "closed"
+})
+.view([0, 0], 1)
+.options({ basemapopacity: 0, flushChartDraw: 1000000 });
+```
+
+:::{.callout-important}
+## Projection maps require `.view([lat, lng], zoom)` array syntax
+The object form `{ center: {lat, lng}, zoom }` does not work with projections. Always use the two-argument array form:
+```javascript
+.view([53.4, 16.9], 3.7)   // ✅ projection
+.view({ center: {...}, zoom: 6 })  // ❌ Mercator only
+```
+:::
+
+### Summary
+
+| Setup | Tiles | Geographic context | Lat/lon positioning |
+|-------|-------|--------------------|---------------------|
+| Tile Mercator | ✅ automatic | Provided by tile service | ✅ native |
+| SVG Mercator | ❌ none | **Must load geometry layers** | ✅ native |
+| Alternative projection | ❌ none | **Must load geometry layers** | ✅ native |
+
+> In every setup, data symbols (bubbles, dots, flow lines) are positioned by lat/lon coordinates from your data. The only difference is whether the map background is automatic or something you must explicitly provide.
+
+---
+
+## Basemap types
+
+The `mapType` option in `ixmaps.Map()` sets the basemap. Names are **case-sensitive** and must match exactly.
+
+### Verified basemaps
+
+| `mapType` value | Appearance | Best for |
+|-----------------|-----------|----------|
+| `"VT_TONER_LITE"` | Clean minimal toner | **Default — use this when in doubt** |
+| `"white"` | Plain white, no tiles | Data-heavy visualisations |
+| `"CartoDB - Positron"` | Light grey minimal | Modern data journalism |
+| `"CartoDB - Dark matter"` | Dark theme | Dark-mode dashboards |
+| `"Stamen Terrain"` | Topographic | Elevation, physical geography |
+| `"OpenStreetMap - Osmarenderer"` | Standard OSM | General reference |
+
+:::{.callout-warning}
+## Case and spacing matter
+- `"CartoDB - Positron"` — note the spaces around the dash
+- `"VT_TONER_LITE"` — all uppercase
+- `"OpenStreetMap - Osmarenderer"` — must include the renderer suffix
+
+❌ `"CartoDB Positron"` · `"vt_toner_lite"` · `"OpenStreetMap"` all fail silently.
+:::
+
+### Hex / keyword backgrounds
+
+For projection-based maps (no tile layer), set `mapType` to a color directly:
+
+```javascript
+ixmaps.Map("map", {
+    mapType:       "#0a1929",   // dark ocean
+    mapProjection: "equalearth"
+})
+```
+
+Accepted: any hex color (`"#rrggbb"`), `"white"`, `"dark"`, `"black"`.
+
+### Adjusting basemap opacity
+
+Instead of changing the basemap, try reducing its opacity to let your data stand out:
+
+```javascript
+.options({ basemapopacity: 0.3 })  // subtle background
+```
+
+---
+
+## Visualization types
+
+### Type and style — two orthogonal dimensions
+
+Every ixMaps layer is described by two independent specifications:
+
+- **`.type()`** — determines the *form and method* of the visualization: what geometric shape is used, how values are mapped to that shape, and which algorithm classifies or aggregates the data. Examples: bubbles sized by value, choropleth filled by class, flow lines between origin and destination.
+
+- **`.style()`** — defines *appearance and numeric parameters*: colors, opacities, size references, power curves, label formatting, scale-dependent visibility. Style is purely about how the chosen form looks and how its quantities are tuned.
+
+Because the two are largely independent, **swapping the chart type while keeping the style** is often all it takes to explore a completely different representation of the same data. The sizing (`normalsizevalue`, `scale`, `sizepow`) and color (`colorscheme`, `fillopacity`) settings carry over unchanged, so the visual density and palette stay consistent across type changes.
+
+```javascript
+// Start with sized bubbles:
+.type("CHART|BUBBLE|SIZE|VALUES")
+.style({ colorscheme: ["#0066cc"], normalsizevalue: "500000", scale: 1, showdata: "true" })
+
+// Switch to a dot map — style unchanged:
+.type("CHART|DOT")
+.style({ colorscheme: ["#0066cc"], normalsizevalue: "500000", scale: 1, showdata: "true" })
+
+// Or to a density grid — style unchanged:
+.type("CHART|BUBBLE|SIZE|AGGREGATE")
+.style({ colorscheme: ["#0066cc"], normalsizevalue: "500000", scale: 1, showdata: "true",
+         gridwidth: "8px" })
+```
+
+The type string is a pipe-separated list of tokens — a base type followed by optional modifiers:
+
+```
+CHART | BUBBLE | SIZE | CATEGORICAL | GLOW | VALUES | NOLEGEND
+  ↑        ↑      ↑         ↑          ↑       ↑         ↑
+base   shape  sizing  coloring  effect  labels  visibility
+```
+
+---
+
+### The three base types
+
+Every ixMaps layer starts with one of three base types. Everything else — classification method, chart shape, visual modifiers — is appended to one of these roots.
+
+| Base type | What it does |
+|-----------|-------------|
+| `FEATURE` | Renders geometry as-is: polygon fills, boundary lines, point markers. No data value required — used for base layers that provide geographic context. |
+| `CHOROPLETH` | Colours polygon fills by data value. Requires geometry already loaded (same layer name as a `FEATURE` base). A **value field** is mapped through a colour scheme via a classification method. |
+| `CHART` | Creates new SVG objects (bubbles, bars, pies, flow lines, …) positioned by lat/lon coordinates or geometry centroids. A **value field** drives size, colour, or both. |
+
+`FEATURE` is a structural layer — it gives the map geography. `CHOROPLETH` and `CHART` are data layers — they need a value field and a classification or sizing method to translate numbers into visual marks.
+
+---
+
+### Continuous vs. discrete classification
+
+`CHOROPLETH` and `CHART` both map a value field to a colour or size. How that mapping is done depends on whether the data is **continuous numeric** or **discrete categorical**.
+
+**Continuous numeric values** — a number that can take any value in a range (population, temperature, GDP). Classification groups the range into classes and assigns a colour to each class:
+
+| Method | How classes are built |
+|--------|----------------------|
+| `EQUIDISTANT` | Equal-width intervals across the data range |
+| `QUANTILE` | Equal-count — same number of features per class |
+| `HEADTAIL` | Iterative mean split — best for heavy-tailed distributions |
+| `NATURAL` | Jenks natural breaks — minimises within-class variance |
+| `LOG` | Logarithmic intervals — for data spanning orders of magnitude |
+
+```javascript
+// Continuous: 5 quantile classes, yellow → dark blue
+.type("CHOROPLETH|QUANTILE")
+.style({ colorscheme: ["#ffffcc","#41b6c4","#253494"], showdata: "true" })
+```
+
+**Discrete categorical values** — a label or code that belongs to a fixed set (`"forest"`, `"urban"`, `"water"`; or species names, party names, land-use codes). Use `CATEGORICAL` and pair it with a `values` array that maps each category to a colour slot:
+
+```javascript
+// Discrete: three categories, each pinned to a colour
+.type("CHART|BUBBLE|CATEGORICAL")
+.style({
+    colorscheme: ["#4fc3f7", "#ffb300", "#ef5350"],
+    values:      ["low",     "medium",  "high"],   // strings — not numbers!
+    showdata:    "true"
+})
+```
+
+:::{.callout-warning}
+## `values` must be strings
+ixMaps matches category values as strings. Numeric categories like `1`, `2`, `3` are silently ignored — always pass `["1","2","3"]`.
+:::
+
+The classification methods work with both `CHOROPLETH` (polygon fill) and `CHART` (symbol colour).
+
+In all cases — continuous or discrete — the colour scheme maps to classes in order: first colour → first class, second colour → second class, and so on. With continuous methods the classes are numeric ranges computed automatically; with `CATEGORICAL` the classes are the entries in the `values` array. The colour assignment mechanism is the same.
+
+---
+
+### Choosing by data shape
+
+```
+Is your data...
+│
+├─ Points (lat / lon)?
+│  ├─ Just locations?                     → CHART|DOT
+│  ├─ Coloured by category?               → CHART|BUBBLE|CATEGORICAL
+│  ├─ Sized by value?                     → CHART|BUBBLE|SIZE|VALUES
+│  ├─ Density grid (circles)?             → CHART|BUBBLE|SIZE|AGGREGATE  + gridwidth:"5px"
+│  ├─ Density grid (squares)?             → CHART|SYMBOL|GRIDSIZE|AGGREGATE|RECT|SUM|DOPACITY|VALUES
+│  ├─ Sparklines per grid cell?           → CHART|SYMBOL|PLOT|LINES
+│  ├─ Flows origin→destination?           → CHART|VECTOR|BEZIER|POINTER
+│  └─ Stacked / grouped bars?             → CHART|BAR|STACKED
+│
+└─ Polygons (GeoJSON / TopoJSON)?
+   ├─ Boundaries only?                    → FEATURE
+   ├─ Colour by data (inline)?            → FEATURE|CHOROPLETH|QUANTILE
+   └─ Join external data to geometry?     → CHOROPLETH|QUANTILE  (NEVER add FEATURE)
+```
+
+### Type modifiers
+
+**Visual effect modifiers:**
+
+| Modifier | Effect |
+|----------|--------|
+| `GLOW` | Glow halo around symbols |
+| `VALUES` | Render value labels inside / near symbols |
+| `VALUESBACKGROUND` | Coloured background box behind value text |
+| `TEXTONLY` | Labels only, no symbol |
+| `TEXTLEGEND` | Category labels on symbols instead of legend box |
+| `GRADIENT` | Gradient colour along flow lines (use `linecolor: ["#from","#to"]`) |
+| `DASH` | Animated flowing dashes on flow lines |
+| `NOSCALE` | Disable dynamic zoom scaling |
+| `CLIPTOGEOBOUNDS` | Clip chart rendering to polygon boundary |
+| `3D` | 3D rendering for `BAR`, `PIE`, `DONUT` |
+| `BOX` | Background box behind each chart; customise with `boxopacity`, `boxmargin`, `bordercolor` |
+| `MOVABLE` | Charts become draggable on the map |
+
+**Filtering / visibility modifiers:**
+
+| Modifier | Effect |
+|----------|--------|
+| `SILENT` | Excludes from legend AND suppresses tooltips |
+| `NOLEGEND` | Excludes from legend only (tooltips still work) |
+| `ZEROISNOTVALUE` | Suppress rendering where value ≤ 0 |
+| `NEGATIVEISVALUE` | Allow and render negative values |
+| `ZEROISVALUE` | Treat zero as a valid value (opposite of `ZEROISNOTVALUE`) |
+| `NOOUTLIER` | Remove extreme outliers from classification |
+| `NONEGATIVE` | Suppress rendering where computed value ≤ 0 (used with `DIFFERENCE`) |
+
+**Value computation modifiers** (derive a single value from two piped fields `"a|b"`):
+
+| Modifier | Formula | Use case |
+|----------|---------|---------|
+| `DIFFERENCE` | `b − a` | Change, net gain/loss |
+| `FRACTION` | `a / b` | Share, ratio |
+| `PERCENT` | `a / b × 100` | Percentage |
+| `PERMILLE` | `a / b × 1000` | Per-mille rate |
+| `RELATIVE` | `a / b × 100 − 100` | Relative change vs. base |
+| `INVERT` | `100 − a / b × 100` | Inverse share |
+| `PRODUCT` | `a × b` | Combined value |
+
+Bind two fields with `|`: `.binding({ value: "field_a|field_b" })`. The modifier determines how the pair is collapsed to one value for colour/size mapping.
+
+**Multi-field coloring modifiers** (for multiple piped fields):
+
+| Modifier | Effect |
+|----------|--------|
+| `DOMINANT` | Colour by the field with the highest value |
+| `PERCENTOFMEAN` | Colour by the field whose value deviates most from the mean |
+| `DEVIATION` | Colour by the field with the highest standard-deviation deviation |
+| `OFFSETMEAN` | Show deviation of all fields as +/− pointers (use with `CHART|BAR|POINTER`) |
+
+**Dynamic opacity modifiers:**
+
+| Modifier | Effect |
+|----------|--------|
+| `DOPACITY` | Opacity proportional to value — lower values become transparent |
+| `DOPACITYMIN` | Opacity emphasises minimum values — higher values become transparent |
+| `DOPACITYMAX` | Opacity emphasises maximum values — tunable with `dopacitypow` / `dopacityscale` |
+| `DOPACITYMINMAX` | Opacity emphasises both extremes — average values become transparent |
+| `BIPOLAR` | Alias for `DOPACITYMINMAX` |
+| `DOPACITYLOG` | Like `DOPACITYMAX` but uses the logarithm of the value |
+| `DOPACITYMEAN` | Dynamic opacity for use with `DOMINANT` / `PERCENTOFMEAN` |
+
+**Chart composition modifiers:**
+
+| Modifier | Effect |
+|----------|--------|
+| `SEQUENCE` | Composite chart: one symbol per piped field, arranged in sequence |
+| `STAR` | Like `SEQUENCE` but arranged in a star / sunburst around the centre |
+| `STARBURST` | `PIE` / `DONUT` modifier — radius varies by value |
+| `SIZE` | 2D: surface area represents value; with `PIE`/`DONUT`: radius represents value |
+| `HEIGHT` | With `PIE` / `DONUT`: height represents value |
+| `WIDTH` | With `PIE` / `DONUT`: like `SIZE`; with `POINTER`: makes width dynamic |
+| `VOLUME` | 3D: volume represents value |
+| `HORZ` | Arrange `BAR` / `SEQUENCE` charts horizontally instead of vertically |
+| `MULTIPLE` | Offset repeated positions so overlapping points are all visible |
+| `DIFFUSE` | Like `AGGREGATE` but distributes each value to the 4 nearest grid points |
+
+**Chart positioning modifiers:**
+
+| Modifier | Effect |
+|----------|--------|
+| `CENTER` | Chart centred on its anchor point (default) |
+| `LEFT` / `RIGHT` | Align chart to the left or right of the anchor |
+| `TOP` / `BOTTOM` | Align chart above or below the anchor |
+| `ABOVE` / `BELOW` | Aliases for `TOP` / `BOTTOM` |
+| `RELOCATE` | Snap chart to geometry centroid |
+| `SORT` | Sort chart parts by value descending |
+| `UP` | Sort ascending (smallest on top) |
+| `DOWN` | Sort descending (largest on top) |
+| `RANDOM` | Random sort — useful with `STAR` to avoid pattern formation |
+
+**Aggregation modifiers** (replace cell value with aggregate):
+
+| Modifier | Computes |
+|----------|---------|
+| `SUM` | Sum of all values in cell |
+| `COUNT` | Count of rows in cell |
+| `MEAN` | Arithmetic mean |
+| `MIN` | Minimum |
+| `MAX` | Maximum |
+
+**Special geometry modifiers:**
+
+| Modifier | Effect |
+|----------|--------|
+| `BUFFER` | Draw buffer zones of `buffersize` metres around point, line, or polygon features |
+
+---
+
+## Sizing methods
+
+ixMaps provides several complementary mechanisms for controlling symbol size.
+
+### `normalsizevalue` — reference-based sizing
+
+Sets the data value that maps to "normal" (100%) display size. The key insight: **higher value = smaller bubbles**.
+
+```javascript
+.style({ normalsizevalue: "1000000" })  // a value of 1M renders at normal size
+```
+
+If most of your data values are below `normalsizevalue`, bubbles are small. Decrease it to make them bigger.
+
+**Zoom-level reference for `normalSizeScale`** (used in `.options()`):
+
+| Zoom | `normalSizeScale` |
+|------|------------------|
+| 4 (continent) | `"30000000"` |
+| 5 (large country) | `"15000000"` |
+| 6 (country, e.g. Italy) | `"8000000"` |
+| 8 (region) | `"2000000"` |
+| 10 (province) | `"500000"` |
+| 12 (city) | `"100000"` |
+| 14 (district) | `"25000"` |
+
+### `scale` — uniform multiplier
+
+A direct multiplier applied on top of all other sizing logic. Start at `1` and adjust:
+
+```javascript
+.style({ scale: 0.5 })  // half size
+.style({ scale: 2.0 })  // double size
+```
+
+### `sizepow` — power curve
+
+Controls how aggressively size differences are exaggerated. A power of `2` = quadratic — small differences become visually obvious:
+
+```javascript
+.style({ sizepow: 2 })  // quadratic — high contrast
+.style({ sizepow: 1 })  // linear — proportional
+```
+
+### `objectscaling: "dynamic"` — zoom-adaptive scaling
+
+Symbols grow and shrink with zoom level, maintaining visual density across all zoom levels. Requires `normalSizeScale` to be set correctly:
+
+```javascript
+.options({
+    objectscaling:   "dynamic",
+    normalSizeScale: "8000000",  // must match the initial zoom
+    dynamicScalePow: "1.8"       // recommended for dense point sets
+})
+```
+
+:::{.callout-warning}
+## Never set `normalSizeScale` below ~10 000
+Values like `"1"` tilt the entire scaling mechanism and produce wildly oversized or invisible symbols. Always use a geographically meaningful scale denominator.
+:::
+
+### Urban trees baseline
+
+A reliable starting point for street-detail zoom levels with `|GLOW`:
+
+```javascript
+.options({
+    objectscaling:   "dynamic",
+    normalSizeScale: "5000"
+})
+.style({
+    normalsizevalue: "220",
+    scale:           0.32   // smaller to compensate for glow halo
+})
+```
+
+---
+
+## Color schemes
+
+The `colorscheme` property accepts several formats.
+
+### Single color
+
+```javascript
+colorscheme: ["#0066cc"]          // single hex color
+colorscheme: ["blue"]             // named color
+```
+
+### Gradient (two colors, auto-interpolated)
+
+```javascript
+colorscheme: ["5", "#ffffcc", "#253494"]   // 5 classes, yellow → dark blue
+colorscheme: ["#fee5d9", "#a50f15"]        // implied 2-class gradient
+```
+
+The first element can be a number (class count) or omitted; ixMaps infers it from the array length.
+
+### Multi-stop palette
+
+```javascript
+colorscheme: ["#ffffcc","#c7e9b4","#41b6c4","#2c7fb8","#253494"]  // 5 explicit colors
+```
+
+### Named palettes
+
+```javascript
+colorscheme: ["5", "tableau10"]   // 5 classes from Tableau 10
+colorscheme: ["7", "viridis"]     // 7 classes viridis
+colorscheme: ["7", "plasma"]      // 7 classes plasma
+colorscheme: ["100", "tableau"]   // auto-palette, 100 classes
+```
+
+### CATEGORICAL color binding
+
+For categorical data, the `values` array pins specific categories to specific colors (in the same order as `colorscheme`):
+
+```javascript
+.type("CHART|BUBBLE|CATEGORICAL")
+.style({
+    colorscheme: ["#4fc3f7", "#ffb300", "#ef5350"],
+    values:      ["low",     "medium",  "high"],    // strings — not numbers!
+    showdata:    "true"
+})
+```
+
+:::{.callout-warning}
+## Always use `values` with CATEGORICAL
+Without `values`, ixMaps assigns colors by order of first occurrence — unpredictable and data-order dependent.
+
+Always cast values to strings: `["1","2","3"]` not `[1,2,3]`.
+:::
+
+### Diverging scales
+
+Use an even number of colors and set `rangecentervalue`:
+
+```javascript
+.style({
+    colorscheme:      ["#d73027","#f46d43","#fdae61","#abd9e9","#74add1","#4575b4"],
+    rangecentervalue: 0,
+    showdata:         "true"
+})
+```
+
+### Flow line gradients
+
+For `CHART|VECTOR|BEZIER|GRADIENT`, use `linecolor` as a two-element array — not `colorscheme`:
+
+```javascript
+.type("CHART|VECTOR|BEZIER|POINTER|GRADIENT")
+.style({
+    linecolor:  ["#00aabb", "#ff4400"],  // origin color → destination color
+    showdata:   "true"
+})
+```
+

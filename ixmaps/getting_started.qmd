@@ -1,0 +1,243 @@
+---
+title: "Quick Start"
+---
+
+This guide walks you through creating your first interactive ixMaps map — from a blank HTML file to a map with a working data layer.
+
+## Step 1: The HTML skeleton
+
+Create an HTML file and include the ixMaps library from the CDN:
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My First ixMap</title>
+    <style>
+        html, body { width: 100%; height: 100%; margin: 0; overflow: hidden; }
+        #map { width: 100%; height: 100%; }
+    </style>
+    <!-- ixMaps library — single script, no other dependencies needed -->
+    <script src="https://cdn.jsdelivr.net/gh/gjrichter/ixmaps-flat@master/ixmaps.js"></script>
+</head>
+<body>
+    <div id="map"></div>
+    <script>
+        // your map code goes here
+    </script>
+</body>
+</html>
+```
+
+:::{.callout-important}
+## CSS rule required
+Never use `width: 100vw; height: 100vh` on the map `<div>`. When a scrollbar appears, `vw/vh` exceed the viewport and trigger a feedback loop. Always use the `width/height: 100%` pattern shown above.
+:::
+
+:::{.callout-note}
+## No extra scripts needed
+`data.js` is already bundled inside `ixmaps.js`. `Data.*` functions are always available — do not add a second `<script>` tag for data.js unless you need it outside a layer callback.
+:::
+
+---
+
+## Step 2: Create a map
+
+The entry point is `ixmaps.Map()`. Always assign the result to a `const` — discarding the return value silently breaks all subsequent calls.
+
+```javascript
+const myMap = ixmaps.Map("map", {
+    mapType: "VT_TONER_LITE",  // basemap style
+    mode:    "info",            // "info" = show tooltips on hover
+    legend:  "closed",          // legend panel starts collapsed
+    tools:   true               // show toolbar (zoom, search)
+})
+.view({ center: { lat: 42.5, lng: 12.5 }, zoom: 6 })
+.options({
+    basemapopacity: 0.6,
+    flushChartDraw:  1000000    // instant rendering (no animation)
+});
+```
+
+Open this in a browser — you should see a clean toner basemap centred on Italy.
+
+---
+
+## Step 3: Add a data layer
+
+Every data layer follows the same chain of methods:
+
+```
+myMap.layer("name")
+    .data({...})       ← data source
+    .binding({...})    ← field mapping
+    .type("...")        ← visualization type
+    .style({...})      ← visual properties
+    .meta({...})       ← tooltip template
+    .define()          ← register the layer (required)
+```
+
+Here is a complete layer with five Italian cities displayed as sized bubbles:
+
+```javascript
+const cities = [
+    { name: "Rome",    lat: 41.90, lon: 12.50, pop: 2873000 },
+    { name: "Milan",   lat: 45.46, lon: 9.19,  pop: 1372000 },
+    { name: "Naples",  lat: 40.85, lon: 14.27, pop:  966000 },
+    { name: "Turin",   lat: 45.07, lon: 7.69,  pop:  875000 },
+    { name: "Palermo", lat: 38.12, lon: 13.36, pop:  657000 }
+];
+
+myMap.layer("cities")
+    .data({ obj: cities, type: "json" })
+    .binding({ geo: "lat|lon", value: "pop", title: "name" })
+    .type("CHART|BUBBLE|SIZE|VALUES")
+    .style({
+        colorscheme: ["#0066cc"],
+        fillopacity: 0.7,
+        normalsizevalue: "3000000",
+        showdata: "true"           // ⚠️ required — without this nothing renders
+    })
+    .meta({ tooltip: "<b>{{name}}</b><br>Population: {{pop}}" })
+    .title("Italian Cities")
+    .define();
+```
+
+---
+
+## Complete working example
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Italian Cities</title>
+    <style>
+        html, body { width: 100%; height: 100%; margin: 0; overflow: hidden; }
+        #map { width: 100%; height: 100%; }
+    </style>
+    <script src="https://cdn.jsdelivr.net/gh/gjrichter/ixmaps-flat@master/ixmaps.js"></script>
+</head>
+<body>
+    <div id="map"></div>
+    <script>
+        const cities = [
+            { name: "Rome",    lat: 41.90, lon: 12.50, pop: 2873000 },
+            { name: "Milan",   lat: 45.46, lon: 9.19,  pop: 1372000 },
+            { name: "Naples",  lat: 40.85, lon: 14.27, pop:  966000 },
+            { name: "Turin",   lat: 45.07, lon: 7.69,  pop:  875000 },
+            { name: "Palermo", lat: 38.12, lon: 13.36, pop:  657000 }
+        ];
+
+        const myMap = ixmaps.Map("map", {
+            mapType: "VT_TONER_LITE",
+            mode:    "info",
+            legend:  "closed",
+            tools:   true
+        })
+        .view({ center: { lat: 42.5, lng: 12.5 }, zoom: 6 })
+        .options({ basemapopacity: 0.6, flushChartDraw: 1000000 });
+
+        myMap.layer("cities")
+            .data({ obj: cities, type: "json" })
+            .binding({ geo: "lat|lon", value: "pop", title: "name" })
+            .type("CHART|BUBBLE|SIZE|VALUES")
+            .style({
+                colorscheme:     ["#0066cc"],
+                fillopacity:     0.7,
+                normalsizevalue: "3000000",
+                showdata:        "true"
+            })
+            .meta({ tooltip: "<b>{{name}}</b><br>Population: {{pop}}" })
+            .title("Italian Cities")
+            .define();
+    </script>
+</body>
+</html>
+```
+
+Save the file and open it in any modern browser. No web server needed for inline data like this.
+
+---
+
+## Loading external data
+
+For CSV or JSON files hosted online, replace `.data({ obj: ... })` with `.data({ url: ... })`:
+
+```javascript
+myMap.layer("cities")
+    .data({
+        url:  "https://cdn.jsdelivr.net/gh/your-user/your-repo@main/cities.csv",
+        type: "csv"
+    })
+    .binding({ geo: "lat|lon", value: "pop", title: "name" })
+    .type("CHART|BUBBLE|SIZE|VALUES")
+    .style({ colorscheme: ["#0066cc"], fillopacity: 0.7, showdata: "true" })
+    .meta({ tooltip: "<b>{{name}}</b><br>Population: {{pop}}" })
+    .define();
+```
+
+:::{.callout-warning}
+## CORS restriction
+Browsers block loading files from `file://` URLs. External data must be served from a web server or a CDN. For development, use a local server (`python3 -m http.server`, VS Code Live Server, etc.) or host data on GitHub + jsDelivr.
+:::
+
+---
+
+## Adding a choropleth layer
+
+To colour polygons (countries, regions) by a data value, you need two layers with the **same name**: a `FEATURE` base layer that loads the geometry, and an overlay layer that joins your data to it.
+
+```javascript
+// 1. Base layer — loads the geometry
+myMap.layer("countries")
+    .data({
+        url:  "https://gisco-services.ec.europa.eu/distribution/v2/countries/topojson/CNTR_RG_60M_2020_4326.json",
+        type: "topojson"
+    })
+    .binding({ geo: "geometry", id: "CNTR_ID", title: "NAME_ENGL" })
+    .type("FEATURE")
+    .style({
+        colorscheme: ["#ddd"],
+        fillopacity: 0.4,
+        linecolor:   "#888",
+        linewidth:   0.5,
+        showdata:    "true"
+    })
+    .define();
+
+// 2. Overlay — joins CSV data to the geometry (SAME layer name "countries")
+myMap.layer("countries")
+    .data({
+        url:  "https://example.com/gdp.csv",
+        type: "csv"
+    })
+    .binding({ lookup: "iso2", value: "gdp_per_capita" })
+    .type("CHOROPLETH|QUANTILE")
+    .style({
+        colorscheme: ["#ffffcc", "#a1dab4", "#41b6c4", "#2c7fb8", "#253494"],
+        fillopacity: 0.8,
+        showdata:    "true"
+    })
+    .meta({ tooltip: "{{NAME_ENGL}}: {{gdp_per_capita}}" })
+    .define();
+```
+
+:::{.callout-important}
+## Same name = geometry reuse
+The overlay layer **must** use the exact same name as the `FEATURE` base layer. A different name means no geometry to draw on — the layer renders nothing with no error message.
+:::
+
+---
+
+## Next steps
+
+- **[API Reference](api_documentation.qmd)** — complete reference for all methods and options
+- **[Style Properties](theme_styles.qmd)** — every style property explained
+- **[Map Types, Sizing & Colors](map_types.qmd)** — basemaps, sizing methods, color schemes
+- **[Examples](examples.qmd)** — copy-paste examples for common use cases
+- **[Troubleshooting](troubleshooting.qmd)** — when things don't work

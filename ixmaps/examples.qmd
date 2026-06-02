@@ -1,0 +1,426 @@
+---
+title: "Examples"
+---
+
+Copy-paste examples for common use cases. All examples use the current flat API with `ixmaps.Map()`.
+
+---
+
+## 1. Simple bubble map (point data)
+
+Points sized by a numeric value. The simplest useful map.
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Bubble Map</title>
+    <style>
+        html, body { width: 100%; height: 100%; margin: 0; overflow: hidden; }
+        #map { width: 100%; height: 100%; }
+    </style>
+    <script src="https://cdn.jsdelivr.net/gh/gjrichter/ixmaps-flat@master/ixmaps.js"></script>
+</head>
+<body>
+    <div id="map"></div>
+    <script>
+        const DATA = [
+            { city: "Rome",    lat: 41.90, lon: 12.50, pop: 2873000 },
+            { city: "Milan",   lat: 45.46, lon: 9.19,  pop: 1372000 },
+            { city: "Naples",  lat: 40.85, lon: 14.27, pop:  966000 },
+            { city: "Turin",   lat: 45.07, lon: 7.69,  pop:  875000 },
+            { city: "Palermo", lat: 38.12, lon: 13.36, pop:  657000 }
+        ];
+
+        const myMap = ixmaps.Map("map", {
+            mapType: "VT_TONER_LITE",
+            mode:    "info",
+            legend:  "closed",
+            tools:   true
+        })
+        .view({ center: { lat: 42.5, lng: 12.5 }, zoom: 6 })
+        .options({ basemapopacity: 0.6, flushChartDraw: 1000000 });
+
+        myMap.layer("cities")
+            .data({ obj: DATA, type: "json" })
+            .binding({ geo: "lat|lon", value: "pop", title: "city" })
+            .type("CHART|BUBBLE|SIZE|VALUES")
+            .style({
+                colorscheme:     ["#0066cc"],
+                fillopacity:     0.7,
+                normalsizevalue: "3000000",
+                showdata:        "true"
+            })
+            .meta({ tooltip: "<b>{{city}}</b><br>Population: {{pop}}" })
+            .title("Population")
+            .define();
+    </script>
+</body>
+</html>
+```
+
+---
+
+## 2. Categorical bubble map
+
+Points coloured by category. `values` pins specific colors to specific categories.
+
+```javascript
+const DATA = [
+    { name: "Florence",  lat: 43.77, lon: 11.25, type: "arts",    size: 370000 },
+    { name: "Venice",    lat: 45.44, lon: 12.34, type: "tourism", size: 255000 },
+    { name: "Bologna",   lat: 44.49, lon: 11.34, type: "food",    size: 400000 },
+    { name: "Genoa",     lat: 44.41, lon: 8.93,  type: "port",    size: 580000 },
+    { name: "Bari",      lat: 41.12, lon: 16.87, type: "port",    size: 320000 }
+];
+
+myMap.layer("cities")
+    .data({ obj: DATA, type: "json" })
+    .binding({ geo: "lat|lon", value: "type", size: "size", title: "name" })
+    .type("CHART|BUBBLE|CATEGORICAL|GLOW")
+    .style({
+        colorscheme:     ["#e76f51","#2a9d8f","#e9c46a","#264653"],
+        values:          ["arts","tourism","food","port"],   // strings, not numbers
+        normalsizevalue: "600000",
+        fillopacity:     0.8,
+        showdata:        "true"
+    })
+    .meta({ tooltip: "<b>{{name}}</b><br>Type: {{type}}" })
+    .title("City type")
+    .define();
+```
+
+---
+
+## 3. World choropleth (countries)
+
+Colour world countries by a CSV value. The overlay layer reuses the geometry base's name.
+
+```javascript
+const myMap = ixmaps.Map("map", {
+    mapType: "CartoDB - Positron",
+    mode:    "info",
+    legend:  "open"
+})
+.view({ center: { lat: 20, lng: 0 }, zoom: 2 })
+.options({ basemapopacity: 0.5, flushChartDraw: 1000000 });
+
+// 1 — geometry base
+myMap.layer("countries")
+    .data({
+        url:  "https://gisco-services.ec.europa.eu/distribution/v2/countries/topojson/CNTR_RG_60M_2020_4326.json",
+        type: "topojson"
+    })
+    .binding({ geo: "geometry", id: "CNTR_ID", title: "NAME_ENGL" })
+    .type("FEATURE")
+    .style({
+        colorscheme: ["#ddd"],
+        fillopacity: 0.3,
+        linecolor:   "#aaa",
+        linewidth:   0.4,
+        showdata:    "true"
+    })
+    .define();
+
+// 2 — choropleth overlay (SAME name "countries")
+myMap.layer("countries")
+    .data({ url: "https://example.com/gdp.csv", type: "csv" })
+    .binding({ lookup: "iso2", value: "gdp_per_capita" })
+    .type("CHOROPLETH|QUANTILE")
+    .style({
+        colorscheme: ["#ffffcc","#c7e9b4","#41b6c4","#2c7fb8","#253494"],
+        fillopacity: 0.8,
+        showdata:    "true"
+    })
+    .meta({ tooltip: "<b>{{NAME_ENGL}}</b><br>GDP per capita: {{gdp_per_capita}}" })
+    .title("GDP per capita")
+    .define();
+```
+
+---
+
+## 4. Italy municipalities (choropleth + join)
+
+Join ISTAT CSV data to municipality polygons. Note the pinned geometry URL for 2024-compatible codes.
+
+```javascript
+const GEO_URL =
+    "https://raw.githubusercontent.com/gjrichter/geo/0153a0e14da5dae877b8c94d6deb11f210d4660a/italy/boundaries/italy_istat_municipalities_4326_500m.topojson";
+
+const myMap = ixmaps.Map("map", {
+    mapType: "VT_TONER_LITE",
+    mode:    "info",
+    legend:  "closed"
+})
+.view({ center: { lat: 42.5, lng: 12.5 }, zoom: 6 })
+.options({
+    basemapopacity: 0.4,
+    flushChartDraw: 1000000,
+    flushPaintShape: 1000000   // required for ~8000 polygons
+});
+
+myMap.layer("comuni")
+    .data({ url: GEO_URL, type: "topojson" })
+    .binding({ geo: "geometry", id: "com_istat_code_num", title: "name" })
+    .type("FEATURE")
+    .style({
+        colorscheme: ["#ccc"],
+        fillopacity: 0.2,
+        linecolor:   "#888",
+        linewidth:   0.2,
+        showdata:    "true"
+    })
+    .define();
+
+myMap.layer("comuni")
+    .data({ url: "https://example.com/istat_data.csv", type: "csv" })
+    .binding({ lookup: "istat_code", value: "value" })
+    .type("CHOROPLETH|QUANTILE")
+    .style({
+        colorscheme: ["#fff7fb","#ece2f0","#a6bddb","#1c9099","#016450"],
+        fillopacity: 0.85,
+        showdata:    "true"
+    })
+    .meta({ tooltip: "<b>{{name}}</b><br>{{value}}" })
+    .title("Value by municipality")
+    .define();
+```
+
+---
+
+## 5. Swappable themes (remove-then-define)
+
+Switch between multiple visualisations of the same geometry without stacking layers.
+
+```javascript
+let ACTIVE_THEME = null;
+
+function setTheme(id, type, styleOverride) {
+    const themeName = "theme-" + id;
+    const prev = ACTIVE_THEME;
+
+    myMap.then(api => {
+        if (prev) { try { api.removeTheme(prev); } catch(e) {} }
+
+        myMap.layer("regions")               // SAME name as FEATURE base
+            .data({ obj: DATA, type: "json", cache: "true" })
+            .binding({ lookup: "code", value: id })
+            .type(type)
+            .style(Object.assign({ showdata: "true" }, styleOverride))
+            .meta({ name: themeName, tooltip: "{{name}}: {{" + id + "}}" })
+            .define();
+
+        ACTIVE_THEME = themeName;
+    });
+}
+
+// Switch between indicators:
+setTheme("population", "CHOROPLETH|QUANTILE",
+    { colorscheme: ["#ffffcc","#253494"], fillopacity: 0.8 });
+
+setTheme("income", "CHOROPLETH|NATURAL",
+    { colorscheme: ["#fff5f0","#a50f15"], fillopacity: 0.8 });
+```
+
+---
+
+## 6. Animated time series
+
+Show one year at a time, stepping through with a slider.
+
+```javascript
+const yearData = {
+    "2020": [...],
+    "2021": [...],
+    "2022": [...],
+    "2023": [...]
+};
+
+let ACTIVE = null;
+
+function showYear(year) {
+    const themeName = "year-" + year;
+    const prev = ACTIVE;
+
+    myMap.then(api => {
+        if (prev) { try { api.removeTheme(prev); } catch(e) {} }
+
+        myMap.layer("countries")
+            .data({ obj: yearData[year], type: "json" })
+            .binding({ geo: "lat|lon", value: "metric", title: "name" })
+            .type("CHART|BUBBLE|SIZE|VALUES")
+            .style({
+                colorscheme:     ["#0066cc"],
+                fillopacity:     0.7,
+                normalsizevalue: "1000000",
+                showdata:        "true"
+            })
+            .meta({ name: themeName, tooltip: "{{name}}: {{metric}}" })
+            .define();
+
+        ACTIVE = themeName;
+    });
+}
+
+// HTML: <input type="range" min="2020" max="2023" oninput="showYear(this.value)">
+showYear("2020");
+```
+
+---
+
+## 7. Flow map (origin → destination)
+
+Arrows from source to destination, with optional animation.
+
+```javascript
+const flows = [
+    { from_name: "Rome",  from_lat: 41.90, from_lon: 12.50,
+      to_lat: 48.86, to_lon: 2.35, volume: 5000 },
+    { from_name: "Milan", from_lat: 45.46, from_lon: 9.19,
+      to_lat: 51.51, to_lon: -0.13, volume: 8000 }
+];
+
+myMap.layer("flows")
+    .data({ obj: flows, type: "json" })
+    .binding({
+        geo:   "from_lat|from_lon",
+        value: "volume",
+        title: "from_name",
+        geo2:  "to_lat|to_lon"
+    })
+    .type("CHART|VECTOR|BEZIER|POINTER|DASH")
+    .style({
+        colorscheme: ["#0066cc"],
+        fillopacity: 0.7,
+        linewidth:   2,
+        showdata:    "true"
+    })
+    .meta({ tooltip: "{{from_name}} → volume: {{volume}}" })
+    .define();
+```
+
+---
+
+## 8. Sparklines (time-series curves per location)
+
+A sparkline curve at each data point showing multi-year trends.
+
+```javascript
+const DATA = [
+    { city: "Rome",  lat: 41.90, lon: 12.50, v2020: 100, v2021: 108, v2022: 115, v2023: 122 },
+    { city: "Milan", lat: 45.46, lon: 9.19,  v2020: 90,  v2021: 95,  v2022: 99,  v2023: 105 }
+];
+
+myMap.layer("trends")
+    .data({ obj: DATA, type: "json" })
+    .binding({ geo: "lat|lon", value: "v2020|v2021|v2022|v2023", title: "city" })
+    .type("CHART|SYMBOL|PLOT|LINES|AREA|FADE|LASTARROW|NOCLIP|GRIDSIZE|FIXSIZE")
+    .style({
+        gridwidth:       "100px",
+        normalsizevalue: "30",
+        markersize:      2,
+        colorscheme:     ["#00e5ff"],
+        fillopacity:     0.5,
+        showdata:        "true"
+    })
+    .meta({ tooltip: "{{city}}<br>{{theme.item.chart}}" })
+    .define();
+```
+
+---
+
+## 9. Grid density heatmap
+
+Aggregate thousands of points into a regular grid.
+
+```javascript
+myMap.layer("density")
+    .data({ url: "https://example.com/points.csv", type: "csv" })
+    .binding({ geo: "lat|lon", value: "$item$" })
+    .type("CHART|BUBBLE|SIZE|AGGREGATE|COUNT|RECT")
+    .style({
+        colorscheme: ["#fee5d9","#fcae91","#fb6a4a","#de2d26","#a50f15"],
+        fillopacity: 0.7,
+        gridwidth:   "5px",
+        showdata:    "true"
+    })
+    .meta({ tooltip: "Count: {{$item$}}" })
+    .title("Point density")
+    .define();
+```
+
+---
+
+## 10. Equal Earth world map (projection)
+
+A world map using the Equal Earth projection — no tile layer, SVG only.
+
+```javascript
+const myMap = ixmaps.Map("map", {
+    mapType:       "#0a1929",       // dark ocean background
+    mapProjection: "equalearth",
+    mode:          "info",
+    legend:        "closed"
+})
+.view([0, 0], 1)                   // array syntax required for projections
+.options({ basemapopacity: 0, flushChartDraw: 1000000 });
+
+myMap.layer("countries")
+    .data({
+        url:  "https://gisco-services.ec.europa.eu/distribution/v2/countries/topojson/CNTR_RG_60M_2020_4326.json",
+        type: "topojson"
+    })
+    .binding({ geo: "geometry", id: "CNTR_ID", title: "NAME_ENGL" })
+    .type("FEATURE")
+    .style({
+        colorscheme: ["#1a3a5c"],
+        fillopacity: 0.9,
+        linecolor:   "#4a7fc1",
+        linewidth:   0.4,
+        showdata:    "true"
+    })
+    .define();
+
+// Add data overlay with external CSV
+myMap.layer("countries")
+    .data({ url: "https://example.com/world_data.csv", type: "csv" })
+    .binding({ lookup: "iso2", value: "value" })
+    .type("CHOROPLETH|QUANTILE")
+    .style({
+        colorscheme: ["#08306b","#2171b5","#6baed6","#bdd7e7","#eff3ff"],
+        fillopacity: 0.85,
+        showdata:    "true"
+    })
+    .meta({ tooltip: "<b>{{NAME_ENGL}}</b>: {{value}}" })
+    .define();
+```
+
+---
+
+## 11. External data via jsDelivr CDN
+
+Best practice for production maps — keep data outside the HTML file.
+
+```javascript
+// Data hosted at github.com/your-user/your-repo/data/cities.csv
+// CDN URL pattern: cdn.jsdelivr.net/gh/<user>/<repo>@<branch>/<path>
+
+myMap.layer("cities")
+    .data({
+        url:  "https://cdn.jsdelivr.net/gh/gjrichter/data@main/cities/italy.csv",
+        type: "csv"
+    })
+    .binding({ geo: "lat|lon", value: "population", title: "name" })
+    .type("CHART|BUBBLE|SIZE|VALUES")
+    .style({
+        colorscheme:     ["#0066cc"],
+        fillopacity:     0.7,
+        normalsizevalue: "3000000",
+        showdata:        "true"
+    })
+    .meta({ tooltip: "<b>{{name}}</b><br>Population: {{population}}" })
+    .define();
+```
+
+**Benefits:** small HTML (no inline data), separate data versioning, free CDN, CORS-enabled.

@@ -1,0 +1,1510 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.24">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>API Reference – ixMaps Documentation</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./map_types.html" rel="next">
+<link href="./pics/favicon.png" rel="icon" type="image/png">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-dc55a5b9e770e841cd82e46aadbfb9b0.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-ba3d7e3108b965ef4c6892bc29f4f97a.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="nav-sidebar docked nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a href="./index.html" class="navbar-brand navbar-brand-logo">
+    </a>
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">ixMaps Documentation</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link active" href="./index.html" aria-current="page"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./getting_started.html"> 
+<span class="menu-text">Quick Start</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./api_documentation.html"> 
+<span class="menu-text">API</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/gjrichter/ixmaps-flat"> <i class="bi bi-github" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./api_documentation.html">Reference</a></li><li class="breadcrumb-item"><a href="./api_documentation.html">API Reference</a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+      <a href="./index.html" class="sidebar-logo-link">
+      </a>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Overview</span></a>
+  </div>
+</li>
+        <li class="px-0"><hr class="sidebar-divider hi "></li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">Getting Started</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./getting_started.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Quick Start</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="px-0"><hr class="sidebar-divider hi "></li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+ <span class="menu-text">Reference</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./api_documentation.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">API Reference</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./map_types.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Map Types, Sizing &amp; Colors</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./theme_styles.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Style Properties</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./chart_scaling.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Chart Scaling</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./user_charts.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">User Charts</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="px-0"><hr class="sidebar-divider hi "></li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./examples.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Examples</span></a>
+  </div>
+</li>
+        <li class="px-0"><hr class="sidebar-divider hi "></li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./troubleshooting.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Troubleshooting</span></a>
+  </div>
+</li>
+        <li class="px-0"><hr class="sidebar-divider hi "></li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./about.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">About</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#map-constructor" id="toc-map-constructor" class="nav-link active" data-scroll-target="#map-constructor">Map constructor</a>
+  <ul class="collapse">
+  <li><a href="#ixmaps.mapelementid-options" id="toc-ixmaps.mapelementid-options" class="nav-link" data-scroll-target="#ixmaps.mapelementid-options"><code>ixmaps.Map(elementId, options)</code></a></li>
+  </ul></li>
+  <li><a href="#map-chain-methods" id="toc-map-chain-methods" class="nav-link" data-scroll-target="#map-chain-methods">Map chain methods</a>
+  <ul class="collapse">
+  <li><a href="#viewconfig" id="toc-viewconfig" class="nav-link" data-scroll-target="#viewconfig"><code>.view(config)</code></a></li>
+  <li><a href="#optionsopts" id="toc-optionsopts" class="nav-link" data-scroll-target="#optionsopts"><code>.options(opts)</code></a></li>
+  <li><a href="#onevents-handler" id="toc-onevents-handler" class="nav-link" data-scroll-target="#onevents-handler"><code>.on(events, handler)</code></a></li>
+  </ul></li>
+  <li><a href="#layer-chain" id="toc-layer-chain" class="nav-link" data-scroll-target="#layer-chain">Layer chain</a>
+  <ul class="collapse">
+  <li><a href="#dataconfig-data-source" id="toc-dataconfig-data-source" class="nav-link" data-scroll-target="#dataconfig-data-source"><code>.data(config)</code> — data source</a></li>
+  <li><a href="#bindingconfig-required" id="toc-bindingconfig-required" class="nav-link" data-scroll-target="#bindingconfig-required"><code>.binding(config)</code> ⚠️ Required</a></li>
+  <li><a href="#filterexpression-optional" id="toc-filterexpression-optional" class="nav-link" data-scroll-target="#filterexpression-optional"><code>.filter(expression)</code> — optional</a></li>
+  <li><a href="#typeviztype-visualization-type" id="toc-typeviztype-visualization-type" class="nav-link" data-scroll-target="#typeviztype-visualization-type"><code>.type(vizType)</code> — visualization type</a></li>
+  <li><a href="#styleprops-visual-properties" id="toc-styleprops-visual-properties" class="nav-link" data-scroll-target="#styleprops-visual-properties"><code>.style(props)</code> — visual properties</a></li>
+  <li><a href="#metaconfig-tooltip-and-metadata" id="toc-metaconfig-tooltip-and-metadata" class="nav-link" data-scroll-target="#metaconfig-tooltip-and-metadata"><code>.meta(config)</code> — tooltip and metadata</a></li>
+  </ul></li>
+  <li><a href="#runtime-api" id="toc-runtime-api" class="nav-link" data-scroll-target="#runtime-api">Runtime API</a>
+  <ul class="collapse">
+  <li><a href="#api.changethemestylename-stylestring-mode" id="toc-api.changethemestylename-stylestring-mode" class="nav-link" data-scroll-target="#api.changethemestylename-stylestring-mode"><code>api.changeThemeStyle(name, styleString, mode)</code></a></li>
+  <li><a href="#api.removethemename" id="toc-api.removethemename" class="nav-link" data-scroll-target="#api.removethemename"><code>api.removeTheme(name)</code></a></li>
+  <li><a href="#ixmaps.hidethemename-ixmaps.showthemename" id="toc-ixmaps.hidethemename-ixmaps.showthemename" class="nav-link" data-scroll-target="#ixmaps.hidethemename-ixmaps.showthemename"><code>ixmaps.hideTheme(name)</code> / <code>ixmaps.showTheme(name)</code></a></li>
+  <li><a href="#ixmaps.getzoom-ixmaps.getcenter" id="toc-ixmaps.getzoom-ixmaps.getcenter" class="nav-link" data-scroll-target="#ixmaps.getzoom-ixmaps.getcenter"><code>ixmaps.getZoom()</code> / <code>ixmaps.getCenter()</code></a></li>
+  <li><a href="#api.getbounds" id="toc-api.getbounds" class="nav-link" data-scroll-target="#api.getbounds"><code>api.getBounds()</code></a></li>
+  </ul></li>
+  <li><a href="#projections" id="toc-projections" class="nav-link" data-scroll-target="#projections">Projections</a></li>
+  <li><a href="#geometry-sources-quick-reference" id="toc-geometry-sources-quick-reference" class="nav-link" data-scroll-target="#geometry-sources-quick-reference">Geometry sources (quick reference)</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/gjrichter/ixmaps-flat/issues/new" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./api_documentation.html">Reference</a></li><li class="breadcrumb-item"><a href="./api_documentation.html">API Reference</a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title">API Reference</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>Complete reference for the ixMaps JavaScript API.</p>
+<hr>
+<section id="map-constructor" class="level2">
+<h2 class="anchored" data-anchor-id="map-constructor">Map constructor</h2>
+<section id="ixmaps.mapelementid-options" class="level3">
+<h3 class="anchored" data-anchor-id="ixmaps.mapelementid-options"><code>ixmaps.Map(elementId, options)</code></h3>
+<p>Creates a new map instance. <strong>Always assign the result to a <code>const</code></strong> — a discarded instance silently breaks all subsequent calls.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> myMap <span class="op">=</span> ixmaps<span class="op">.</span><span class="fu">Map</span>(<span class="st">"map"</span><span class="op">,</span> {</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    <span class="dt">mapType</span><span class="op">:</span> <span class="st">"VT_TONER_LITE"</span><span class="op">,</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">mode</span><span class="op">:</span>    <span class="st">"info"</span><span class="op">,</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">legend</span><span class="op">:</span>  <span class="st">"closed"</span><span class="op">,</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">tools</span><span class="op">:</span>   <span class="kw">true</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>})<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>Parameters:</strong></p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 36%">
+<col style="width: 20%">
+<col style="width: 43%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Parameter</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>elementId</code></td>
+<td>string</td>
+<td>ID of the HTML <code>&lt;div&gt;</code> that will contain the map</td>
+</tr>
+<tr class="even">
+<td><code>options</code></td>
+<td>object</td>
+<td>Map configuration (see below)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Options:</strong></p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Option</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>mapType</code></td>
+<td>string</td>
+<td><code>"VT_TONER_LITE"</code></td>
+<td>Basemap style — see <a href="./map_types.html">Map Types</a></td>
+</tr>
+<tr class="even">
+<td><code>mapProjection</code></td>
+<td>string</td>
+<td><em>(web Mercator)</em></td>
+<td>Projection — <code>"lambert"</code>, <code>"equalearth"</code>, <code>"orthographic"</code>, etc.</td>
+</tr>
+<tr class="odd">
+<td><code>mode</code></td>
+<td>string</td>
+<td><code>"pan"</code></td>
+<td><code>"info"</code> enables tooltips on hover; <code>"pan"</code> pan/zoom only</td>
+</tr>
+<tr class="even">
+<td><code>legend</code></td>
+<td>string</td>
+<td><code>"closed"</code></td>
+<td><code>"open"</code> or <code>"closed"</code> initial legend panel state</td>
+</tr>
+<tr class="odd">
+<td><code>tools</code></td>
+<td>boolean</td>
+<td><code>false</code></td>
+<td>Show the map toolbar (zoom buttons, search)</td>
+</tr>
+<tr class="even">
+<td><code>projectionParams</code></td>
+<td>object</td>
+<td>—</td>
+<td>Albers-only: custom standard parallels / center</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong> a <code>MapBuilder</code> instance — chainable.</p>
+<hr>
+</section>
+</section>
+<section id="map-chain-methods" class="level2">
+<h2 class="anchored" data-anchor-id="map-chain-methods">Map chain methods</h2>
+<p>The map builder supports a fluent API. Call these methods immediately after <code>ixmaps.Map()</code>.</p>
+<section id="viewconfig" class="level3">
+<h3 class="anchored" data-anchor-id="viewconfig"><code>.view(config)</code></h3>
+<p>Set the initial center and zoom.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Standard (Mercator / tile-based):</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">view</span>({ <span class="dt">center</span><span class="op">:</span> { <span class="dt">lat</span><span class="op">:</span> <span class="fl">42.5</span><span class="op">,</span> <span class="dt">lng</span><span class="op">:</span> <span class="fl">12.5</span> }<span class="op">,</span> <span class="dt">zoom</span><span class="op">:</span> <span class="dv">6</span> })</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co">// Projection maps (MUST use array form):</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">view</span>([<span class="fl">42.5</span><span class="op">,</span> <span class="fl">12.5</span>]<span class="op">,</span> <span class="dv">6</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Zoom</th>
+<th>Scale</th>
+<th>Coverage</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1–3</td>
+<td>world / continent</td>
+<td></td>
+</tr>
+<tr class="even">
+<td>4–6</td>
+<td>country</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>7–10</td>
+<td>region / state</td>
+<td></td>
+</tr>
+<tr class="even">
+<td>11–14</td>
+<td>city</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>15–18</td>
+<td>street / building</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="optionsopts" class="level3">
+<h3 class="anchored" data-anchor-id="optionsopts"><code>.options(opts)</code></h3>
+<p>Configure rendering and behaviour.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">options</span>({</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    <span class="dt">objectscaling</span><span class="op">:</span>   <span class="st">"dynamic"</span><span class="op">,</span>   <span class="co">// symbols scale with zoom</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">normalSizeScale</span><span class="op">:</span> <span class="st">"8000000"</span><span class="op">,</span>   <span class="co">// ⚠️ REQUIRED with objectscaling</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">basemapopacity</span><span class="op">:</span>  <span class="fl">0.6</span><span class="op">,</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">flushChartDraw</span><span class="op">:</span>  <span class="dv">1000000</span>      <span class="co">// 1 000 000 = instant (no animation)</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>})</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 29%">
+<col style="width: 22%">
+<col style="width: 48%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Option</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>objectscaling</code></td>
+<td>string</td>
+<td><code>"dynamic"</code> — symbols grow/shrink with zoom</td>
+</tr>
+<tr class="even">
+<td><code>normalSizeScale</code></td>
+<td>string</td>
+<td><strong>Required</strong> with <code>objectscaling</code>. Map scale denominator at which charts render at their nominal size. Zoom 6 ≈ <code>"8000000"</code>, zoom 12 ≈ <code>"100000"</code></td>
+</tr>
+<tr class="odd">
+<td><code>dynamicScalePow</code></td>
+<td>string</td>
+<td>Exponent for zoom scaling. <code>"1.8"</code> recommended for dense point sets</td>
+</tr>
+<tr class="even">
+<td><code>featurescaling</code></td>
+<td>string</td>
+<td><code>"true"</code> — scale individual features relative to each other</td>
+</tr>
+<tr class="odd">
+<td><code>basemapopacity</code></td>
+<td>number</td>
+<td>Opacity of basemap tiles. <code>0</code> = invisible, <code>1</code> = fully opaque</td>
+</tr>
+<tr class="even">
+<td><code>flushChartDraw</code></td>
+<td>number</td>
+<td>Rendering batch size. <code>1000000</code> = instant, <code>1</code> = animated one-by-one</td>
+</tr>
+<tr class="odd">
+<td><code>flushPaintShape</code></td>
+<td>number</td>
+<td>Set to <code>1000000</code> for large polygon datasets (municipalities) to prevent render hangs</td>
+</tr>
+<tr class="even">
+<td><code>zoomAnimation</code></td>
+<td>boolean</td>
+<td>Smooth zoom transitions. <code>false</code> = snap</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="onevents-handler" class="level3">
+<h3 class="anchored" data-anchor-id="onevents-handler"><code>.on(events, handler)</code></h3>
+<p>Subscribe to map events. Multiple space-separated event names are accepted.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>myMap</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">on</span>(<span class="st">"ready"</span><span class="op">,</span>     () <span class="kw">=&gt;</span> <span class="fu">hideSpinner</span>())</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">on</span>(<span class="st">"layerdraw"</span><span class="op">,</span> e <span class="kw">=&gt;</span> <span class="bu">console</span><span class="op">.</span><span class="fu">log</span>(<span class="st">"drawn:"</span><span class="op">,</span> e<span class="op">.</span><span class="at">id</span>))</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">on</span>(<span class="st">"click"</span><span class="op">,</span>     e <span class="kw">=&gt;</span> <span class="fu">showDetail</span>(e<span class="op">.</span><span class="at">id</span>))</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">on</span>(<span class="st">"mouseover"</span><span class="op">,</span> e <span class="kw">=&gt;</span> <span class="fu">highlight</span>(e<span class="op">.</span><span class="at">id</span>))</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">on</span>(<span class="st">"mouseout"</span><span class="op">,</span>  () <span class="kw">=&gt;</span> <span class="fu">clearHighlight</span>())</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">on</span>(<span class="st">"zoomend moveend"</span><span class="op">,</span> () <span class="kw">=&gt;</span> <span class="fu">updateStats</span>())<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>View events:</strong></p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Event</th>
+<th>Fires when</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>zoomend</code></td>
+<td>Zoom changed</td>
+</tr>
+<tr class="even">
+<td><code>moveend</code></td>
+<td>Map panned</td>
+</tr>
+<tr class="odd">
+<td><code>viewchange</code> / <code>zoompan</code></td>
+<td>Any zoom or pan</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Item (feature) events:</strong> handler receives <code>{ szId, id, theme, szMap }</code> where <code>id</code> = item key.</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Event</th>
+<th>Fires when</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>mouseover</code> / <code>itemover</code></td>
+<td>Pointer enters a feature</td>
+</tr>
+<tr class="even">
+<td><code>mouseout</code> / <code>itemout</code></td>
+<td>Pointer leaves a feature</td>
+</tr>
+<tr class="odd">
+<td><code>click</code> / <code>itemclick</code></td>
+<td>Feature clicked</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Lifecycle events:</strong></p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Event</th>
+<th>Fires when</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>ready</code> / <code>mapready</code></td>
+<td>SVG engine fully loaded</td>
+</tr>
+<tr class="even">
+<td><code>layerdraw</code> / <code>drawtheme</code></td>
+<td>A layer finishes drawing</td>
+</tr>
+<tr class="odd">
+<td><code>layeradd</code> / <code>newtheme</code></td>
+<td>A layer is created</td>
+</tr>
+<tr class="even">
+<td><code>layerremove</code> / <code>removetheme</code></td>
+<td>A layer is removed</td>
+</tr>
+</tbody>
+</table>
+<hr>
+</section>
+</section>
+<section id="layer-chain" class="level2">
+<h2 class="anchored" data-anchor-id="layer-chain">Layer chain</h2>
+<p>Every data layer uses the same method chain:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>myMap<span class="op">.</span><span class="fu">layer</span>(<span class="st">"layerName"</span>)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">data</span>({<span class="op">...</span>})       <span class="co">// ① data source</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">binding</span>({<span class="op">...</span>})    <span class="co">// ② field mapping   ← required</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">filter</span>(<span class="st">"..."</span>)     <span class="co">// ③ optional filter</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">type</span>(<span class="st">"..."</span>)        <span class="co">// ④ visualization type</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">style</span>({<span class="op">...</span>})      <span class="co">// ⑤ style properties</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">meta</span>({<span class="op">...</span>})       <span class="co">// ⑥ tooltip / metadata</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">title</span>(<span class="st">"..."</span>)       <span class="co">// ⑦ legend label</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">define</span>()          <span class="co">// ⑧ register (required — must close every chain)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<section id="dataconfig-data-source" class="level3">
+<h3 class="anchored" data-anchor-id="dataconfig-data-source"><code>.data(config)</code> — data source</h3>
+<p><strong>Inline JSON:</strong></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">data</span>({ <span class="dt">obj</span><span class="op">:</span> myArray<span class="op">,</span> <span class="dt">type</span><span class="op">:</span> <span class="st">"json"</span> })</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">data</span>({ <span class="dt">obj</span><span class="op">:</span> myArray<span class="op">,</span> <span class="dt">type</span><span class="op">:</span> <span class="st">"json"</span><span class="op">,</span> <span class="dt">cache</span><span class="op">:</span> <span class="st">"true"</span> })  <span class="co">// reuse for multiple layers</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>External file:</strong></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">data</span>({ <span class="dt">url</span><span class="op">:</span> <span class="st">"https://example.com/data.csv"</span><span class="op">,</span>  <span class="dt">type</span><span class="op">:</span> <span class="st">"csv"</span> })</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">data</span>({ <span class="dt">url</span><span class="op">:</span> <span class="st">"https://example.com/geo.topojson"</span><span class="op">,</span> <span class="dt">type</span><span class="op">:</span> <span class="st">"topojson"</span> })</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>Supported <code>type</code> values:</strong> <code>"json"</code> · <code>"jsonl"</code> · <code>"csv"</code> · <code>"geojson"</code> · <code>"topojson"</code> · <code>"parquet"</code> · <code>"geoparquet"</code> · <code>"geopackage"</code> / <code>"gpck"</code> · <code>"flatgeobuf"</code> / <code>"fgb"</code> · <code>"geobuf"</code> / <code>"pbf"</code></p>
+<p><strong>Multi-source loading (Data.provider):</strong></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> loadData <span class="op">=</span> <span class="kw">function</span>(themeObj<span class="op">,</span> options) {</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>    Data<span class="op">.</span><span class="fu">provider</span>()</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>        <span class="op">.</span><span class="fu">addSource</span>(<span class="st">"https://example.com/2022.csv.gz"</span><span class="op">,</span> <span class="st">"csv"</span>)</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>        <span class="op">.</span><span class="fu">addSource</span>(<span class="st">"https://example.com/2023.csv.gz"</span><span class="op">,</span> <span class="st">"csv"</span>)</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>        <span class="op">.</span><span class="fu">realize</span>(<span class="kw">function</span>(dataA) {</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>            dataA[<span class="dv">0</span>]<span class="op">.</span><span class="fu">append</span>(dataA[<span class="dv">1</span>])<span class="op">;</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>            options<span class="op">.</span><span class="at">type</span> <span class="op">=</span> <span class="st">"dbtable"</span><span class="op">;</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>            ixmaps<span class="op">.</span><span class="fu">setExternalData</span>(dataA[<span class="dv">0</span>]<span class="op">,</span> options)<span class="op">;</span></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>        })<span class="op">;</span></span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>}<span class="op">;</span></span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>myMap<span class="op">.</span><span class="fu">layer</span>(<span class="st">"events"</span>)</span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">data</span>({ <span class="dt">name</span><span class="op">:</span> <span class="st">"themeDataObj"</span><span class="op">,</span> <span class="dt">query</span><span class="op">:</span> loadData<span class="op">.</span><span class="fu">toString</span>()<span class="op">,</span> <span class="dt">cache</span><span class="op">:</span> <span class="st">"true"</span> })</span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>    <span class="co">// ...</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="callout callout-style-simple callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Important</span>Self-contained function required
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The function passed to <code>query:</code> is serialised with <code>.toString()</code>. It cannot reference outer-scope variables — make everything self-contained inside the function body.</p>
+</div>
+</div>
+<hr>
+</section>
+<section id="bindingconfig-required" class="level3">
+<h3 class="anchored" data-anchor-id="bindingconfig-required"><code>.binding(config)</code> ⚠️ Required</h3>
+<p>Maps data fields to map properties.</p>
+<p><strong>Point data (CSV / JSON with lat/lon columns):</strong></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">binding</span>({ <span class="dt">geo</span><span class="op">:</span> <span class="st">"lat|lon"</span><span class="op">,</span>   <span class="dt">value</span><span class="op">:</span> <span class="st">"fieldname"</span><span class="op">,</span> <span class="dt">title</span><span class="op">:</span> <span class="st">"label"</span> })</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">binding</span>({ <span class="dt">geo</span><span class="op">:</span> <span class="st">"geometry"</span><span class="op">,</span>  <span class="dt">value</span><span class="op">:</span> <span class="st">"fieldname"</span><span class="op">,</span> <span class="dt">title</span><span class="op">:</span> <span class="st">"label"</span> })  <span class="co">// GeoJSON Point geometry</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>GeoJSON / TopoJSON with join:</strong></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">binding</span>({ <span class="dt">geo</span><span class="op">:</span> <span class="st">"geometry"</span><span class="op">,</span> <span class="dt">id</span><span class="op">:</span> <span class="st">"CNTR_ID"</span><span class="op">,</span> <span class="dt">title</span><span class="op">:</span> <span class="st">"NAME_ENGL"</span> })</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>Choropleth overlay (joins to FEATURE base by id):</strong></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">binding</span>({ <span class="dt">lookup</span><span class="op">:</span> <span class="st">"csv_code_col"</span><span class="op">,</span> <span class="dt">value</span><span class="op">:</span> <span class="st">"metric"</span> })</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="co">// "lookup" field must match the "id" field of the FEATURE base</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>Multi-value (sparklines, stacked bars, flows):</strong></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">binding</span>({ <span class="dt">geo</span><span class="op">:</span> <span class="st">"lat|lon"</span><span class="op">,</span> <span class="dt">value</span><span class="op">:</span> <span class="st">"val2020|val2021|val2022|val2023"</span> })</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>With size driven by a separate field (categorical color + numeric size):</strong></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">binding</span>({ <span class="dt">geo</span><span class="op">:</span> <span class="st">"lat|lon"</span><span class="op">,</span> <span class="dt">value</span><span class="op">:</span> <span class="st">"category"</span><span class="op">,</span> <span class="dt">title</span><span class="op">:</span> <span class="st">"name"</span><span class="op">,</span> <span class="dt">size</span><span class="op">:</span> <span class="st">"numericField"</span> })</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>Time series:</strong></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">binding</span>({ <span class="dt">geo</span><span class="op">:</span> <span class="st">"lat|lon"</span><span class="op">,</span> <span class="dt">value</span><span class="op">:</span> <span class="st">"metric"</span><span class="op">,</span> <span class="dt">title</span><span class="op">:</span> <span class="st">"name"</span><span class="op">,</span> <span class="dt">timefield</span><span class="op">:</span> <span class="st">"year"</span> })</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 35%">
+<col style="width: 64%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Key</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>geo</code></td>
+<td>Coordinates: <code>"lat\|lon"</code> for columns, <code>"geometry"</code> for GeoJSON geometry</td>
+</tr>
+<tr class="even">
+<td><code>id</code></td>
+<td>Feature identifier for later joins (FEATURE base layers)</td>
+</tr>
+<tr class="odd">
+<td><code>lookup</code></td>
+<td>Join key on the data side (must match <code>id</code> in the geometry)</td>
+</tr>
+<tr class="even">
+<td><code>value</code></td>
+<td>Field(s) to visualise — pipe-separated for multi-value</td>
+</tr>
+<tr class="odd">
+<td><code>title</code></td>
+<td>Display name in tooltips</td>
+</tr>
+<tr class="even">
+<td><code>size</code></td>
+<td>Independent size field when using CATEGORICAL with numeric sizing</td>
+</tr>
+<tr class="odd">
+<td><code>alpha</code></td>
+<td>Field for dynamic opacity (<code>DOPACITYMAX</code> / <code>DOPACITYMINMAX</code>)</td>
+</tr>
+<tr class="even">
+<td><code>timefield</code></td>
+<td>Time field for animated / time-slider maps</td>
+</tr>
+</tbody>
+</table>
+<hr>
+</section>
+<section id="filterexpression-optional" class="level3">
+<h3 class="anchored" data-anchor-id="filterexpression-optional"><code>.filter(expression)</code> — optional</h3>
+<p>Filter rows before visualisation.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb15"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">filter</span>(<span class="st">'WHERE country == "IT"'</span>)</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">filter</span>(<span class="st">'WHERE year == 2024'</span>)</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">filter</span>(<span class="st">'WHERE value &gt; 100 AND category in (A,B,C)'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="callout callout-style-simple callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Warning</span>String quoting in filters
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Use <strong>double quotes</strong> for string values — single quotes are not string delimiters and produce no matches. Use <code>AND</code> / <code>OR</code> not <code>&amp;&amp;</code> / <code>||</code>.</p>
+</div>
+</div>
+<hr>
+</section>
+<section id="typeviztype-visualization-type" class="level3">
+<h3 class="anchored" data-anchor-id="typeviztype-visualization-type"><code>.type(vizType)</code> — visualization type</h3>
+<p>The type string is composed by piping modifiers with <code>|</code>. See <a href="./map_types.html">Map Types, Sizing &amp; Colors</a> for the full reference.</p>
+<p><strong>Quick reference:</strong></p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 59%">
+<col style="width: 40%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Type string</th>
+<th>Renders</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>"FEATURE"</code></td>
+<td>Polygon or line boundaries only</td>
+</tr>
+<tr class="even">
+<td><code>"CHOROPLETH\|QUANTILE"</code></td>
+<td>Colour-coded polygons joined to a FEATURE base</td>
+</tr>
+<tr class="odd">
+<td><code>"CHART\|DOT"</code></td>
+<td>Uniform dots at coordinates</td>
+</tr>
+<tr class="even">
+<td><code>"CHART\|BUBBLE\|SIZE\|VALUES"</code></td>
+<td>Sized bubbles with value labels</td>
+</tr>
+<tr class="odd">
+<td><code>"CHART\|BUBBLE\|CATEGORICAL"</code></td>
+<td>Bubbles coloured by category</td>
+</tr>
+<tr class="even">
+<td><code>"CHART\|PIE"</code></td>
+<td>Pie charts at coordinates</td>
+</tr>
+<tr class="odd">
+<td><code>"CHART\|BAR\|STACKED"</code></td>
+<td>Stacked / grouped bar charts</td>
+</tr>
+<tr class="even">
+<td><code>"CHART\|SYMBOL\|PLOT\|LINES"</code></td>
+<td>Sparklines (time-series curves)</td>
+</tr>
+<tr class="odd">
+<td><code>"CHART\|VECTOR\|BEZIER\|POINTER"</code></td>
+<td>Flow arrows</td>
+</tr>
+</tbody>
+</table>
+<hr>
+</section>
+<section id="styleprops-visual-properties" class="level3">
+<h3 class="anchored" data-anchor-id="styleprops-visual-properties"><code>.style(props)</code> — visual properties</h3>
+<p>See <a href="./theme_styles.html">Style Properties</a> for the complete reference. Minimum required for any layer:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb16"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">style</span>({ <span class="dt">showdata</span><span class="op">:</span> <span class="st">"true"</span> })  <span class="co">// ⚠️ required — missing this = nothing renders</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<hr>
+</section>
+<section id="metaconfig-tooltip-and-metadata" class="level3">
+<h3 class="anchored" data-anchor-id="metaconfig-tooltip-and-metadata"><code>.meta(config)</code> — tooltip and metadata</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb17"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">meta</span>({ <span class="dt">tooltip</span><span class="op">:</span> <span class="st">"{{name}}: {{value}}"</span> })</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">meta</span>({ <span class="dt">name</span><span class="op">:</span> <span class="st">"myLayer"</span><span class="op">,</span> <span class="dt">tooltip</span><span class="op">:</span> <span class="st">"{{theme.item.chart}}{{theme.item.data}}"</span> })</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 35%">
+<col style="width: 64%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Key</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>tooltip</code></td>
+<td>Mustache template for the hover tooltip</td>
+</tr>
+<tr class="even">
+<td><code>name</code></td>
+<td>Theme name — <strong>required</strong> for <code>changeThemeStyle</code>, <code>hideTheme</code>, <code>showTheme</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Tooltip placeholders:</strong></p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Syntax</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>{fieldname}</code></td>
+<td>ixMaps-formatted value</td>
+</tr>
+<tr class="even">
+<td><code>{raw.fieldname}</code></td>
+<td>Raw unformatted value — bypasses all ixMaps formatting</td>
+</tr>
+<tr class="odd">
+<td><code>{theme.item.chart}</code></td>
+<td>Built-in chart SVG for this item</td>
+</tr>
+<tr class="even">
+<td><code>{theme.item.data}</code></td>
+<td>Built-in data table for this item</td>
+</tr>
+</tbody>
+</table>
+<hr>
+</section>
+</section>
+<section id="runtime-api" class="level2">
+<h2 class="anchored" data-anchor-id="runtime-api">Runtime API</h2>
+<p>Access the live map instance through <code>myMap.then()</code>:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb18"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>myMap<span class="op">.</span><span class="fu">then</span>(<span class="kw">function</span>(api) {</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">// api is the live ixMaps map object</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>    api<span class="op">.</span><span class="fu">changeThemeStyle</span>(<span class="st">"layerName"</span><span class="op">,</span> <span class="st">"filter:WHERE year == 2024"</span><span class="op">,</span> <span class="st">"set"</span>)<span class="op">;</span></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>    api<span class="op">.</span><span class="fu">removeTheme</span>(<span class="st">"prevTheme"</span>)<span class="op">;</span></span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>    api<span class="op">.</span><span class="fu">setBasemapOpacity</span>(<span class="fl">0.3</span><span class="op">,</span> <span class="st">"absolute"</span>)<span class="op">;</span></span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>})<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<section id="api.changethemestylename-stylestring-mode" class="level3">
+<h3 class="anchored" data-anchor-id="api.changethemestylename-stylestring-mode"><code>api.changeThemeStyle(name, styleString, mode)</code></h3>
+<p>Modify a style property on a live layer and trigger re-render.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb19"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>myMap<span class="op">.</span><span class="fu">then</span>(api <span class="kw">=&gt;</span> {</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>    api<span class="op">.</span><span class="fu">changeThemeStyle</span>(<span class="st">"cities"</span><span class="op">,</span> <span class="st">"filter:WHERE pop &gt; 500000"</span><span class="op">,</span> <span class="st">"set"</span>)<span class="op">;</span></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>    api<span class="op">.</span><span class="fu">changeThemeStyle</span>(<span class="st">"cities"</span><span class="op">,</span> <span class="st">"filter"</span><span class="op">,</span> <span class="st">"remove"</span>)<span class="op">;</span>          <span class="co">// clear filter</span></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>    api<span class="op">.</span><span class="fu">changeThemeStyle</span>(<span class="st">"cities"</span><span class="op">,</span> <span class="st">"scale:1.2"</span><span class="op">,</span> <span class="st">"set"</span>)<span class="op">;</span></span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>    api<span class="op">.</span><span class="fu">changeThemeStyle</span>(<span class="st">"cities"</span><span class="op">,</span> <span class="st">"gridwidthpx:1.1"</span><span class="op">,</span> <span class="st">"factor"</span>)<span class="op">;</span> <span class="co">// multiply by 1.1</span></span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>})<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Mode</th>
+<th>Effect</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>"set"</code></td>
+<td>Replace the property value</td>
+</tr>
+<tr class="even">
+<td><code>"remove"</code></td>
+<td>Delete the property entirely</td>
+</tr>
+<tr class="odd">
+<td><code>"factor"</code></td>
+<td>Multiply the current numeric value by the given factor</td>
+</tr>
+<tr class="even">
+<td><code>"set\|silent"</code></td>
+<td>Set without triggering a redraw</td>
+</tr>
+</tbody>
+</table>
+<div class="callout callout-style-simple callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Important</span>Requires <code>name</code> in <code>.meta()</code>
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><code>changeThemeStyle</code> finds themes by the <code>name</code> key in <code>.meta()</code>. Without it, the call silently has no effect.</p>
+</div>
+</div>
+</section>
+<section id="api.removethemename" class="level3">
+<h3 class="anchored" data-anchor-id="api.removethemename"><code>api.removeTheme(name)</code></h3>
+<p>Remove a layer by its <code>meta.name</code>. Use this before redefining an overlay to prevent stacking:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb20"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="kw">let</span> ACTIVE <span class="op">=</span> <span class="kw">null</span><span class="op">;</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">showYear</span>(year) {</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> themeName <span class="op">=</span> <span class="st">"year-"</span> <span class="op">+</span> year<span class="op">;</span></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> prev <span class="op">=</span> ACTIVE<span class="op">;</span></span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>    myMap<span class="op">.</span><span class="fu">then</span>(api <span class="kw">=&gt;</span> {</span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> (prev) { <span class="cf">try</span> { api<span class="op">.</span><span class="fu">removeTheme</span>(prev)<span class="op">;</span> } <span class="cf">catch</span>(e) {} }</span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>        myMap<span class="op">.</span><span class="fu">layer</span>(<span class="st">"countries"</span>)</span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>            <span class="op">.</span><span class="fu">data</span>({ <span class="dt">obj</span><span class="op">:</span> yearData[year]<span class="op">,</span> <span class="dt">type</span><span class="op">:</span> <span class="st">"json"</span> })</span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a>            <span class="op">.</span><span class="fu">binding</span>({ <span class="dt">geo</span><span class="op">:</span> <span class="st">"lat|lon"</span><span class="op">,</span> <span class="dt">value</span><span class="op">:</span> <span class="st">"metric"</span> })</span>
+<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a>            <span class="op">.</span><span class="fu">type</span>(<span class="st">"CHART|BUBBLE|SIZE|VALUES"</span>)</span>
+<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a>            <span class="op">.</span><span class="fu">style</span>({ <span class="dt">colorscheme</span><span class="op">:</span> [<span class="st">"#0066cc"</span>]<span class="op">,</span> <span class="dt">showdata</span><span class="op">:</span> <span class="st">"true"</span> })</span>
+<span id="cb20-13"><a href="#cb20-13" aria-hidden="true" tabindex="-1"></a>            <span class="op">.</span><span class="fu">meta</span>({ <span class="dt">name</span><span class="op">:</span> themeName<span class="op">,</span> <span class="dt">tooltip</span><span class="op">:</span> <span class="st">"{{name}}: {{metric}}"</span> })</span>
+<span id="cb20-14"><a href="#cb20-14" aria-hidden="true" tabindex="-1"></a>            <span class="op">.</span><span class="fu">define</span>()<span class="op">;</span></span>
+<span id="cb20-15"><a href="#cb20-15" aria-hidden="true" tabindex="-1"></a>        ACTIVE <span class="op">=</span> themeName<span class="op">;</span></span>
+<span id="cb20-16"><a href="#cb20-16" aria-hidden="true" tabindex="-1"></a>    })<span class="op">;</span></span>
+<span id="cb20-17"><a href="#cb20-17" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="ixmaps.hidethemename-ixmaps.showthemename" class="level3">
+<h3 class="anchored" data-anchor-id="ixmaps.hidethemename-ixmaps.showthemename"><code>ixmaps.hideTheme(name)</code> / <code>ixmaps.showTheme(name)</code></h3>
+<p>Toggle layer visibility by <code>meta.name</code>. For initially hidden layers, use <code>visible: false</code> in <code>.style()</code>:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb21"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>myMap<span class="op">.</span><span class="fu">layer</span>(<span class="st">"overlay"</span>)</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">style</span>({ <span class="op">...,</span> <span class="dt">visible</span><span class="op">:</span> <span class="kw">false</span> })</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">meta</span>({ <span class="dt">name</span><span class="op">:</span> <span class="st">"overlay"</span> })</span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">define</span>()<span class="op">;</span></span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a><span class="co">// Later:</span></span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>ixmaps<span class="op">.</span><span class="fu">showTheme</span>(<span class="st">"overlay"</span>)<span class="op">;</span></span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>ixmaps<span class="op">.</span><span class="fu">hideTheme</span>(<span class="st">"overlay"</span>)<span class="op">;</span></span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a><span class="co">// Checkbox toggle:</span></span>
+<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a><span class="co">// &lt;input type="checkbox" onchange="this.checked ? ixmaps.showTheme('overlay') : ixmaps.hideTheme('overlay')"&gt;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="ixmaps.getzoom-ixmaps.getcenter" class="level3">
+<h3 class="anchored" data-anchor-id="ixmaps.getzoom-ixmaps.getcenter"><code>ixmaps.getZoom()</code> / <code>ixmaps.getCenter()</code></h3>
+<p>Global helpers — call directly without <code>.then()</code>:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb22"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> z <span class="op">=</span> ixmaps<span class="op">.</span><span class="fu">getZoom</span>()<span class="op">;</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> c <span class="op">=</span> ixmaps<span class="op">.</span><span class="fu">getCenter</span>()<span class="op">;</span>  <span class="co">// { lat, lng }</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="api.getbounds" class="level3">
+<h3 class="anchored" data-anchor-id="api.getbounds"><code>api.getBounds()</code></h3>
+<p>Returns a flat 4-element array <code>[swLat, swLng, neLat, neLng]</code>:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb23"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>myMap<span class="op">.</span><span class="fu">then</span>(<span class="kw">function</span>(m) {</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> bounds <span class="op">=</span> m<span class="op">.</span><span class="fu">getBounds</span>()<span class="op">;</span></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="op">!</span>bounds <span class="op">||</span> bounds<span class="op">.</span><span class="at">length</span> <span class="op">!==</span> <span class="dv">4</span>) <span class="cf">return</span><span class="op">;</span></span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> [swLat<span class="op">,</span> swLng<span class="op">,</span> neLat<span class="op">,</span> neLng] <span class="op">=</span> bounds<span class="op">;</span></span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>})<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<hr>
+</section>
+</section>
+<section id="projections" class="level2">
+<h2 class="anchored" data-anchor-id="projections">Projections</h2>
+<p>All projections use SVG-based rendering. Omit <code>mapProjection</code> for the default Web Mercator / Leaflet tile setup.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th><code>mapProjection</code></th>
+<th>Alias</th>
+<th>Projection</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><em>(omit)</em></td>
+<td>—</td>
+<td>Web Mercator (Leaflet tiles)</td>
+</tr>
+<tr class="even">
+<td><code>"mercator"</code></td>
+<td>—</td>
+<td>Mercator (SVG, no tiles)</td>
+</tr>
+<tr class="odd">
+<td><code>"winkel"</code></td>
+<td>—</td>
+<td>Winkel Tripel</td>
+</tr>
+<tr class="even">
+<td><code>"equalearth"</code></td>
+<td>—</td>
+<td>Equal Earth</td>
+</tr>
+<tr class="odd">
+<td><code>"albersequalarea"</code></td>
+<td><code>"albers"</code></td>
+<td>Albers Equal-Area Conic</td>
+</tr>
+<tr class="even">
+<td><code>"lambertazimuthalequalarea"</code></td>
+<td><code>"lambert"</code></td>
+<td>Lambert Azimuthal Equal-Area (EPSG:3035)</td>
+</tr>
+<tr class="odd">
+<td><code>"orthographic"</code></td>
+<td>—</td>
+<td>Orthographic (globe)</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>Lookup is <strong>case-insensitive</strong></li>
+<li>For any projection: <code>.view()</code> <strong>must</strong> use array syntax <code>.view([lat, lng], zoom)</code></li>
+<li>Set <code>mapType</code> to a hex color (<code>"#0a1929"</code>, <code>"white"</code>, <code>"dark"</code>) as background — do not use CSS <code>background</code> on <code>#map</code></li>
+</ul>
+<p><strong>Lambert (Eurostat-style Europe):</strong></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb24"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> myMap <span class="op">=</span> ixmaps<span class="op">.</span><span class="fu">Map</span>(<span class="st">"map"</span><span class="op">,</span> {</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>    <span class="dt">mapType</span><span class="op">:</span>       <span class="st">"white"</span><span class="op">,</span></span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">mapProjection</span><span class="op">:</span> <span class="st">"lambert"</span><span class="op">,</span></span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">mode</span><span class="op">:</span>          <span class="st">"info"</span><span class="op">,</span></span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">legend</span><span class="op">:</span>        <span class="st">"closed"</span><span class="op">,</span></span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>    <span class="dt">tools</span><span class="op">:</span>         <span class="kw">false</span></span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">view</span>([<span class="fl">53.4</span><span class="op">,</span> <span class="fl">16.9</span>]<span class="op">,</span> <span class="fl">3.7</span>)</span>
+<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">options</span>({ <span class="dt">basemapopacity</span><span class="op">:</span> <span class="dv">0</span><span class="op">,</span> <span class="dt">flushChartDraw</span><span class="op">:</span> <span class="dv">1000000</span> })<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<hr>
+</section>
+<section id="geometry-sources-quick-reference" class="level2">
+<h2 class="anchored" data-anchor-id="geometry-sources-quick-reference">Geometry sources (quick reference)</h2>
+<p><strong>World countries (GISCO):</strong></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb25"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">data</span>({ <span class="dt">url</span><span class="op">:</span> <span class="st">"https://gisco-services.ec.europa.eu/distribution/v2/countries/topojson/CNTR_RG_60M_2020_4326.json"</span><span class="op">,</span> <span class="dt">type</span><span class="op">:</span> <span class="st">"topojson"</span> })</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">binding</span>({ <span class="dt">geo</span><span class="op">:</span> <span class="st">"geometry"</span><span class="op">,</span> <span class="dt">id</span><span class="op">:</span> <span class="st">"CNTR_ID"</span><span class="op">,</span> <span class="dt">title</span><span class="op">:</span> <span class="st">"NAME_ENGL"</span> })</span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a><span class="co">// Scales: 60M (world) · 20M · 10M · 3M · 1M (country)</span></span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a><span class="co">// ⚠️ Join field is CNTR_ID, NOT CNTR_CODE</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>Italy municipalities (ISTAT 2024-compatible):</strong></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb26"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">data</span>({ <span class="dt">url</span><span class="op">:</span> <span class="st">"https://raw.githubusercontent.com/gjrichter/geo/0153a0e14da5dae877b8c94d6deb11f210d4660a/italy/boundaries/italy_istat_municipalities_4326_500m.topojson"</span><span class="op">,</span> <span class="dt">type</span><span class="op">:</span> <span class="st">"topojson"</span> })</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">binding</span>({ <span class="dt">geo</span><span class="op">:</span> <span class="st">"geometry"</span><span class="op">,</span> <span class="dt">id</span><span class="op">:</span> <span class="st">"com_istat_code_num"</span><span class="op">,</span> <span class="dt">title</span><span class="op">:</span> <span class="st">"name"</span> })</span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a><span class="co">// com_istat_code_num = integer 28001 (use for joins with ISTAT CSVs)</span></span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a><span class="co">// com_istat_code     = zero-padded string "028001"</span></span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a><span class="co">// ⚠️ Add flushPaintShape: 1000000 to .options() for all ~8000 polygons</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>Germany LAU municipalities:</strong></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb27"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">data</span>({ <span class="dt">url</span><span class="op">:</span> <span class="st">"https://cdn.jsdelivr.net/gh/gjrichter/geo@028b3fe/lau/germany_lau_2021_4326.topojson"</span><span class="op">,</span> <span class="dt">type</span><span class="op">:</span> <span class="st">"topojson"</span> })</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">binding</span>({ <span class="dt">geo</span><span class="op">:</span> <span class="st">"geometry"</span><span class="op">,</span> <span class="dt">id</span><span class="op">:</span> <span class="st">"LAU_ID"</span><span class="op">,</span> <span class="dt">title</span><span class="op">:</span> <span class="st">"LAU_NAME"</span> })</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>NUTS1–3 (Eurostat):</strong></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb28"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">data</span>({ <span class="dt">url</span><span class="op">:</span> <span class="st">"https://gisco-services.ec.europa.eu/distribution/v2/nuts/topojson/NUTS_RG_60M_2021_4326_LEVL_1.json"</span><span class="op">,</span> <span class="dt">type</span><span class="op">:</span> <span class="st">"topojson"</span> })</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">binding</span>({ <span class="dt">geo</span><span class="op">:</span> <span class="st">"geometry"</span><span class="op">,</span> <span class="dt">id</span><span class="op">:</span> <span class="st">"NUTS_ID"</span><span class="op">,</span> <span class="dt">title</span><span class="op">:</span> <span class="st">"NUTS_NAME"</span> })</span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a><span class="co">// For a single country: .filter('WHERE CNTR_CODE == "DE"')</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./map_types.html" class="pagination-link" aria-label="Map Types, Sizing &amp; Colors">
+        <span class="nav-page-text">Map Types, Sizing &amp; Colors</span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/gjrichter/ixmaps-flat/issues/new" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div></div></div></footer></body></html>

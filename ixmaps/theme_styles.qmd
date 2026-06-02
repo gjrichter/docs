@@ -1,0 +1,455 @@
+---
+title: "Style Properties"
+---
+
+Complete reference for `.style({...})` properties in ixMaps layer definitions.
+
+:::{.callout-important}
+## `showdata: "true"` is always required
+Every layer that should render anything must include `showdata: "true"` in its `.style()`. Without it, data loads and processes but the draw phase never starts — no error, just silence.
+:::
+
+---
+
+## Core properties
+
+| Property | Type | Description |
+|----------|------|-------------|
+| `showdata` | string | **Required.** Must be the string `"true"` |
+| `colorscheme` | array / string | Color palette — see [Color Schemes](map_types.qmd#color-schemes) |
+| `fillopacity` | number (0–1) | Fill opacity. **Prefer `fillopacity` over `opacity`** |
+| `linecolor` | string / array | Polygon border color or flow-line color. Single string or `["#from","#to"]` for `VECTOR\|GRADIENT` |
+| `linewidth` | number | Border / stroke width in pixels |
+| `scale` | number | Uniform size multiplier. Start at `1` |
+| `visible` | boolean | `false` = layer starts hidden (toggle with `showTheme`/`hideTheme`) |
+
+:::{.callout-warning}
+## Never use these properties
+- `opacity` — use `fillopacity`
+- `fillcolor` — use `colorscheme: ["#hex"]`
+- `strokecolor` / `strokewidth` — use `linecolor` / `linewidth`
+:::
+
+---
+
+## Sizing properties
+
+| Property | Type | Description |
+|----------|------|-------------|
+| `normalsizevalue` | string | Data value that maps to "normal" display size. **Higher = smaller bubbles** (most data values fall below it). E.g. `"1000"` → smaller than `"300"` |
+| `sizepow` | number | Power curve for size scaling. `2` = quadratic (exaggerates contrast) |
+| `rangescale` | number | Scale factor applied after range computation |
+| `minvaluesize` | number | Minimum pixel size below which no symbol is drawn |
+| `scale` | number | Simple multiplier on top of all sizing logic |
+| `gridwidth` | string | Grid cell size for aggregate layers, e.g. `"5px"` |
+| `gridwidthpx` | string | Grid cell width in pixels (supports `"factor"` mode in `changeThemeStyle`) |
+| `normalsizevalue` with `\|GLOW` | — | Start with a **smaller `scale`** (e.g. `0.32`) to compensate for the glow halo |
+
+---
+
+## Classification and ranges
+
+| Property | Type | Description |
+|----------|------|-------------|
+| `ranges` | string / array | Explicit class breaks: `n+1` values for `n` classes |
+| `rangecentervalue` | number | Diverging scale center. Requires an **even** number of colors |
+| `values` | array | Category list for `CATEGORICAL`. **Must be strings** (numeric values are silently ignored) |
+| `valuedecimals` | number | Decimal places for rendered value labels |
+| `units` | string | String appended to value labels, e.g. `"%"`, `"€"` |
+
+**Explicit class breaks example:**
+```javascript
+.type("CHOROPLETH|EQUIDISTANT")
+.style({
+    colorscheme: ["#ffffcc","#c7e9b4","#41b6c4","#2c7fb8","#253494"],
+    ranges:      "0,100,500,1000,5000,10000",
+    showdata:    "true"
+})
+```
+
+**Diverging scale example:**
+```javascript
+.style({
+    colorscheme:      ["#d73027","#f46d43","#fdae61","#abd9e9","#74add1","#4575b4"],
+    rangecentervalue: 0,
+    showdata:         "true"
+})
+```
+
+---
+
+## Label and text properties
+
+| Property | Type | Description |
+|----------|------|-------------|
+| `textscale` | number | Scale factor for label text on the chart |
+| `fontsize` | string | Font size (e.g. `"12"`) |
+| `fontfamily` | string | Font family (e.g. `"Arial"`) |
+| `fontweight` | string | Font weight (e.g. `"bold"`) |
+| `textcolor` | string | Text color |
+| `titlefield` | string | Data column used as chart title label (overrides `binding.title`) |
+| `datafields` | array | Extra fields for `{{theme.item.data}}` table: `["field1","field2"]` |
+
+---
+
+## Dynamic opacity properties
+
+| Property | Type | Description |
+|----------|------|-------------|
+| `dopacitypow` | number | Power curve exponent for `DOPACITY` opacity mapping (default ≈ 1) |
+| `dopacityscale` | number | Multiplier stretching the opacity range |
+| `dopacityramp` | string | Ramp type for dynamic opacity: `"linear"` (default) or `"exponential"` |
+
+For dynamic opacity, add `\|DOPACITYMAX` or `\|DOPACITYMINMAX` to the type string and an `alpha` field to `.binding()`:
+
+```javascript
+.binding({ geo: "lat|lon", value: "count", alpha: "density" })
+.type("CHART|BUBBLE|SIZE|DOPACITYMAX")
+```
+
+---
+
+## Scale-dependent visibility
+
+| Property | Type | Description |
+|----------|------|-------------|
+| `chartupper` | string | Hide layer when map scale denominator is **larger** (more zoomed out) than this value |
+| `chartlower` | string | Hide layer when map scale denominator is **smaller** (more zoomed in) than this value |
+| `boxupper` | string | Scale at which a box background becomes visible, e.g. `"1:250000"` |
+| `boxlower` | string | Scale at which a box background is hidden |
+| `valuesupper` | string | Scale-dependent value label visibility upper threshold |
+| `valueslower` | string | Scale-dependent value label visibility lower threshold |
+
+```javascript
+.style({
+    chartupper: "1:5000",   // hide when zoomed out past 1:5000
+    chartlower: "1:500"     // hide when zoomed in past 1:500
+})
+```
+
+:::{.callout-warning}
+## Use `chartupper`/`chartlower`, not `clipupper`/`cliplower`
+`clipupper` and `cliplower` are not valid style properties and are silently ignored.
+:::
+
+---
+
+## Symbol and chart properties
+
+| Property | Type | Description |
+|----------|------|-------------|
+| `align` | string | Chart anchor: `"left"` · `"right"` · `"top"` · `"bottom"` · `"above"` · `"below"` |
+| `rotation` | number | Rotate chart symbol in degrees |
+| `sizefield` | string | Data column driving symbol SIZE independently from the `value` (color) field |
+| `aggregationfield` | string | Field used as aggregation key when `AGGREGATE` is set |
+| `userdraw` | string | Name of custom draw function for `CHART\|USER` type |
+
+---
+
+## Sparkline-specific properties
+
+| Property | Type | Description |
+|----------|------|-------------|
+| `xaxis` | array | X-axis labels, e.g. `["2020","2021","2022","2023"]` |
+| `label` | array | Category labels (for `BOX\|GRID\|XAXIS` display) |
+| `markersize` | number | `LASTARROW` arrow head size (default ~8; use 1–3 for smaller) |
+
+---
+
+## Aggregate / grid properties
+
+| Property | Type | Description |
+|----------|------|-------------|
+| `gridwidth` | string | Grid cell size, e.g. `"5px"` |
+| `gridwidthpx` | string | Grid cell width in pixels; supports `"factor"` mode |
+| `gridx` | number | Values per bar group in `CHART\|BAR\|STACKED` (`gridx:2` → 2 segments per bar) |
+
+---
+
+## Line styling properties
+
+These SVG stroke properties apply to line and polygon outline rendering:
+
+| Property | Type | Description | Example |
+|----------|------|-------------|---------|
+| `dasharray` | string | SVG stroke-dasharray pattern | `"5,5"` (dashes) · `"10,3,3,3"` (dash-dot) |
+| `dashoffset` | number | SVG stroke-dashoffset | `"0"` |
+| `linecap` | string | Line end cap style | `"round"` · `"square"` · `"butt"` |
+| `linejoin` | string | Line join style | `"round"` · `"miter"` · `"bevel"` |
+
+```javascript
+.style({
+    linecolor:  "#0066cc",
+    linewidth:  2,
+    dasharray:  "6,4",      // dashed outline
+    linecap:    "round",
+    showdata:   "true"
+})
+```
+
+---
+
+## Visual effect properties
+
+| Property | Type | Description |
+|----------|------|-------------|
+| `blur` | number | Gaussian blur radius in pixels |
+
+---
+
+## Position and offset properties
+
+| Property | Type | Description |
+|----------|------|-------------|
+| `offsetx` | number | Horizontal offset of the chart symbol in pixels |
+| `offsety` | number | Vertical offset of the chart symbol in pixels |
+
+---
+
+## Value range properties
+
+| Property | Type | Description |
+|----------|------|-------------|
+| `minvalue` | number | Clamp: suppress rendering for values below this threshold |
+| `maxvalue` | number | Clamp: suppress rendering for values above this threshold |
+| `lowvalue` | number | Low value threshold (visual emphasis, not suppression) |
+| `highvalue` | number | High value threshold (visual emphasis) |
+
+```javascript
+.style({
+    minvalue: 100,     // don't render features with value < 100
+    maxvalue: 500000,  // don't render features with value > 500 000
+    showdata: "true"
+})
+```
+
+---
+
+## Advanced lookup options
+
+When the geometry id field and data join key need normalization before matching:
+
+| Property | Type | Description |
+|----------|------|-------------|
+| `lookuptonumber` | boolean | Convert the lookup field value to a number before matching |
+| `lookuptoupper` | boolean | Convert to uppercase before matching |
+| `lookupsuffix` | string | Append a suffix to the lookup value before matching |
+| `lookupdigits` | number | Zero-pad the lookup value to this many digits |
+
+Example: data has `"028001"` (zero-padded 6-digit string) but geometry has integer `28001`:
+```javascript
+.style({ lookuptonumber: true, showdata: "true" })
+```
+
+---
+
+## Additional units variants
+
+| Property | Type | Description |
+|----------|------|-------------|
+| `labelunits` | string | Units appended to label text |
+| `sizevalueunits` | string | Units for the size value field |
+| `legendunits` | string | Units shown in the legend |
+
+---
+
+## Feature layer notes
+
+Styling behaviour depends on geometry type:
+
+- **Line features** — `colorscheme` sets the stroke / line color. `linecolor` is overridden by `colorscheme` and has no effect on lines.
+- **Polygon features** — `colorscheme` sets the **fill** color; `linecolor` sets the **border** color; `fillopacity` controls fill transparency.
+
+**Making a fill invisible:**
+```javascript
+colorscheme: ["none"]   // ✅ correct
+// fillopacity: 0        // ❌ may cause errors on polygon layers
+```
+
+---
+
+## Complete style example
+
+```javascript
+// FEATURE base layer
+myMap.layer("regions")
+    .data({ url: "regions.topojson", type: "topojson" })
+    .binding({ geo: "geometry", id: "reg_code", title: "reg_name" })
+    .type("FEATURE")
+    .style({
+        colorscheme: ["#ccc"],
+        fillopacity: 0.3,
+        linecolor:   "#666",
+        linewidth:   0.5,
+        showdata:    "true"
+    })
+    .define();
+
+// CHOROPLETH overlay (same layer name "regions")
+myMap.layer("regions")
+    .data({ url: "stats.csv", type: "csv" })
+    .binding({ lookup: "code", value: "value" })
+    .type("CHOROPLETH|QUANTILE")
+    .style({
+        colorscheme:   ["#eef","#003f88"],
+        fillopacity:   0.75,
+        valuedecimals: 1,
+        units:         "%",
+        showdata:      "true"
+    })
+    .meta({ name: "choropleth", tooltip: "{{reg_name}}: {{value}}%" })
+    .define();
+```
+
+---
+
+## Alphabetical property reference
+
+All `.style()` properties drawn from the ixMaps source (`themeStyleTranslateA`). **Deprecated** properties have preferred replacements shown; **Required** means the layer will not render without it.
+
+| Property | Type | Description |
+|----------|------|-------------|
+| `aggregation` | string | Aggregation method override |
+| `aggregationfield` | string | Field used as aggregation key |
+| `aggregationlower` | string | Scale below which aggregation is hidden, e.g. `"1:50000"` |
+| `aggregationscale` | array | Multi-scale aggregation config, e.g. `["1:1","commune","1:1000000","province"]` |
+| `aggregationupper` | string | Scale above which aggregation is hidden |
+| `align` | string | Chart anchor: `"left"` · `"right"` · `"top"` · `"bottom"` · `"above"` · `"below"` |
+| `alphafield` | string | Data field driving DOPACITY alpha channel |
+| `alphavalueunits` | string | Units label for the alpha value field |
+| `autoopacity` | boolean | Automatic opacity scaling |
+| `autoscale` | boolean | Automatic scale adjustment |
+| `autosize` | boolean | Automatic size adjustment |
+| `blur` | number | Gaussian blur radius in pixels |
+| `bordercolor` | string | Background box border color |
+| `borderradius` | number | Background box corner radius in pixels |
+| `borderstyle` | string | Background box border style, e.g. `"solid"` |
+| `borderwidth` | number | Background box border width |
+| `boxcolor` | string | Background box fill color |
+| `boxlower` | string | Scale below which the box disappears |
+| `boxmargin` | number | Background box padding in pixels |
+| `boxopacity` | number | Background box fill opacity |
+| `boxupper` | string | Scale above which the box disappears, e.g. `"1:250000"` |
+| `brightness` | number | Brightness multiplier |
+| `centerpart` | string | Center part flag |
+| `chartupper` | string | Hide chart when scale denominator > this value |
+| `chartlower` | string | Hide chart when scale denominator < this value |
+| `colorscheme` | array / string | Color palette — single hex, gradient array, or named scheme |
+| `dasharray` | string | SVG stroke-dasharray pattern, e.g. `"5,5"` or `"10,3,3,3"` |
+| `dashoffset` | number | SVG stroke-dashoffset |
+| `datafields` | array | Fields shown in `{{theme.item.data}}` tooltip table |
+| `declutterupper` | string | Scale above which label decluttering activates |
+| `dopacitypow` | number | Power curve exponent for DOPACITY mapping |
+| `dopacityramp` | string | DOPACITY ramp: `"linear"` (default) or `"exponential"` |
+| `dopacityscale` | number | Multiplier stretching the DOPACITY range |
+| `dominantfilter` | string | Filter expression for dominant-value logic |
+| `dominantdfilter` | number | Delta filter for dominant-value mode |
+| `evidence` | string | Evidence mode flag |
+| `exclude` | array | Values excluded from rendering |
+| `fadenegative` | number | Fade factor applied to negative values |
+| `fadevaluepow` | string | Power curve for value fade-out |
+| `featurelower` | string | Scale below which feature geometry is hidden |
+| `featureupper` | string | Scale above which feature geometry is hidden |
+| `~~fillcolor~~` | string | **Deprecated** — use `colorscheme: ["#hex"]` |
+| `fillopacity` | number (0–1) | Fill opacity — **prefer over `opacity`** |
+| `fontfamily` | string | Label font family |
+| `fontsize` | string | Label font size, e.g. `"12"` |
+| `fontstyle` | string | Label font style, e.g. `"italic"` |
+| `fontweight` | string | Label font weight, e.g. `"bold"` |
+| `gapsize` | number | Gap between chart elements in pixels |
+| `glowlower` | string | Scale below which the glow effect is hidden |
+| `glowupper` | string | Scale above which the glow effect is hidden |
+| `gridmatrix` | number | Grid matrix mode |
+| `gridoffsetx` | number | Grid X offset |
+| `gridoffsety` | number | Grid Y offset |
+| `gridwidth` | string | Grid cell size, e.g. `"5px"` |
+| `gridwidthpx` | string | Grid cell width in pixels; supports `"factor"` mode in `changeThemeStyle` |
+| `gridx` | number | Values per bar group in `CHART\|BAR\|STACKED` |
+| `highvalue` | number | High value threshold (visual emphasis, not suppression) |
+| `infotitle` | string | Info panel title text |
+| `label` | array | Category labels for sparkline `BOX\|GRID\|XAXIS` display |
+| `labellower` | string | Scale below which labels are hidden |
+| `labelunits` | string | Units appended to label text |
+| `labelupper` | string | Scale above which labels are hidden |
+| `layerlower` | string | Scale below which the entire layer is hidden |
+| `layerupper` | string | Scale above which the entire layer is hidden |
+| `legendunits` | string | Units shown in the legend |
+| `linecap` | string | Line end cap: `"round"` · `"square"` · `"butt"` |
+| `linecolor` | string / array | Polygon border color; `["#from","#to"]` for `VECTOR\|GRADIENT` |
+| `linejoin` | string | Line join: `"round"` · `"miter"` · `"bevel"` |
+| `linewidth` | number | Border / stroke width in pixels |
+| `lookupdigits` | number | Zero-pad the lookup value to this many digits |
+| `lookupfield` | string | Geographic join field name |
+| `lookuptonumber` | boolean | Convert lookup value to number before matching |
+| `lookupsuffix` | string | Suffix appended to lookup value before matching |
+| `lookuptoupper` | boolean | Convert lookup value to uppercase before matching |
+| `lowvalue` | number | Low value threshold (visual emphasis, not suppression) |
+| `markclass` | number | Highlighted class index |
+| `markclasses` | array | Array of highlighted class indices |
+| `markersize` | number | `LASTARROW` arrow head size (default ~8) |
+| `maxvalue` | number | Suppress rendering for values above this threshold |
+| `minaggregation` | string | Minimum scale denominator for aggregation |
+| `minvalue` | number | Suppress rendering for values below this threshold |
+| `minvaluesize` | number | Minimum pixel size — no symbol drawn below this |
+| `nodatacolor` | string | Color for features with no joined data, e.g. `"#ccc"` |
+| `normalsizevalue` | string | Reference data value mapping to nominal display size |
+| `offsetx` | number | Horizontal symbol offset in pixels |
+| `offsety` | number | Vertical symbol offset in pixels |
+| `~~opacity~~` | number | **Deprecated** — use `fillopacity` |
+| `outlierscale` | number | Scale factor applied to outlier values |
+| `overviewchart` | string | Overview chart mode flag |
+| `rangecentervalue` | number | Diverging scale center value — requires even color count |
+| `rangescale` | number | Scale factor applied after range computation |
+| `ranges` | string / array | Explicit class breaks: `n+1` values for `n` classes |
+| `rotation` | number | Symbol rotation in degrees |
+| `scale` | number | Direct size multiplier on top of all sizing logic |
+| `shadow` | boolean | Drop shadow flag |
+| `shadowblur` | number | Shadow blur radius |
+| `shadowcolor` | string | Shadow color |
+| `shadowlower` | string | Scale below which shadow is hidden |
+| `shadowoffsetx` | number | Shadow X offset |
+| `shadowoffsety` | number | Shadow Y offset |
+| `shadowopacity` | number | Shadow opacity |
+| `shadowupper` | string | Scale above which shadow is hidden |
+| `showdata` | string | **Required** — must be `"true"` for any rendering to occur |
+| `sizefield` | string | Data field driving symbol size independently of value (color) field |
+| `sizepow` | number | Power curve for size scaling — `2` = square root (default) |
+| `sizevalueunits` | string | Units for the size value field |
+| `snippetfield` | string | Data field used as subtitle / snippet |
+| `~~strokecolor~~` | string | **Deprecated** — use `linecolor` |
+| `~~strokewidth~~` | number | **Deprecated** — use `linewidth` |
+| `symbols` | array | Symbol shape list for multi-symbol layers, e.g. `["circle","square"]` |
+| `symbolvalues` | array | Symbol values array |
+| `textcolor` | string | Label / value text color |
+| `textplacement` | string | Label placement hint |
+| `textscale` | number | Scale factor for label text |
+| `timefield` | string | Field name driving time-series animation |
+| `titlefield` | string | Data field used as chart title label |
+| `titlelower` | string | Scale below which titles are hidden |
+| `titleunits` | string | Title units label |
+| `titleupper` | string | Scale above which titles are hidden |
+| `units` | string | Units appended to value labels, e.g. `"%"`, `"€"` |
+| `units100` | string | Units for 100%-normalised values |
+| `userdraw` | string | Name of custom D3 draw function (requires `CHART\|USER` type) |
+| `valuecolor` | string | Value label color |
+| `valuedecimals` | number | Decimal places for rendered value labels |
+| `valuelower` | string | Scale below which value labels are hidden |
+| `valuemap` | object | Key → display-value mapping object |
+| `valuescale` | number | Scale factor applied to displayed values |
+| `valueupper` | string | Scale above which value labels are hidden |
+| `values` | array | Category list for `CATEGORICAL` — **must be strings** |
+| `visible` | boolean | `false` = layer starts hidden; toggle with `showTheme`/`hideTheme` |
+| `weights` | string | Weight values for weighted aggregation |
+| `xaxis` | array | X-axis labels for sparklines, e.g. `["2020","2021","2022"]` |
+| `xfield` | string | Longitude data field (alternative to `geo` binding) |
+| `yfield` | string | Latitude data field (alternative to `geo` binding) |
+
+:::{.callout-note}
+## Deprecated aliases
+`fillcolor` → `colorscheme: ["#hex"]` · `strokecolor` → `linecolor` · `strokewidth` → `linewidth` · `opacity` → `fillopacity`
+:::
+
+:::{.callout-warning}
+## Invalid properties (silently ignored)
+`clipupper` and `cliplower` appear in some older documentation but are **not valid** style properties. Use `chartupper` / `chartlower` for scale-dependent chart visibility, or `layerupper` / `layerlower` for the full layer.
+:::

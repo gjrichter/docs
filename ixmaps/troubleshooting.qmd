@@ -1,0 +1,308 @@
+---
+title: "Troubleshooting"
+---
+
+When something goes wrong in ixMaps, it often fails silently — no error, no warning, just a blank map or missing data. This page covers the most common causes and fixes.
+
+---
+
+## Silent failure hotspots
+
+These produce **no error, no console message** — the map just silently renders wrong. Check these first.
+
+| # | What you did | What happens | Fix |
+|---|---|---|---|
+| 1 | Omitted `showdata: "true"` | Layer loads silently, nothing renders | Add `showdata: "true"` to every `.style()` |
+| 2 | Different layer name for overlay vs FEATURE base | Overlay renders nothing | Overlay name must match the FEATURE base name exactly |
+| 3 | Discarded `ixmaps.Map()` result | Map initialises partially; further calls fail | Always `const myMap = ixmaps.Map(...)` |
+| 4 | Omitted `name` in `.meta()` | `changeThemeStyle` / `hideTheme` / `showTheme` silently no-op | Add `name: "themeName"` to `.meta()` |
+| 5 | `changeThemeStyle` via `ixmaps.map()` | Returns `{szMap: null}`; no update | Use `myMap.then(api => api.changeThemeStyle(...))` |
+| 6 | Missing `.binding()` | Layer skipped entirely | `.binding()` with `geo` + `value` is required |
+| 7 | Missing `.define()` | Layer never registered | `.define()` must close every layer chain |
+| 8 | `objectscaling:"dynamic"` without `normalSizeScale` | All symbols invisible or wildly oversized | Add `normalSizeScale: "8000000"` (match to zoom) |
+| 9 | `removeTheme` not called before redefining overlay | Themes stack | Call `api.removeTheme(prev)` inside `myMap.then()` |
+| 10 | `values:` for CATEGORICAL contains numbers | Categories silently unmatched | Cast all `values:` to strings: `["1","2","3"]` |
+
+---
+
+## Map not displaying
+
+### Blank page or white screen
+
+1. **JavaScript error** — Open the browser console (F12) and look for red errors. Common causes: syntax errors, missing commas or brackets, typos in method names.
+
+2. **Library not loaded**
+   ```html
+   <script src="https://cdn.jsdelivr.net/gh/gjrichter/ixmaps-flat@master/ixmaps.js"></script>
+   ```
+
+3. **Map container has no height**
+   ```css
+   html, body { width: 100%; height: 100%; overflow: hidden; }
+   #map { width: 100%; height: 100%; }
+   ```
+   Never use `100vw` / `100vh` — they exceed the viewport when a scrollbar appears.
+
+4. **Invalid `mapType` name**
+   ```javascript
+   // ❌ Wrong:
+   mapType: "CartoDB Positron"     // missing spaces
+   mapType: "vt_toner_lite"        // wrong case
+
+   // ✅ Correct:
+   mapType: "CartoDB - Positron"
+   mapType: "VT_TONER_LITE"
+   ```
+
+5. **Reserved element IDs** — ixMaps owns `loading-div`, `tooltip`, `contextmenu`. Using them for your own elements causes visible artifacts (a white box stuck on the map). Rename your overlay to `app-loading` or similar.
+
+---
+
+## Data not showing
+
+### Map displays but no points or regions are visible
+
+The two-phase model: ixMaps loads and processes data (phase 1), then draws (phase 2). `showdata: "true"` is the gate that opens phase 2. Without it, data is fully loaded but never drawn.
+
+**Checklist:**
+
+1. **`showdata: "true"` missing** — most common issue
+   ```javascript
+   .style({ colorscheme: ["#0066cc"], showdata: "true" })
+   ```
+
+2. **`.binding()` missing or incorrect**
+   ```javascript
+   // ❌ Wrong:
+   .data({ obj: data, type: "json" })
+   .style({ ... })
+
+   // ✅ Correct:
+   .data({ obj: data, type: "json" })
+   .binding({ geo: "lat|lon", value: "count", title: "name" })
+   .type("CHART|BUBBLE|SIZE|VALUES")
+   .style({ showdata: "true" })
+   ```
+
+3. **`.define()` missing** — the layer chain must end with `.define()`
+
+4. **Data outside the visible map area** — zoom out to see if data appears elsewhere. Verify the map center/zoom matches the data's geographic location.
+
+5. **Coordinates invalid** — latitude must be −90 to 90, longitude −180 to 180. Check for swapped lat/lon, null values, or coordinates stored as strings instead of numbers.
+
+6. **Wrong visualization type for geometry**
+   - Point data → `CHART|...` types
+   - Polygon/line data → `FEATURE` or `CHOROPLETH`
+   - Do not combine `FEATURE` and `CHOROPLETH` on the **same** layer — use two layers with the same name
+
+### Some features show, some don't
+
+- **Mismatched join keys** — for choropleth joins, verify that the `lookup` field values exactly match the `id` field in the geometry (case-sensitive, type-sensitive: `"28001"` ≠ `28001`)
+- **Filter too restrictive** — temporarily remove `.filter()` to test
+- **ISTAT 2026 geometry with 2024 data** — pin the geometry URL to commit `0153a0e` for 2024-compatible codes
+
+---
+
+## Tooltips not working
+
+### No tooltips on hover
+
+1. **Missing `mode: "info"` in constructor** — this is a constructor-time decision; it cannot be added after init
+   ```javascript
+   // ❌ Wrong:
+   ixmaps.Map("map", { mapType: "VT_TONER_LITE" })
+
+   // ✅ Correct:
+   ixmaps.Map("map", { mapType: "VT_TONER_LITE", mode: "info" })
+   ```
+
+2. **Missing `.meta()`**
+   ```javascript
+   .meta({ tooltip: "{{theme.item.chart}}{{theme.item.data}}" })
+   ```
+
+3. **Wrong field names** — field names in tooltip templates are case-sensitive
+   ```javascript
+   // ❌ Wrong (GeoJSON):
+   tooltip: "{{properties.NAME}}"
+
+   // ✅ Correct:
+   tooltip: "{{NAME}}"
+   ```
+
+### Tooltip text is invisible on dark basemaps
+
+```css
+#tooltip { color: #e8eaf6 !important; }
+#tooltip * { color: #e8eaf6 !important; }
+```
+
+---
+
+## Styling issues
+
+### Colors not applying
+
+```javascript
+// ❌ Wrong property name:
+fillcolor: "#ff0000"
+
+// ✅ Correct:
+colorscheme: ["#ff0000"]
+```
+
+```javascript
+// ❌ Wrong type (string instead of array):
+colorscheme: "#ff0000"
+
+// ✅ Correct:
+colorscheme: ["#ff0000"]
+```
+
+### Symbols too small or too large
+
+1. Adjust `scale`:
+   ```javascript
+   .style({ scale: 2.0 })   // double size
+   .style({ scale: 0.5 })   // half size
+   ```
+
+2. Adjust `normalsizevalue` (lower = larger bubbles):
+   ```javascript
+   .style({ normalsizevalue: "500000" })  // smaller reference → bigger bubbles
+   ```
+
+3. Adjust `normalSizeScale` in `.options()` (must match initial zoom):
+   ```javascript
+   .options({ objectscaling: "dynamic", normalSizeScale: "8000000" })
+   ```
+
+### Diverging scale not centered
+
+Requires an **even** number of colors:
+```javascript
+// ❌ Wrong — 7 colors (odd):
+colorscheme: ["#d73027","#f46d43","#fdae61","#ffffbf","#abd9e9","#74add1","#4575b4"]
+
+// ✅ Correct — 6 colors (even):
+colorscheme: ["#d73027","#f46d43","#fdae61","#abd9e9","#74add1","#4575b4"],
+rangecentervalue: 0
+```
+
+---
+
+## Runtime API issues
+
+### `changeThemeStyle` has no effect
+
+1. **Missing `name` in `.meta()`** — `changeThemeStyle` finds themes by meta name, not by layer name
+   ```javascript
+   .meta({ name: "myLayer", tooltip: "..." })  // ✅ name required
+   ```
+
+2. **Called via wrong API**
+   ```javascript
+   // ❌ Wrong:
+   ixmaps.map().changeThemeStyle(...)  // returns {szMap:null}
+
+   // ✅ Correct:
+   myMap.then(api => api.changeThemeStyle("myLayer", "scale:1.5", "set"))
+   ```
+
+3. **Filter string quoting** — use double quotes for string values:
+   ```javascript
+   // ❌ Wrong — single quotes don't work:
+   m.changeThemeStyle("layer", "filter:WHERE type == 'A'", "set")
+
+   // ✅ Correct:
+   m.changeThemeStyle("layer", 'filter:WHERE type == "A"', "set")
+   ```
+
+### Overlays stack instead of replacing
+
+Missing `removeTheme()` before redefining:
+```javascript
+let ACTIVE = null;
+myMap.then(api => {
+    if (ACTIVE) api.removeTheme(ACTIVE);   // ← required
+    myMap.layer("base")
+        .data({ obj: newData, type: "json" })
+        // ...
+        .meta({ name: "theme-v2" })
+        .define();
+    ACTIVE = "theme-v2";
+});
+```
+
+---
+
+## Performance issues
+
+### Map loads slowly / browser freezes
+
+1. **Disable animation**
+   ```javascript
+   .options({ flushChartDraw: 1000000 })
+   ```
+
+2. **Add `flushPaintShape` for large polygon datasets** (municipalities, communes)
+   ```javascript
+   .options({ flushPaintShape: 1000000 })
+   ```
+
+3. **Use grid aggregation instead of individual points**
+   ```javascript
+   .type("CHART|BUBBLE|SIZE|AGGREGATE")
+   .style({ gridwidth: "5px", showdata: "true" })
+   ```
+
+4. **Use TopoJSON** — 80–90 % smaller than equivalent GeoJSON. Simplify with [mapshaper.org](https://mapshaper.org).
+
+---
+
+## Data hosting (CORS)
+
+### Local files blocked
+
+Browsers block loading `file://` URLs from JavaScript. Use a local dev server:
+
+```bash
+python3 -m http.server 8000   # Python 3
+npx http-server               # Node.js
+# then open http://localhost:8000/map.html
+```
+
+### CDN not updating after data push
+
+jsDelivr caches for 5–10 minutes. For development, use `raw.githubusercontent.com` (immediate, no cache). For production, use `cdn.jsdelivr.net/gh/` (fast, cached).
+
+---
+
+## CSS conflicts (Bootstrap)
+
+Bootstrap 3's `.hidden { display:none !important }` silently breaks ixMaps toolbar buttons, tooltips, and context menus.
+
+**Root fix:** Remove Bootstrap 3 and use standalone facet CSS (see the create-ixmap skill for the ~35-line replacement).
+
+**Fallback:** Higher-specificity overrides:
+```css
+.hidden[style*="display: flex"]  { display: flex   !important; }
+.hidden[style*="display: block"] { display: block  !important; }
+```
+
+---
+
+## Debugging checklist
+
+Work through this in order:
+
+1. ✅ Browser console (F12) — check for red errors
+2. ✅ ixMaps library `<script>` tag present
+3. ✅ Map `<div>` has explicit height via CSS
+4. ✅ `const myMap = ixmaps.Map(...)` — result assigned
+5. ✅ Every layer has `.binding()` with `geo` + `value`
+6. ✅ Every layer has `showdata: "true"` in `.style()`
+7. ✅ Every layer has `.meta({ tooltip: "..." })`
+8. ✅ Every layer ends with `.define()`
+9. ✅ Overlay layer name matches FEATURE base layer name
+10. ✅ Data coordinates are WGS84 (EPSG:4326), numeric, non-null

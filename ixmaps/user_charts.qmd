@@ -1,0 +1,156 @@
+---
+title: "User Charts"
+---
+
+ixMaps supports custom D3-based chart functions that replace the built-in symbol renderer. Two functions are currently available: `pinnacleChart` (vertical bar/pillar) and `arrowChart`.
+
+---
+
+## How custom chart functions work
+
+You write a JavaScript function, attach it to the `ixmaps` namespace, then reference it by name in `.style({ userdraw: "functionName" })`. ixMaps calls your function once per rendered feature, passing the SVG context and data.
+
+**Function signature:**
+```javascript
+ixmaps.myChart = function(SVGDocument, args) {
+    // args properties:
+    //   args.target   — the SVG group element to draw into
+    //   args.value    — the primary data value for this feature
+    //   args.values   — array of all values (for multi-value bindings)
+    //   args.theme    — theme object (contains style, color scheme, etc.)
+    //   args.item     — the raw data item/row
+    //   args.class    — color class index (maps to colorscheme)
+
+    var svg = d3.select(args.target);
+    // ... draw with D3 or SVG DOM methods ...
+
+    return { x: 0, y: 0 };  // optional offset for chaining
+};
+```
+
+:::{.callout-warning}
+## `userdraw` vs `chartdraw`
+The current flat API uses **`userdraw`** as the style property name. Older ixMaps documentation and the legacy API used `chartdraw` — this name is no longer valid with the flat API.
+:::
+
+---
+
+## Required scripts
+
+Three extra CDN scripts are required in addition to `ixmaps.js`:
+
+```html
+<script src="https://cdn.jsdelivr.net/gh/gjrichter/ixmaps-flat@master/ixmaps.js"></script>
+<script src="https://d3js.org/d3.v3.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/gjrichter/ixmaps-flat@master/usercharts/d3/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/gjrichter/ixmaps-flat@master/usercharts/d3/arrow_chart.js"></script>
+```
+
+Script load order relative to `ixmaps.js` does not matter.
+
+---
+
+## Type flags
+
+`CHART|USER` layers use several modifiers not found on other types:
+
+| Modifier | Role |
+|----------|------|
+| `DIFFERENCE` | Computes `value[1] − value[0]` from a `"a\|b"` binding |
+| `NONEGATIVE` | Suppresses rendering where computed value ≤ 0 (data still processed) |
+| `RELOCATE` | Snaps chart to geometry centroid |
+| `BOX` | Adds a background box behind the label |
+| `BOTTOMTITLE` | Places title below the chart symbol |
+| `NOLEGEND` | Excludes this layer from the map legend |
+
+---
+
+## pinnacleChart
+
+A vertical pillar/bar chart rendered at each feature location. Size encodes a numeric value.
+
+```javascript
+myMap.layer("comuni")
+    .data({ url: DATA_URL, type: "csv" })
+    .binding({ lookup: "cod_istat", value: "value", title: "name" })
+    .type("CHART|USER|3D|AGGREGATE|RECT|RELOCATE|SUM|VALUES|BOX|BOTTOMTITLE|NOLEGEND")
+    .style({
+        userdraw:         "pinnacleChart",
+        colorscheme:      ["#0066cc","#004499"],
+        normalsizevalue:  1000000,
+        sizepow:          2,
+        aggregationfield: "name",
+        titlefield:       "name",
+        showdata:         "true"
+    })
+    .meta({ name: "pinnacles", tooltip: "{{name}}: {{value}}" })
+    .define();
+```
+
+---
+
+## Split-winner pattern
+
+Two layers from the same dataset — one for each "winner" — without pre-filtering. The `DIFFERENCE` modifier computes `b − a`; `NONEGATIVE` skips locations where the difference is ≤ 0.
+
+```javascript
+// Layer A — shows locations where "sì" > "no"
+myMap.layer("comuni")
+    .data({ url: DATA_URL, type: "csv" })
+    .binding({ lookup: "cod_istat", value: "voti_no|voti_si", title: "comune" })
+    .type("CHART|USER|3D|DIFFERENCE|AGGREGATE|RECT|RELOCATE|SUM|VALUES|NONEGATIVE|BOX|BOTTOMTITLE|NOLEGEND")
+    .style({
+        userdraw:         "pinnacleChart",
+        colorscheme:      ["#2e7d32","#4caf50"],
+        normalsizevalue:  500000,
+        sizepow:          2,
+        aggregationfield: "comune",
+        titlefield:       "comune",
+        showdata:         "true"
+    })
+    .meta({ name: "si_wins", tooltip: "{{comune}}: Sì wins by {{$value}}" })
+    .define();
+
+// Layer B — shows locations where "no" > "sì" (binding order swapped)
+myMap.layer("comuni")
+    .data({ url: DATA_URL, type: "csv" })
+    .binding({ lookup: "cod_istat", value: "voti_si|voti_no", title: "comune" })
+    .type("CHART|USER|3D|DIFFERENCE|AGGREGATE|RECT|RELOCATE|SUM|VALUES|NONEGATIVE|BOX|BOTTOMTITLE|NOLEGEND")
+    .style({
+        userdraw:         "pinnacleChart",
+        colorscheme:      ["#b71c1c","#ef5350"],
+        normalsizevalue:  500000,
+        sizepow:          2,
+        aggregationfield: "comune",
+        titlefield:       "comune",
+        showdata:         "true"
+    })
+    .meta({ name: "no_wins", tooltip: "{{comune}}: No wins by {{$value}}" })
+    .define();
+```
+
+Binding order determines sign: `"a|b"` computes `b − a`. Swapping `a` and `b` between two layers gives "A wins" vs "B wins" without any data preprocessing.
+
+---
+
+## Invisible centroid anchor layer
+
+When `CHART|USER` layers need to snap to precise centroids (not grid positions), load a centroid geometry layer first without rendering it visually:
+
+```javascript
+myMap.layer("centroids")
+    .data({ url: CENTROIDS_GEOJSON_URL, type: "geojson" })
+    .binding({ geo: "geometry", id: "PRO_COM", title: "PRO_COM" })
+    .type("FEATURE|NOLEGEND")
+    .style({
+        colorscheme: ["none"],
+        scale:       0,          // scale:0 fully suppresses rendering for point geometry
+        fillopacity: 0,
+        linecolor:   "none",
+        linewidth:   0,
+        showdata:    "true"
+    })
+    .define();
+```
+
+For point geometry, `fillopacity: 0` alone still renders a tiny dot. `scale: 0` suppresses the draw entirely.

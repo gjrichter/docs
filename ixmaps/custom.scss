@@ -1,0 +1,112 @@
+/*-- scss:defaults --*/
+
+// iXmaps brand colors
+$primary: #1e90f0;
+$secondary: #1e538e;
+$success: #1DA63B;
+$info: #3FA6FE;
+$warning: #F5C428;
+$danger: #E64B23;
+$light: #f8f9fa;
+$dark: #2c3e50;
+
+// Typography
+$font-family-sans-serif: Inter, -apple-system, BlinkMacSystemFont, "avenir next", avenir, helvetica, "helvetica neue", ubuntu, roboto, noto, "segoe ui", arial, sans-serif;
+$headings-font-weight: 600;
+
+// Links
+$link-color: $primary;
+$link-hover-color: $secondary;
+
+// Code
+$code-bg: #f4f4f4;
+$code-color: #e64b23;
+
+/*-- scss:rules --*/
+
+// Custom navbar gradient
+.navbar {
+    background: linear-gradient(90deg, $primary 0%, $secondary 100%);
+    
+    .navbar-brand,
+    .nav-link {
+        color: white !important;
+    }
+}
+
+// Sidebar links - FORCE DARK COLOR
+.sidebar {
+    background: white !important;
+    
+    a,
+    .sidebar-item a,
+    .sidebar-item-text,
+    nav a {
+        color: #2c3e50 !important;
+        text-decoration: none !important;
+    }
+    
+    a:hover {
+        color: $primary !important;
+        background-color: rgba(30, 144, 240, 0.1) !important;
+    }
+    
+    .active a,
+    a.active {
+        color: $primary !important;
+        font-weight: 600 !important;
+        border-left: 3px solid $primary !important;
+        padding-left: 8px !important;
+    }
+}
+
+// Enhanced code blocks
+pre {
+    border-left: 4px solid $primary;
+    background: $light;
+}
+
+// Custom callout styling
+.callout {
+    border-radius: 8px;
+    
+    &.callout-tip {
+        border-left-color: $primary;
+        background-color: lighten($primary, 45%);
+    }
+    
+    &.callout-important {
+        border-left-color: $danger;
+        background-color: lighten($danger, 45%);
+    }
+    
+    &.callout-note {
+        border-left-color: $success;
+        background-color: lighten($success, 50%);
+    }
+    
+    &.callout-warning {
+        border-left-color: $warning;
+        background-color: lighten($warning, 45%);
+    }
+}
+
+// Table enhancements
+table {
+    th {
+        background-color: $primary;
+        color: white;
+    }
+    
+    tr:hover {
+        background-color: $light;
+    }
+}
+
+// TOC styling
+.sidebar nav[role="doc-toc"] ul > li > a.active {
+    border-left-color: $primary;
+    color: $primary;
+    font-weight: 600;
+}
+

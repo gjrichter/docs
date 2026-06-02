@@ -1,0 +1,2200 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.24">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Style Properties – ixMaps Documentation</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./chart_scaling.html" rel="next">
+<link href="./map_types.html" rel="prev">
+<link href="./pics/favicon.png" rel="icon" type="image/png">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-dc55a5b9e770e841cd82e46aadbfb9b0.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-ba3d7e3108b965ef4c6892bc29f4f97a.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="nav-sidebar docked nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a href="./index.html" class="navbar-brand navbar-brand-logo">
+    </a>
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">ixMaps Documentation</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link active" href="./index.html" aria-current="page"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./getting_started.html"> 
+<span class="menu-text">Quick Start</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./api_documentation.html"> 
+<span class="menu-text">API</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/gjrichter/ixmaps-flat"> <i class="bi bi-github" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./api_documentation.html">Reference</a></li><li class="breadcrumb-item"><a href="./theme_styles.html">Style Properties</a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+      <a href="./index.html" class="sidebar-logo-link">
+      </a>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Overview</span></a>
+  </div>
+</li>
+        <li class="px-0"><hr class="sidebar-divider hi "></li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">Getting Started</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./getting_started.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Quick Start</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="px-0"><hr class="sidebar-divider hi "></li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+ <span class="menu-text">Reference</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./api_documentation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">API Reference</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./map_types.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Map Types, Sizing &amp; Colors</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./theme_styles.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">Style Properties</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./chart_scaling.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Chart Scaling</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./user_charts.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">User Charts</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="px-0"><hr class="sidebar-divider hi "></li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./examples.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Examples</span></a>
+  </div>
+</li>
+        <li class="px-0"><hr class="sidebar-divider hi "></li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./troubleshooting.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Troubleshooting</span></a>
+  </div>
+</li>
+        <li class="px-0"><hr class="sidebar-divider hi "></li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./about.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">About</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#core-properties" id="toc-core-properties" class="nav-link active" data-scroll-target="#core-properties">Core properties</a></li>
+  <li><a href="#sizing-properties" id="toc-sizing-properties" class="nav-link" data-scroll-target="#sizing-properties">Sizing properties</a></li>
+  <li><a href="#classification-and-ranges" id="toc-classification-and-ranges" class="nav-link" data-scroll-target="#classification-and-ranges">Classification and ranges</a></li>
+  <li><a href="#label-and-text-properties" id="toc-label-and-text-properties" class="nav-link" data-scroll-target="#label-and-text-properties">Label and text properties</a></li>
+  <li><a href="#dynamic-opacity-properties" id="toc-dynamic-opacity-properties" class="nav-link" data-scroll-target="#dynamic-opacity-properties">Dynamic opacity properties</a></li>
+  <li><a href="#scale-dependent-visibility" id="toc-scale-dependent-visibility" class="nav-link" data-scroll-target="#scale-dependent-visibility">Scale-dependent visibility</a></li>
+  <li><a href="#symbol-and-chart-properties" id="toc-symbol-and-chart-properties" class="nav-link" data-scroll-target="#symbol-and-chart-properties">Symbol and chart properties</a></li>
+  <li><a href="#sparkline-specific-properties" id="toc-sparkline-specific-properties" class="nav-link" data-scroll-target="#sparkline-specific-properties">Sparkline-specific properties</a></li>
+  <li><a href="#aggregate-grid-properties" id="toc-aggregate-grid-properties" class="nav-link" data-scroll-target="#aggregate-grid-properties">Aggregate / grid properties</a></li>
+  <li><a href="#line-styling-properties" id="toc-line-styling-properties" class="nav-link" data-scroll-target="#line-styling-properties">Line styling properties</a></li>
+  <li><a href="#visual-effect-properties" id="toc-visual-effect-properties" class="nav-link" data-scroll-target="#visual-effect-properties">Visual effect properties</a></li>
+  <li><a href="#position-and-offset-properties" id="toc-position-and-offset-properties" class="nav-link" data-scroll-target="#position-and-offset-properties">Position and offset properties</a></li>
+  <li><a href="#value-range-properties" id="toc-value-range-properties" class="nav-link" data-scroll-target="#value-range-properties">Value range properties</a></li>
+  <li><a href="#advanced-lookup-options" id="toc-advanced-lookup-options" class="nav-link" data-scroll-target="#advanced-lookup-options">Advanced lookup options</a></li>
+  <li><a href="#additional-units-variants" id="toc-additional-units-variants" class="nav-link" data-scroll-target="#additional-units-variants">Additional units variants</a></li>
+  <li><a href="#feature-layer-notes" id="toc-feature-layer-notes" class="nav-link" data-scroll-target="#feature-layer-notes">Feature layer notes</a></li>
+  <li><a href="#complete-style-example" id="toc-complete-style-example" class="nav-link" data-scroll-target="#complete-style-example">Complete style example</a></li>
+  <li><a href="#alphabetical-property-reference" id="toc-alphabetical-property-reference" class="nav-link" data-scroll-target="#alphabetical-property-reference">Alphabetical property reference</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/gjrichter/ixmaps-flat/issues/new" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./api_documentation.html">Reference</a></li><li class="breadcrumb-item"><a href="./theme_styles.html">Style Properties</a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title">Style Properties</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>Complete reference for <code>.style({...})</code> properties in ixMaps layer definitions.</p>
+<div class="callout callout-style-simple callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Important</span><code>showdata: "true"</code> is always required
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Every layer that should render anything must include <code>showdata: "true"</code> in its <code>.style()</code>. Without it, data loads and processes but the draw phase never starts — no error, just silence.</p>
+</div>
+</div>
+<hr>
+<section id="core-properties" class="level2">
+<h2 class="anchored" data-anchor-id="core-properties">Core properties</h2>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Property</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>showdata</code></td>
+<td>string</td>
+<td><strong>Required.</strong> Must be the string <code>"true"</code></td>
+</tr>
+<tr class="even">
+<td><code>colorscheme</code></td>
+<td>array / string</td>
+<td>Color palette — see <a href="./map_types.html#color-schemes">Color Schemes</a></td>
+</tr>
+<tr class="odd">
+<td><code>fillopacity</code></td>
+<td>number (0–1)</td>
+<td>Fill opacity. <strong>Prefer <code>fillopacity</code> over <code>opacity</code></strong></td>
+</tr>
+<tr class="even">
+<td><code>linecolor</code></td>
+<td>string / array</td>
+<td>Polygon border color or flow-line color. Single string or <code>["#from","#to"]</code> for <code>VECTOR\|GRADIENT</code></td>
+</tr>
+<tr class="odd">
+<td><code>linewidth</code></td>
+<td>number</td>
+<td>Border / stroke width in pixels</td>
+</tr>
+<tr class="even">
+<td><code>scale</code></td>
+<td>number</td>
+<td>Uniform size multiplier. Start at <code>1</code></td>
+</tr>
+<tr class="odd">
+<td><code>visible</code></td>
+<td>boolean</td>
+<td><code>false</code> = layer starts hidden (toggle with <code>showTheme</code>/<code>hideTheme</code>)</td>
+</tr>
+</tbody>
+</table>
+<div class="callout callout-style-simple callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Warning</span>Never use these properties
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li><code>opacity</code> — use <code>fillopacity</code></li>
+<li><code>fillcolor</code> — use <code>colorscheme: ["#hex"]</code></li>
+<li><code>strokecolor</code> / <code>strokewidth</code> — use <code>linecolor</code> / <code>linewidth</code></li>
+</ul>
+</div>
+</div>
+<hr>
+</section>
+<section id="sizing-properties" class="level2">
+<h2 class="anchored" data-anchor-id="sizing-properties">Sizing properties</h2>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 34%">
+<col style="width: 20%">
+<col style="width: 44%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Property</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>normalsizevalue</code></td>
+<td>string</td>
+<td>Data value that maps to “normal” display size. <strong>Higher = smaller bubbles</strong> (most data values fall below it). E.g. <code>"1000"</code> → smaller than <code>"300"</code></td>
+</tr>
+<tr class="even">
+<td><code>sizepow</code></td>
+<td>number</td>
+<td>Power curve for size scaling. <code>2</code> = quadratic (exaggerates contrast)</td>
+</tr>
+<tr class="odd">
+<td><code>rangescale</code></td>
+<td>number</td>
+<td>Scale factor applied after range computation</td>
+</tr>
+<tr class="even">
+<td><code>minvaluesize</code></td>
+<td>number</td>
+<td>Minimum pixel size below which no symbol is drawn</td>
+</tr>
+<tr class="odd">
+<td><code>scale</code></td>
+<td>number</td>
+<td>Simple multiplier on top of all sizing logic</td>
+</tr>
+<tr class="even">
+<td><code>gridwidth</code></td>
+<td>string</td>
+<td>Grid cell size for aggregate layers, e.g.&nbsp;<code>"5px"</code></td>
+</tr>
+<tr class="odd">
+<td><code>gridwidthpx</code></td>
+<td>string</td>
+<td>Grid cell width in pixels (supports <code>"factor"</code> mode in <code>changeThemeStyle</code>)</td>
+</tr>
+<tr class="even">
+<td><code>normalsizevalue</code> with <code>\|GLOW</code></td>
+<td>—</td>
+<td>Start with a <strong>smaller <code>scale</code></strong> (e.g.&nbsp;<code>0.32</code>) to compensate for the glow halo</td>
+</tr>
+</tbody>
+</table>
+<hr>
+</section>
+<section id="classification-and-ranges" class="level2">
+<h2 class="anchored" data-anchor-id="classification-and-ranges">Classification and ranges</h2>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 34%">
+<col style="width: 20%">
+<col style="width: 44%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Property</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>ranges</code></td>
+<td>string / array</td>
+<td>Explicit class breaks: <code>n+1</code> values for <code>n</code> classes</td>
+</tr>
+<tr class="even">
+<td><code>rangecentervalue</code></td>
+<td>number</td>
+<td>Diverging scale center. Requires an <strong>even</strong> number of colors</td>
+</tr>
+<tr class="odd">
+<td><code>values</code></td>
+<td>array</td>
+<td>Category list for <code>CATEGORICAL</code>. <strong>Must be strings</strong> (numeric values are silently ignored)</td>
+</tr>
+<tr class="even">
+<td><code>valuedecimals</code></td>
+<td>number</td>
+<td>Decimal places for rendered value labels</td>
+</tr>
+<tr class="odd">
+<td><code>units</code></td>
+<td>string</td>
+<td>String appended to value labels, e.g.&nbsp;<code>"%"</code>, <code>"€"</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Explicit class breaks example:</strong></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">type</span>(<span class="st">"CHOROPLETH|EQUIDISTANT"</span>)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">style</span>({</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">colorscheme</span><span class="op">:</span> [<span class="st">"#ffffcc"</span><span class="op">,</span><span class="st">"#c7e9b4"</span><span class="op">,</span><span class="st">"#41b6c4"</span><span class="op">,</span><span class="st">"#2c7fb8"</span><span class="op">,</span><span class="st">"#253494"</span>]<span class="op">,</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">ranges</span><span class="op">:</span>      <span class="st">"0,100,500,1000,5000,10000"</span><span class="op">,</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">showdata</span><span class="op">:</span>    <span class="st">"true"</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>})</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>Diverging scale example:</strong></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">style</span>({</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    <span class="dt">colorscheme</span><span class="op">:</span>      [<span class="st">"#d73027"</span><span class="op">,</span><span class="st">"#f46d43"</span><span class="op">,</span><span class="st">"#fdae61"</span><span class="op">,</span><span class="st">"#abd9e9"</span><span class="op">,</span><span class="st">"#74add1"</span><span class="op">,</span><span class="st">"#4575b4"</span>]<span class="op">,</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">rangecentervalue</span><span class="op">:</span> <span class="dv">0</span><span class="op">,</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">showdata</span><span class="op">:</span>         <span class="st">"true"</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>})</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<hr>
+</section>
+<section id="label-and-text-properties" class="level2">
+<h2 class="anchored" data-anchor-id="label-and-text-properties">Label and text properties</h2>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 34%">
+<col style="width: 20%">
+<col style="width: 44%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Property</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>textscale</code></td>
+<td>number</td>
+<td>Scale factor for label text on the chart</td>
+</tr>
+<tr class="even">
+<td><code>fontsize</code></td>
+<td>string</td>
+<td>Font size (e.g.&nbsp;<code>"12"</code>)</td>
+</tr>
+<tr class="odd">
+<td><code>fontfamily</code></td>
+<td>string</td>
+<td>Font family (e.g.&nbsp;<code>"Arial"</code>)</td>
+</tr>
+<tr class="even">
+<td><code>fontweight</code></td>
+<td>string</td>
+<td>Font weight (e.g.&nbsp;<code>"bold"</code>)</td>
+</tr>
+<tr class="odd">
+<td><code>textcolor</code></td>
+<td>string</td>
+<td>Text color</td>
+</tr>
+<tr class="even">
+<td><code>titlefield</code></td>
+<td>string</td>
+<td>Data column used as chart title label (overrides <code>binding.title</code>)</td>
+</tr>
+<tr class="odd">
+<td><code>datafields</code></td>
+<td>array</td>
+<td>Extra fields for <code>{theme.item.data}</code> table: <code>["field1","field2"]</code></td>
+</tr>
+</tbody>
+</table>
+<hr>
+</section>
+<section id="dynamic-opacity-properties" class="level2">
+<h2 class="anchored" data-anchor-id="dynamic-opacity-properties">Dynamic opacity properties</h2>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 34%">
+<col style="width: 20%">
+<col style="width: 44%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Property</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>dopacitypow</code></td>
+<td>number</td>
+<td>Power curve exponent for <code>DOPACITY</code> opacity mapping (default ≈ 1)</td>
+</tr>
+<tr class="even">
+<td><code>dopacityscale</code></td>
+<td>number</td>
+<td>Multiplier stretching the opacity range</td>
+</tr>
+<tr class="odd">
+<td><code>dopacityramp</code></td>
+<td>string</td>
+<td>Ramp type for dynamic opacity: <code>"linear"</code> (default) or <code>"exponential"</code></td>
+</tr>
+</tbody>
+</table>
+<p>For dynamic opacity, add <code>\|DOPACITYMAX</code> or <code>\|DOPACITYMINMAX</code> to the type string and an <code>alpha</code> field to <code>.binding()</code>:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">binding</span>({ <span class="dt">geo</span><span class="op">:</span> <span class="st">"lat|lon"</span><span class="op">,</span> <span class="dt">value</span><span class="op">:</span> <span class="st">"count"</span><span class="op">,</span> <span class="dt">alpha</span><span class="op">:</span> <span class="st">"density"</span> })</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">type</span>(<span class="st">"CHART|BUBBLE|SIZE|DOPACITYMAX"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<hr>
+</section>
+<section id="scale-dependent-visibility" class="level2">
+<h2 class="anchored" data-anchor-id="scale-dependent-visibility">Scale-dependent visibility</h2>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 34%">
+<col style="width: 20%">
+<col style="width: 44%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Property</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>chartupper</code></td>
+<td>string</td>
+<td>Hide layer when map scale denominator is <strong>larger</strong> (more zoomed out) than this value</td>
+</tr>
+<tr class="even">
+<td><code>chartlower</code></td>
+<td>string</td>
+<td>Hide layer when map scale denominator is <strong>smaller</strong> (more zoomed in) than this value</td>
+</tr>
+<tr class="odd">
+<td><code>boxupper</code></td>
+<td>string</td>
+<td>Scale at which a box background becomes visible, e.g.&nbsp;<code>"1:250000"</code></td>
+</tr>
+<tr class="even">
+<td><code>boxlower</code></td>
+<td>string</td>
+<td>Scale at which a box background is hidden</td>
+</tr>
+<tr class="odd">
+<td><code>valuesupper</code></td>
+<td>string</td>
+<td>Scale-dependent value label visibility upper threshold</td>
+</tr>
+<tr class="even">
+<td><code>valueslower</code></td>
+<td>string</td>
+<td>Scale-dependent value label visibility lower threshold</td>
+</tr>
+</tbody>
+</table>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">style</span>({</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    <span class="dt">chartupper</span><span class="op">:</span> <span class="st">"1:5000"</span><span class="op">,</span>   <span class="co">// hide when zoomed out past 1:5000</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">chartlower</span><span class="op">:</span> <span class="st">"1:500"</span>     <span class="co">// hide when zoomed in past 1:500</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>})</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="callout callout-style-simple callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Warning</span>Use <code>chartupper</code>/<code>chartlower</code>, not <code>clipupper</code>/<code>cliplower</code>
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><code>clipupper</code> and <code>cliplower</code> are not valid style properties and are silently ignored.</p>
+</div>
+</div>
+<hr>
+</section>
+<section id="symbol-and-chart-properties" class="level2">
+<h2 class="anchored" data-anchor-id="symbol-and-chart-properties">Symbol and chart properties</h2>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 34%">
+<col style="width: 20%">
+<col style="width: 44%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Property</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>align</code></td>
+<td>string</td>
+<td>Chart anchor: <code>"left"</code> · <code>"right"</code> · <code>"top"</code> · <code>"bottom"</code> · <code>"above"</code> · <code>"below"</code></td>
+</tr>
+<tr class="even">
+<td><code>rotation</code></td>
+<td>number</td>
+<td>Rotate chart symbol in degrees</td>
+</tr>
+<tr class="odd">
+<td><code>sizefield</code></td>
+<td>string</td>
+<td>Data column driving symbol SIZE independently from the <code>value</code> (color) field</td>
+</tr>
+<tr class="even">
+<td><code>aggregationfield</code></td>
+<td>string</td>
+<td>Field used as aggregation key when <code>AGGREGATE</code> is set</td>
+</tr>
+<tr class="odd">
+<td><code>userdraw</code></td>
+<td>string</td>
+<td>Name of custom draw function for <code>CHART\|USER</code> type</td>
+</tr>
+</tbody>
+</table>
+<hr>
+</section>
+<section id="sparkline-specific-properties" class="level2">
+<h2 class="anchored" data-anchor-id="sparkline-specific-properties">Sparkline-specific properties</h2>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 34%">
+<col style="width: 20%">
+<col style="width: 44%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Property</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>xaxis</code></td>
+<td>array</td>
+<td>X-axis labels, e.g.&nbsp;<code>["2020","2021","2022","2023"]</code></td>
+</tr>
+<tr class="even">
+<td><code>label</code></td>
+<td>array</td>
+<td>Category labels (for <code>BOX\|GRID\|XAXIS</code> display)</td>
+</tr>
+<tr class="odd">
+<td><code>markersize</code></td>
+<td>number</td>
+<td><code>LASTARROW</code> arrow head size (default ~8; use 1–3 for smaller)</td>
+</tr>
+</tbody>
+</table>
+<hr>
+</section>
+<section id="aggregate-grid-properties" class="level2">
+<h2 class="anchored" data-anchor-id="aggregate-grid-properties">Aggregate / grid properties</h2>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 34%">
+<col style="width: 20%">
+<col style="width: 44%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Property</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>gridwidth</code></td>
+<td>string</td>
+<td>Grid cell size, e.g.&nbsp;<code>"5px"</code></td>
+</tr>
+<tr class="even">
+<td><code>gridwidthpx</code></td>
+<td>string</td>
+<td>Grid cell width in pixels; supports <code>"factor"</code> mode</td>
+</tr>
+<tr class="odd">
+<td><code>gridx</code></td>
+<td>number</td>
+<td>Values per bar group in <code>CHART\|BAR\|STACKED</code> (<code>gridx:2</code> → 2 segments per bar)</td>
+</tr>
+</tbody>
+</table>
+<hr>
+</section>
+<section id="line-styling-properties" class="level2">
+<h2 class="anchored" data-anchor-id="line-styling-properties">Line styling properties</h2>
+<p>These SVG stroke properties apply to line and polygon outline rendering:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 26%">
+<col style="width: 15%">
+<col style="width: 34%">
+<col style="width: 23%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Property</th>
+<th>Type</th>
+<th>Description</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>dasharray</code></td>
+<td>string</td>
+<td>SVG stroke-dasharray pattern</td>
+<td><code>"5,5"</code> (dashes) · <code>"10,3,3,3"</code> (dash-dot)</td>
+</tr>
+<tr class="even">
+<td><code>dashoffset</code></td>
+<td>number</td>
+<td>SVG stroke-dashoffset</td>
+<td><code>"0"</code></td>
+</tr>
+<tr class="odd">
+<td><code>linecap</code></td>
+<td>string</td>
+<td>Line end cap style</td>
+<td><code>"round"</code> · <code>"square"</code> · <code>"butt"</code></td>
+</tr>
+<tr class="even">
+<td><code>linejoin</code></td>
+<td>string</td>
+<td>Line join style</td>
+<td><code>"round"</code> · <code>"miter"</code> · <code>"bevel"</code></td>
+</tr>
+</tbody>
+</table>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">style</span>({</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    <span class="dt">linecolor</span><span class="op">:</span>  <span class="st">"#0066cc"</span><span class="op">,</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">linewidth</span><span class="op">:</span>  <span class="dv">2</span><span class="op">,</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">dasharray</span><span class="op">:</span>  <span class="st">"6,4"</span><span class="op">,</span>      <span class="co">// dashed outline</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">linecap</span><span class="op">:</span>    <span class="st">"round"</span><span class="op">,</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>    <span class="dt">showdata</span><span class="op">:</span>   <span class="st">"true"</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>})</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<hr>
+</section>
+<section id="visual-effect-properties" class="level2">
+<h2 class="anchored" data-anchor-id="visual-effect-properties">Visual effect properties</h2>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Property</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>blur</code></td>
+<td>number</td>
+<td>Gaussian blur radius in pixels</td>
+</tr>
+</tbody>
+</table>
+<hr>
+</section>
+<section id="position-and-offset-properties" class="level2">
+<h2 class="anchored" data-anchor-id="position-and-offset-properties">Position and offset properties</h2>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Property</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>offsetx</code></td>
+<td>number</td>
+<td>Horizontal offset of the chart symbol in pixels</td>
+</tr>
+<tr class="even">
+<td><code>offsety</code></td>
+<td>number</td>
+<td>Vertical offset of the chart symbol in pixels</td>
+</tr>
+</tbody>
+</table>
+<hr>
+</section>
+<section id="value-range-properties" class="level2">
+<h2 class="anchored" data-anchor-id="value-range-properties">Value range properties</h2>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 34%">
+<col style="width: 20%">
+<col style="width: 44%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Property</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>minvalue</code></td>
+<td>number</td>
+<td>Clamp: suppress rendering for values below this threshold</td>
+</tr>
+<tr class="even">
+<td><code>maxvalue</code></td>
+<td>number</td>
+<td>Clamp: suppress rendering for values above this threshold</td>
+</tr>
+<tr class="odd">
+<td><code>lowvalue</code></td>
+<td>number</td>
+<td>Low value threshold (visual emphasis, not suppression)</td>
+</tr>
+<tr class="even">
+<td><code>highvalue</code></td>
+<td>number</td>
+<td>High value threshold (visual emphasis)</td>
+</tr>
+</tbody>
+</table>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">style</span>({</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    <span class="dt">minvalue</span><span class="op">:</span> <span class="dv">100</span><span class="op">,</span>     <span class="co">// don't render features with value &lt; 100</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">maxvalue</span><span class="op">:</span> <span class="dv">500000</span><span class="op">,</span>  <span class="co">// don't render features with value &gt; 500 000</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">showdata</span><span class="op">:</span> <span class="st">"true"</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>})</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<hr>
+</section>
+<section id="advanced-lookup-options" class="level2">
+<h2 class="anchored" data-anchor-id="advanced-lookup-options">Advanced lookup options</h2>
+<p>When the geometry id field and data join key need normalization before matching:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 34%">
+<col style="width: 20%">
+<col style="width: 44%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Property</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>lookuptonumber</code></td>
+<td>boolean</td>
+<td>Convert the lookup field value to a number before matching</td>
+</tr>
+<tr class="even">
+<td><code>lookuptoupper</code></td>
+<td>boolean</td>
+<td>Convert to uppercase before matching</td>
+</tr>
+<tr class="odd">
+<td><code>lookupsuffix</code></td>
+<td>string</td>
+<td>Append a suffix to the lookup value before matching</td>
+</tr>
+<tr class="even">
+<td><code>lookupdigits</code></td>
+<td>number</td>
+<td>Zero-pad the lookup value to this many digits</td>
+</tr>
+</tbody>
+</table>
+<p>Example: data has <code>"028001"</code> (zero-padded 6-digit string) but geometry has integer <code>28001</code>:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">style</span>({ <span class="dt">lookuptonumber</span><span class="op">:</span> <span class="kw">true</span><span class="op">,</span> <span class="dt">showdata</span><span class="op">:</span> <span class="st">"true"</span> })</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<hr>
+</section>
+<section id="additional-units-variants" class="level2">
+<h2 class="anchored" data-anchor-id="additional-units-variants">Additional units variants</h2>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Property</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>labelunits</code></td>
+<td>string</td>
+<td>Units appended to label text</td>
+</tr>
+<tr class="even">
+<td><code>sizevalueunits</code></td>
+<td>string</td>
+<td>Units for the size value field</td>
+</tr>
+<tr class="odd">
+<td><code>legendunits</code></td>
+<td>string</td>
+<td>Units shown in the legend</td>
+</tr>
+</tbody>
+</table>
+<hr>
+</section>
+<section id="feature-layer-notes" class="level2">
+<h2 class="anchored" data-anchor-id="feature-layer-notes">Feature layer notes</h2>
+<p>Styling behaviour depends on geometry type:</p>
+<ul>
+<li><strong>Line features</strong> — <code>colorscheme</code> sets the stroke / line color. <code>linecolor</code> is overridden by <code>colorscheme</code> and has no effect on lines.</li>
+<li><strong>Polygon features</strong> — <code>colorscheme</code> sets the <strong>fill</strong> color; <code>linecolor</code> sets the <strong>border</strong> color; <code>fillopacity</code> controls fill transparency.</li>
+</ul>
+<p><strong>Making a fill invisible:</strong></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>colorscheme<span class="op">:</span> [<span class="st">"none"</span>]   <span class="co">// ✅ correct</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="co">// fillopacity: 0        // ❌ may cause errors on polygon layers</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<hr>
+</section>
+<section id="complete-style-example" class="level2">
+<h2 class="anchored" data-anchor-id="complete-style-example">Complete style example</h2>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co">// FEATURE base layer</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>myMap<span class="op">.</span><span class="fu">layer</span>(<span class="st">"regions"</span>)</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">data</span>({ <span class="dt">url</span><span class="op">:</span> <span class="st">"regions.topojson"</span><span class="op">,</span> <span class="dt">type</span><span class="op">:</span> <span class="st">"topojson"</span> })</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">binding</span>({ <span class="dt">geo</span><span class="op">:</span> <span class="st">"geometry"</span><span class="op">,</span> <span class="dt">id</span><span class="op">:</span> <span class="st">"reg_code"</span><span class="op">,</span> <span class="dt">title</span><span class="op">:</span> <span class="st">"reg_name"</span> })</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">type</span>(<span class="st">"FEATURE"</span>)</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">style</span>({</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>        <span class="dt">colorscheme</span><span class="op">:</span> [<span class="st">"#ccc"</span>]<span class="op">,</span></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>        <span class="dt">fillopacity</span><span class="op">:</span> <span class="fl">0.3</span><span class="op">,</span></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>        <span class="dt">linecolor</span><span class="op">:</span>   <span class="st">"#666"</span><span class="op">,</span></span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>        <span class="dt">linewidth</span><span class="op">:</span>   <span class="fl">0.5</span><span class="op">,</span></span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>        <span class="dt">showdata</span><span class="op">:</span>    <span class="st">"true"</span></span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>    })</span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">define</span>()<span class="op">;</span></span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a><span class="co">// CHOROPLETH overlay (same layer name "regions")</span></span>
+<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a>myMap<span class="op">.</span><span class="fu">layer</span>(<span class="st">"regions"</span>)</span>
+<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">data</span>({ <span class="dt">url</span><span class="op">:</span> <span class="st">"stats.csv"</span><span class="op">,</span> <span class="dt">type</span><span class="op">:</span> <span class="st">"csv"</span> })</span>
+<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">binding</span>({ <span class="dt">lookup</span><span class="op">:</span> <span class="st">"code"</span><span class="op">,</span> <span class="dt">value</span><span class="op">:</span> <span class="st">"value"</span> })</span>
+<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">type</span>(<span class="st">"CHOROPLETH|QUANTILE"</span>)</span>
+<span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">style</span>({</span>
+<span id="cb9-21"><a href="#cb9-21" aria-hidden="true" tabindex="-1"></a>        <span class="dt">colorscheme</span><span class="op">:</span>   [<span class="st">"#eef"</span><span class="op">,</span><span class="st">"#003f88"</span>]<span class="op">,</span></span>
+<span id="cb9-22"><a href="#cb9-22" aria-hidden="true" tabindex="-1"></a>        <span class="dt">fillopacity</span><span class="op">:</span>   <span class="fl">0.75</span><span class="op">,</span></span>
+<span id="cb9-23"><a href="#cb9-23" aria-hidden="true" tabindex="-1"></a>        <span class="dt">valuedecimals</span><span class="op">:</span> <span class="dv">1</span><span class="op">,</span></span>
+<span id="cb9-24"><a href="#cb9-24" aria-hidden="true" tabindex="-1"></a>        <span class="dt">units</span><span class="op">:</span>         <span class="st">"%"</span><span class="op">,</span></span>
+<span id="cb9-25"><a href="#cb9-25" aria-hidden="true" tabindex="-1"></a>        <span class="dt">showdata</span><span class="op">:</span>      <span class="st">"true"</span></span>
+<span id="cb9-26"><a href="#cb9-26" aria-hidden="true" tabindex="-1"></a>    })</span>
+<span id="cb9-27"><a href="#cb9-27" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">meta</span>({ <span class="dt">name</span><span class="op">:</span> <span class="st">"choropleth"</span><span class="op">,</span> <span class="dt">tooltip</span><span class="op">:</span> <span class="st">"{{reg_name}}: {{value}}%"</span> })</span>
+<span id="cb9-28"><a href="#cb9-28" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">define</span>()<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<hr>
+</section>
+<section id="alphabetical-property-reference" class="level2">
+<h2 class="anchored" data-anchor-id="alphabetical-property-reference">Alphabetical property reference</h2>
+<p>All <code>.style()</code> properties drawn from the ixMaps source (<code>themeStyleTranslateA</code>). <strong>Deprecated</strong> properties have preferred replacements shown; <strong>Required</strong> means the layer will not render without it.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 34%">
+<col style="width: 20%">
+<col style="width: 44%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Property</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>aggregation</code></td>
+<td>string</td>
+<td>Aggregation method override</td>
+</tr>
+<tr class="even">
+<td><code>aggregationfield</code></td>
+<td>string</td>
+<td>Field used as aggregation key</td>
+</tr>
+<tr class="odd">
+<td><code>aggregationlower</code></td>
+<td>string</td>
+<td>Scale below which aggregation is hidden, e.g.&nbsp;<code>"1:50000"</code></td>
+</tr>
+<tr class="even">
+<td><code>aggregationscale</code></td>
+<td>array</td>
+<td>Multi-scale aggregation config, e.g.&nbsp;<code>["1:1","commune","1:1000000","province"]</code></td>
+</tr>
+<tr class="odd">
+<td><code>aggregationupper</code></td>
+<td>string</td>
+<td>Scale above which aggregation is hidden</td>
+</tr>
+<tr class="even">
+<td><code>align</code></td>
+<td>string</td>
+<td>Chart anchor: <code>"left"</code> · <code>"right"</code> · <code>"top"</code> · <code>"bottom"</code> · <code>"above"</code> · <code>"below"</code></td>
+</tr>
+<tr class="odd">
+<td><code>alphafield</code></td>
+<td>string</td>
+<td>Data field driving DOPACITY alpha channel</td>
+</tr>
+<tr class="even">
+<td><code>alphavalueunits</code></td>
+<td>string</td>
+<td>Units label for the alpha value field</td>
+</tr>
+<tr class="odd">
+<td><code>autoopacity</code></td>
+<td>boolean</td>
+<td>Automatic opacity scaling</td>
+</tr>
+<tr class="even">
+<td><code>autoscale</code></td>
+<td>boolean</td>
+<td>Automatic scale adjustment</td>
+</tr>
+<tr class="odd">
+<td><code>autosize</code></td>
+<td>boolean</td>
+<td>Automatic size adjustment</td>
+</tr>
+<tr class="even">
+<td><code>blur</code></td>
+<td>number</td>
+<td>Gaussian blur radius in pixels</td>
+</tr>
+<tr class="odd">
+<td><code>bordercolor</code></td>
+<td>string</td>
+<td>Background box border color</td>
+</tr>
+<tr class="even">
+<td><code>borderradius</code></td>
+<td>number</td>
+<td>Background box corner radius in pixels</td>
+</tr>
+<tr class="odd">
+<td><code>borderstyle</code></td>
+<td>string</td>
+<td>Background box border style, e.g.&nbsp;<code>"solid"</code></td>
+</tr>
+<tr class="even">
+<td><code>borderwidth</code></td>
+<td>number</td>
+<td>Background box border width</td>
+</tr>
+<tr class="odd">
+<td><code>boxcolor</code></td>
+<td>string</td>
+<td>Background box fill color</td>
+</tr>
+<tr class="even">
+<td><code>boxlower</code></td>
+<td>string</td>
+<td>Scale below which the box disappears</td>
+</tr>
+<tr class="odd">
+<td><code>boxmargin</code></td>
+<td>number</td>
+<td>Background box padding in pixels</td>
+</tr>
+<tr class="even">
+<td><code>boxopacity</code></td>
+<td>number</td>
+<td>Background box fill opacity</td>
+</tr>
+<tr class="odd">
+<td><code>boxupper</code></td>
+<td>string</td>
+<td>Scale above which the box disappears, e.g.&nbsp;<code>"1:250000"</code></td>
+</tr>
+<tr class="even">
+<td><code>brightness</code></td>
+<td>number</td>
+<td>Brightness multiplier</td>
+</tr>
+<tr class="odd">
+<td><code>centerpart</code></td>
+<td>string</td>
+<td>Center part flag</td>
+</tr>
+<tr class="even">
+<td><code>chartupper</code></td>
+<td>string</td>
+<td>Hide chart when scale denominator &gt; this value</td>
+</tr>
+<tr class="odd">
+<td><code>chartlower</code></td>
+<td>string</td>
+<td>Hide chart when scale denominator &lt; this value</td>
+</tr>
+<tr class="even">
+<td><code>colorscheme</code></td>
+<td>array / string</td>
+<td>Color palette — single hex, gradient array, or named scheme</td>
+</tr>
+<tr class="odd">
+<td><code>dasharray</code></td>
+<td>string</td>
+<td>SVG stroke-dasharray pattern, e.g.&nbsp;<code>"5,5"</code> or <code>"10,3,3,3"</code></td>
+</tr>
+<tr class="even">
+<td><code>dashoffset</code></td>
+<td>number</td>
+<td>SVG stroke-dashoffset</td>
+</tr>
+<tr class="odd">
+<td><code>datafields</code></td>
+<td>array</td>
+<td>Fields shown in <code>{theme.item.data}</code> tooltip table</td>
+</tr>
+<tr class="even">
+<td><code>declutterupper</code></td>
+<td>string</td>
+<td>Scale above which label decluttering activates</td>
+</tr>
+<tr class="odd">
+<td><code>dopacitypow</code></td>
+<td>number</td>
+<td>Power curve exponent for DOPACITY mapping</td>
+</tr>
+<tr class="even">
+<td><code>dopacityramp</code></td>
+<td>string</td>
+<td>DOPACITY ramp: <code>"linear"</code> (default) or <code>"exponential"</code></td>
+</tr>
+<tr class="odd">
+<td><code>dopacityscale</code></td>
+<td>number</td>
+<td>Multiplier stretching the DOPACITY range</td>
+</tr>
+<tr class="even">
+<td><code>dominantfilter</code></td>
+<td>string</td>
+<td>Filter expression for dominant-value logic</td>
+</tr>
+<tr class="odd">
+<td><code>dominantdfilter</code></td>
+<td>number</td>
+<td>Delta filter for dominant-value mode</td>
+</tr>
+<tr class="even">
+<td><code>evidence</code></td>
+<td>string</td>
+<td>Evidence mode flag</td>
+</tr>
+<tr class="odd">
+<td><code>exclude</code></td>
+<td>array</td>
+<td>Values excluded from rendering</td>
+</tr>
+<tr class="even">
+<td><code>fadenegative</code></td>
+<td>number</td>
+<td>Fade factor applied to negative values</td>
+</tr>
+<tr class="odd">
+<td><code>fadevaluepow</code></td>
+<td>string</td>
+<td>Power curve for value fade-out</td>
+</tr>
+<tr class="even">
+<td><code>featurelower</code></td>
+<td>string</td>
+<td>Scale below which feature geometry is hidden</td>
+</tr>
+<tr class="odd">
+<td><code>featureupper</code></td>
+<td>string</td>
+<td>Scale above which feature geometry is hidden</td>
+</tr>
+<tr class="even">
+<td><code>~~fillcolor~~</code></td>
+<td>string</td>
+<td><strong>Deprecated</strong> — use <code>colorscheme: ["#hex"]</code></td>
+</tr>
+<tr class="odd">
+<td><code>fillopacity</code></td>
+<td>number (0–1)</td>
+<td>Fill opacity — <strong>prefer over <code>opacity</code></strong></td>
+</tr>
+<tr class="even">
+<td><code>fontfamily</code></td>
+<td>string</td>
+<td>Label font family</td>
+</tr>
+<tr class="odd">
+<td><code>fontsize</code></td>
+<td>string</td>
+<td>Label font size, e.g.&nbsp;<code>"12"</code></td>
+</tr>
+<tr class="even">
+<td><code>fontstyle</code></td>
+<td>string</td>
+<td>Label font style, e.g.&nbsp;<code>"italic"</code></td>
+</tr>
+<tr class="odd">
+<td><code>fontweight</code></td>
+<td>string</td>
+<td>Label font weight, e.g.&nbsp;<code>"bold"</code></td>
+</tr>
+<tr class="even">
+<td><code>gapsize</code></td>
+<td>number</td>
+<td>Gap between chart elements in pixels</td>
+</tr>
+<tr class="odd">
+<td><code>glowlower</code></td>
+<td>string</td>
+<td>Scale below which the glow effect is hidden</td>
+</tr>
+<tr class="even">
+<td><code>glowupper</code></td>
+<td>string</td>
+<td>Scale above which the glow effect is hidden</td>
+</tr>
+<tr class="odd">
+<td><code>gridmatrix</code></td>
+<td>number</td>
+<td>Grid matrix mode</td>
+</tr>
+<tr class="even">
+<td><code>gridoffsetx</code></td>
+<td>number</td>
+<td>Grid X offset</td>
+</tr>
+<tr class="odd">
+<td><code>gridoffsety</code></td>
+<td>number</td>
+<td>Grid Y offset</td>
+</tr>
+<tr class="even">
+<td><code>gridwidth</code></td>
+<td>string</td>
+<td>Grid cell size, e.g.&nbsp;<code>"5px"</code></td>
+</tr>
+<tr class="odd">
+<td><code>gridwidthpx</code></td>
+<td>string</td>
+<td>Grid cell width in pixels; supports <code>"factor"</code> mode in <code>changeThemeStyle</code></td>
+</tr>
+<tr class="even">
+<td><code>gridx</code></td>
+<td>number</td>
+<td>Values per bar group in <code>CHART\|BAR\|STACKED</code></td>
+</tr>
+<tr class="odd">
+<td><code>highvalue</code></td>
+<td>number</td>
+<td>High value threshold (visual emphasis, not suppression)</td>
+</tr>
+<tr class="even">
+<td><code>infotitle</code></td>
+<td>string</td>
+<td>Info panel title text</td>
+</tr>
+<tr class="odd">
+<td><code>label</code></td>
+<td>array</td>
+<td>Category labels for sparkline <code>BOX\|GRID\|XAXIS</code> display</td>
+</tr>
+<tr class="even">
+<td><code>labellower</code></td>
+<td>string</td>
+<td>Scale below which labels are hidden</td>
+</tr>
+<tr class="odd">
+<td><code>labelunits</code></td>
+<td>string</td>
+<td>Units appended to label text</td>
+</tr>
+<tr class="even">
+<td><code>labelupper</code></td>
+<td>string</td>
+<td>Scale above which labels are hidden</td>
+</tr>
+<tr class="odd">
+<td><code>layerlower</code></td>
+<td>string</td>
+<td>Scale below which the entire layer is hidden</td>
+</tr>
+<tr class="even">
+<td><code>layerupper</code></td>
+<td>string</td>
+<td>Scale above which the entire layer is hidden</td>
+</tr>
+<tr class="odd">
+<td><code>legendunits</code></td>
+<td>string</td>
+<td>Units shown in the legend</td>
+</tr>
+<tr class="even">
+<td><code>linecap</code></td>
+<td>string</td>
+<td>Line end cap: <code>"round"</code> · <code>"square"</code> · <code>"butt"</code></td>
+</tr>
+<tr class="odd">
+<td><code>linecolor</code></td>
+<td>string / array</td>
+<td>Polygon border color; <code>["#from","#to"]</code> for <code>VECTOR\|GRADIENT</code></td>
+</tr>
+<tr class="even">
+<td><code>linejoin</code></td>
+<td>string</td>
+<td>Line join: <code>"round"</code> · <code>"miter"</code> · <code>"bevel"</code></td>
+</tr>
+<tr class="odd">
+<td><code>linewidth</code></td>
+<td>number</td>
+<td>Border / stroke width in pixels</td>
+</tr>
+<tr class="even">
+<td><code>lookupdigits</code></td>
+<td>number</td>
+<td>Zero-pad the lookup value to this many digits</td>
+</tr>
+<tr class="odd">
+<td><code>lookupfield</code></td>
+<td>string</td>
+<td>Geographic join field name</td>
+</tr>
+<tr class="even">
+<td><code>lookuptonumber</code></td>
+<td>boolean</td>
+<td>Convert lookup value to number before matching</td>
+</tr>
+<tr class="odd">
+<td><code>lookupsuffix</code></td>
+<td>string</td>
+<td>Suffix appended to lookup value before matching</td>
+</tr>
+<tr class="even">
+<td><code>lookuptoupper</code></td>
+<td>boolean</td>
+<td>Convert lookup value to uppercase before matching</td>
+</tr>
+<tr class="odd">
+<td><code>lowvalue</code></td>
+<td>number</td>
+<td>Low value threshold (visual emphasis, not suppression)</td>
+</tr>
+<tr class="even">
+<td><code>markclass</code></td>
+<td>number</td>
+<td>Highlighted class index</td>
+</tr>
+<tr class="odd">
+<td><code>markclasses</code></td>
+<td>array</td>
+<td>Array of highlighted class indices</td>
+</tr>
+<tr class="even">
+<td><code>markersize</code></td>
+<td>number</td>
+<td><code>LASTARROW</code> arrow head size (default ~8)</td>
+</tr>
+<tr class="odd">
+<td><code>maxvalue</code></td>
+<td>number</td>
+<td>Suppress rendering for values above this threshold</td>
+</tr>
+<tr class="even">
+<td><code>minaggregation</code></td>
+<td>string</td>
+<td>Minimum scale denominator for aggregation</td>
+</tr>
+<tr class="odd">
+<td><code>minvalue</code></td>
+<td>number</td>
+<td>Suppress rendering for values below this threshold</td>
+</tr>
+<tr class="even">
+<td><code>minvaluesize</code></td>
+<td>number</td>
+<td>Minimum pixel size — no symbol drawn below this</td>
+</tr>
+<tr class="odd">
+<td><code>nodatacolor</code></td>
+<td>string</td>
+<td>Color for features with no joined data, e.g.&nbsp;<code>"#ccc"</code></td>
+</tr>
+<tr class="even">
+<td><code>normalsizevalue</code></td>
+<td>string</td>
+<td>Reference data value mapping to nominal display size</td>
+</tr>
+<tr class="odd">
+<td><code>offsetx</code></td>
+<td>number</td>
+<td>Horizontal symbol offset in pixels</td>
+</tr>
+<tr class="even">
+<td><code>offsety</code></td>
+<td>number</td>
+<td>Vertical symbol offset in pixels</td>
+</tr>
+<tr class="odd">
+<td><code>~~opacity~~</code></td>
+<td>number</td>
+<td><strong>Deprecated</strong> — use <code>fillopacity</code></td>
+</tr>
+<tr class="even">
+<td><code>outlierscale</code></td>
+<td>number</td>
+<td>Scale factor applied to outlier values</td>
+</tr>
+<tr class="odd">
+<td><code>overviewchart</code></td>
+<td>string</td>
+<td>Overview chart mode flag</td>
+</tr>
+<tr class="even">
+<td><code>rangecentervalue</code></td>
+<td>number</td>
+<td>Diverging scale center value — requires even color count</td>
+</tr>
+<tr class="odd">
+<td><code>rangescale</code></td>
+<td>number</td>
+<td>Scale factor applied after range computation</td>
+</tr>
+<tr class="even">
+<td><code>ranges</code></td>
+<td>string / array</td>
+<td>Explicit class breaks: <code>n+1</code> values for <code>n</code> classes</td>
+</tr>
+<tr class="odd">
+<td><code>rotation</code></td>
+<td>number</td>
+<td>Symbol rotation in degrees</td>
+</tr>
+<tr class="even">
+<td><code>scale</code></td>
+<td>number</td>
+<td>Direct size multiplier on top of all sizing logic</td>
+</tr>
+<tr class="odd">
+<td><code>shadow</code></td>
+<td>boolean</td>
+<td>Drop shadow flag</td>
+</tr>
+<tr class="even">
+<td><code>shadowblur</code></td>
+<td>number</td>
+<td>Shadow blur radius</td>
+</tr>
+<tr class="odd">
+<td><code>shadowcolor</code></td>
+<td>string</td>
+<td>Shadow color</td>
+</tr>
+<tr class="even">
+<td><code>shadowlower</code></td>
+<td>string</td>
+<td>Scale below which shadow is hidden</td>
+</tr>
+<tr class="odd">
+<td><code>shadowoffsetx</code></td>
+<td>number</td>
+<td>Shadow X offset</td>
+</tr>
+<tr class="even">
+<td><code>shadowoffsety</code></td>
+<td>number</td>
+<td>Shadow Y offset</td>
+</tr>
+<tr class="odd">
+<td><code>shadowopacity</code></td>
+<td>number</td>
+<td>Shadow opacity</td>
+</tr>
+<tr class="even">
+<td><code>shadowupper</code></td>
+<td>string</td>
+<td>Scale above which shadow is hidden</td>
+</tr>
+<tr class="odd">
+<td><code>showdata</code></td>
+<td>string</td>
+<td><strong>Required</strong> — must be <code>"true"</code> for any rendering to occur</td>
+</tr>
+<tr class="even">
+<td><code>sizefield</code></td>
+<td>string</td>
+<td>Data field driving symbol size independently of value (color) field</td>
+</tr>
+<tr class="odd">
+<td><code>sizepow</code></td>
+<td>number</td>
+<td>Power curve for size scaling — <code>2</code> = square root (default)</td>
+</tr>
+<tr class="even">
+<td><code>sizevalueunits</code></td>
+<td>string</td>
+<td>Units for the size value field</td>
+</tr>
+<tr class="odd">
+<td><code>snippetfield</code></td>
+<td>string</td>
+<td>Data field used as subtitle / snippet</td>
+</tr>
+<tr class="even">
+<td><code>~~strokecolor~~</code></td>
+<td>string</td>
+<td><strong>Deprecated</strong> — use <code>linecolor</code></td>
+</tr>
+<tr class="odd">
+<td><code>~~strokewidth~~</code></td>
+<td>number</td>
+<td><strong>Deprecated</strong> — use <code>linewidth</code></td>
+</tr>
+<tr class="even">
+<td><code>symbols</code></td>
+<td>array</td>
+<td>Symbol shape list for multi-symbol layers, e.g.&nbsp;<code>["circle","square"]</code></td>
+</tr>
+<tr class="odd">
+<td><code>symbolvalues</code></td>
+<td>array</td>
+<td>Symbol values array</td>
+</tr>
+<tr class="even">
+<td><code>textcolor</code></td>
+<td>string</td>
+<td>Label / value text color</td>
+</tr>
+<tr class="odd">
+<td><code>textplacement</code></td>
+<td>string</td>
+<td>Label placement hint</td>
+</tr>
+<tr class="even">
+<td><code>textscale</code></td>
+<td>number</td>
+<td>Scale factor for label text</td>
+</tr>
+<tr class="odd">
+<td><code>timefield</code></td>
+<td>string</td>
+<td>Field name driving time-series animation</td>
+</tr>
+<tr class="even">
+<td><code>titlefield</code></td>
+<td>string</td>
+<td>Data field used as chart title label</td>
+</tr>
+<tr class="odd">
+<td><code>titlelower</code></td>
+<td>string</td>
+<td>Scale below which titles are hidden</td>
+</tr>
+<tr class="even">
+<td><code>titleunits</code></td>
+<td>string</td>
+<td>Title units label</td>
+</tr>
+<tr class="odd">
+<td><code>titleupper</code></td>
+<td>string</td>
+<td>Scale above which titles are hidden</td>
+</tr>
+<tr class="even">
+<td><code>units</code></td>
+<td>string</td>
+<td>Units appended to value labels, e.g.&nbsp;<code>"%"</code>, <code>"€"</code></td>
+</tr>
+<tr class="odd">
+<td><code>units100</code></td>
+<td>string</td>
+<td>Units for 100%-normalised values</td>
+</tr>
+<tr class="even">
+<td><code>userdraw</code></td>
+<td>string</td>
+<td>Name of custom D3 draw function (requires <code>CHART\|USER</code> type)</td>
+</tr>
+<tr class="odd">
+<td><code>valuecolor</code></td>
+<td>string</td>
+<td>Value label color</td>
+</tr>
+<tr class="even">
+<td><code>valuedecimals</code></td>
+<td>number</td>
+<td>Decimal places for rendered value labels</td>
+</tr>
+<tr class="odd">
+<td><code>valuelower</code></td>
+<td>string</td>
+<td>Scale below which value labels are hidden</td>
+</tr>
+<tr class="even">
+<td><code>valuemap</code></td>
+<td>object</td>
+<td>Key → display-value mapping object</td>
+</tr>
+<tr class="odd">
+<td><code>valuescale</code></td>
+<td>number</td>
+<td>Scale factor applied to displayed values</td>
+</tr>
+<tr class="even">
+<td><code>valueupper</code></td>
+<td>string</td>
+<td>Scale above which value labels are hidden</td>
+</tr>
+<tr class="odd">
+<td><code>values</code></td>
+<td>array</td>
+<td>Category list for <code>CATEGORICAL</code> — <strong>must be strings</strong></td>
+</tr>
+<tr class="even">
+<td><code>visible</code></td>
+<td>boolean</td>
+<td><code>false</code> = layer starts hidden; toggle with <code>showTheme</code>/<code>hideTheme</code></td>
+</tr>
+<tr class="odd">
+<td><code>weights</code></td>
+<td>string</td>
+<td>Weight values for weighted aggregation</td>
+</tr>
+<tr class="even">
+<td><code>xaxis</code></td>
+<td>array</td>
+<td>X-axis labels for sparklines, e.g.&nbsp;<code>["2020","2021","2022"]</code></td>
+</tr>
+<tr class="odd">
+<td><code>xfield</code></td>
+<td>string</td>
+<td>Longitude data field (alternative to <code>geo</code> binding)</td>
+</tr>
+<tr class="even">
+<td><code>yfield</code></td>
+<td>string</td>
+<td>Latitude data field (alternative to <code>geo</code> binding)</td>
+</tr>
+</tbody>
+</table>
+<div class="callout callout-style-simple callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Deprecated aliases
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><code>fillcolor</code> → <code>colorscheme: ["#hex"]</code> · <code>strokecolor</code> → <code>linecolor</code> · <code>strokewidth</code> → <code>linewidth</code> · <code>opacity</code> → <code>fillopacity</code></p>
+</div>
+</div>
+<div class="callout callout-style-simple callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Warning</span>Invalid properties (silently ignored)
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><code>clipupper</code> and <code>cliplower</code> appear in some older documentation but are <strong>not valid</strong> style properties. Use <code>chartupper</code> / <code>chartlower</code> for scale-dependent chart visibility, or <code>layerupper</code> / <code>layerlower</code> for the full layer.</p>
+</div>
+</div>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./map_types.html" class="pagination-link" aria-label="Map Types, Sizing &amp; Colors">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Map Types, Sizing &amp; Colors</span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./chart_scaling.html" class="pagination-link" aria-label="Chart Scaling">
+        <span class="nav-page-text">Chart Scaling</span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/gjrichter/ixmaps-flat/issues/new" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div></div></div></footer></body></html>
