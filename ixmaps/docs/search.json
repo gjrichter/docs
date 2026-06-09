@@ -467,18 +467,6 @@
     ]
   },
   {
-    "objectID": "map_types.html#projections",
-    "href": "map_types.html#projections",
-    "title": "Map Types, Sizing & Colors",
-    "section": "Projections",
-    "text": "Projections\nAll projections render in SVG without a tile layer. See § Three map contexts above for when to use each setup.\n\n\n\n\n\n\n\n\n\nmapProjection\nAlso accepted\nProjection\nBest for\n\n\n\n\n(omit)\n—\nWeb Mercator + tiles\nDefault tile-based maps\n\n\n\"mercator\"\n—\nMercator SVG, no tiles\nClean Mercator, no tile texture\n\n\n\"lambert\"\n\"lambertazimuthalequalarea\"\nLambert Azimuthal Equal-Area (EPSG:3035)\nEurope (Eurostat style)\n\n\n\"equalearth\"\n—\nEqual Earth\nWorld maps\n\n\n\"winkel\"\n—\nWinkel Tripel\nWorld maps (minimal distortion)\n\n\n\"albers\"\n\"albersequalarea\"\nAlbers Equal-Area Conic\nContinental US, large regions\n\n\n\"orthographic\"\n—\nOrthographic\nGlobe view\n\n\n\nLambert — Europe (Eurostat style):\nconst myMap = ixmaps.Map(\"map\", {\n    mapType:       \"white\",\n    mapProjection: \"lambert\",\n    mode:          \"pan\",\n    legend:        \"closed\",\n    tools:         false\n})\n.view([53.4, 16.9], 3.7)\n.options({ basemapopacity: 0, flushChartDraw: 1000000 });\nEqual Earth — world map:\nconst myMap = ixmaps.Map(\"map\", {\n    mapType:       \"#0a1929\",\n    mapProjection: \"equalearth\",\n    mode:          \"info\",\n    legend:        \"closed\"\n})\n.view([0, 0], 1)\n.options({ basemapopacity: 0, flushChartDraw: 1000000 });",
-    "crumbs": [
-      "Home",
-      "Reference",
-      "Map Types, Sizing & Colors"
-    ]
-  },
-  {
     "objectID": "getting_started.html",
     "href": "getting_started.html",
     "title": "Quick Start",
