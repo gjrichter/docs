@@ -122,12 +122,12 @@ const myMap = ixmaps.Map("map", {
 .options({ basemapopacity: 0, flushChartDraw: 1000000 });
 ```
 
-:::{.callout-important}
-## Projection maps require `.view([lat, lng], zoom)` array syntax
-The object form `{ center: {lat, lng}, zoom }` does not work with projections. Always use the two-argument array form:
+:::{.callout-tip}
+## Prefer the array form `.view([lat, lng], zoom)`
+The two-argument array form is the convention across all ixMaps examples — use it for consistency. The object form is also accepted and works with projections too; the two are equivalent:
 ```javascript
-.view([53.4, 16.9], 3.7)   // ✅ projection
-.view({ center: {...}, zoom: 6 })  // ❌ Mercator only
+.view([53.4, 16.9], 3.7)                                 // ← preferred
+.view({ center: { lat: 53.4, lng: 16.9 }, zoom: 3.7 })   // equivalent, projections included
 ```
 :::
 
@@ -323,6 +323,11 @@ Is your data...
 | `3D` | 3D rendering for `BAR`, `PIE`, `DONUT` |
 | `BOX` | Background box behind each chart; customise with `boxopacity`, `boxmargin`, `bordercolor` |
 | `MOVABLE` | Charts become draggable on the map |
+
+:::{.callout-note}
+## Scale-bounding `CLIPTOGEOBOUNDS`
+When a layer uses `CLIPTOGEOBOUNDS`, the optional `clipupper` / `cliplower` style properties restrict the geo-bounds clipping to a map-scale range — same `"1:scale"` syntax as `chartupper` / `chartlower`. They are read only when `CLIPTOGEOBOUNDS` is present in the type string; on a layer without it they have no effect.
+:::
 
 **Filtering / visibility modifiers:**
 

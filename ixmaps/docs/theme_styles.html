@@ -325,20 +325,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 <p>Complete reference for <code>.style({...})</code> properties in ixMaps layer definitions.</p>
-<div class="callout callout-style-simple callout-important callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Important</span><code>showdata: "true"</code> is always required
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>Every layer that should render anything must include <code>showdata: "true"</code> in its <code>.style()</code>. Without it, data loads and processes but the draw phase never starts — no error, just silence.</p>
-</div>
-</div>
-<hr>
 <section id="core-properties" class="level2">
 <h2 class="anchored" data-anchor-id="core-properties">Core properties</h2>
 <table class="caption-top table">
@@ -353,7 +339,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <tr class="odd">
 <td><code>showdata</code></td>
 <td>string</td>
-<td><strong>Required.</strong> Must be the string <code>"true"</code></td>
+<td>Set <code>"true"</code> to expose the feature’s data record on click — needed for <code>{{theme.item.data}}</code> tooltips. Not required for rendering.</td>
 </tr>
 <tr class="even">
 <td><code>colorscheme</code></td>
@@ -366,21 +352,26 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <td>Fill opacity. <strong>Prefer <code>fillopacity</code> over <code>opacity</code></strong></td>
 </tr>
 <tr class="even">
+<td><code>opacity</code></td>
+<td>number (0–1)</td>
+<td>Overall opacity. Works, but <strong>prefer <code>fillopacity</code></strong> for fill transparency</td>
+</tr>
+<tr class="odd">
 <td><code>linecolor</code></td>
 <td>string / array</td>
 <td>Polygon border color or flow-line color. Single string or <code>["#from","#to"]</code> for <code>VECTOR\|GRADIENT</code></td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><code>linewidth</code></td>
 <td>number</td>
 <td>Border / stroke width in pixels</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><code>scale</code></td>
 <td>number</td>
 <td>Uniform size multiplier. Start at <code>1</code></td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><code>visible</code></td>
 <td>boolean</td>
 <td><code>false</code> = layer starts hidden (toggle with <code>showTheme</code>/<code>hideTheme</code>)</td>
@@ -398,7 +389,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <div class="callout-body-container callout-body">
 <ul>
-<li><code>opacity</code> — use <code>fillopacity</code></li>
 <li><code>fillcolor</code> — use <code>colorscheme: ["#hex"]</code></li>
 <li><code>strokecolor</code> / <code>strokewidth</code> — use <code>linecolor</code> / <code>linewidth</code></li>
 </ul>
@@ -573,7 +563,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <tr class="odd">
 <td><code>datafields</code></td>
 <td>array</td>
-<td>Extra fields for <code>{theme.item.data}</code> table: <code>["field1","field2"]</code></td>
+<td>Extra fields for <code>{{theme.item.data}}</code> table: <code>["field1","field2"]</code></td>
 </tr>
 </tbody>
 </table>
@@ -669,19 +659,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    <span class="dt">chartupper</span><span class="op">:</span> <span class="st">"1:5000"</span><span class="op">,</span>   <span class="co">// hide when zoomed out past 1:5000</span></span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">chartlower</span><span class="op">:</span> <span class="st">"1:500"</span>     <span class="co">// hide when zoomed in past 1:500</span></span>
 <span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>})</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="callout callout-style-simple callout-warning callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Warning</span>Use <code>chartupper</code>/<code>chartlower</code>, not <code>clipupper</code>/<code>cliplower</code>
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p><code>clipupper</code> and <code>cliplower</code> are not valid style properties and are silently ignored.</p>
-</div>
-</div>
 <hr>
 </section>
 <section id="symbol-and-chart-properties" class="level2">
@@ -1220,7 +1197,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <tr class="odd">
 <td><code>datafields</code></td>
 <td>array</td>
-<td>Fields shown in <code>{theme.item.data}</code> tooltip table</td>
+<td>Fields shown in <code>{{theme.item.data}}</code> tooltip table</td>
 </tr>
 <tr class="even">
 <td><code>declutterupper</code></td>
@@ -1508,9 +1485,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <td>Vertical symbol offset in pixels</td>
 </tr>
 <tr class="odd">
-<td><code>~~opacity~~</code></td>
+<td><code>opacity</code></td>
 <td>number</td>
-<td><strong>Deprecated</strong> — use <code>fillopacity</code></td>
+<td>Overall opacity — prefer <code>fillopacity</code> for fill transparency</td>
 </tr>
 <tr class="even">
 <td><code>outlierscale</code></td>
@@ -1590,7 +1567,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <tr class="odd">
 <td><code>showdata</code></td>
 <td>string</td>
-<td><strong>Required</strong> — must be <code>"true"</code> for any rendering to occur</td>
+<td>Set <code>"true"</code> to expose the data record on click (needed for <code>{{theme.item.data}}</code> tooltips); not required for rendering</td>
 </tr>
 <tr class="even">
 <td><code>sizefield</code></td>
@@ -1759,20 +1736,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p><code>fillcolor</code> → <code>colorscheme: ["#hex"]</code> · <code>strokecolor</code> → <code>linecolor</code> · <code>strokewidth</code> → <code>linewidth</code> · <code>opacity</code> → <code>fillopacity</code></p>
-</div>
-</div>
-<div class="callout callout-style-simple callout-warning callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Warning</span>Invalid properties (silently ignored)
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p><code>clipupper</code> and <code>cliplower</code> appear in some older documentation but are <strong>not valid</strong> style properties. Use <code>chartupper</code> / <code>chartlower</code> for scale-dependent chart visibility, or <code>layerupper</code> / <code>layerlower</code> for the full layer.</p>
+<p><code>fillcolor</code> → <code>colorscheme: ["#hex"]</code> · <code>strokecolor</code> → <code>linecolor</code> · <code>strokewidth</code> → <code>linewidth</code></p>
 </div>
 </div>
 

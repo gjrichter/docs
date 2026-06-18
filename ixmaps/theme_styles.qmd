@@ -4,20 +4,14 @@ title: "Style Properties"
 
 Complete reference for `.style({...})` properties in ixMaps layer definitions.
 
-:::{.callout-important}
-## `showdata: "true"` is always required
-Every layer that should render anything must include `showdata: "true"` in its `.style()`. Without it, data loads and processes but the draw phase never starts — no error, just silence.
-:::
-
----
-
 ## Core properties
 
 | Property | Type | Description |
 |----------|------|-------------|
-| `showdata` | string | **Required.** Must be the string `"true"` |
+| `showdata` | string | Set `"true"` to expose the feature's data record on click — needed for `{{{theme.item.data}}}` tooltips. Not required for rendering. |
 | `colorscheme` | array / string | Color palette — see [Color Schemes](map_types.qmd#color-schemes) |
 | `fillopacity` | number (0–1) | Fill opacity. **Prefer `fillopacity` over `opacity`** |
+| `opacity` | number (0–1) | Overall opacity. Works, but **prefer `fillopacity`** for fill transparency |
 | `linecolor` | string / array | Polygon border color or flow-line color. Single string or `["#from","#to"]` for `VECTOR\|GRADIENT` |
 | `linewidth` | number | Border / stroke width in pixels |
 | `scale` | number | Uniform size multiplier. Start at `1` |
@@ -25,7 +19,6 @@ Every layer that should render anything must include `showdata: "true"` in its `
 
 :::{.callout-warning}
 ## Never use these properties
-- `opacity` — use `fillopacity`
 - `fillcolor` — use `colorscheme: ["#hex"]`
 - `strokecolor` / `strokewidth` — use `linecolor` / `linewidth`
 :::
@@ -88,7 +81,7 @@ Every layer that should render anything must include `showdata: "true"` in its `
 | `fontweight` | string | Font weight (e.g. `"bold"`) |
 | `textcolor` | string | Text color |
 | `titlefield` | string | Data column used as chart title label (overrides `binding.title`) |
-| `datafields` | array | Extra fields for `{{theme.item.data}}` table: `["field1","field2"]` |
+| `datafields` | array | Extra fields for `{{{theme.item.data}}}` table: `["field1","field2"]` |
 
 ---
 
@@ -126,11 +119,6 @@ For dynamic opacity, add `\|DOPACITYMAX` or `\|DOPACITYMINMAX` to the type strin
     chartlower: "1:500"     // hide when zoomed in past 1:500
 })
 ```
-
-:::{.callout-warning}
-## Use `chartupper`/`chartlower`, not `clipupper`/`cliplower`
-`clipupper` and `cliplower` are not valid style properties and are silently ignored.
-:::
 
 ---
 
@@ -337,7 +325,7 @@ All `.style()` properties drawn from the ixMaps source (`themeStyleTranslateA`).
 | `colorscheme` | array / string | Color palette — single hex, gradient array, or named scheme |
 | `dasharray` | string | SVG stroke-dasharray pattern, e.g. `"5,5"` or `"10,3,3,3"` |
 | `dashoffset` | number | SVG stroke-dashoffset |
-| `datafields` | array | Fields shown in `{{theme.item.data}}` tooltip table |
+| `datafields` | array | Fields shown in `{{{theme.item.data}}}` tooltip table |
 | `declutterupper` | string | Scale above which label decluttering activates |
 | `dopacitypow` | number | Power curve exponent for DOPACITY mapping |
 | `dopacityramp` | string | DOPACITY ramp: `"linear"` (default) or `"exponential"` |
@@ -395,7 +383,7 @@ All `.style()` properties drawn from the ixMaps source (`themeStyleTranslateA`).
 | `normalsizevalue` | string | Reference data value mapping to nominal display size |
 | `offsetx` | number | Horizontal symbol offset in pixels |
 | `offsety` | number | Vertical symbol offset in pixels |
-| `~~opacity~~` | number | **Deprecated** — use `fillopacity` |
+| `opacity` | number | Overall opacity — prefer `fillopacity` for fill transparency |
 | `outlierscale` | number | Scale factor applied to outlier values |
 | `overviewchart` | string | Overview chart mode flag |
 | `rangecentervalue` | number | Diverging scale center value — requires even color count |
@@ -411,7 +399,7 @@ All `.style()` properties drawn from the ixMaps source (`themeStyleTranslateA`).
 | `shadowoffsety` | number | Shadow Y offset |
 | `shadowopacity` | number | Shadow opacity |
 | `shadowupper` | string | Scale above which shadow is hidden |
-| `showdata` | string | **Required** — must be `"true"` for any rendering to occur |
+| `showdata` | string | Set `"true"` to expose the data record on click (needed for `{{{theme.item.data}}}` tooltips); not required for rendering |
 | `sizefield` | string | Data field driving symbol size independently of value (color) field |
 | `sizepow` | number | Power curve for size scaling — `2` = square root (default) |
 | `sizevalueunits` | string | Units for the size value field |
@@ -446,10 +434,5 @@ All `.style()` properties drawn from the ixMaps source (`themeStyleTranslateA`).
 
 :::{.callout-note}
 ## Deprecated aliases
-`fillcolor` → `colorscheme: ["#hex"]` · `strokecolor` → `linecolor` · `strokewidth` → `linewidth` · `opacity` → `fillopacity`
-:::
-
-:::{.callout-warning}
-## Invalid properties (silently ignored)
-`clipupper` and `cliplower` appear in some older documentation but are **not valid** style properties. Use `chartupper` / `chartlower` for scale-dependent chart visibility, or `layerupper` / `layerlower` for the full layer.
+`fillcolor` → `colorscheme: ["#hex"]` · `strokecolor` → `linecolor` · `strokewidth` → `linewidth`
 :::

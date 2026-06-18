@@ -12,7 +12,7 @@ These produce **no error, no console message** — the map just silently renders
 
 | # | What you did | What happens | Fix |
 |---|---|---|---|
-| 1 | Omitted `showdata: "true"` | Layer loads silently, nothing renders | Add `showdata: "true"` to every `.style()` |
+| 1 | Tooltip uses `{{{theme.item.data}}}` but `showdata` omitted | Click shows empty data (layer still renders) | Add `showdata: "true"` when the tooltip uses `{{{theme.item.data}}}` |
 | 2 | Different layer name for overlay vs FEATURE base | Overlay renders nothing | Overlay name must match the FEATURE base name exactly |
 | 3 | Discarded `ixmaps.Map()` result | Map initialises partially; further calls fail | Always `const myMap = ixmaps.Map(...)` |
 | 4 | Omitted `name` in `.meta()` | `changeThemeStyle` / `hideTheme` / `showTheme` silently no-op | Add `name: "themeName"` to `.meta()` |
@@ -33,7 +33,7 @@ These produce **no error, no console message** — the map just silently renders
 
 2. **Library not loaded**
    ```html
-   <script src="https://cdn.jsdelivr.net/gh/gjrichter/ixmaps-flat@master/ixmaps.js"></script>
+   <script src="https://cdn.jsdelivr.net/gh/gjrichter/ixmaps-flat@1/ixmaps.js"></script>
    ```
 
 3. **Map container has no height**
@@ -62,16 +62,11 @@ These produce **no error, no console message** — the map just silently renders
 
 ### Map displays but no points or regions are visible
 
-The two-phase model: ixMaps loads and processes data (phase 1), then draws (phase 2). `showdata: "true"` is the gate that opens phase 2. Without it, data is fully loaded but never drawn.
+When a layer renders nothing, the cause is almost always a missing `.binding()`, a missing `.define()`, or bad coordinates — not `showdata` (which doesn't gate rendering).
 
 **Checklist:**
 
-1. **`showdata: "true"` missing** — most common issue
-   ```javascript
-   .style({ colorscheme: ["#0066cc"], showdata: "true" })
-   ```
-
-2. **`.binding()` missing or incorrect**
+1. **`.binding()` missing or incorrect**
    ```javascript
    // ❌ Wrong:
    .data({ obj: data, type: "json" })
@@ -84,13 +79,13 @@ The two-phase model: ixMaps loads and processes data (phase 1), then draws (phas
    .style({ showdata: "true" })
    ```
 
-3. **`.define()` missing** — the layer chain must end with `.define()`
+2. **`.define()` missing** — the layer chain must end with `.define()`
 
-4. **Data outside the visible map area** — zoom out to see if data appears elsewhere. Verify the map center/zoom matches the data's geographic location.
+3. **Data outside the visible map area** — zoom out to see if data appears elsewhere. Verify the map center/zoom matches the data's geographic location.
 
-5. **Coordinates invalid** — latitude must be −90 to 90, longitude −180 to 180. Check for swapped lat/lon, null values, or coordinates stored as strings instead of numbers.
+4. **Coordinates invalid** — latitude must be −90 to 90, longitude −180 to 180. Check for swapped lat/lon, null values, or coordinates stored as strings instead of numbers.
 
-6. **Wrong visualization type for geometry**
+5. **Wrong visualization type for geometry**
    - Point data → `CHART|...` types
    - Polygon/line data → `FEATURE` or `CHOROPLETH`
    - Do not combine `FEATURE` and `CHOROPLETH` on the **same** layer — use two layers with the same name
@@ -301,7 +296,7 @@ Work through this in order:
 3. ✅ Map `<div>` has explicit height via CSS
 4. ✅ `const myMap = ixmaps.Map(...)` — result assigned
 5. ✅ Every layer has `.binding()` with `geo` + `value`
-6. ✅ Every layer has `showdata: "true"` in `.style()`
+6. ✅ Tooltips using `{{{theme.item.data}}}` include `showdata: "true"`
 7. ✅ Every layer has `.meta({ tooltip: "..." })`
 8. ✅ Every layer ends with `.define()`
 9. ✅ Overlay layer name matches FEATURE base layer name

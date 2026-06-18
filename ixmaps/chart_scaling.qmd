@@ -173,11 +173,6 @@ Background boxes can also appear/disappear by scale:
 })
 ```
 
-:::{.callout-note}
-## Use `chartupper` / `chartlower`, not `clipupper` / `cliplower`
-`clipupper` and `cliplower` are not valid properties and are silently ignored.
-:::
-
 ---
 
 ## Runtime size adjustments

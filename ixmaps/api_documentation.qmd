@@ -301,10 +301,10 @@ See [Style Properties](theme_styles.qmd) for the complete reference. Minimum req
 
 | Syntax | Result |
 |--------|--------|
-| `{{fieldname}}` | ixMaps-formatted value |
-| `{{raw.fieldname}}` | Raw unformatted value — bypasses all ixMaps formatting |
-| `{{theme.item.chart}}` | Built-in chart SVG for this item |
-| `{{theme.item.data}}` | Built-in data table for this item |
+| `{{{fieldname}}}` | ixMaps-formatted value |
+| `{{{raw.fieldname}}}` | Raw unformatted value — bypasses all ixMaps formatting |
+| `{{{theme.item.chart}}}` | Built-in chart SVG for this item |
+| `{{{theme.item.data}}}` | Built-in data table for this item |
 
 ---
 

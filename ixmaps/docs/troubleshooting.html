@@ -364,9 +364,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <tbody>
 <tr class="odd">
 <td>1</td>
-<td>Omitted <code>showdata: "true"</code></td>
-<td>Layer loads silently, nothing renders</td>
-<td>Add <code>showdata: "true"</code> to every <code>.style()</code></td>
+<td>Tooltip uses <code>{{theme.item.data}}</code> but <code>showdata</code> omitted</td>
+<td>Click shows empty data (layer still renders)</td>
+<td>Add <code>showdata: "true"</code> when the tooltip uses <code>{{theme.item.data}}</code></td>
 </tr>
 <tr class="even">
 <td>2</td>
@@ -433,7 +433,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <ol type="1">
 <li><p><strong>JavaScript error</strong> — Open the browser console (F12) and look for red errors. Common causes: syntax errors, missing commas or brackets, typos in method names.</p></li>
 <li><p><strong>Library not loaded</strong></p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode html code-with-copy"><code class="sourceCode html"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">script</span><span class="ot"> src</span><span class="op">=</span><span class="st">"https://cdn.jsdelivr.net/gh/gjrichter/ixmaps-flat@master/ixmaps.js"</span><span class="dt">&gt;&lt;/</span><span class="kw">script</span><span class="dt">&gt;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div></li>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode html code-with-copy"><code class="sourceCode html"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">script</span><span class="ot"> src</span><span class="op">=</span><span class="st">"https://cdn.jsdelivr.net/gh/gjrichter/ixmaps-flat@1/ixmaps.js"</span><span class="dt">&gt;&lt;/</span><span class="kw">script</span><span class="dt">&gt;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div></li>
 <li><p><strong>Map container has no height</strong></p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode css code-with-copy"><code class="sourceCode css"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>html<span class="op">,</span> body { <span class="kw">width</span><span class="ch">:</span> <span class="dv">100</span><span class="dt">%</span><span class="op">;</span> <span class="kw">height</span><span class="ch">:</span> <span class="dv">100</span><span class="dt">%</span><span class="op">;</span> <span class="kw">overflow</span><span class="ch">:</span> <span class="dv">hidden</span><span class="op">;</span> }</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="pp">#map</span> { <span class="kw">width</span><span class="ch">:</span> <span class="dv">100</span><span class="dt">%</span><span class="op">;</span> <span class="kw">height</span><span class="ch">:</span> <span class="dv">100</span><span class="dt">%</span><span class="op">;</span> }</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -455,21 +455,19 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h2 class="anchored" data-anchor-id="data-not-showing">Data not showing</h2>
 <section id="map-displays-but-no-points-or-regions-are-visible" class="level3">
 <h3 class="anchored" data-anchor-id="map-displays-but-no-points-or-regions-are-visible">Map displays but no points or regions are visible</h3>
-<p>The two-phase model: ixMaps loads and processes data (phase 1), then draws (phase 2). <code>showdata: "true"</code> is the gate that opens phase 2. Without it, data is fully loaded but never drawn.</p>
+<p>When a layer renders nothing, the cause is almost always a missing <code>.binding()</code>, a missing <code>.define()</code>, or bad coordinates — not <code>showdata</code> (which doesn’t gate rendering).</p>
 <p><strong>Checklist:</strong></p>
 <ol type="1">
-<li><p><strong><code>showdata: "true"</code> missing</strong> — most common issue</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">style</span>({ <span class="dt">colorscheme</span><span class="op">:</span> [<span class="st">"#0066cc"</span>]<span class="op">,</span> <span class="dt">showdata</span><span class="op">:</span> <span class="st">"true"</span> })</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div></li>
 <li><p><strong><code>.binding()</code> missing or incorrect</strong></p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co">// ❌ Wrong:</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">data</span>({ <span class="dt">obj</span><span class="op">:</span> data<span class="op">,</span> <span class="dt">type</span><span class="op">:</span> <span class="st">"json"</span> })</span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">style</span>({ <span class="op">...</span> })</span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="co">// ✅ Correct:</span></span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">data</span>({ <span class="dt">obj</span><span class="op">:</span> data<span class="op">,</span> <span class="dt">type</span><span class="op">:</span> <span class="st">"json"</span> })</span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">binding</span>({ <span class="dt">geo</span><span class="op">:</span> <span class="st">"lat|lon"</span><span class="op">,</span> <span class="dt">value</span><span class="op">:</span> <span class="st">"count"</span><span class="op">,</span> <span class="dt">title</span><span class="op">:</span> <span class="st">"name"</span> })</span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">type</span>(<span class="st">"CHART|BUBBLE|SIZE|VALUES"</span>)</span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">style</span>({ <span class="dt">showdata</span><span class="op">:</span> <span class="st">"true"</span> })</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div></li>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co">// ❌ Wrong:</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">data</span>({ <span class="dt">obj</span><span class="op">:</span> data<span class="op">,</span> <span class="dt">type</span><span class="op">:</span> <span class="st">"json"</span> })</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">style</span>({ <span class="op">...</span> })</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="co">// ✅ Correct:</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">data</span>({ <span class="dt">obj</span><span class="op">:</span> data<span class="op">,</span> <span class="dt">type</span><span class="op">:</span> <span class="st">"json"</span> })</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">binding</span>({ <span class="dt">geo</span><span class="op">:</span> <span class="st">"lat|lon"</span><span class="op">,</span> <span class="dt">value</span><span class="op">:</span> <span class="st">"count"</span><span class="op">,</span> <span class="dt">title</span><span class="op">:</span> <span class="st">"name"</span> })</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">type</span>(<span class="st">"CHART|BUBBLE|SIZE|VALUES"</span>)</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">style</span>({ <span class="dt">showdata</span><span class="op">:</span> <span class="st">"true"</span> })</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div></li>
 <li><p><strong><code>.define()</code> missing</strong> — the layer chain must end with <code>.define()</code></p></li>
 <li><p><strong>Data outside the visible map area</strong> — zoom out to see if data appears elsewhere. Verify the map center/zoom matches the data’s geographic location.</p></li>
 <li><p><strong>Coordinates invalid</strong> — latitude must be −90 to 90, longitude −180 to 180. Check for swapped lat/lon, null values, or coordinates stored as strings instead of numbers.</p></li>
@@ -497,25 +495,25 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h3 class="anchored" data-anchor-id="no-tooltips-on-hover">No tooltips on hover</h3>
 <ol type="1">
 <li><p><strong>Missing <code>mode: "info"</code> in constructor</strong> — this is a constructor-time decision; it cannot be added after init</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co">// ❌ Wrong:</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>ixmaps<span class="op">.</span><span class="fu">Map</span>(<span class="st">"map"</span><span class="op">,</span> { <span class="dt">mapType</span><span class="op">:</span> <span class="st">"VT_TONER_LITE"</span> })</span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="co">// ✅ Correct:</span></span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>ixmaps<span class="op">.</span><span class="fu">Map</span>(<span class="st">"map"</span><span class="op">,</span> { <span class="dt">mapType</span><span class="op">:</span> <span class="st">"VT_TONER_LITE"</span><span class="op">,</span> <span class="dt">mode</span><span class="op">:</span> <span class="st">"info"</span> })</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div></li>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co">// ❌ Wrong:</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>ixmaps<span class="op">.</span><span class="fu">Map</span>(<span class="st">"map"</span><span class="op">,</span> { <span class="dt">mapType</span><span class="op">:</span> <span class="st">"VT_TONER_LITE"</span> })</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="co">// ✅ Correct:</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>ixmaps<span class="op">.</span><span class="fu">Map</span>(<span class="st">"map"</span><span class="op">,</span> { <span class="dt">mapType</span><span class="op">:</span> <span class="st">"VT_TONER_LITE"</span><span class="op">,</span> <span class="dt">mode</span><span class="op">:</span> <span class="st">"info"</span> })</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div></li>
 <li><p><strong>Missing <code>.meta()</code></strong></p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">meta</span>({ <span class="dt">tooltip</span><span class="op">:</span> <span class="st">"{{theme.item.chart}}{{theme.item.data}}"</span> })</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div></li>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">meta</span>({ <span class="dt">tooltip</span><span class="op">:</span> <span class="st">"{{theme.item.chart}}{{theme.item.data}}"</span> })</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div></li>
 <li><p><strong>Wrong field names</strong> — field names in tooltip templates are case-sensitive</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co">// ❌ Wrong (GeoJSON):</span></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>tooltip<span class="op">:</span> <span class="st">"{{properties.NAME}}"</span></span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="co">// ✅ Correct:</span></span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>tooltip<span class="op">:</span> <span class="st">"{{NAME}}"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div></li>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co">// ❌ Wrong (GeoJSON):</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>tooltip<span class="op">:</span> <span class="st">"{{properties.NAME}}"</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="co">// ✅ Correct:</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>tooltip<span class="op">:</span> <span class="st">"{{NAME}}"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div></li>
 </ol>
 </section>
 <section id="tooltip-text-is-invisible-on-dark-basemaps" class="level3">
 <h3 class="anchored" data-anchor-id="tooltip-text-is-invisible-on-dark-basemaps">Tooltip text is invisible on dark basemaps</h3>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode css code-with-copy"><code class="sourceCode css"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="pp">#tooltip</span> { <span class="kw">color</span><span class="ch">:</span> <span class="cn">#e8eaf6</span> <span class="at">!important</span><span class="op">;</span> }</span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="pp">#tooltip</span> <span class="op">*</span> { <span class="kw">color</span><span class="ch">:</span> <span class="cn">#e8eaf6</span> <span class="at">!important</span><span class="op">;</span> }</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode css code-with-copy"><code class="sourceCode css"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="pp">#tooltip</span> { <span class="kw">color</span><span class="ch">:</span> <span class="cn">#e8eaf6</span> <span class="at">!important</span><span class="op">;</span> }</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="pp">#tooltip</span> <span class="op">*</span> { <span class="kw">color</span><span class="ch">:</span> <span class="cn">#e8eaf6</span> <span class="at">!important</span><span class="op">;</span> }</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <hr>
 </section>
 </section>
@@ -523,38 +521,38 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h2 class="anchored" data-anchor-id="styling-issues">Styling issues</h2>
 <section id="colors-not-applying" class="level3">
 <h3 class="anchored" data-anchor-id="colors-not-applying">Colors not applying</h3>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co">// ❌ Wrong property name:</span></span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>fillcolor<span class="op">:</span> <span class="st">"#ff0000"</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co">// ❌ Wrong property name:</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>fillcolor<span class="op">:</span> <span class="st">"#ff0000"</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="co">// ✅ Correct:</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>colorscheme<span class="op">:</span> [<span class="st">"#ff0000"</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co">// ❌ Wrong type (string instead of array):</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>colorscheme<span class="op">:</span> <span class="st">"#ff0000"</span></span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="co">// ✅ Correct:</span></span>
 <span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>colorscheme<span class="op">:</span> [<span class="st">"#ff0000"</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co">// ❌ Wrong type (string instead of array):</span></span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>colorscheme<span class="op">:</span> <span class="st">"#ff0000"</span></span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="co">// ✅ Correct:</span></span>
-<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>colorscheme<span class="op">:</span> [<span class="st">"#ff0000"</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="symbols-too-small-or-too-large" class="level3">
 <h3 class="anchored" data-anchor-id="symbols-too-small-or-too-large">Symbols too small or too large</h3>
 <ol type="1">
 <li><p>Adjust <code>scale</code>:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">style</span>({ <span class="dt">scale</span><span class="op">:</span> <span class="fl">2.0</span> })   <span class="co">// double size</span></span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">style</span>({ <span class="dt">scale</span><span class="op">:</span> <span class="fl">0.5</span> })   <span class="co">// half size</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div></li>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">style</span>({ <span class="dt">scale</span><span class="op">:</span> <span class="fl">2.0</span> })   <span class="co">// double size</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">style</span>({ <span class="dt">scale</span><span class="op">:</span> <span class="fl">0.5</span> })   <span class="co">// half size</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div></li>
 <li><p>Adjust <code>normalsizevalue</code> (lower = larger bubbles):</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">style</span>({ <span class="dt">normalsizevalue</span><span class="op">:</span> <span class="st">"500000"</span> })  <span class="co">// smaller reference → bigger bubbles</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div></li>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">style</span>({ <span class="dt">normalsizevalue</span><span class="op">:</span> <span class="st">"500000"</span> })  <span class="co">// smaller reference → bigger bubbles</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div></li>
 <li><p>Adjust <code>normalSizeScale</code> in <code>.options()</code> (must match initial zoom):</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">options</span>({ <span class="dt">objectscaling</span><span class="op">:</span> <span class="st">"dynamic"</span><span class="op">,</span> <span class="dt">normalSizeScale</span><span class="op">:</span> <span class="st">"8000000"</span> })</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div></li>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">options</span>({ <span class="dt">objectscaling</span><span class="op">:</span> <span class="st">"dynamic"</span><span class="op">,</span> <span class="dt">normalSizeScale</span><span class="op">:</span> <span class="st">"8000000"</span> })</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div></li>
 </ol>
 </section>
 <section id="diverging-scale-not-centered" class="level3">
 <h3 class="anchored" data-anchor-id="diverging-scale-not-centered">Diverging scale not centered</h3>
 <p>Requires an <strong>even</strong> number of colors:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb15"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co">// ❌ Wrong — 7 colors (odd):</span></span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>colorscheme<span class="op">:</span> [<span class="st">"#d73027"</span><span class="op">,</span><span class="st">"#f46d43"</span><span class="op">,</span><span class="st">"#fdae61"</span><span class="op">,</span><span class="st">"#ffffbf"</span><span class="op">,</span><span class="st">"#abd9e9"</span><span class="op">,</span><span class="st">"#74add1"</span><span class="op">,</span><span class="st">"#4575b4"</span>]</span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="co">// ✅ Correct — 6 colors (even):</span></span>
-<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>colorscheme<span class="op">:</span> [<span class="st">"#d73027"</span><span class="op">,</span><span class="st">"#f46d43"</span><span class="op">,</span><span class="st">"#fdae61"</span><span class="op">,</span><span class="st">"#abd9e9"</span><span class="op">,</span><span class="st">"#74add1"</span><span class="op">,</span><span class="st">"#4575b4"</span>]<span class="op">,</span></span>
-<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>rangecentervalue<span class="op">:</span> <span class="dv">0</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co">// ❌ Wrong — 7 colors (odd):</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>colorscheme<span class="op">:</span> [<span class="st">"#d73027"</span><span class="op">,</span><span class="st">"#f46d43"</span><span class="op">,</span><span class="st">"#fdae61"</span><span class="op">,</span><span class="st">"#ffffbf"</span><span class="op">,</span><span class="st">"#abd9e9"</span><span class="op">,</span><span class="st">"#74add1"</span><span class="op">,</span><span class="st">"#4575b4"</span>]</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="co">// ✅ Correct — 6 colors (even):</span></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>colorscheme<span class="op">:</span> [<span class="st">"#d73027"</span><span class="op">,</span><span class="st">"#f46d43"</span><span class="op">,</span><span class="st">"#fdae61"</span><span class="op">,</span><span class="st">"#abd9e9"</span><span class="op">,</span><span class="st">"#74add1"</span><span class="op">,</span><span class="st">"#4575b4"</span>]<span class="op">,</span></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>rangecentervalue<span class="op">:</span> <span class="dv">0</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <hr>
 </section>
 </section>
@@ -564,34 +562,34 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h3 class="anchored" data-anchor-id="changethemestyle-has-no-effect"><code>changeThemeStyle</code> has no effect</h3>
 <ol type="1">
 <li><p><strong>Missing <code>name</code> in <code>.meta()</code></strong> — <code>changeThemeStyle</code> finds themes by meta name, not by layer name</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb16"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">meta</span>({ <span class="dt">name</span><span class="op">:</span> <span class="st">"myLayer"</span><span class="op">,</span> <span class="dt">tooltip</span><span class="op">:</span> <span class="st">"..."</span> })  <span class="co">// ✅ name required</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div></li>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb15"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">meta</span>({ <span class="dt">name</span><span class="op">:</span> <span class="st">"myLayer"</span><span class="op">,</span> <span class="dt">tooltip</span><span class="op">:</span> <span class="st">"..."</span> })  <span class="co">// ✅ name required</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div></li>
 <li><p><strong>Called via wrong API</strong></p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb17"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co">// ❌ Wrong:</span></span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>ixmaps<span class="op">.</span><span class="fu">map</span>()<span class="op">.</span><span class="fu">changeThemeStyle</span>(<span class="op">...</span>)  <span class="co">// returns {szMap:null}</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb16"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co">// ❌ Wrong:</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>ixmaps<span class="op">.</span><span class="fu">map</span>()<span class="op">.</span><span class="fu">changeThemeStyle</span>(<span class="op">...</span>)  <span class="co">// returns {szMap:null}</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="co">// ✅ Correct:</span></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>myMap<span class="op">.</span><span class="fu">then</span>(api <span class="kw">=&gt;</span> api<span class="op">.</span><span class="fu">changeThemeStyle</span>(<span class="st">"myLayer"</span><span class="op">,</span> <span class="st">"scale:1.5"</span><span class="op">,</span> <span class="st">"set"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div></li>
+<li><p><strong>Filter string quoting</strong> — use double quotes for string values:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb17"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co">// ❌ Wrong — single quotes don't work:</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>m<span class="op">.</span><span class="fu">changeThemeStyle</span>(<span class="st">"layer"</span><span class="op">,</span> <span class="st">"filter:WHERE type == 'A'"</span><span class="op">,</span> <span class="st">"set"</span>)</span>
 <span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a><span class="co">// ✅ Correct:</span></span>
-<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>myMap<span class="op">.</span><span class="fu">then</span>(api <span class="kw">=&gt;</span> api<span class="op">.</span><span class="fu">changeThemeStyle</span>(<span class="st">"myLayer"</span><span class="op">,</span> <span class="st">"scale:1.5"</span><span class="op">,</span> <span class="st">"set"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div></li>
-<li><p><strong>Filter string quoting</strong> — use double quotes for string values:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb18"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co">// ❌ Wrong — single quotes don't work:</span></span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>m<span class="op">.</span><span class="fu">changeThemeStyle</span>(<span class="st">"layer"</span><span class="op">,</span> <span class="st">"filter:WHERE type == 'A'"</span><span class="op">,</span> <span class="st">"set"</span>)</span>
-<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a><span class="co">// ✅ Correct:</span></span>
-<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>m<span class="op">.</span><span class="fu">changeThemeStyle</span>(<span class="st">"layer"</span><span class="op">,</span> <span class="st">'filter:WHERE type == "A"'</span><span class="op">,</span> <span class="st">"set"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div></li>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>m<span class="op">.</span><span class="fu">changeThemeStyle</span>(<span class="st">"layer"</span><span class="op">,</span> <span class="st">'filter:WHERE type == "A"'</span><span class="op">,</span> <span class="st">"set"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div></li>
 </ol>
 </section>
 <section id="overlays-stack-instead-of-replacing" class="level3">
 <h3 class="anchored" data-anchor-id="overlays-stack-instead-of-replacing">Overlays stack instead of replacing</h3>
 <p>Missing <code>removeTheme()</code> before redefining:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb19"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="kw">let</span> ACTIVE <span class="op">=</span> <span class="kw">null</span><span class="op">;</span></span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>myMap<span class="op">.</span><span class="fu">then</span>(api <span class="kw">=&gt;</span> {</span>
-<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (ACTIVE) api<span class="op">.</span><span class="fu">removeTheme</span>(ACTIVE)<span class="op">;</span>   <span class="co">// ← required</span></span>
-<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>    myMap<span class="op">.</span><span class="fu">layer</span>(<span class="st">"base"</span>)</span>
-<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>        <span class="op">.</span><span class="fu">data</span>({ <span class="dt">obj</span><span class="op">:</span> newData<span class="op">,</span> <span class="dt">type</span><span class="op">:</span> <span class="st">"json"</span> })</span>
-<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>        <span class="co">// ...</span></span>
-<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>        <span class="op">.</span><span class="fu">meta</span>({ <span class="dt">name</span><span class="op">:</span> <span class="st">"theme-v2"</span> })</span>
-<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>        <span class="op">.</span><span class="fu">define</span>()<span class="op">;</span></span>
-<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>    ACTIVE <span class="op">=</span> <span class="st">"theme-v2"</span><span class="op">;</span></span>
-<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a>})<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb18"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="kw">let</span> ACTIVE <span class="op">=</span> <span class="kw">null</span><span class="op">;</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>myMap<span class="op">.</span><span class="fu">then</span>(api <span class="kw">=&gt;</span> {</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (ACTIVE) api<span class="op">.</span><span class="fu">removeTheme</span>(ACTIVE)<span class="op">;</span>   <span class="co">// ← required</span></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>    myMap<span class="op">.</span><span class="fu">layer</span>(<span class="st">"base"</span>)</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>        <span class="op">.</span><span class="fu">data</span>({ <span class="dt">obj</span><span class="op">:</span> newData<span class="op">,</span> <span class="dt">type</span><span class="op">:</span> <span class="st">"json"</span> })</span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>        <span class="co">// ...</span></span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>        <span class="op">.</span><span class="fu">meta</span>({ <span class="dt">name</span><span class="op">:</span> <span class="st">"theme-v2"</span> })</span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>        <span class="op">.</span><span class="fu">define</span>()<span class="op">;</span></span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>    ACTIVE <span class="op">=</span> <span class="st">"theme-v2"</span><span class="op">;</span></span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a>})<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <hr>
 </section>
 </section>
@@ -601,12 +599,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h3 class="anchored" data-anchor-id="map-loads-slowly-browser-freezes">Map loads slowly / browser freezes</h3>
 <ol type="1">
 <li><p><strong>Disable animation</strong></p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb20"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">options</span>({ <span class="dt">flushChartDraw</span><span class="op">:</span> <span class="dv">1000000</span> })</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div></li>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb19"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">options</span>({ <span class="dt">flushChartDraw</span><span class="op">:</span> <span class="dv">1000000</span> })</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div></li>
 <li><p><strong>Add <code>flushPaintShape</code> for large polygon datasets</strong> (municipalities, communes)</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb21"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">options</span>({ <span class="dt">flushPaintShape</span><span class="op">:</span> <span class="dv">1000000</span> })</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div></li>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb20"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">options</span>({ <span class="dt">flushPaintShape</span><span class="op">:</span> <span class="dv">1000000</span> })</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div></li>
 <li><p><strong>Use grid aggregation instead of individual points</strong></p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb22"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">type</span>(<span class="st">"CHART|BUBBLE|SIZE|AGGREGATE"</span>)</span>
-<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">style</span>({ <span class="dt">gridwidth</span><span class="op">:</span> <span class="st">"5px"</span><span class="op">,</span> <span class="dt">showdata</span><span class="op">:</span> <span class="st">"true"</span> })</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div></li>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb21"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">type</span>(<span class="st">"CHART|BUBBLE|SIZE|AGGREGATE"</span>)</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">style</span>({ <span class="dt">gridwidth</span><span class="op">:</span> <span class="st">"5px"</span><span class="op">,</span> <span class="dt">showdata</span><span class="op">:</span> <span class="st">"true"</span> })</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div></li>
 <li><p><strong>Use TopoJSON</strong> — 80–90 % smaller than equivalent GeoJSON. Simplify with <a href="https://mapshaper.org">mapshaper.org</a>.</p></li>
 </ol>
 <hr>
@@ -617,9 +615,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="local-files-blocked" class="level3">
 <h3 class="anchored" data-anchor-id="local-files-blocked">Local files blocked</h3>
 <p>Browsers block loading <code>file://</code> URLs from JavaScript. Use a local dev server:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb23"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="ex">python3</span> <span class="at">-m</span> http.server 8000   <span class="co"># Python 3</span></span>
-<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="ex">npx</span> http-server               <span class="co"># Node.js</span></span>
-<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a><span class="co"># then open http://localhost:8000/map.html</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb22"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="ex">python3</span> <span class="at">-m</span> http.server 8000   <span class="co"># Python 3</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="ex">npx</span> http-server               <span class="co"># Node.js</span></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="co"># then open http://localhost:8000/map.html</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="cdn-not-updating-after-data-push" class="level3">
 <h3 class="anchored" data-anchor-id="cdn-not-updating-after-data-push">CDN not updating after data push</h3>
@@ -632,8 +630,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Bootstrap 3’s <code>.hidden { display:none !important }</code> silently breaks ixMaps toolbar buttons, tooltips, and context menus.</p>
 <p><strong>Root fix:</strong> Remove Bootstrap 3 and use standalone facet CSS (see the create-ixmap skill for the ~35-line replacement).</p>
 <p><strong>Fallback:</strong> Higher-specificity overrides:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb24"><pre class="sourceCode css code-with-copy"><code class="sourceCode css"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">.hidden</span><span class="ex">[</span><span class="ss">style</span><span class="op">*=</span><span class="st">"display: flex"</span><span class="ex">]</span>  { <span class="kw">display</span><span class="ch">:</span> <span class="dv">flex</span>   <span class="at">!important</span><span class="op">;</span> }</span>
-<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="fu">.hidden</span><span class="ex">[</span><span class="ss">style</span><span class="op">*=</span><span class="st">"display: block"</span><span class="ex">]</span> { <span class="kw">display</span><span class="ch">:</span> <span class="dv">block</span>  <span class="at">!important</span><span class="op">;</span> }</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb23"><pre class="sourceCode css code-with-copy"><code class="sourceCode css"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">.hidden</span><span class="ex">[</span><span class="ss">style</span><span class="op">*=</span><span class="st">"display: flex"</span><span class="ex">]</span>  { <span class="kw">display</span><span class="ch">:</span> <span class="dv">flex</span>   <span class="at">!important</span><span class="op">;</span> }</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="fu">.hidden</span><span class="ex">[</span><span class="ss">style</span><span class="op">*=</span><span class="st">"display: block"</span><span class="ex">]</span> { <span class="kw">display</span><span class="ch">:</span> <span class="dv">block</span>  <span class="at">!important</span><span class="op">;</span> }</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <hr>
 </section>
 <section id="debugging-checklist" class="level2">
@@ -645,7 +643,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>✅ Map <code>&lt;div&gt;</code> has explicit height via CSS</li>
 <li>✅ <code>const myMap = ixmaps.Map(...)</code> — result assigned</li>
 <li>✅ Every layer has <code>.binding()</code> with <code>geo</code> + <code>value</code></li>
-<li>✅ Every layer has <code>showdata: "true"</code> in <code>.style()</code></li>
+<li>✅ Tooltips using <code>{{theme.item.data}}</code> include <code>showdata: "true"</code></li>
 <li>✅ Every layer has <code>.meta({ tooltip: "..." })</code></li>
 <li>✅ Every layer ends with <code>.define()</code></li>
 <li>✅ Overlay layer name matches FEATURE base layer name</li>

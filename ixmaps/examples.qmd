@@ -20,7 +20,7 @@ Points sized by a numeric value. The simplest useful map.
         html, body { width: 100%; height: 100%; margin: 0; overflow: hidden; }
         #map { width: 100%; height: 100%; }
     </style>
-    <script src="https://cdn.jsdelivr.net/gh/gjrichter/ixmaps-flat@master/ixmaps.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/gjrichter/ixmaps-flat@1/ixmaps.js"></script>
 </head>
 <body>
     <div id="map"></div>

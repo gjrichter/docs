@@ -491,19 +491,19 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>})</span>
 <span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">view</span>([<span class="dv">0</span><span class="op">,</span> <span class="dv">0</span>]<span class="op">,</span> <span class="dv">1</span>)</span>
 <span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">options</span>({ <span class="dt">basemapopacity</span><span class="op">:</span> <span class="dv">0</span><span class="op">,</span> <span class="dt">flushChartDraw</span><span class="op">:</span> <span class="dv">1000000</span> })<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="callout callout-style-simple callout-important callout-titled">
+<div class="callout callout-style-simple callout-tip callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Important</span>Projection maps require <code>.view([lat, lng], zoom)</code> array syntax
+<span class="screen-reader-only">Tip</span>Prefer the array form <code>.view([lat, lng], zoom)</code>
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>The object form <code>{ center: {lat, lng}, zoom }</code> does not work with projections. Always use the two-argument array form:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">view</span>([<span class="fl">53.4</span><span class="op">,</span> <span class="fl">16.9</span>]<span class="op">,</span> <span class="fl">3.7</span>)   <span class="co">// ✅ projection</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">view</span>({ <span class="dt">center</span><span class="op">:</span> {<span class="op">...</span>}<span class="op">,</span> <span class="dt">zoom</span><span class="op">:</span> <span class="dv">6</span> })  <span class="co">// ❌ Mercator only</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>The two-argument array form is the convention across all ixMaps examples — use it for consistency. The object form is also accepted and works with projections too; the two are equivalent:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">view</span>([<span class="fl">53.4</span><span class="op">,</span> <span class="fl">16.9</span>]<span class="op">,</span> <span class="fl">3.7</span>)                                 <span class="co">// ← preferred</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">view</span>({ <span class="dt">center</span><span class="op">:</span> { <span class="dt">lat</span><span class="op">:</span> <span class="fl">53.4</span><span class="op">,</span> <span class="dt">lng</span><span class="op">:</span> <span class="fl">16.9</span> }<span class="op">,</span> <span class="dt">zoom</span><span class="op">:</span> <span class="fl">3.7</span> })   <span class="co">// equivalent, projections included</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </section>
@@ -848,6 +848,19 @@ base   shape  sizing  coloring  effect  labels  visibility</code></pre>
 </tr>
 </tbody>
 </table>
+<div class="callout callout-style-simple callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Scale-bounding <code>CLIPTOGEOBOUNDS</code>
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>When a layer uses <code>CLIPTOGEOBOUNDS</code>, the optional <code>clipupper</code> / <code>cliplower</code> style properties restrict the geo-bounds clipping to a map-scale range — same <code>"1:scale"</code> syntax as <code>chartupper</code> / <code>chartlower</code>. They are read only when <code>CLIPTOGEOBOUNDS</code> is present in the type string; on a layer without it they have no effect.</p>
+</div>
+</div>
 <p><strong>Filtering / visibility modifiers:</strong></p>
 <table class="caption-top table">
 <colgroup>
