@@ -352,6 +352,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>Multi-source loading with broker pattern</li>
 <li>Real-time updates and live data feeds</li>
 </ul>
+<div class="callout callout-style-simple callout-note">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-body-container">
+<p>Data.js does <strong>no reprojection</strong> — all input coordinates must be geographic WGS84 (EPSG:4326), i.e.&nbsp;decimal longitude/latitude. Convert any other CRS to EPSG:4326 before loading.</p>
+</div>
+</div>
+</div>
 </section>
 <section id="ixmaps-core" class="level3">
 <h3 class="anchored" data-anchor-id="ixmaps-core">2. <strong>iXmaps Core</strong></h3>

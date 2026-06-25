@@ -42,6 +42,10 @@ Data processing engine supporting:
 - Multi-source loading with broker pattern
 - Real-time updates and live data feeds
 
+:::{.callout-note}
+Data.js does **no reprojection** — all input coordinates must be geographic WGS84 (EPSG:4326), i.e. decimal longitude/latitude. Convert any other CRS to EPSG:4326 before loading.
+:::
+
 ### 2. **iXmaps Core**
 SVG-based interactive mapping framework:
 
