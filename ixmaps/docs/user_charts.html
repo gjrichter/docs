@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>User Charts – ixMaps Documentation</title>
+<title>User Charts – iXMaps Documentation</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -121,7 +121,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <a href="./index.html" class="navbar-brand navbar-brand-logo">
     </a>
     <a class="navbar-brand" href="./index.html">
-    <span class="navbar-title">ixMaps Documentation</span>
+    <span class="navbar-title">iXMaps Documentation</span>
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
@@ -312,11 +312,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<p>ixMaps supports custom D3-based chart functions that replace the built-in symbol renderer. Two functions are currently available: <code>pinnacleChart</code> (vertical bar/pillar) and <code>arrowChart</code>.</p>
+<p>iXMaps supports custom D3-based chart functions that replace the built-in symbol renderer. Two functions are currently available: <code>pinnacleChart</code> (vertical bar/pillar) and <code>arrowChart</code>.</p>
 <hr>
 <section id="how-custom-chart-functions-work" class="level2">
 <h2 class="anchored" data-anchor-id="how-custom-chart-functions-work">How custom chart functions work</h2>
-<p>You write a JavaScript function, attach it to the <code>ixmaps</code> namespace, then reference it by name in <code>.style({ userdraw: "functionName" })</code>. ixMaps calls your function once per rendered feature, passing the SVG context and data.</p>
+<p>You write a JavaScript function, attach it to the <code>ixmaps</code> namespace, then reference it by name in <code>.style({ userdraw: "functionName" })</code>. iXMaps calls your function once per rendered feature, passing the SVG context and data.</p>
 <p><strong>Function signature:</strong></p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>ixmaps<span class="op">.</span><span class="at">myChart</span> <span class="op">=</span> <span class="kw">function</span>(SVGDocument<span class="op">,</span> args) {</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">// args properties:</span></span>
@@ -342,7 +342,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>The current flat API uses <strong><code>userdraw</code></strong> as the style property name. Older ixMaps documentation and the legacy API used <code>chartdraw</code> — this name is no longer valid with the flat API.</p>
+<p>The current flat API uses <strong><code>userdraw</code></strong> as the style property name. Older iXMaps documentation and the legacy API used <code>chartdraw</code> — this name is no longer valid with the flat API.</p>
 </div>
 </div>
 <hr>

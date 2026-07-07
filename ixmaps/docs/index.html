@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>ixMaps Documentation</title>
+<title>iXMaps Documentation</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -120,7 +120,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <a href="./index.html" class="navbar-brand navbar-brand-logo">
     </a>
     <a class="navbar-brand" href="./index.html">
-    <span class="navbar-title">ixMaps Documentation</span>
+    <span class="navbar-title">iXMaps Documentation</span>
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
@@ -280,19 +280,19 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#welcome-to-ixmaps-documentation" id="toc-welcome-to-ixmaps-documentation" class="nav-link active" data-scroll-target="#welcome-to-ixmaps-documentation">Welcome to iXmaps Documentation 🗺️</a>
+  <li><a href="#welcome-to-ixmaps-documentation" id="toc-welcome-to-ixmaps-documentation" class="nav-link active" data-scroll-target="#welcome-to-ixmaps-documentation">Welcome to iXMaps Documentation 🗺️</a>
   <ul class="collapse">
-  <li><a href="#what-is-ixmaps" id="toc-what-is-ixmaps" class="nav-link" data-scroll-target="#what-is-ixmaps">What is iXmaps?</a></li>
+  <li><a href="#what-is-ixmaps" id="toc-what-is-ixmaps" class="nav-link" data-scroll-target="#what-is-ixmaps">What is iXMaps?</a></li>
   <li><a href="#key-features" id="toc-key-features" class="nav-link" data-scroll-target="#key-features">Key Features</a></li>
   <li><a href="#framework-components" id="toc-framework-components" class="nav-link" data-scroll-target="#framework-components">Framework Components</a>
   <ul class="collapse">
   <li><a href="#data.js-library" id="toc-data.js-library" class="nav-link" data-scroll-target="#data.js-library">1. <strong>Data.js Library</strong></a></li>
-  <li><a href="#ixmaps-core" id="toc-ixmaps-core" class="nav-link" data-scroll-target="#ixmaps-core">2. <strong>iXmaps Core</strong></a></li>
+  <li><a href="#ixmaps-core" id="toc-ixmaps-core" class="nav-link" data-scroll-target="#ixmaps-core">2. <strong>iXMaps Core</strong></a></li>
   <li><a href="#visualization-grammar" id="toc-visualization-grammar" class="nav-link" data-scroll-target="#visualization-grammar">3. <strong>Visualization grammar</strong></a></li>
   <li><a href="#user-api" id="toc-user-api" class="nav-link" data-scroll-target="#user-api">4. <strong>User API</strong></a></li>
   <li><a href="#ui-components" id="toc-ui-components" class="nav-link" data-scroll-target="#ui-components">5. <strong>UI Components</strong></a></li>
   </ul></li>
-  <li><a href="#who-should-use-ixmaps" id="toc-who-should-use-ixmaps" class="nav-link" data-scroll-target="#who-should-use-ixmaps">Who Should Use iXmaps?</a></li>
+  <li><a href="#who-should-use-ixmaps" id="toc-who-should-use-ixmaps" class="nav-link" data-scroll-target="#who-should-use-ixmaps">Who Should Use iXMaps?</a></li>
   <li><a href="#what-is-it-not" id="toc-what-is-it-not" class="nav-link" data-scroll-target="#what-is-it-not">What is it NOT?</a></li>
   <li><a href="#technology-stack" id="toc-technology-stack" class="nav-link" data-scroll-target="#technology-stack">Technology Stack</a></li>
   <li><a href="#license" id="toc-license" class="nav-link" data-scroll-target="#license">License</a></li>
@@ -311,14 +311,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 <section id="welcome-to-ixmaps-documentation" class="level1">
-<h1>Welcome to iXmaps Documentation 🗺️</h1>
-<p><strong>iXmaps defines a high-level visualization grammar for thematic maps.</strong> It provides a concise JSON syntax for supporting rapid generation of visualizations from raw data — operating directly in the browser with no installation and no build step.</p>
+<h1>Welcome to iXMaps Documentation 🗺️</h1>
+<p><strong>iXMaps defines a high-level visualization grammar for thematic maps.</strong> It provides a concise JSON syntax for supporting rapid generation of visualizations from raw data — operating directly in the browser with no installation and no build step.</p>
 <iframe id="map2" width="100%" height="600" style="max-width:100%;" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="https://gjrichter.github.io/MapCodeViewer/?url=https://gjrichter.github.io/stage/ixmap_gdp_minimal.html">
 </iframe>
-<p><em>mappa 1: World GDP per capita 2023</em> –&gt; <a href="https://gjrichter.github.io/MapCodeViewer/?url=https://gjrichter.github.io/stage/ixmap_gdp_minimal.html">fullscreen</a></p>
+<p><em>Map 1: World GDP per capita, 2023</em> –&gt; <a href="https://gjrichter.github.io/MapCodeViewer/?url=https://gjrichter.github.io/stage/ixmap_gdp_minimal.html">fullscreen</a></p>
 <section id="what-is-ixmaps" class="level2">
-<h2 class="anchored" data-anchor-id="what-is-ixmaps">What is iXmaps?</h2>
-<p>At its core, <strong>iXmaps theme specifications are JSON objects</strong> that describe visualizations as mappings from data to properties of geographical map objects. The framework combines:</p>
+<h2 class="anchored" data-anchor-id="what-is-ixmaps">What is iXMaps?</h2>
+<p>At its core, <strong>iXMaps theme specifications are JSON objects</strong> that describe visualizations as mappings from data to properties of geographical map objects. The framework combines:</p>
 <ul>
 <li><strong>Visualization grammar</strong> - Declarative JSON layer definitions: data → binding → type → style</li>
 <li><strong>Interactive Mapping</strong> - SVG-based maps with zoom, pan, and search capabilities</li>
@@ -332,7 +332,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h2 class="anchored" data-anchor-id="key-features">Key Features</h2>
 <p>At the end of this documentation, you will be able to:</p>
 <ul>
-<li>Set up an iXmaps environment to create interactive map visualizations</li>
+<li>Set up an iXMaps environment to create interactive map visualizations</li>
 <li>Load and process data from multiple sources efficiently</li>
 <li>Create various types of data visualizations (choropleth, bubbles, symbols, charts)</li>
 <li>Customize themes with styles, colors, and interactions</li>
@@ -343,7 +343,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="framework-components" class="level2">
 <h2 class="anchored" data-anchor-id="framework-components">Framework Components</h2>
-<p>iXmaps consists of four main components:</p>
+<p>iXMaps consists of five main components:</p>
 <section id="data.js-library" class="level3">
 <h3 class="anchored" data-anchor-id="data.js-library">1. <strong>Data.js Library</strong></h3>
 <p>Data processing engine supporting:</p>
@@ -365,7 +365,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </section>
 <section id="ixmaps-core" class="level3">
-<h3 class="anchored" data-anchor-id="ixmaps-core">2. <strong>iXmaps Core</strong></h3>
+<h3 class="anchored" data-anchor-id="ixmaps-core">2. <strong>iXMaps Core</strong></h3>
 <p>SVG-based interactive mapping framework:</p>
 <ul>
 <li>Dynamic theme system for visualizations</li>
@@ -379,13 +379,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>A declarative, JSON-based layer definition system:</p>
 <ul>
 <li>Each layer is described by <strong>data</strong> (source), <strong>binding</strong> (field→visual mapping), <strong>type</strong> (visualization method), and <strong>style</strong> (appearance)</li>
-<li>iXmaps theme specifications are pure JSON objects — no imperative rendering code required</li>
+<li>iXMaps theme specifications are pure JSON objects — no imperative rendering code required</li>
 <li>The same grammar drives choropleth maps, bubble charts, flow lines, sparklines, and custom D3 symbols</li>
 </ul>
 </section>
 <section id="user-api" class="level3">
 <h3 class="anchored" data-anchor-id="user-api">4. <strong>User API</strong></h3>
-<p>The central Jacascript object ixmaps gives you the API to:</p>
+<p>The central JavaScript object ixmaps gives you the API to:</p>
 <ul>
 <li>create and embed interactive maps</li>
 <li>load themes or projects</li>
@@ -405,8 +405,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 </section>
 <section id="who-should-use-ixmaps" class="level2">
-<h2 class="anchored" data-anchor-id="who-should-use-ixmaps">Who Should Use iXmaps?</h2>
-<p><strong>iXmaps</strong> is ideal for:</p>
+<h2 class="anchored" data-anchor-id="who-should-use-ixmaps">Who Should Use iXMaps?</h2>
+<p><strong>iXMaps</strong> is ideal for:</p>
 <ul>
 <li><strong>Data Scientists</strong> - Visualizing geographic data and patterns</li>
 <li><strong>Web Developers</strong> - Creating interactive map applications</li>
@@ -417,7 +417,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="what-is-it-not" class="level2">
 <h2 class="anchored" data-anchor-id="what-is-it-not">What is it NOT?</h2>
-<p>iXmaps is <strong>not</strong>:</p>
+<p>iXMaps is <strong>not</strong>:</p>
 <ul>
 <li>A tile-based mapping library like Leaflet or Google Maps (though it can work with them)</li>
 <li>A GIS system for spatial analysis</li>
@@ -427,7 +427,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="technology-stack" class="level2">
 <h2 class="anchored" data-anchor-id="technology-stack">Technology Stack</h2>
-<p>iXmaps is built on:</p>
+<p>iXMaps is built on:</p>
 <ul>
 <li><p><strong>JavaScript</strong> (ES6+) - Core programming language</p></li>
 <li><p><strong>SVG</strong> - Vector graphics for maps and visualization</p></li>
@@ -441,11 +441,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="license" class="level2">
 <h2 class="anchored" data-anchor-id="license">License</h2>
-<p>iXmaps is licensed under <a href="https://github.com/gjrichter/ixmaps-flat/blob/main/LICENSE.txt">BSD 3-Clause License</a>, making it free for both personal and commercial use provided the original copyright notice is included and the original authors’ names may not be used to promote derived products</p>
+<p>iXMaps is licensed under <a href="https://github.com/gjrichter/ixmaps-flat/blob/main/LICENSE.txt">BSD 3-Clause License</a>, making it free for both personal and commercial use provided the original copyright notice is included and the original authors’ names may not be used to promote derived products</p>
 </section>
 <section id="credits" class="level2">
 <h2 class="anchored" data-anchor-id="credits">Credits</h2>
-<p>iXmaps was created and is maintained by <strong>Guenter Richter</strong>.</p>
+<p>iXMaps was created and is maintained by <strong>Guenter Richter</strong>.</p>
 <ul>
 <li><strong>GitHub Repository</strong>: <a href="https://github.com/gjrichter/ixmaps-flat">github.com/gjrichter/ixmaps-flat</a></li>
 <li><strong>Live Examples</strong>: <a href="https://ixmaps.com">ixmaps.com</a></li>
@@ -460,7 +460,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Tip</span>New to ixMaps?
+<span class="screen-reader-only">Tip</span>New to iXMaps?
 </div>
 </div>
 <div class="callout-body-container callout-body">
@@ -496,7 +496,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="cdn" class="level2">
 <h2 class="anchored" data-anchor-id="cdn">CDN</h2>
-<p>Include ixMaps in any HTML page with a single <code>&lt;script&gt;</code> tag — no installation, no build step:</p>
+<p>Include iXMaps in any HTML page with a single <code>&lt;script&gt;</code> tag — no installation, no build step:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode html code-with-copy"><code class="sourceCode html"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">script</span><span class="ot"> src</span><span class="op">=</span><span class="st">"https://cdn.jsdelivr.net/gh/gjrichter/ixmaps-flat@1/ixmaps.js"</span><span class="dt">&gt;&lt;/</span><span class="kw">script</span><span class="dt">&gt;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="community-and-support" class="level2">

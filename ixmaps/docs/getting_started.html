@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Quick Start – ixMaps Documentation</title>
+<title>Quick Start – iXMaps Documentation</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -120,7 +120,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <a href="./index.html" class="navbar-brand navbar-brand-logo">
     </a>
     <a class="navbar-brand" href="./index.html">
-    <span class="navbar-title">ixMaps Documentation</span>
+    <span class="navbar-title">iXMaps Documentation</span>
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
@@ -313,20 +313,20 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<p>This guide walks you through creating your first interactive ixMaps map — from a blank HTML file to a map with a working data layer.</p>
+<p>This guide walks you through creating your first interactive iXMaps map — from a blank HTML file to a map with a working data layer.</p>
 <section id="fastest-path-let-an-ai-build-it" class="level2">
 <h2 class="anchored" data-anchor-id="fastest-path-let-an-ai-build-it">Fastest path: let an AI build it</h2>
-<p>You don’t have to write any of this by hand. Two AI-powered options turn a plain-language description of your data into a working ixMaps map:</p>
+<p>You don’t have to write any of this by hand. Two AI-powered options turn a plain-language description of your data into a working iXMaps map:</p>
 <ul>
 <li><strong><a href="https://chat2map.it">Chat2Map.it</a></strong> — explore your data, describe the visualization you want in plain language, and get a live, shareable map. No code, nothing to install.</li>
-<li><strong><a href="https://github.com/gjrichter/ixmaps-skills">Agent-ready skills</a></strong> — drop the ixMaps skills into Claude Code, Codex, or Cursor, and your AI agent writes runnable ixMaps code right in your editor.</li>
+<li><strong><a href="https://github.com/gjrichter/ixmaps-skills">Agent-ready skills</a></strong> — drop the iXMaps skills into Claude Code, Codex, or Cursor, and your AI agent writes runnable iXMaps code right in your editor.</li>
 </ul>
-<p>Both know the ixMaps API and its common pitfalls. The hand-written walkthrough below is still worth reading — it explains <em>what</em> the generated code does, so you can adjust the result with confidence.</p>
+<p>Both know the iXMaps API and its common pitfalls. The hand-written walkthrough below is still worth reading — it explains <em>what</em> the generated code does, so you can adjust the result with confidence.</p>
 <hr>
 </section>
 <section id="step-1-the-html-skeleton" class="level2">
 <h2 class="anchored" data-anchor-id="step-1-the-html-skeleton">Step 1: The HTML skeleton</h2>
-<p>Create an HTML file and include the ixMaps library from the CDN:</p>
+<p>Create an HTML file and include the iXMaps library from the CDN:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode html code-with-copy"><code class="sourceCode html"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;!DOCTYPE</span> html<span class="dt">&gt;</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">html</span><span class="ot"> lang</span><span class="op">=</span><span class="st">"en"</span><span class="dt">&gt;</span></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">head</span><span class="dt">&gt;</span></span>
@@ -337,7 +337,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>        html<span class="op">,</span> body { <span class="kw">width</span><span class="ch">:</span> <span class="dv">100</span><span class="dt">%</span><span class="op">;</span> <span class="kw">height</span><span class="ch">:</span> <span class="dv">100</span><span class="dt">%</span><span class="op">;</span> <span class="kw">margin</span><span class="ch">:</span> <span class="dv">0</span><span class="op">;</span> <span class="kw">overflow</span><span class="ch">:</span> <span class="dv">hidden</span><span class="op">;</span> }</span>
 <span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>        <span class="pp">#map</span> { <span class="kw">width</span><span class="ch">:</span> <span class="dv">100</span><span class="dt">%</span><span class="op">;</span> <span class="kw">height</span><span class="ch">:</span> <span class="dv">100</span><span class="dt">%</span><span class="op">;</span> }</span>
 <span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&lt;/</span><span class="kw">style</span><span class="dt">&gt;</span></span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>    <span class="co">&lt;!-- ixMaps library — single script, no other dependencies needed --&gt;</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>    <span class="co">&lt;!-- iXMaps library — single script, no other dependencies needed --&gt;</span></span>
 <span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&lt;</span><span class="kw">script</span><span class="ot"> src</span><span class="op">=</span><span class="st">"https://cdn.jsdelivr.net/gh/gjrichter/ixmaps-flat@1/ixmaps.js"</span><span class="dt">&gt;&lt;/</span><span class="kw">script</span><span class="dt">&gt;</span></span>
 <span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;/</span><span class="kw">head</span><span class="dt">&gt;</span></span>
 <span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">body</span><span class="dt">&gt;</span></span>
@@ -487,7 +487,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Open a live, editable version of this kind of bubble map in the <strong><a href="https://gjrichter.github.io/MapCodeViewer/index.html?url=maps/first_demo.html">ixMaps code viewer</a></strong> — edit the code on the left and watch the map update on the right.</p>
+<p>Open a live, editable version of this kind of bubble map in the <strong><a href="https://gjrichter.github.io/MapCodeViewer/index.html?url=maps/first_demo.html">iXMaps code viewer</a></strong> — edit the code on the left and watch the map update on the right.</p>
 </div>
 </div>
 <hr>

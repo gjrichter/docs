@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Map Types, Sizing &amp; Colors – ixMaps Documentation</title>
+<title>Map Types, Sizing &amp; Colors – iXMaps Documentation</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -122,7 +122,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <a href="./index.html" class="navbar-brand navbar-brand-logo">
     </a>
     <a class="navbar-brand" href="./index.html">
-    <span class="navbar-title">ixMaps Documentation</span>
+    <span class="navbar-title">iXMaps Documentation</span>
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
@@ -350,10 +350,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <hr>
 <section id="three-map-contexts" class="level2">
 <h2 class="anchored" data-anchor-id="three-map-contexts">Three map contexts</h2>
-<p>Before choosing a basemap or visualization type, decide which map context you need. ixMaps supports three fundamentally different setups that affect both the visual result and what layers you must provide.</p>
+<p>Before choosing a basemap or visualization type, decide which map context you need. iXMaps supports three fundamentally different setups that affect both the visual result and what layers you must provide.</p>
 <section id="tile-based-mercator-leaflet" class="level3">
 <h3 class="anchored" data-anchor-id="tile-based-mercator-leaflet">1 · Tile-based Mercator (Leaflet)</h3>
-<p>The default setup. A tile service (Stamen, CartoDB, OSM, …) renders the geographic background — streets, labels, terrain, water — and ixMaps draws your data layers on top as SVG. This is the <strong>easiest starting point</strong>: geographic context is provided automatically, so a bubble map with just lat/lon points already makes geographic sense.</p>
+<p>The default setup. A tile service (Stamen, CartoDB, OSM, …) renders the geographic background — streets, labels, terrain, water — and iXMaps draws your data layers on top as SVG. This is the <strong>easiest starting point</strong>: geographic context is provided automatically, so a bubble map with just lat/lon points already makes geographic sense.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> myMap <span class="op">=</span> ixmaps<span class="op">.</span><span class="fu">Map</span>(<span class="st">"map"</span><span class="op">,</span> {</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    <span class="dt">mapType</span><span class="op">:</span> <span class="st">"VT_TONER_LITE"</span><span class="op">,</span>   <span class="co">// any tile basemap</span></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">mode</span><span class="op">:</span>    <span class="st">"info"</span><span class="op">,</span></span>
@@ -502,7 +502,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>The two-argument array form is the convention across all ixMaps examples — use it for consistency. The object form is also accepted and works with projections too; the two are equivalent:</p>
+<p>The two-argument array form is the convention across all iXMaps examples — use it for consistency. The object form is also accepted and works with projections too; the two are equivalent:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">view</span>([<span class="fl">53.4</span><span class="op">,</span> <span class="fl">16.9</span>]<span class="op">,</span> <span class="fl">3.7</span>)                                 <span class="co">// ← preferred</span></span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">view</span>({ <span class="dt">center</span><span class="op">:</span> { <span class="dt">lat</span><span class="op">:</span> <span class="fl">53.4</span><span class="op">,</span> <span class="dt">lng</span><span class="op">:</span> <span class="fl">16.9</span> }<span class="op">,</span> <span class="dt">zoom</span><span class="op">:</span> <span class="fl">3.7</span> })   <span class="co">// equivalent, projections included</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
@@ -643,7 +643,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h2 class="anchored" data-anchor-id="visualization-types">Visualization types</h2>
 <section id="type-and-style-two-orthogonal-dimensions" class="level3">
 <h3 class="anchored" data-anchor-id="type-and-style-two-orthogonal-dimensions">Type and style — two orthogonal dimensions</h3>
-<p>Every ixMaps layer is described by two independent specifications:</p>
+<p>Every iXMaps layer is described by two independent specifications:</p>
 <ul>
 <li><p><strong><code>.type()</code></strong> — determines the <em>form and method</em> of the visualization: what geometric shape is used, how values are mapped to that shape, and which algorithm classifies or aggregates the data. Examples: bubbles sized by value, choropleth filled by class, flow lines between origin and destination.</p></li>
 <li><p><strong><code>.style()</code></strong> — defines <em>appearance and numeric parameters</em>: colors, opacities, size references, power curves, label formatting, scale-dependent visibility. Style is purely about how the chosen form looks and how its quantities are tuned.</p></li>
@@ -669,7 +669,7 @@ base   shape  sizing  coloring  effect  labels  visibility</code></pre>
 </section>
 <section id="the-three-base-types" class="level3">
 <h3 class="anchored" data-anchor-id="the-three-base-types">The three base types</h3>
-<p>Every ixMaps layer starts with one of three base types. Everything else — classification method, chart shape, visual modifiers — is appended to one of these roots.</p>
+<p>Every iXMaps layer starts with one of three base types. Everything else — classification method, chart shape, visual modifiers — is appended to one of these roots.</p>
 <table class="caption-top table">
 <colgroup>
 <col style="width: 45%">
@@ -758,7 +758,7 @@ base   shape  sizing  coloring  effect  labels  visibility</code></pre>
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>ixMaps matches category values as strings. Numeric categories like <code>1</code>, <code>2</code>, <code>3</code> are silently ignored — always pass <code>["1","2","3"]</code>.</p>
+<p>iXMaps matches category values as strings. Numeric categories like <code>1</code>, <code>2</code>, <code>3</code> are silently ignored — always pass <code>["1","2","3"]</code>.</p>
 </div>
 </div>
 <p>The classification methods work with both <code>CHOROPLETH</code> (polygon fill) and <code>CHART</code> (symbol colour).</p>
@@ -1188,7 +1188,7 @@ base   shape  sizing  coloring  effect  labels  visibility</code></pre>
 </section>
 <section id="sizing-methods" class="level2">
 <h2 class="anchored" data-anchor-id="sizing-methods">Sizing methods</h2>
-<p>ixMaps provides several complementary mechanisms for controlling symbol size.</p>
+<p>iXMaps provides several complementary mechanisms for controlling symbol size.</p>
 <section id="normalsizevalue-reference-based-sizing" class="level3">
 <h3 class="anchored" data-anchor-id="normalsizevalue-reference-based-sizing"><code>normalsizevalue</code> — reference-based sizing</h3>
 <p>Sets the data value that maps to “normal” (100%) display size. The key insight: <strong>higher value = smaller bubbles</strong>.</p>
@@ -1294,7 +1294,7 @@ base   shape  sizing  coloring  effect  labels  visibility</code></pre>
 <h3 class="anchored" data-anchor-id="gradient-two-colors-auto-interpolated">Gradient (two colors, auto-interpolated)</h3>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb20"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>colorscheme<span class="op">:</span> [<span class="st">"5"</span><span class="op">,</span> <span class="st">"#ffffcc"</span><span class="op">,</span> <span class="st">"#253494"</span>]   <span class="co">// 5 classes, yellow → dark blue</span></span>
 <span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>colorscheme<span class="op">:</span> [<span class="st">"#fee5d9"</span><span class="op">,</span> <span class="st">"#a50f15"</span>]        <span class="co">// implied 2-class gradient</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>The first element can be a number (class count) or omitted; ixMaps infers it from the array length.</p>
+<p>The first element can be a number (class count) or omitted; iXMaps infers it from the array length.</p>
 </section>
 <section id="multi-stop-palette" class="level3">
 <h3 class="anchored" data-anchor-id="multi-stop-palette">Multi-stop palette</h3>
@@ -1326,7 +1326,7 @@ base   shape  sizing  coloring  effect  labels  visibility</code></pre>
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Without <code>values</code>, ixMaps assigns colors by order of first occurrence — unpredictable and data-order dependent.</p>
+<p>Without <code>values</code>, iXMaps assigns colors by order of first occurrence — unpredictable and data-order dependent.</p>
 <p>Always cast values to strings: <code>["1","2","3"]</code> not <code>[1,2,3]</code>.</p>
 </div>
 </div>

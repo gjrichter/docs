@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Troubleshooting – ixMaps Documentation</title>
+<title>Troubleshooting – iXMaps Documentation</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -120,7 +120,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <a href="./index.html" class="navbar-brand navbar-brand-logo">
     </a>
     <a class="navbar-brand" href="./index.html">
-    <span class="navbar-title">ixMaps Documentation</span>
+    <span class="navbar-title">iXMaps Documentation</span>
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
@@ -342,7 +342,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<p>When something goes wrong in ixMaps, it often fails silently — no error, no warning, just a blank map or missing data. This page covers the most common causes and fixes.</p>
+<p>When something goes wrong in iXMaps, it often fails silently — no error, no warning, just a blank map or missing data. This page covers the most common causes and fixes.</p>
 <hr>
 <section id="silent-failure-hotspots" class="level2">
 <h2 class="anchored" data-anchor-id="silent-failure-hotspots">Silent failure hotspots</h2>
@@ -447,7 +447,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="co">// ✅ Correct:</span></span>
 <span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>mapType<span class="op">:</span> <span class="st">"CartoDB - Positron"</span></span>
 <span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>mapType<span class="op">:</span> <span class="st">"VT_TONER_LITE"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div></li>
-<li><p><strong>Reserved element IDs</strong> — ixMaps owns <code>loading-div</code>, <code>tooltip</code>, <code>contextmenu</code>. Using them for your own elements causes visible artifacts (a white box stuck on the map). Rename your overlay to <code>app-loading</code> or similar.</p></li>
+<li><p><strong>Reserved element IDs</strong> — iXMaps owns <code>loading-div</code>, <code>tooltip</code>, <code>contextmenu</code>. Using them for your own elements causes visible artifacts (a white box stuck on the map). Rename your overlay to <code>app-loading</code> or similar.</p></li>
 </ol>
 <hr>
 </section>
@@ -628,7 +628,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="css-conflicts-bootstrap" class="level2">
 <h2 class="anchored" data-anchor-id="css-conflicts-bootstrap">CSS conflicts (Bootstrap)</h2>
-<p>Bootstrap 3’s <code>.hidden { display:none !important }</code> silently breaks ixMaps toolbar buttons, tooltips, and context menus.</p>
+<p>Bootstrap 3’s <code>.hidden { display:none !important }</code> silently breaks iXMaps toolbar buttons, tooltips, and context menus.</p>
 <p><strong>Root fix:</strong> Remove Bootstrap 3 and use standalone facet CSS (see the create-ixmap skill for the ~35-line replacement).</p>
 <p><strong>Fallback:</strong> Higher-specificity overrides:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb23"><pre class="sourceCode css code-with-copy"><code class="sourceCode css"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">.hidden</span><span class="ex">[</span><span class="ss">style</span><span class="op">*=</span><span class="st">"display: flex"</span><span class="ex">]</span>  { <span class="kw">display</span><span class="ch">:</span> <span class="dv">flex</span>   <span class="at">!important</span><span class="op">;</span> }</span>
@@ -640,7 +640,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Work through this in order:</p>
 <ol type="1">
 <li>✅ Browser console (F12) — check for red errors</li>
-<li>✅ ixMaps library <code>&lt;script&gt;</code> tag present</li>
+<li>✅ iXMaps library <code>&lt;script&gt;</code> tag present</li>
 <li>✅ Map <code>&lt;div&gt;</code> has explicit height via CSS</li>
 <li>✅ <code>const myMap = ixmaps.Map(...)</code> — result assigned</li>
 <li>✅ Every layer has <code>.binding()</code> with <code>geo</code> + <code>value</code></li>
