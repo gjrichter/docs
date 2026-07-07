@@ -1,5 +1,6 @@
 ---
 title: "Examples"
+description: "Copy-ready iXMaps examples: bubble maps, world and municipality choropleths, categorical maps, swappable themes and animated time series."
 ---
 
 Copy-paste examples for common use cases. All examples use the current flat API with `ixmaps.Map()`.

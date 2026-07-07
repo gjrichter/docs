@@ -1,3 +1,7 @@
+---
+description: "Documentation for iXMaps, the declarative JSON visualization grammar for interactive thematic maps in the browser — no installation, no build step."
+---
+
 # Welcome to iXMaps Documentation
 
 **iXMaps defines a high-level visualization grammar for thematic maps.** It provides a concise JSON syntax for supporting rapid generation of visualizations from raw data — operating directly in the browser with no installation and no build step.

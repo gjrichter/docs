@@ -1,5 +1,6 @@
 ---
 title: "Quick Start"
+description: "Build your first iXMaps map: one CDN script, an HTML skeleton, then chain layer, data, binding and type calls — or let an AI agent write it for you."
 ---
 
 This guide walks you through creating your first interactive iXMaps map — from a blank HTML file to a map with a working data layer.

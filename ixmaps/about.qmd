@@ -1,3 +1,7 @@
+---
+description: "About iXMaps: project vision, history, core philosophy and the technology stack behind the open-source thematic mapping framework."
+---
+
 # About iXMaps
 
 ## The Project

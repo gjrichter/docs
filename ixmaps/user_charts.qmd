@@ -1,5 +1,6 @@
 ---
 title: "User Charts"
+description: "Draw custom chart symbols in iXMaps with userdraw and chartdraw functions: required scripts, type flags and patterns like pinnacleChart."
 ---
 
 iXMaps supports custom D3-based chart functions that replace the built-in symbol renderer. Two functions are currently available: `pinnacleChart` (vertical bar/pillar) and `arrowChart`.

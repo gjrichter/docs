@@ -1,5 +1,6 @@
 ---
 title: "Map Types, Sizing & Colors"
+description: "iXMaps map contexts, basemap types and visualization types — choropleth, bubbles, charts — plus sizing and color rules and common pitfalls."
 ---
 
 This chapter covers the three topics that most directly shape how a map looks: which basemap to use, how to choose a visualization type, and how to configure sizes and color schemes.

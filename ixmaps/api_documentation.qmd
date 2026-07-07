@@ -1,5 +1,6 @@
 ---
 title: "API Reference"
+description: "iXMaps API reference: the Map constructor, map and layer chain methods, filters and the runtime API, with required patterns and examples."
 ---
 
 Complete reference for the iXMaps JavaScript API.

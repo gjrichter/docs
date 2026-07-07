@@ -1,5 +1,6 @@
 ---
 title: "Troubleshooting"
+description: "Fix common iXMaps issues: silent failure hotspots, maps not displaying, data not showing, tooltip, styling and runtime API problems."
 ---
 
 When something goes wrong in iXMaps, it often fails silently — no error, no warning, just a blank map or missing data. This page covers the most common causes and fixes.

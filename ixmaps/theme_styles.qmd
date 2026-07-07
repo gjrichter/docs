@@ -1,5 +1,6 @@
 ---
 title: "Style Properties"
+description: "Reference of iXMaps theme style properties: core, sizing, classification and ranges, labels and dynamic opacity — with properties to avoid."
 ---
 
 Complete reference for `.style({...})` properties in iXMaps layer definitions.

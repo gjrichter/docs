@@ -37,3 +37,6 @@ body {
 .nav-page-next {
     margin-right: 2em;
 }
+
+/* meta descriptions are for search engines; keep the title block clean */
+#title-block-header .description{display:none}
