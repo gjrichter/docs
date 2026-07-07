@@ -3,13 +3,13 @@ diff --git a/API_DOCUMENTATION.md b/API_DOCUMENTATION.md
 --- a/API_DOCUMENTATION.md
 +++ b/API_DOCUMENTATION.md
 @@ -0,0 +1,1138 @@
-+# iXmaps Framework - Complete API Documentation
++# iXMaps Framework - Complete API Documentation
 +
 +## Table of Contents
 +
 +1. [Overview](#overview)
 +2. [Data.js Library](#datajs-library)
-+3. [iXmaps Core API](#ixmaps-core-api)
++3. [iXMaps Core API](#ixmaps-core-api)
 +4. [UI Components](#ui-components)
 +5. [Chart Components](#chart-components)
 +6. [Utilities](#utilities)
@@ -17,10 +17,10 @@ diff --git a/API_DOCUMENTATION.md b/API_DOCUMENTATION.md
 +
 +## Overview
 +
-+The iXmaps framework is a comprehensive JavaScript library for creating interactive web maps with data visualization capabilities. It consists of several main components:
++The iXMaps framework is a comprehensive JavaScript library for creating interactive web maps with data visualization capabilities. It consists of several main components:
 +
 +- **Data.js**: A powerful data processing library for loading, parsing, and transforming various data sources (CSV, JSON, GeoJSON, KML, RSS)
-+- **iXmaps Core**: SVG-based mapping framework with theming, querying, and visualization capabilities
++- **iXMaps Core**: SVG-based mapping framework with theming, querying, and visualization capabilities
 +- **UI Components**: HTML interface components for map interaction, legends, tooltips, and controls
 +- **Chart Components**: D3.js-based charting extensions for data visualization
 +
@@ -291,7 +291,7 @@ diff --git a/API_DOCUMENTATION.md b/API_DOCUMENTATION.md
 +
 +---
 +
-+## iXmaps Core API
++## iXMaps Core API
 +
 +### Map Control
 +
@@ -1140,6 +1140,6 @@ diff --git a/API_DOCUMENTATION.md b/API_DOCUMENTATION.md
 +};
 +```
 +
-+This comprehensive documentation covers all major APIs, components, and usage patterns in the iXmaps framework. Each section includes detailed function signatures, parameters, return values, and practical examples.
++This comprehensive documentation covers all major APIs, components, and usage patterns in the iXMaps framework. Each section includes detailed function signatures, parameters, return values, and practical examples.
 EOF
 )

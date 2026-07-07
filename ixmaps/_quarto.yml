@@ -1,6 +1,6 @@
 project:
   type: website
-  title: "ixMaps Documentation"
+  title: "iXMaps Documentation"
   execute-dir: project
   output-dir: docs
   render:
@@ -16,7 +16,7 @@ project:
       - about.qmd
 
 website:
-  title: "ixMaps Documentation"
+  title: "iXMaps Documentation"
   site-url: "https://www.ixmaps.com/docs"
   repo-url: https://github.com/gjrichter/ixmaps-flat
   repo-actions: [issue]

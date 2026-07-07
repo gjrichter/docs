@@ -1,8 +1,8 @@
 I'll sort the table alphabetically by the Style Property column for better organization:
 
-# ixMaps Theme Style Properties Reference Table
+# iXMaps Theme Style Properties Reference Table
 
-Based on the `themeStyleTranslateA` array in the ixMaps codebase, here are all the available style properties:
+Based on the `themeStyleTranslateA` array in the iXMaps codebase, here are all the available style properties:
 
 | Style Property | Object Property | Type | Description | Example |
 |----------------|-----------------|------|-------------|---------|

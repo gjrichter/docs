@@ -1,8 +1,8 @@
-# ixMaps Quick Start Guide
+# iXMaps Quick Start Guide
 
 ## Overview
 
-ixMaps is a JavaScript library for creating interactive SVG-based maps with data visualization. This quick start guide will help you get up and running with ixMaps in minutes.
+iXMaps is a JavaScript library for creating interactive SVG-based maps with data visualization. This quick start guide will help you get up and running with iXMaps in minutes.
 
 ## Prerequisites
 
@@ -20,7 +20,7 @@ Create a new HTML file with the following structure:
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ixMaps Quick Start</title>
+    <title>iXMaps Quick Start</title>
     <style>
         body {
             margin: 0;
@@ -37,7 +37,7 @@ Create a new HTML file with the following structure:
     <!-- Map container -->
     <div id="map-container"></div>
 
-    <!-- Include ixMaps library -->
+    <!-- Include iXMaps library -->
     <script src="https://gjrichter.github.io/ixmaps/ui/js/htmlgui_flat.js"></script>
     
     <!-- Your map code -->
@@ -350,7 +350,7 @@ ixmaps.embed("map-container", {
     map.legend("<h3>Population by Municipality</h3><p>Hover over areas for details</p>");
     
     // Welcome message
-    map.message("Welcome to ixMaps! Use mouse wheel to zoom, drag to pan", 5000);
+    map.message("Welcome to iXMaps! Use mouse wheel to zoom, drag to pan", 5000);
 });
 ```
 
@@ -364,7 +364,7 @@ Here's a complete working example:
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ixMaps Quick Start</title>
+    <title>iXMaps Quick Start</title>
     <style>
         body {
             margin: 0;
@@ -462,7 +462,7 @@ Here's a complete working example:
             map.legend("<h3>Population by Municipality</h3>");
             
             // Welcome message
-            map.message("ixMaps Quick Start - Use mouse wheel to zoom, drag to pan", 5000);
+            map.message("iXMaps Quick Start - Use mouse wheel to zoom, drag to pan", 5000);
         });
         
         // Control functions
@@ -503,8 +503,8 @@ Here's a complete working example:
 
 ## Resources
 
-- [ixMaps Documentation](https://gjrichter.github.io/ixmaps/)
+- [iXMaps Documentation](https://gjrichter.github.io/ixmaps/)
 - [API Reference](https://gjrichter.github.io/ixmaps/docs/)
 - [Examples Gallery](https://gjrichter.github.io/ixmaps/examples/)
 
-This quick start guide should get you up and running with ixMaps in no time!
+This quick start guide should get you up and running with iXMaps in no time!

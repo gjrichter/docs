@@ -2,20 +2,20 @@
 title: "Quick Start"
 ---
 
-This guide walks you through creating your first interactive ixMaps map — from a blank HTML file to a map with a working data layer.
+This guide walks you through creating your first interactive iXMaps map — from a blank HTML file to a map with a working data layer.
 
 ## Fastest path: let an AI build it
 
 You don't have to write any of this by hand. Two AI-powered options turn a plain-language
-description of your data into a working ixMaps map:
+description of your data into a working iXMaps map:
 
 - **[Chat2Map.it](https://chat2map.it)** — explore your data, describe the visualization you
   want in plain language, and get a live, shareable map. No code, nothing to install.
-- **[Agent-ready skills](https://github.com/gjrichter/ixmaps-skills)** — drop the ixMaps skills
-  into Claude Code, Codex, or Cursor, and your AI agent writes runnable ixMaps code right in
+- **[Agent-ready skills](https://github.com/gjrichter/ixmaps-skills)** — drop the iXMaps skills
+  into Claude Code, Codex, or Cursor, and your AI agent writes runnable iXMaps code right in
   your editor.
 
-Both know the ixMaps API and its common pitfalls. The hand-written walkthrough below is still
+Both know the iXMaps API and its common pitfalls. The hand-written walkthrough below is still
 worth reading — it explains *what* the generated code does, so you can adjust the result with
 confidence.
 
@@ -23,7 +23,7 @@ confidence.
 
 ## Step 1: The HTML skeleton
 
-Create an HTML file and include the ixMaps library from the CDN:
+Create an HTML file and include the iXMaps library from the CDN:
 
 ```html
 <!DOCTYPE html>
@@ -36,7 +36,7 @@ Create an HTML file and include the ixMaps library from the CDN:
         html, body { width: 100%; height: 100%; margin: 0; overflow: hidden; }
         #map { width: 100%; height: 100%; }
     </style>
-    <!-- ixMaps library — single script, no other dependencies needed -->
+    <!-- iXMaps library — single script, no other dependencies needed -->
     <script src="https://cdn.jsdelivr.net/gh/gjrichter/ixmaps-flat@1/ixmaps.js"></script>
 </head>
 <body>
@@ -182,7 +182,7 @@ Save the file and open it in any modern browser. No web server needed for inline
 :::{.callout-tip}
 ## See it live
 Open a live, editable version of this kind of bubble map in the
-**[ixMaps code viewer](https://gjrichter.github.io/MapCodeViewer/index.html?url=maps/first_demo.html)** —
+**[iXMaps code viewer](https://gjrichter.github.io/MapCodeViewer/index.html?url=maps/first_demo.html)** —
 edit the code on the left and watch the map update on the right.
 :::
 

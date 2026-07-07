@@ -2,7 +2,7 @@
 title: "API Reference"
 ---
 
-Complete reference for the ixMaps JavaScript API.
+Complete reference for the iXMaps JavaScript API.
 
 ---
 
@@ -301,8 +301,8 @@ See [Style Properties](theme_styles.qmd) for the complete reference. Minimum req
 
 | Syntax | Result |
 |--------|--------|
-| `{{{fieldname}}}` | ixMaps-formatted value |
-| `{{{raw.fieldname}}}` | Raw unformatted value — bypasses all ixMaps formatting |
+| `{{{fieldname}}}` | iXMaps-formatted value |
+| `{{{raw.fieldname}}}` | Raw unformatted value — bypasses all iXMaps formatting |
 | `{{{theme.item.chart}}}` | Built-in chart SVG for this item |
 | `{{{theme.item.data}}}` | Built-in data table for this item |
 
@@ -314,7 +314,7 @@ Access the live map instance through `myMap.then()`:
 
 ```javascript
 myMap.then(function(api) {
-    // api is the live ixMaps map object
+    // api is the live iXMaps map object
     api.changeThemeStyle("layerName", "filter:WHERE year == 2024", "set");
     api.removeTheme("prevTheme");
     api.setBasemapOpacity(0.3, "absolute");

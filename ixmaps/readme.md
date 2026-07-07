@@ -1,6 +1,6 @@
-# ixMaps Documentation — Quarto Project
+# iXMaps Documentation — Quarto Project
 
-Quarto-based documentation for the ixMaps JavaScript framework.
+Quarto-based documentation for the iXMaps JavaScript framework.
 
 ## Prerequisites
 
@@ -52,7 +52,7 @@ The `.github/workflows/publish.yml` workflow renders the site on every push to `
    ```bash
    git init
    git add .
-   git commit -m "Initial ixMaps documentation"
+   git commit -m "Initial iXMaps documentation"
    git remote add origin https://github.com/<your-user>/ixmaps-docs.git
    git push -u origin main
    ```
@@ -77,4 +77,4 @@ git push
 
 ## License
 
-CC-BY 4.0 — same as the ixMaps framework.
+CC-BY 4.0 — same as the iXMaps framework.

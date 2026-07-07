@@ -2,7 +2,7 @@
 title: "Chart Scaling"
 ---
 
-ixMaps provides several complementary mechanisms for controlling how symbols and charts are sized. Understanding how they interact helps you get the right visual density at every zoom level.
+iXMaps provides several complementary mechanisms for controlling how symbols and charts are sized. Understanding how they interact helps you get the right visual density at every zoom level.
 
 ---
 
@@ -24,7 +24,7 @@ screen size ∝ (data value / normalsizevalue) * scale * f(currentZoom / normalS
 
 ## `normalSizeScale` — the zoom anchor
 
-Set in `.options()`. Tells ixMaps: "at this map scale denominator, render symbols at their nominal size."
+Set in `.options()`. Tells iXMaps: "at this map scale denominator, render symbols at their nominal size."
 
 | Zoom level | Approximate `normalSizeScale` |
 |-----------|-------------------------------|

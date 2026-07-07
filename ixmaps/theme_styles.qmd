@@ -2,7 +2,7 @@
 title: "Style Properties"
 ---
 
-Complete reference for `.style({...})` properties in ixMaps layer definitions.
+Complete reference for `.style({...})` properties in iXMaps layer definitions.
 
 ## Core properties
 
@@ -293,7 +293,7 @@ myMap.layer("regions")
 
 ## Alphabetical property reference
 
-All `.style()` properties drawn from the ixMaps source (`themeStyleTranslateA`). **Deprecated** properties have preferred replacements shown; **Required** means the layer will not render without it.
+All `.style()` properties drawn from the iXMaps source (`themeStyleTranslateA`). **Deprecated** properties have preferred replacements shown; **Required** means the layer will not render without it.
 
 | Property | Type | Description |
 |----------|------|-------------|

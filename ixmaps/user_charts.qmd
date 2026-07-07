@@ -2,13 +2,13 @@
 title: "User Charts"
 ---
 
-ixMaps supports custom D3-based chart functions that replace the built-in symbol renderer. Two functions are currently available: `pinnacleChart` (vertical bar/pillar) and `arrowChart`.
+iXMaps supports custom D3-based chart functions that replace the built-in symbol renderer. Two functions are currently available: `pinnacleChart` (vertical bar/pillar) and `arrowChart`.
 
 ---
 
 ## How custom chart functions work
 
-You write a JavaScript function, attach it to the `ixmaps` namespace, then reference it by name in `.style({ userdraw: "functionName" })`. ixMaps calls your function once per rendered feature, passing the SVG context and data.
+You write a JavaScript function, attach it to the `ixmaps` namespace, then reference it by name in `.style({ userdraw: "functionName" })`. iXMaps calls your function once per rendered feature, passing the SVG context and data.
 
 **Function signature:**
 ```javascript
@@ -30,7 +30,7 @@ ixmaps.myChart = function(SVGDocument, args) {
 
 :::{.callout-warning}
 ## `userdraw` vs `chartdraw`
-The current flat API uses **`userdraw`** as the style property name. Older ixMaps documentation and the legacy API used `chartdraw` — this name is no longer valid with the flat API.
+The current flat API uses **`userdraw`** as the style property name. Older iXMaps documentation and the legacy API used `chartdraw` — this name is no longer valid with the flat API.
 :::
 
 ---

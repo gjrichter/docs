@@ -2,7 +2,7 @@
 title: "Troubleshooting"
 ---
 
-When something goes wrong in ixMaps, it often fails silently — no error, no warning, just a blank map or missing data. This page covers the most common causes and fixes.
+When something goes wrong in iXMaps, it often fails silently — no error, no warning, just a blank map or missing data. This page covers the most common causes and fixes.
 
 ---
 
@@ -54,7 +54,7 @@ These produce **no error, no console message** — the map just silently renders
    mapType: "VT_TONER_LITE"
    ```
 
-5. **Reserved element IDs** — ixMaps owns `loading-div`, `tooltip`, `contextmenu`. Using them for your own elements causes visible artifacts (a white box stuck on the map). Rename your overlay to `app-loading` or similar.
+5. **Reserved element IDs** — iXMaps owns `loading-div`, `tooltip`, `contextmenu`. Using them for your own elements causes visible artifacts (a white box stuck on the map). Rename your overlay to `app-loading` or similar.
 
 ---
 
@@ -275,7 +275,7 @@ jsDelivr caches for 5–10 minutes. For development, use `raw.githubusercontent.
 
 ## CSS conflicts (Bootstrap)
 
-Bootstrap 3's `.hidden { display:none !important }` silently breaks ixMaps toolbar buttons, tooltips, and context menus.
+Bootstrap 3's `.hidden { display:none !important }` silently breaks iXMaps toolbar buttons, tooltips, and context menus.
 
 **Root fix:** Remove Bootstrap 3 and use standalone facet CSS (see the create-ixmap skill for the ~35-line replacement).
 
@@ -292,7 +292,7 @@ Bootstrap 3's `.hidden { display:none !important }` silently breaks ixMaps toolb
 Work through this in order:
 
 1. ✅ Browser console (F12) — check for red errors
-2. ✅ ixMaps library `<script>` tag present
+2. ✅ iXMaps library `<script>` tag present
 3. ✅ Map `<div>` has explicit height via CSS
 4. ✅ `const myMap = ixmaps.Map(...)` — result assigned
 5. ✅ Every layer has `.binding()` with `geo` + `value`

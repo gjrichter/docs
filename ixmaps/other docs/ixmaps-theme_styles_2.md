@@ -1,4 +1,4 @@
-I need to search for the `themeStyleTranslateA` array in the ixMaps codebase to find all the style properties it contains.
+I need to search for the `themeStyleTranslateA` array in the iXMaps codebase to find all the style properties it contains.
 
 Ran tool
 Now let me read the `themeStyleTranslateA` array definition to see all the style properties:
@@ -9,9 +9,9 @@ Let me continue reading to see if there are more properties in the array:
 Read file: maps/svg/js/maptheme.js
 Now I have the complete `themeStyleTranslateA` array. Let me create a comprehensive table of all the style properties:
 
-# ixMaps Theme Style Properties Reference Table
+# iXMaps Theme Style Properties Reference Table
 
-Based on the `themeStyleTranslateA` array in the ixMaps codebase, here are all the available style properties:
+Based on the `themeStyleTranslateA` array in the iXMaps codebase, here are all the available style properties:
 
 | Style Property | Object Property | Type | Description | Example |
 |----------------|-----------------|------|-------------|---------|
@@ -228,4 +228,4 @@ Based on the `themeStyleTranslateA` array in the ixMaps codebase, here are all t
 })
 ```
 
-This table provides a comprehensive reference for all available style properties in ixMaps themes.
+This table provides a comprehensive reference for all available style properties in iXMaps themes.

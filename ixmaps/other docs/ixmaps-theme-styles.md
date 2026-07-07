@@ -1,8 +1,8 @@
-# ixMaps Theme Style Properties Documentation
+# iXMaps Theme Style Properties Documentation
 
 ## Overview
 
-Theme styles in ixMaps control how data is visualized on the map. This documentation covers all available style properties and their usage.
+Theme styles in iXMaps control how data is visualized on the map. This documentation covers all available style properties and their usage.
 
 ## Basic Style Structure
 
@@ -531,4 +531,4 @@ datacache: "true"
 6. **Test performance** with large datasets
 7. **Consider accessibility** in color choices
 
-This documentation covers all the main theme style properties available in ixMaps. For more advanced usage and examples, refer to the official ixMaps documentation.
+This documentation covers all the main theme style properties available in iXMaps. For more advanced usage and examples, refer to the official iXMaps documentation.

@@ -1,8 +1,8 @@
-Certainly! Here’s a grouped and sorted table of the ixMaps theme style properties, organized by their likely context within a theme definition. The groups are based on common mapping and visualization conventions:
+Certainly! Here’s a grouped and sorted table of the iXMaps theme style properties, organized by their likely context within a theme definition. The groups are based on common mapping and visualization conventions:
 
 ---
 
-# ixMaps Theme Style Properties Reference (Grouped by Context)
+# iXMaps Theme Style Properties Reference (Grouped by Context)
 
 ## 1. **General/Basic Properties**
 

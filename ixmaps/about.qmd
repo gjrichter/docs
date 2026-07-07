@@ -1,12 +1,12 @@
-# About iXmaps
+# About iXMaps
 
 ## The Project
 
-**iXmaps** is an open-source JavaScript framework for creating interactive, data-driven web maps. It was designed to make geographic data visualization accessible and powerful, combining the flexibility of SVG graphics with modern web technologies.
+**iXMaps** is an open-source JavaScript framework for creating interactive, data-driven web maps. It was designed to make geographic data visualization accessible and powerful, combining the flexibility of SVG graphics with modern web technologies.
 
 ## Vision
 
-The vision behind iXmaps is to provide a **comprehensive solution** for interactive cartography that:
+The vision behind iXMaps is to provide a **comprehensive solution** for interactive cartography that:
 
 - Works entirely in the browser without server dependencies
 - Supports complex data transformations and visualizations
@@ -16,7 +16,7 @@ The vision behind iXmaps is to provide a **comprehensive solution** for interact
 
 ## History
 
-iXmaps was created by **Guenter Richter** to address the need for a flexible, powerful mapping framework that could handle:
+iXMaps was created by **Guenter Richter** to address the need for a flexible, powerful mapping framework that could handle:
 
 - Multiple data sources and formats
 - Complex data transformations
@@ -29,7 +29,7 @@ The framework has been used in numerous projects, from journalism and research t
 ## Core Philosophy
 
 ### 1. **Browser-First**
-All processing happens in the browser, making iXmaps:
+All processing happens in the browser, making iXMaps:
 
 - Easy to deploy (just HTML and JavaScript)
 - Private and secure (data never leaves the user's browser)
@@ -52,7 +52,7 @@ Free and open for everyone:
 
 ## Technology Stack
 
-iXmaps is built on proven web technologies:
+iXMaps is built on proven web technologies:
 
 ### Core Technologies
 - **JavaScript (ES6+)** - Modern JavaScript with classes and modules
@@ -72,7 +72,7 @@ iXmaps is built on proven web technologies:
 
 ## Use Cases
 
-iXmaps has been successfully used for:
+iXMaps has been successfully used for:
 
 ### Journalism and Media
 - Election results visualizations
@@ -100,7 +100,7 @@ iXmaps has been successfully used for:
 
 ## Features Comparison
 
-| Feature | iXmaps | Leaflet | Google Maps | D3.js Maps |
+| Feature | iXMaps | Leaflet | Google Maps | D3.js Maps |
 |---------|--------|---------|-------------|------------|
 | Data Processing | ✅ Built-in | ❌ External | ❌ External | ⚠️ Manual |
 | Choropleth Maps | ✅ Easy | ⚠️ Plugins | ⚠️ Complex | ✅ Manual |
@@ -111,7 +111,7 @@ iXmaps has been successfully used for:
 
 ## Community
 
-iXmaps is maintained by an active community of developers and users:
+iXMaps is maintained by an active community of developers and users:
 
 - **GitHub Repository**: [github.com/gjrichter/ixmaps](https://github.com/gjrichter/ixmaps)
 - **Examples Gallery**: [gjrichter.github.io/pages](https://gjrichter.github.io/pages)
@@ -119,7 +119,7 @@ iXmaps is maintained by an active community of developers and users:
 
 ## License
 
-iXmaps is released under the **Creative Commons Attribution 4.0 International (CC-BY 4.0)** license.
+iXMaps is released under the **Creative Commons Attribution 4.0 International (CC-BY 4.0)** license.
 
 This means you can:
 
@@ -167,9 +167,9 @@ Visit the [GitHub repository](https://github.com/gjrichter/ixmaps) to get involv
 For questions, suggestions, or collaboration:
 
 - **GitHub Issues**: [github.com/gjrichter/ixmaps/issues](https://github.com/gjrichter/ixmaps/issues)
-- **Email**: richter@iXmaps.com
+- **Email**: richter@ixmaps.com
 
 ---
 
-*iXmaps - Making geographic data visualization accessible and powerful for everyone.*
+*iXMaps - Making geographic data visualization accessible and powerful for everyone.*
 

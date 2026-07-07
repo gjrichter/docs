@@ -1,12 +1,12 @@
-Absolutely! Here’s a clear explanation of how **user-coded charts** can be included in ixMaps themes, including the workflow, requirements, and a practical example.
+Absolutely! Here’s a clear explanation of how **user-coded charts** can be included in iXMaps themes, including the workflow, requirements, and a practical example.
 
 ---
 
-# Including User-Coded Charts in ixMaps Themes
+# Including User-Coded Charts in iXMaps Themes
 
 ## 1. **What Are User-Coded Charts?**
 
-User-coded charts in ixMaps are custom JavaScript functions (often using D3.js or SVG) that you write to render map symbols or charts in your own style, beyond the built-in chart types. These functions are then referenced in your theme definition, allowing ixMaps to call your code for each map feature.
+User-coded charts in iXMaps are custom JavaScript functions (often using D3.js or SVG) that you write to render map symbols or charts in your own style, beyond the built-in chart types. These functions are then referenced in your theme definition, allowing iXMaps to call your code for each map feature.
 
 ---
 
@@ -15,7 +15,7 @@ User-coded charts in ixMaps are custom JavaScript functions (often using D3.js o
 - You write a JavaScript function that draws a chart (e.g., a custom bar, lollipop, or pictogram) using D3 or SVG.
 - You register this function in the global `ixmaps` namespace.
 - In your theme definition, you set the `type` property to `"CHART|USER"` and specify the function name in the `chartdraw` property.
-- ixMaps will call your function for each data item, passing in arguments like the SVG target, data values, and theme options.
+- iXMaps will call your function for each data item, passing in arguments like the SVG target, data values, and theme options.
 
 ---
 
@@ -85,7 +85,7 @@ Or in JSON:
 
 ---
 
-## 4. **What Does ixMaps Pass to Your Function?**
+## 4. **What Does iXMaps Pass to Your Function?**
 
 Your function receives two arguments:
 - `SVGDocument`: The SVG DOM or D3 selection to draw into.
@@ -154,11 +154,11 @@ window.ixmaps = window.ixmaps || {};
 
 ## 8. **Further Reading**
 
-- [ixMaps Theme Documentation](#)
+- [iXMaps Theme Documentation](#)
 - [D3.js Documentation](https://d3js.org/)
-- [ixMaps Example Gallery](#)
+- [iXMaps Example Gallery](#)
 
 ---
 
 **In summary:**  
-Write your chart function, load it before the map, and reference it in your theme with `type: "CHART|USER"` and `chartdraw: "yourFunctionName"`. ixMaps will call your function for each feature, letting you fully customize the chart rendering!
+Write your chart function, load it before the map, and reference it in your theme with `type: "CHART|USER"` and `chartdraw: "yourFunctionName"`. iXMaps will call your function for each feature, letting you fully customize the chart rendering!

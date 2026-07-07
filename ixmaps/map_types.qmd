@@ -8,11 +8,11 @@ This chapter covers the three topics that most directly shape how a map looks: w
 
 ## Three map contexts
 
-Before choosing a basemap or visualization type, decide which map context you need. ixMaps supports three fundamentally different setups that affect both the visual result and what layers you must provide.
+Before choosing a basemap or visualization type, decide which map context you need. iXMaps supports three fundamentally different setups that affect both the visual result and what layers you must provide.
 
 ### 1 · Tile-based Mercator (Leaflet)
 
-The default setup. A tile service (Stamen, CartoDB, OSM, …) renders the geographic background — streets, labels, terrain, water — and ixMaps draws your data layers on top as SVG. This is the **easiest starting point**: geographic context is provided automatically, so a bubble map with just lat/lon points already makes geographic sense.
+The default setup. A tile service (Stamen, CartoDB, OSM, …) renders the geographic background — streets, labels, terrain, water — and iXMaps draws your data layers on top as SVG. This is the **easiest starting point**: geographic context is provided automatically, so a bubble map with just lat/lon points already makes geographic sense.
 
 ```javascript
 const myMap = ixmaps.Map("map", {
@@ -124,7 +124,7 @@ const myMap = ixmaps.Map("map", {
 
 :::{.callout-tip}
 ## Prefer the array form `.view([lat, lng], zoom)`
-The two-argument array form is the convention across all ixMaps examples — use it for consistency. The object form is also accepted and works with projections too; the two are equivalent:
+The two-argument array form is the convention across all iXMaps examples — use it for consistency. The object form is also accepted and works with projections too; the two are equivalent:
 ```javascript
 .view([53.4, 16.9], 3.7)                                 // ← preferred
 .view({ center: { lat: 53.4, lng: 16.9 }, zoom: 3.7 })   // equivalent, projections included
@@ -194,7 +194,7 @@ Instead of changing the basemap, try reducing its opacity to let your data stand
 
 ### Type and style — two orthogonal dimensions
 
-Every ixMaps layer is described by two independent specifications:
+Every iXMaps layer is described by two independent specifications:
 
 - **`.type()`** — determines the *form and method* of the visualization: what geometric shape is used, how values are mapped to that shape, and which algorithm classifies or aggregates the data. Examples: bubbles sized by value, choropleth filled by class, flow lines between origin and destination.
 
@@ -229,7 +229,7 @@ base   shape  sizing  coloring  effect  labels  visibility
 
 ### The three base types
 
-Every ixMaps layer starts with one of three base types. Everything else — classification method, chart shape, visual modifiers — is appended to one of these roots.
+Every iXMaps layer starts with one of three base types. Everything else — classification method, chart shape, visual modifiers — is appended to one of these roots.
 
 | Base type | What it does |
 |-----------|-------------|
@@ -275,7 +275,7 @@ Every ixMaps layer starts with one of three base types. Everything else — clas
 
 :::{.callout-warning}
 ## `values` must be strings
-ixMaps matches category values as strings. Numeric categories like `1`, `2`, `3` are silently ignored — always pass `["1","2","3"]`.
+iXMaps matches category values as strings. Numeric categories like `1`, `2`, `3` are silently ignored — always pass `["1","2","3"]`.
 :::
 
 The classification methods work with both `CHOROPLETH` (polygon fill) and `CHART` (symbol colour).
@@ -425,7 +425,7 @@ Bind two fields with `|`: `.binding({ value: "field_a|field_b" })`. The modifier
 
 ## Sizing methods
 
-ixMaps provides several complementary mechanisms for controlling symbol size.
+iXMaps provides several complementary mechanisms for controlling symbol size.
 
 ### `normalsizevalue` — reference-based sizing
 
@@ -519,7 +519,7 @@ colorscheme: ["5", "#ffffcc", "#253494"]   // 5 classes, yellow → dark blue
 colorscheme: ["#fee5d9", "#a50f15"]        // implied 2-class gradient
 ```
 
-The first element can be a number (class count) or omitted; ixMaps infers it from the array length.
+The first element can be a number (class count) or omitted; iXMaps infers it from the array length.
 
 ### Multi-stop palette
 
@@ -551,7 +551,7 @@ For categorical data, the `values` array pins specific categories to specific co
 
 :::{.callout-warning}
 ## Always use `values` with CATEGORICAL
-Without `values`, ixMaps assigns colors by order of first occurrence — unpredictable and data-order dependent.
+Without `values`, iXMaps assigns colors by order of first occurrence — unpredictable and data-order dependent.
 
 Always cast values to strings: `["1","2","3"]` not `[1,2,3]`.
 :::
