@@ -17,6 +17,7 @@ project:
 
 website:
   title: "ixMaps Documentation"
+  site-url: "https://www.ixmaps.com/docs"
   repo-url: https://github.com/gjrichter/ixmaps-flat
   repo-actions: [issue]
   favicon: pics/favicon.png
@@ -74,5 +75,6 @@ format:
     css: styles.css
     toc: true
     toc-depth: 3
+    canonical-url: true
 
 callout-appearance: simple

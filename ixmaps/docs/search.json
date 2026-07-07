@@ -479,6 +479,18 @@
     ]
   },
   {
+    "objectID": "getting_started.html#fastest-path-let-an-ai-build-it",
+    "href": "getting_started.html#fastest-path-let-an-ai-build-it",
+    "title": "Quick Start",
+    "section": "Fastest path: let an AI build it",
+    "text": "Fastest path: let an AI build it\nYou don’t have to write any of this by hand. Two AI-powered options turn a plain-language description of your data into a working ixMaps map:\n\nChat2Map.it — explore your data, describe the visualization you want in plain language, and get a live, shareable map. No code, nothing to install.\nAgent-ready skills — drop the ixMaps skills into Claude Code, Codex, or Cursor, and your AI agent writes runnable ixMaps code right in your editor.\n\nBoth know the ixMaps API and its common pitfalls. The hand-written walkthrough below is still worth reading — it explains what the generated code does, so you can adjust the result with confidence.",
+    "crumbs": [
+      "Home",
+      "Getting Started",
+      "Quick Start"
+    ]
+  },
+  {
     "objectID": "getting_started.html#step-1-the-html-skeleton",
     "href": "getting_started.html#step-1-the-html-skeleton",
     "title": "Quick Start",
@@ -567,7 +579,7 @@
     "href": "index.html",
     "title": "Welcome to iXmaps Documentation 🗺️",
     "section": "",
-    "text": "iXmaps defines a high-level visualization grammar for thematic maps. It provides a concise JSON syntax for supporting rapid generation of visualizations from raw data — operating directly in the browser with no installation and no build step.\n\n\nmappa 1: World GDP per capita 2023 –&gt; fullscreen\n\n\nAt its core, iXmaps theme specifications are JSON objects that describe visualizations as mappings from data to properties of geographical map objects. The framework combines:\n\nVisualization grammar - Declarative JSON layer definitions: data → binding → type → style\nInteractive Mapping - SVG-based maps with zoom, pan, and search capabilities\nData Processing - Advanced data manipulation with Data.js library\nVisualization Themes - Choropleth, bubble charts, symbols, and custom visualizations\nReal-time Data - Support for live data feeds and dynamic updates\nMultiple Formats - CSV, JSON, GeoJSON, TopoJSON, KML, RSS, and more\n\n\n\n\nAt the end of this documentation, you will be able to:\n\nSet up an iXmaps environment to create interactive map visualizations\nLoad and process data from multiple sources efficiently\nCreate various types of data visualizations (choropleth, bubbles, symbols, charts)\nCustomize themes with styles, colors, and interactions\nImplement advanced features like tooltips, legends, and data filtering\nIntegrate D3.js custom charts with map themes\nDeploy interactive maps for web applications\n\n\n\n\niXmaps consists of four main components:\n\n\nData processing engine supporting:\n\nMultiple formats: CSV, JSON, GeoJSON, KML, RSS, JSONstat, TopoJSON\nData transformation: filtering, pivoting, aggregation, calculated columns\nMulti-source loading with broker pattern\nReal-time updates and live data feeds\n\n\n\n\nSVG-based interactive mapping framework:\n\nDynamic theme system for visualizations\nMulti-layer support with geographic and data layers\nPerformance optimized for large datasets\nInteractive features: zoom, pan, search, tooltips\n\n\n\n\nA declarative, JSON-based layer definition system:\n\nEach layer is described by data (source), binding (field→visual mapping), type (visualization method), and style (appearance)\niXmaps theme specifications are pure JSON objects — no imperative rendering code required\nThe same grammar drives choropleth maps, bubble charts, flow lines, sparklines, and custom D3 symbols\n\n\n\n\nThe central Jacascript object ixmaps gives you the API to:\n\ncreate and embed interactive maps\nload themes or projects\nchange theme styles\nget information about the actual visualization state\n\n\n\n\nRich HTML interface elements:\n\nTooltip system with Mustache templating\nAutomatic legend generation\nSearch interface (normal and advanced)\nData visualization controls\n\n\n\n\n\niXmaps is ideal for:\n\nData Scientists - Visualizing geographic data and patterns\nWeb Developers - Creating interactive map applications\nJournalists - Building data-driven stories with maps\nResearchers - Exploring and presenting spatial data\nGovernment Agencies - Publishing open data visualizations\n\n\n\n\niXmaps is not:\n\nA tile-based mapping library like Leaflet or Google Maps (though it can work with them)\nA GIS system for spatial analysis\nA backend server or database system\nA static map generator (it’s designed for interactive visualizations)\n\n\n\n\niXmaps is built on:\n\nJavaScript (ES6+) - Core programming language\nSVG - Vector graphics for maps and visualization\njQuery (optional) - DOM manipulation and utilities\nMustache - Template engine for tooltips and labels\nPapaparse - CSV parser\nDuckdb WASM - for reading parquet and geoparquet and geo package\nflatgeobuf - read .fgb files, also partially\ngeobuf - read geo buffer files\n\n\n\n\niXmaps is licensed under BSD 3-Clause License, making it free for both personal and commercial use provided the original copyright notice is included and the original authors’ names may not be used to promote derived products\n\n\n\niXmaps was created and is maintained by Guenter Richter.\n\nGitHub Repository: github.com/gjrichter/ixmaps-flat\nLive Examples: ixmaps.com\nData Viz Gallery: gjrichter.github.io/pages\n\n\n\n\n\n\n\n\n\n\nTipNew to ixMaps?\n\n\n\nStart with the Quick Start Guide to create your first interactive map in minutes.\n\n\n\n\n\n\n\n\nNoteLooking for API Reference?\n\n\n\nCheck the API Documentation for the complete method reference, or Style Properties for all .style() options.\n\n\n\n\n\n\n\n\nImportantNeed examples?\n\n\n\nBrowse Examples for copy-paste working code for the most common use cases.\n\n\n\n\n\nInclude ixMaps in any HTML page with a single &lt;script&gt; tag — no installation, no build step:\n&lt;script src=\"https://cdn.jsdelivr.net/gh/gjrichter/ixmaps-flat@1/ixmaps.js\"&gt;&lt;/script&gt;\n\n\n\n\nGitHub Repository: github.com/gjrichter/ixmaps-flat\nIssues and Questions: GitHub Issues\n\n\nReady to start? Head over to the Quick Start Guide to create your first map!",
+    "text": "iXmaps defines a high-level visualization grammar for thematic maps. It provides a concise JSON syntax for supporting rapid generation of visualizations from raw data — operating directly in the browser with no installation and no build step.\n\n\nmappa 1: World GDP per capita 2023 –&gt; fullscreen\n\n\nAt its core, iXmaps theme specifications are JSON objects that describe visualizations as mappings from data to properties of geographical map objects. The framework combines:\n\nVisualization grammar - Declarative JSON layer definitions: data → binding → type → style\nInteractive Mapping - SVG-based maps with zoom, pan, and search capabilities\nData Processing - Advanced data manipulation with Data.js library\nVisualization Themes - Choropleth, bubble charts, symbols, and custom visualizations\nReal-time Data - Support for live data feeds and dynamic updates\nMultiple Formats - CSV, JSON, GeoJSON, TopoJSON, KML, RSS, and more\n\n\n\n\nAt the end of this documentation, you will be able to:\n\nSet up an iXmaps environment to create interactive map visualizations\nLoad and process data from multiple sources efficiently\nCreate various types of data visualizations (choropleth, bubbles, symbols, charts)\nCustomize themes with styles, colors, and interactions\nImplement advanced features like tooltips, legends, and data filtering\nIntegrate D3.js custom charts with map themes\nDeploy interactive maps for web applications\n\n\n\n\niXmaps consists of four main components:\n\n\nData processing engine supporting:\n\nMultiple formats: CSV, JSON, GeoJSON, KML, RSS, JSONstat, TopoJSON\nData transformation: filtering, pivoting, aggregation, calculated columns\nMulti-source loading with broker pattern\nReal-time updates and live data feeds\n\n\n\n\n\n\n\nData.js does no reprojection — all input coordinates must be geographic WGS84 (EPSG:4326), i.e. decimal longitude/latitude. Convert any other CRS to EPSG:4326 before loading.\n\n\n\n\n\n\nSVG-based interactive mapping framework:\n\nDynamic theme system for visualizations\nMulti-layer support with geographic and data layers\nPerformance optimized for large datasets\nInteractive features: zoom, pan, search, tooltips\n\n\n\n\nA declarative, JSON-based layer definition system:\n\nEach layer is described by data (source), binding (field→visual mapping), type (visualization method), and style (appearance)\niXmaps theme specifications are pure JSON objects — no imperative rendering code required\nThe same grammar drives choropleth maps, bubble charts, flow lines, sparklines, and custom D3 symbols\n\n\n\n\nThe central Jacascript object ixmaps gives you the API to:\n\ncreate and embed interactive maps\nload themes or projects\nchange theme styles\nget information about the actual visualization state\n\n\n\n\nRich HTML interface elements:\n\nTooltip system with Mustache templating\nAutomatic legend generation\nSearch interface (normal and advanced)\nData visualization controls\n\n\n\n\n\niXmaps is ideal for:\n\nData Scientists - Visualizing geographic data and patterns\nWeb Developers - Creating interactive map applications\nJournalists - Building data-driven stories with maps\nResearchers - Exploring and presenting spatial data\nGovernment Agencies - Publishing open data visualizations\n\n\n\n\niXmaps is not:\n\nA tile-based mapping library like Leaflet or Google Maps (though it can work with them)\nA GIS system for spatial analysis\nA backend server or database system\nA static map generator (it’s designed for interactive visualizations)\n\n\n\n\niXmaps is built on:\n\nJavaScript (ES6+) - Core programming language\nSVG - Vector graphics for maps and visualization\njQuery (optional) - DOM manipulation and utilities\nMustache - Template engine for tooltips and labels\nPapaparse - CSV parser\nDuckdb WASM - for reading parquet and geoparquet and geo package\nflatgeobuf - read .fgb files, also partially\ngeobuf - read geo buffer files\n\n\n\n\niXmaps is licensed under BSD 3-Clause License, making it free for both personal and commercial use provided the original copyright notice is included and the original authors’ names may not be used to promote derived products\n\n\n\niXmaps was created and is maintained by Guenter Richter.\n\nGitHub Repository: github.com/gjrichter/ixmaps-flat\nLive Examples: ixmaps.com\nData Viz Gallery: gjrichter.github.io/pages\n\n\n\n\n\n\n\n\n\n\nTipNew to ixMaps?\n\n\n\nStart with the Quick Start Guide to create your first interactive map in minutes.\n\n\n\n\n\n\n\n\nNoteLooking for API Reference?\n\n\n\nCheck the API Documentation for the complete method reference, or Style Properties for all .style() options.\n\n\n\n\n\n\n\n\nImportantNeed examples?\n\n\n\nBrowse Examples for copy-paste working code for the most common use cases.\n\n\n\n\n\nInclude ixMaps in any HTML page with a single &lt;script&gt; tag — no installation, no build step:\n&lt;script src=\"https://cdn.jsdelivr.net/gh/gjrichter/ixmaps-flat@1/ixmaps.js\"&gt;&lt;/script&gt;\n\n\n\n\nGitHub Repository: github.com/gjrichter/ixmaps-flat\nIssues and Questions: GitHub Issues\n\n\nReady to start? Head over to the Quick Start Guide to create your first map!",
     "crumbs": [
       "Home",
       "Overview"
@@ -600,7 +612,7 @@
     "href": "index.html#framework-components",
     "title": "Welcome to iXmaps Documentation 🗺️",
     "section": "",
-    "text": "iXmaps consists of four main components:\n\n\nData processing engine supporting:\n\nMultiple formats: CSV, JSON, GeoJSON, KML, RSS, JSONstat, TopoJSON\nData transformation: filtering, pivoting, aggregation, calculated columns\nMulti-source loading with broker pattern\nReal-time updates and live data feeds\n\n\n\n\nSVG-based interactive mapping framework:\n\nDynamic theme system for visualizations\nMulti-layer support with geographic and data layers\nPerformance optimized for large datasets\nInteractive features: zoom, pan, search, tooltips\n\n\n\n\nA declarative, JSON-based layer definition system:\n\nEach layer is described by data (source), binding (field→visual mapping), type (visualization method), and style (appearance)\niXmaps theme specifications are pure JSON objects — no imperative rendering code required\nThe same grammar drives choropleth maps, bubble charts, flow lines, sparklines, and custom D3 symbols\n\n\n\n\nThe central Jacascript object ixmaps gives you the API to:\n\ncreate and embed interactive maps\nload themes or projects\nchange theme styles\nget information about the actual visualization state\n\n\n\n\nRich HTML interface elements:\n\nTooltip system with Mustache templating\nAutomatic legend generation\nSearch interface (normal and advanced)\nData visualization controls",
+    "text": "iXmaps consists of four main components:\n\n\nData processing engine supporting:\n\nMultiple formats: CSV, JSON, GeoJSON, KML, RSS, JSONstat, TopoJSON\nData transformation: filtering, pivoting, aggregation, calculated columns\nMulti-source loading with broker pattern\nReal-time updates and live data feeds\n\n\n\n\n\n\n\nData.js does no reprojection — all input coordinates must be geographic WGS84 (EPSG:4326), i.e. decimal longitude/latitude. Convert any other CRS to EPSG:4326 before loading.\n\n\n\n\n\n\nSVG-based interactive mapping framework:\n\nDynamic theme system for visualizations\nMulti-layer support with geographic and data layers\nPerformance optimized for large datasets\nInteractive features: zoom, pan, search, tooltips\n\n\n\n\nA declarative, JSON-based layer definition system:\n\nEach layer is described by data (source), binding (field→visual mapping), type (visualization method), and style (appearance)\niXmaps theme specifications are pure JSON objects — no imperative rendering code required\nThe same grammar drives choropleth maps, bubble charts, flow lines, sparklines, and custom D3 symbols\n\n\n\n\nThe central Jacascript object ixmaps gives you the API to:\n\ncreate and embed interactive maps\nload themes or projects\nchange theme styles\nget information about the actual visualization state\n\n\n\n\nRich HTML interface elements:\n\nTooltip system with Mustache templating\nAutomatic legend generation\nSearch interface (normal and advanced)\nData visualization controls",
     "crumbs": [
       "Home",
       "Overview"
@@ -1209,330 +1221,6 @@
     "crumbs": [
       "Home",
       "Troubleshooting"
-    ]
-  },
-  {
-    "objectID": "getting_started.html#fastest-path-let-an-ai-build-it",
-    "href": "getting_started.html#fastest-path-let-an-ai-build-it",
-    "title": "Quick Start",
-    "section": "Fastest path: let an AI build it",
-    "text": "Fastest path: let an AI build it\nYou don’t have to write any of this by hand. Two AI-powered options turn a plain-language description of your data into a working ixMaps map:\n\nChat2Map.it — explore your data, describe the visualization you want in plain language, and get a live, shareable map. No code, nothing to install.\nAgent-ready skills — drop the ixMaps skills into Claude Code, Codex, or Cursor, and your AI agent writes runnable ixMaps code right in your editor.\n\nBoth know the ixMaps API and its common pitfalls. The hand-written walkthrough below is still worth reading — it explains what the generated code does, so you can adjust the result with confidence.",
-    "crumbs": [
-      "Home",
-      "Getting Started",
-      "Quick Start"
-    ]
-  },
-  {
-    "objectID": "theme_styles.html#fastest-path-let-an-ai-build-it",
-    "href": "theme_styles.html#fastest-path-let-an-ai-build-it",
-    "title": "Quick Start",
-    "section": "Fastest path: let an AI build it",
-    "text": "Fastest path: let an AI build it\nYou don’t have to write any of this by hand. Two AI-powered options turn a plain-language description of your data into a working ixMaps map:\n\nChat2Map.it — explore your data, describe the visualization you want in plain language, and get a live, shareable map. No code, nothing to install.\nAgent-ready skills — drop the ixMaps skills into Claude Code, Codex, or Cursor, and your AI agent writes runnable ixMaps code right in your editor.\n\nBoth know the ixMaps API and its common pitfalls. The hand-written walkthrough below is still worth reading — it explains what the generated code does, so you can adjust the result with confidence.",
-    "crumbs": [
-      "Home",
-      "Reference",
-      "Style Properties"
-    ]
-  },
-  {
-    "objectID": "theme_styles.html#step-1-the-html-skeleton",
-    "href": "theme_styles.html#step-1-the-html-skeleton",
-    "title": "Quick Start",
-    "section": "Step 1: The HTML skeleton",
-    "text": "Step 1: The HTML skeleton\nCreate an HTML file and include the ixMaps library from the CDN:\n&lt;!DOCTYPE html&gt;\n&lt;html lang=\"en\"&gt;\n&lt;head&gt;\n    &lt;meta charset=\"UTF-8\"&gt;\n    &lt;meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"&gt;\n    &lt;title&gt;My First ixMap&lt;/title&gt;\n    &lt;style&gt;\n        html, body { width: 100%; height: 100%; margin: 0; overflow: hidden; }\n        #map { width: 100%; height: 100%; }\n    &lt;/style&gt;\n    &lt;!-- ixMaps library — single script, no other dependencies needed --&gt;\n    &lt;script src=\"https://cdn.jsdelivr.net/gh/gjrichter/ixmaps-flat@1/ixmaps.js\"&gt;&lt;/script&gt;\n&lt;/head&gt;\n&lt;body&gt;\n    &lt;div id=\"map\"&gt;&lt;/div&gt;\n    &lt;script&gt;\n        // your map code goes here\n    &lt;/script&gt;\n&lt;/body&gt;\n&lt;/html&gt;\n\n\n\n\n\n\nImportantCSS rule required\n\n\n\nNever use width: 100vw; height: 100vh on the map &lt;div&gt;. When a scrollbar appears, vw/vh exceed the viewport and trigger a feedback loop. Always use the width/height: 100% pattern shown above.\n\n\n\n\n\n\n\n\nNoteNo extra scripts needed\n\n\n\ndata.js is already bundled inside ixmaps.js. Data.* functions are always available — do not add a second &lt;script&gt; tag for data.js unless you need it outside a layer callback.",
-    "crumbs": [
-      "Home",
-      "Reference",
-      "Style Properties"
-    ]
-  },
-  {
-    "objectID": "theme_styles.html#step-2-create-a-map",
-    "href": "theme_styles.html#step-2-create-a-map",
-    "title": "Quick Start",
-    "section": "Step 2: Create a map",
-    "text": "Step 2: Create a map\nThe entry point is ixmaps.Map(). Always assign the result to a const — discarding the return value silently breaks all subsequent calls.\nconst myMap = ixmaps.Map(\"map\", {\n    mapType: \"VT_TONER_LITE\",  // basemap style\n    mode:    \"info\",            // \"info\" = show tooltips on hover\n    legend:  \"closed\",          // legend panel starts collapsed\n    tools:   true               // show toolbar (zoom, search)\n})\n.view({ center: { lat: 42.5, lng: 12.5 }, zoom: 6 })\n.options({\n    basemapopacity: 0.6,\n    flushChartDraw:  1000000    // instant rendering (no animation)\n});\nOpen this in a browser — you should see a clean toner basemap centred on Italy.",
-    "crumbs": [
-      "Home",
-      "Reference",
-      "Style Properties"
-    ]
-  },
-  {
-    "objectID": "theme_styles.html#step-3-add-a-data-layer",
-    "href": "theme_styles.html#step-3-add-a-data-layer",
-    "title": "Quick Start",
-    "section": "Step 3: Add a data layer",
-    "text": "Step 3: Add a data layer\nEvery data layer follows the same chain of methods:\nmyMap.layer(\"name\")\n    .data({...})       ← data source\n    .binding({...})    ← field mapping\n    .type(\"...\")        ← visualization type\n    .style({...})      ← visual properties\n    .meta({...})       ← tooltip template\n    .define()          ← register the layer (required)\nHere is a complete layer with five Italian cities displayed as sized bubbles:\nconst cities = [\n    { name: \"Rome\",    lat: 41.90, lon: 12.50, pop: 2873000 },\n    { name: \"Milan\",   lat: 45.46, lon: 9.19,  pop: 1372000 },\n    { name: \"Naples\",  lat: 40.85, lon: 14.27, pop:  966000 },\n    { name: \"Turin\",   lat: 45.07, lon: 7.69,  pop:  875000 },\n    { name: \"Palermo\", lat: 38.12, lon: 13.36, pop:  657000 }\n];\n\nmyMap.layer(\"cities\")\n    .data({ obj: cities, type: \"json\" })\n    .binding({ geo: \"lat|lon\", value: \"pop\", title: \"name\" })\n    .type(\"CHART|BUBBLE|SIZE|VALUES\")\n    .style({\n        colorscheme: [\"#0066cc\"],\n        fillopacity: 0.7,\n        normalsizevalue: \"3000000\",\n        showdata: \"true\"           // exposes the data record on click (needed for {{theme.item.data}} tooltips)\n    })\n    .meta({ tooltip: \"&lt;b&gt;{{name}}&lt;/b&gt;&lt;br&gt;Population: {{pop}}\" })\n    .title(\"Italian Cities\")\n    .define();",
-    "crumbs": [
-      "Home",
-      "Reference",
-      "Style Properties"
-    ]
-  },
-  {
-    "objectID": "theme_styles.html#complete-working-example",
-    "href": "theme_styles.html#complete-working-example",
-    "title": "Quick Start",
-    "section": "Complete working example",
-    "text": "Complete working example\n&lt;!DOCTYPE html&gt;\n&lt;html lang=\"en\"&gt;\n&lt;head&gt;\n    &lt;meta charset=\"UTF-8\"&gt;\n    &lt;meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"&gt;\n    &lt;title&gt;Italian Cities&lt;/title&gt;\n    &lt;style&gt;\n        html, body { width: 100%; height: 100%; margin: 0; overflow: hidden; }\n        #map { width: 100%; height: 100%; }\n    &lt;/style&gt;\n    &lt;script src=\"https://cdn.jsdelivr.net/gh/gjrichter/ixmaps-flat@1/ixmaps.js\"&gt;&lt;/script&gt;\n&lt;/head&gt;\n&lt;body&gt;\n    &lt;div id=\"map\"&gt;&lt;/div&gt;\n    &lt;script&gt;\n        const cities = [\n            { name: \"Rome\",    lat: 41.90, lon: 12.50, pop: 2873000 },\n            { name: \"Milan\",   lat: 45.46, lon: 9.19,  pop: 1372000 },\n            { name: \"Naples\",  lat: 40.85, lon: 14.27, pop:  966000 },\n            { name: \"Turin\",   lat: 45.07, lon: 7.69,  pop:  875000 },\n            { name: \"Palermo\", lat: 38.12, lon: 13.36, pop:  657000 }\n        ];\n\n        const myMap = ixmaps.Map(\"map\", {\n            mapType: \"VT_TONER_LITE\",\n            mode:    \"info\",\n            legend:  \"closed\",\n            tools:   true\n        })\n        .view({ center: { lat: 42.5, lng: 12.5 }, zoom: 6 })\n        .options({ basemapopacity: 0.6, flushChartDraw: 1000000 });\n\n        myMap.layer(\"cities\")\n            .data({ obj: cities, type: \"json\" })\n            .binding({ geo: \"lat|lon\", value: \"pop\", title: \"name\" })\n            .type(\"CHART|BUBBLE|SIZE|VALUES\")\n            .style({\n                colorscheme:     [\"#0066cc\"],\n                fillopacity:     0.7,\n                normalsizevalue: \"3000000\",\n                showdata:        \"true\"\n            })\n            .meta({ tooltip: \"&lt;b&gt;{{name}}&lt;/b&gt;&lt;br&gt;Population: {{pop}}\" })\n            .title(\"Italian Cities\")\n            .define();\n    &lt;/script&gt;\n&lt;/body&gt;\n&lt;/html&gt;\nSave the file and open it in any modern browser. No web server needed for inline data like this.\n\n\n\n\n\n\nTipSee it live\n\n\n\nOpen a live, editable version of this kind of bubble map in the ixMaps code viewer — edit the code on the left and watch the map update on the right.",
-    "crumbs": [
-      "Home",
-      "Reference",
-      "Style Properties"
-    ]
-  },
-  {
-    "objectID": "theme_styles.html#loading-external-data",
-    "href": "theme_styles.html#loading-external-data",
-    "title": "Quick Start",
-    "section": "Loading external data",
-    "text": "Loading external data\nFor CSV or JSON files hosted online, replace .data({ obj: ... }) with .data({ url: ... }):\nmyMap.layer(\"cities\")\n    .data({\n        url:  \"https://cdn.jsdelivr.net/gh/your-user/your-repo@main/cities.csv\",\n        type: \"csv\"\n    })\n    .binding({ geo: \"lat|lon\", value: \"pop\", title: \"name\" })\n    .type(\"CHART|BUBBLE|SIZE|VALUES\")\n    .style({ colorscheme: [\"#0066cc\"], fillopacity: 0.7, showdata: \"true\" })\n    .meta({ tooltip: \"&lt;b&gt;{{name}}&lt;/b&gt;&lt;br&gt;Population: {{pop}}\" })\n    .define();\n\n\n\n\n\n\nWarningCORS restriction\n\n\n\nBrowsers block loading files from file:// URLs. External data must be served from a web server or a CDN. For development, use a local server (python3 -m http.server, VS Code Live Server, etc.) or host data on GitHub + jsDelivr.",
-    "crumbs": [
-      "Home",
-      "Reference",
-      "Style Properties"
-    ]
-  },
-  {
-    "objectID": "theme_styles.html#adding-a-choropleth-layer",
-    "href": "theme_styles.html#adding-a-choropleth-layer",
-    "title": "Quick Start",
-    "section": "Adding a choropleth layer",
-    "text": "Adding a choropleth layer\nTo colour polygons (countries, regions) by a data value, you need two layers with the same name: a FEATURE base layer that loads the geometry, and an overlay layer that joins your data to it.\n// 1. Base layer — loads the geometry\nmyMap.layer(\"countries\")\n    .data({\n        url:  \"https://gisco-services.ec.europa.eu/distribution/v2/countries/topojson/CNTR_RG_60M_2020_4326.json\",\n        type: \"topojson\"\n    })\n    .binding({ geo: \"geometry\", id: \"CNTR_ID\", title: \"NAME_ENGL\" })\n    .type(\"FEATURE\")\n    .style({\n        colorscheme: [\"#ddd\"],\n        fillopacity: 0.4,\n        linecolor:   \"#888\",\n        linewidth:   0.5,\n        showdata:    \"true\"\n    })\n    .define();\n\n// 2. Overlay — joins CSV data to the geometry (SAME layer name \"countries\")\nmyMap.layer(\"countries\")\n    .data({\n        url:  \"https://example.com/gdp.csv\",\n        type: \"csv\"\n    })\n    .binding({ lookup: \"iso2\", value: \"gdp_per_capita\" })\n    .type(\"CHOROPLETH|QUANTILE\")\n    .style({\n        colorscheme: [\"#ffffcc\", \"#a1dab4\", \"#41b6c4\", \"#2c7fb8\", \"#253494\"],\n        fillopacity: 0.8,\n        showdata:    \"true\"\n    })\n    .meta({ tooltip: \"{{NAME_ENGL}}: {{gdp_per_capita}}\" })\n    .define();\n\n\n\n\n\n\nImportantSame name = geometry reuse\n\n\n\nThe overlay layer must use the exact same name as the FEATURE base layer. A different name means no geometry to draw on — the layer renders nothing with no error message.",
-    "crumbs": [
-      "Home",
-      "Reference",
-      "Style Properties"
-    ]
-  },
-  {
-    "objectID": "theme_styles.html#next-steps",
-    "href": "theme_styles.html#next-steps",
-    "title": "Quick Start",
-    "section": "Next steps",
-    "text": "Next steps\n\nAPI Reference — complete reference for all methods and options\nStyle Properties — every style property explained\nMap Types, Sizing & Colors — basemaps, sizing methods, color schemes\nExamples — copy-paste examples for common use cases\nTroubleshooting — when things don’t work",
-    "crumbs": [
-      "Home",
-      "Reference",
-      "Style Properties"
-    ]
-  },
-  {
-    "objectID": "chart_scaling.html#core-properties",
-    "href": "chart_scaling.html#core-properties",
-    "title": "Style Properties",
-    "section": "Core properties",
-    "text": "Core properties\n\n\n\nProperty\nType\nDescription\n\n\n\n\nshowdata\nstring\nSet \"true\" to expose the feature’s data record on click — needed for {theme.item.data} tooltips. Not required for rendering.\n\n\ncolorscheme\narray / string\nColor palette — see Color Schemes\n\n\nfillopacity\nnumber (0–1)\nFill opacity. Prefer fillopacity over opacity\n\n\nopacity\nnumber (0–1)\nOverall opacity. Works, but prefer fillopacity for fill transparency\n\n\nlinecolor\nstring / array\nPolygon border color or flow-line color. Single string or [\"#from\",\"#to\"] for VECTOR\\|GRADIENT\n\n\nlinewidth\nnumber\nBorder / stroke width in pixels\n\n\nscale\nnumber\nUniform size multiplier. Start at 1\n\n\nvisible\nboolean\nfalse = layer starts hidden (toggle with showTheme/hideTheme)\n\n\n\n\n\n\n\n\n\nWarningNever use these properties\n\n\n\n\nfillcolor — use colorscheme: [\"#hex\"]\nstrokecolor / strokewidth — use linecolor / linewidth",
-    "crumbs": [
-      "Home",
-      "Reference",
-      "Chart Scaling"
-    ]
-  },
-  {
-    "objectID": "chart_scaling.html#sizing-properties",
-    "href": "chart_scaling.html#sizing-properties",
-    "title": "Style Properties",
-    "section": "Sizing properties",
-    "text": "Sizing properties\n\n\n\n\n\n\n\n\nProperty\nType\nDescription\n\n\n\n\nnormalsizevalue\nstring\nData value that maps to “normal” display size. Higher = smaller bubbles (most data values fall below it). E.g. \"1000\" → smaller than \"300\"\n\n\nsizepow\nnumber\nPower curve for size scaling. 2 = quadratic (exaggerates contrast)\n\n\nrangescale\nnumber\nScale factor applied after range computation\n\n\nminvaluesize\nnumber\nMinimum pixel size below which no symbol is drawn\n\n\nscale\nnumber\nSimple multiplier on top of all sizing logic\n\n\ngridwidth\nstring\nGrid cell size for aggregate layers, e.g. \"5px\"\n\n\ngridwidthpx\nstring\nGrid cell width in pixels (supports \"factor\" mode in changeThemeStyle)\n\n\nnormalsizevalue with \\|GLOW\n—\nStart with a smaller scale (e.g. 0.32) to compensate for the glow halo",
-    "crumbs": [
-      "Home",
-      "Reference",
-      "Chart Scaling"
-    ]
-  },
-  {
-    "objectID": "chart_scaling.html#classification-and-ranges",
-    "href": "chart_scaling.html#classification-and-ranges",
-    "title": "Style Properties",
-    "section": "Classification and ranges",
-    "text": "Classification and ranges\n\n\n\n\n\n\n\n\nProperty\nType\nDescription\n\n\n\n\nranges\nstring / array\nExplicit class breaks: n+1 values for n classes\n\n\nrangecentervalue\nnumber\nDiverging scale center. Requires an even number of colors\n\n\nvalues\narray\nCategory list for CATEGORICAL. Must be strings (numeric values are silently ignored)\n\n\nvaluedecimals\nnumber\nDecimal places for rendered value labels\n\n\nunits\nstring\nString appended to value labels, e.g. \"%\", \"€\"\n\n\n\nExplicit class breaks example:\n.type(\"CHOROPLETH|EQUIDISTANT\")\n.style({\n    colorscheme: [\"#ffffcc\",\"#c7e9b4\",\"#41b6c4\",\"#2c7fb8\",\"#253494\"],\n    ranges:      \"0,100,500,1000,5000,10000\",\n    showdata:    \"true\"\n})\nDiverging scale example:\n.style({\n    colorscheme:      [\"#d73027\",\"#f46d43\",\"#fdae61\",\"#abd9e9\",\"#74add1\",\"#4575b4\"],\n    rangecentervalue: 0,\n    showdata:         \"true\"\n})",
-    "crumbs": [
-      "Home",
-      "Reference",
-      "Chart Scaling"
-    ]
-  },
-  {
-    "objectID": "chart_scaling.html#label-and-text-properties",
-    "href": "chart_scaling.html#label-and-text-properties",
-    "title": "Style Properties",
-    "section": "Label and text properties",
-    "text": "Label and text properties\n\n\n\n\n\n\n\n\nProperty\nType\nDescription\n\n\n\n\ntextscale\nnumber\nScale factor for label text on the chart\n\n\nfontsize\nstring\nFont size (e.g. \"12\")\n\n\nfontfamily\nstring\nFont family (e.g. \"Arial\")\n\n\nfontweight\nstring\nFont weight (e.g. \"bold\")\n\n\ntextcolor\nstring\nText color\n\n\ntitlefield\nstring\nData column used as chart title label (overrides binding.title)\n\n\ndatafields\narray\nExtra fields for {theme.item.data} table: [\"field1\",\"field2\"]",
-    "crumbs": [
-      "Home",
-      "Reference",
-      "Chart Scaling"
-    ]
-  },
-  {
-    "objectID": "chart_scaling.html#dynamic-opacity-properties",
-    "href": "chart_scaling.html#dynamic-opacity-properties",
-    "title": "Style Properties",
-    "section": "Dynamic opacity properties",
-    "text": "Dynamic opacity properties\n\n\n\n\n\n\n\n\nProperty\nType\nDescription\n\n\n\n\ndopacitypow\nnumber\nPower curve exponent for DOPACITY opacity mapping (default ≈ 1)\n\n\ndopacityscale\nnumber\nMultiplier stretching the opacity range\n\n\ndopacityramp\nstring\nRamp type for dynamic opacity: \"linear\" (default) or \"exponential\"\n\n\n\nFor dynamic opacity, add \\|DOPACITYMAX or \\|DOPACITYMINMAX to the type string and an alpha field to .binding():\n.binding({ geo: \"lat|lon\", value: \"count\", alpha: \"density\" })\n.type(\"CHART|BUBBLE|SIZE|DOPACITYMAX\")",
-    "crumbs": [
-      "Home",
-      "Reference",
-      "Chart Scaling"
-    ]
-  },
-  {
-    "objectID": "chart_scaling.html#scale-dependent-visibility-1",
-    "href": "chart_scaling.html#scale-dependent-visibility-1",
-    "title": "Style Properties",
-    "section": "Scale-dependent visibility",
-    "text": "Scale-dependent visibility\n\n\n\n\n\n\n\n\nProperty\nType\nDescription\n\n\n\n\nchartupper\nstring\nHide layer when map scale denominator is larger (more zoomed out) than this value\n\n\nchartlower\nstring\nHide layer when map scale denominator is smaller (more zoomed in) than this value\n\n\nboxupper\nstring\nScale at which a box background becomes visible, e.g. \"1:250000\"\n\n\nboxlower\nstring\nScale at which a box background is hidden\n\n\nvaluesupper\nstring\nScale-dependent value label visibility upper threshold\n\n\nvalueslower\nstring\nScale-dependent value label visibility lower threshold\n\n\n\n.style({\n    chartupper: \"1:5000\",   // hide when zoomed out past 1:5000\n    chartlower: \"1:500\"     // hide when zoomed in past 1:500\n})\n\n\n\n\n\n\nTipchartupper/chartlower vs clipupper/cliplower\n\n\n\nFor scale-dependent chart visibility use chartupper / chartlower. clipupper / cliplower are also valid, but control a different thing — geo-bounds clipping — and only apply when the type string includes CLIPTOGEOBOUNDS. On an ordinary chart layer they have no visible effect.",
-    "crumbs": [
-      "Home",
-      "Reference",
-      "Chart Scaling"
-    ]
-  },
-  {
-    "objectID": "chart_scaling.html#symbol-and-chart-properties",
-    "href": "chart_scaling.html#symbol-and-chart-properties",
-    "title": "Style Properties",
-    "section": "Symbol and chart properties",
-    "text": "Symbol and chart properties\n\n\n\n\n\n\n\n\nProperty\nType\nDescription\n\n\n\n\nalign\nstring\nChart anchor: \"left\" · \"right\" · \"top\" · \"bottom\" · \"above\" · \"below\"\n\n\nrotation\nnumber\nRotate chart symbol in degrees\n\n\nsizefield\nstring\nData column driving symbol SIZE independently from the value (color) field\n\n\naggregationfield\nstring\nField used as aggregation key when AGGREGATE is set\n\n\nuserdraw\nstring\nName of custom draw function for CHART\\|USER type",
-    "crumbs": [
-      "Home",
-      "Reference",
-      "Chart Scaling"
-    ]
-  },
-  {
-    "objectID": "chart_scaling.html#sparkline-specific-properties",
-    "href": "chart_scaling.html#sparkline-specific-properties",
-    "title": "Style Properties",
-    "section": "Sparkline-specific properties",
-    "text": "Sparkline-specific properties\n\n\n\n\n\n\n\n\nProperty\nType\nDescription\n\n\n\n\nxaxis\narray\nX-axis labels, e.g. [\"2020\",\"2021\",\"2022\",\"2023\"]\n\n\nlabel\narray\nCategory labels (for BOX\\|GRID\\|XAXIS display)\n\n\nmarkersize\nnumber\nLASTARROW arrow head size (default ~8; use 1–3 for smaller)",
-    "crumbs": [
-      "Home",
-      "Reference",
-      "Chart Scaling"
-    ]
-  },
-  {
-    "objectID": "chart_scaling.html#aggregate-grid-properties",
-    "href": "chart_scaling.html#aggregate-grid-properties",
-    "title": "Style Properties",
-    "section": "Aggregate / grid properties",
-    "text": "Aggregate / grid properties\n\n\n\n\n\n\n\n\nProperty\nType\nDescription\n\n\n\n\ngridwidth\nstring\nGrid cell size, e.g. \"5px\"\n\n\ngridwidthpx\nstring\nGrid cell width in pixels; supports \"factor\" mode\n\n\ngridx\nnumber\nValues per bar group in CHART\\|BAR\\|STACKED (gridx:2 → 2 segments per bar)",
-    "crumbs": [
-      "Home",
-      "Reference",
-      "Chart Scaling"
-    ]
-  },
-  {
-    "objectID": "chart_scaling.html#line-styling-properties",
-    "href": "chart_scaling.html#line-styling-properties",
-    "title": "Style Properties",
-    "section": "Line styling properties",
-    "text": "Line styling properties\nThese SVG stroke properties apply to line and polygon outline rendering:\n\n\n\n\n\n\n\n\n\nProperty\nType\nDescription\nExample\n\n\n\n\ndasharray\nstring\nSVG stroke-dasharray pattern\n\"5,5\" (dashes) · \"10,3,3,3\" (dash-dot)\n\n\ndashoffset\nnumber\nSVG stroke-dashoffset\n\"0\"\n\n\nlinecap\nstring\nLine end cap style\n\"round\" · \"square\" · \"butt\"\n\n\nlinejoin\nstring\nLine join style\n\"round\" · \"miter\" · \"bevel\"\n\n\n\n.style({\n    linecolor:  \"#0066cc\",\n    linewidth:  2,\n    dasharray:  \"6,4\",      // dashed outline\n    linecap:    \"round\",\n    showdata:   \"true\"\n})",
-    "crumbs": [
-      "Home",
-      "Reference",
-      "Chart Scaling"
-    ]
-  },
-  {
-    "objectID": "chart_scaling.html#visual-effect-properties",
-    "href": "chart_scaling.html#visual-effect-properties",
-    "title": "Style Properties",
-    "section": "Visual effect properties",
-    "text": "Visual effect properties\n\n\n\nProperty\nType\nDescription\n\n\n\n\nblur\nnumber\nGaussian blur radius in pixels",
-    "crumbs": [
-      "Home",
-      "Reference",
-      "Chart Scaling"
-    ]
-  },
-  {
-    "objectID": "chart_scaling.html#position-and-offset-properties",
-    "href": "chart_scaling.html#position-and-offset-properties",
-    "title": "Style Properties",
-    "section": "Position and offset properties",
-    "text": "Position and offset properties\n\n\n\nProperty\nType\nDescription\n\n\n\n\noffsetx\nnumber\nHorizontal offset of the chart symbol in pixels\n\n\noffsety\nnumber\nVertical offset of the chart symbol in pixels",
-    "crumbs": [
-      "Home",
-      "Reference",
-      "Chart Scaling"
-    ]
-  },
-  {
-    "objectID": "chart_scaling.html#value-range-properties",
-    "href": "chart_scaling.html#value-range-properties",
-    "title": "Style Properties",
-    "section": "Value range properties",
-    "text": "Value range properties\n\n\n\n\n\n\n\n\nProperty\nType\nDescription\n\n\n\n\nminvalue\nnumber\nClamp: suppress rendering for values below this threshold\n\n\nmaxvalue\nnumber\nClamp: suppress rendering for values above this threshold\n\n\nlowvalue\nnumber\nLow value threshold (visual emphasis, not suppression)\n\n\nhighvalue\nnumber\nHigh value threshold (visual emphasis)\n\n\n\n.style({\n    minvalue: 100,     // don't render features with value &lt; 100\n    maxvalue: 500000,  // don't render features with value &gt; 500 000\n    showdata: \"true\"\n})",
-    "crumbs": [
-      "Home",
-      "Reference",
-      "Chart Scaling"
-    ]
-  },
-  {
-    "objectID": "chart_scaling.html#advanced-lookup-options",
-    "href": "chart_scaling.html#advanced-lookup-options",
-    "title": "Style Properties",
-    "section": "Advanced lookup options",
-    "text": "Advanced lookup options\nWhen the geometry id field and data join key need normalization before matching:\n\n\n\n\n\n\n\n\nProperty\nType\nDescription\n\n\n\n\nlookuptonumber\nboolean\nConvert the lookup field value to a number before matching\n\n\nlookuptoupper\nboolean\nConvert to uppercase before matching\n\n\nlookupsuffix\nstring\nAppend a suffix to the lookup value before matching\n\n\nlookupdigits\nnumber\nZero-pad the lookup value to this many digits\n\n\n\nExample: data has \"028001\" (zero-padded 6-digit string) but geometry has integer 28001:\n.style({ lookuptonumber: true, showdata: \"true\" })",
-    "crumbs": [
-      "Home",
-      "Reference",
-      "Chart Scaling"
-    ]
-  },
-  {
-    "objectID": "chart_scaling.html#additional-units-variants",
-    "href": "chart_scaling.html#additional-units-variants",
-    "title": "Style Properties",
-    "section": "Additional units variants",
-    "text": "Additional units variants\n\n\n\nProperty\nType\nDescription\n\n\n\n\nlabelunits\nstring\nUnits appended to label text\n\n\nsizevalueunits\nstring\nUnits for the size value field\n\n\nlegendunits\nstring\nUnits shown in the legend",
-    "crumbs": [
-      "Home",
-      "Reference",
-      "Chart Scaling"
-    ]
-  },
-  {
-    "objectID": "chart_scaling.html#feature-layer-notes",
-    "href": "chart_scaling.html#feature-layer-notes",
-    "title": "Style Properties",
-    "section": "Feature layer notes",
-    "text": "Feature layer notes\nStyling behaviour depends on geometry type:\n\nLine features — colorscheme sets the stroke / line color. linecolor is overridden by colorscheme and has no effect on lines.\nPolygon features — colorscheme sets the fill color; linecolor sets the border color; fillopacity controls fill transparency.\n\nMaking a fill invisible:\ncolorscheme: [\"none\"]   // ✅ correct\n// fillopacity: 0        // ❌ may cause errors on polygon layers",
-    "crumbs": [
-      "Home",
-      "Reference",
-      "Chart Scaling"
-    ]
-  },
-  {
-    "objectID": "chart_scaling.html#complete-style-example",
-    "href": "chart_scaling.html#complete-style-example",
-    "title": "Style Properties",
-    "section": "Complete style example",
-    "text": "Complete style example\n// FEATURE base layer\nmyMap.layer(\"regions\")\n    .data({ url: \"regions.topojson\", type: \"topojson\" })\n    .binding({ geo: \"geometry\", id: \"reg_code\", title: \"reg_name\" })\n    .type(\"FEATURE\")\n    .style({\n        colorscheme: [\"#ccc\"],\n        fillopacity: 0.3,\n        linecolor:   \"#666\",\n        linewidth:   0.5,\n        showdata:    \"true\"\n    })\n    .define();\n\n// CHOROPLETH overlay (same layer name \"regions\")\nmyMap.layer(\"regions\")\n    .data({ url: \"stats.csv\", type: \"csv\" })\n    .binding({ lookup: \"code\", value: \"value\" })\n    .type(\"CHOROPLETH|QUANTILE\")\n    .style({\n        colorscheme:   [\"#eef\",\"#003f88\"],\n        fillopacity:   0.75,\n        valuedecimals: 1,\n        units:         \"%\",\n        showdata:      \"true\"\n    })\n    .meta({ name: \"choropleth\", tooltip: \"{{reg_name}}: {{value}}%\" })\n    .define();",
-    "crumbs": [
-      "Home",
-      "Reference",
-      "Chart Scaling"
-    ]
-  },
-  {
-    "objectID": "chart_scaling.html#alphabetical-property-reference",
-    "href": "chart_scaling.html#alphabetical-property-reference",
-    "title": "Style Properties",
-    "section": "Alphabetical property reference",
-    "text": "Alphabetical property reference\nAll .style() properties drawn from the ixMaps source (themeStyleTranslateA). Deprecated properties have preferred replacements shown; Required means the layer will not render without it.\n\n\n\n\n\n\n\n\nProperty\nType\nDescription\n\n\n\n\naggregation\nstring\nAggregation method override\n\n\naggregationfield\nstring\nField used as aggregation key\n\n\naggregationlower\nstring\nScale below which aggregation is hidden, e.g. \"1:50000\"\n\n\naggregationscale\narray\nMulti-scale aggregation config, e.g. [\"1:1\",\"commune\",\"1:1000000\",\"province\"]\n\n\naggregationupper\nstring\nScale above which aggregation is hidden\n\n\nalign\nstring\nChart anchor: \"left\" · \"right\" · \"top\" · \"bottom\" · \"above\" · \"below\"\n\n\nalphafield\nstring\nData field driving DOPACITY alpha channel\n\n\nalphavalueunits\nstring\nUnits label for the alpha value field\n\n\nautoopacity\nboolean\nAutomatic opacity scaling\n\n\nautoscale\nboolean\nAutomatic scale adjustment\n\n\nautosize\nboolean\nAutomatic size adjustment\n\n\nblur\nnumber\nGaussian blur radius in pixels\n\n\nbordercolor\nstring\nBackground box border color\n\n\nborderradius\nnumber\nBackground box corner radius in pixels\n\n\nborderstyle\nstring\nBackground box border style, e.g. \"solid\"\n\n\nborderwidth\nnumber\nBackground box border width\n\n\nboxcolor\nstring\nBackground box fill color\n\n\nboxlower\nstring\nScale below which the box disappears\n\n\nboxmargin\nnumber\nBackground box padding in pixels\n\n\nboxopacity\nnumber\nBackground box fill opacity\n\n\nboxupper\nstring\nScale above which the box disappears, e.g. \"1:250000\"\n\n\nbrightness\nnumber\nBrightness multiplier\n\n\ncenterpart\nstring\nCenter part flag\n\n\nchartupper\nstring\nHide chart when scale denominator &gt; this value\n\n\nchartlower\nstring\nHide chart when scale denominator &lt; this value\n\n\ncolorscheme\narray / string\nColor palette — single hex, gradient array, or named scheme\n\n\ndasharray\nstring\nSVG stroke-dasharray pattern, e.g. \"5,5\" or \"10,3,3,3\"\n\n\ndashoffset\nnumber\nSVG stroke-dashoffset\n\n\ndatafields\narray\nFields shown in {theme.item.data} tooltip table\n\n\ndeclutterupper\nstring\nScale above which label decluttering activates\n\n\ndopacitypow\nnumber\nPower curve exponent for DOPACITY mapping\n\n\ndopacityramp\nstring\nDOPACITY ramp: \"linear\" (default) or \"exponential\"\n\n\ndopacityscale\nnumber\nMultiplier stretching the DOPACITY range\n\n\ndominantfilter\nstring\nFilter expression for dominant-value logic\n\n\ndominantdfilter\nnumber\nDelta filter for dominant-value mode\n\n\nevidence\nstring\nEvidence mode flag\n\n\nexclude\narray\nValues excluded from rendering\n\n\nfadenegative\nnumber\nFade factor applied to negative values\n\n\nfadevaluepow\nstring\nPower curve for value fade-out\n\n\nfeaturelower\nstring\nScale below which feature geometry is hidden\n\n\nfeatureupper\nstring\nScale above which feature geometry is hidden\n\n\n~~fillcolor~~\nstring\nDeprecated — use colorscheme: [\"#hex\"]\n\n\nfillopacity\nnumber (0–1)\nFill opacity — prefer over opacity\n\n\nfontfamily\nstring\nLabel font family\n\n\nfontsize\nstring\nLabel font size, e.g. \"12\"\n\n\nfontstyle\nstring\nLabel font style, e.g. \"italic\"\n\n\nfontweight\nstring\nLabel font weight, e.g. \"bold\"\n\n\ngapsize\nnumber\nGap between chart elements in pixels\n\n\nglowlower\nstring\nScale below which the glow effect is hidden\n\n\nglowupper\nstring\nScale above which the glow effect is hidden\n\n\ngridmatrix\nnumber\nGrid matrix mode\n\n\ngridoffsetx\nnumber\nGrid X offset\n\n\ngridoffsety\nnumber\nGrid Y offset\n\n\ngridwidth\nstring\nGrid cell size, e.g. \"5px\"\n\n\ngridwidthpx\nstring\nGrid cell width in pixels; supports \"factor\" mode in changeThemeStyle\n\n\ngridx\nnumber\nValues per bar group in CHART\\|BAR\\|STACKED\n\n\nhighvalue\nnumber\nHigh value threshold (visual emphasis, not suppression)\n\n\ninfotitle\nstring\nInfo panel title text\n\n\nlabel\narray\nCategory labels for sparkline BOX\\|GRID\\|XAXIS display\n\n\nlabellower\nstring\nScale below which labels are hidden\n\n\nlabelunits\nstring\nUnits appended to label text\n\n\nlabelupper\nstring\nScale above which labels are hidden\n\n\nlayerlower\nstring\nScale below which the entire layer is hidden\n\n\nlayerupper\nstring\nScale above which the entire layer is hidden\n\n\nlegendunits\nstring\nUnits shown in the legend\n\n\nlinecap\nstring\nLine end cap: \"round\" · \"square\" · \"butt\"\n\n\nlinecolor\nstring / array\nPolygon border color; [\"#from\",\"#to\"] for VECTOR\\|GRADIENT\n\n\nlinejoin\nstring\nLine join: \"round\" · \"miter\" · \"bevel\"\n\n\nlinewidth\nnumber\nBorder / stroke width in pixels\n\n\nlookupdigits\nnumber\nZero-pad the lookup value to this many digits\n\n\nlookupfield\nstring\nGeographic join field name\n\n\nlookuptonumber\nboolean\nConvert lookup value to number before matching\n\n\nlookupsuffix\nstring\nSuffix appended to lookup value before matching\n\n\nlookuptoupper\nboolean\nConvert lookup value to uppercase before matching\n\n\nlowvalue\nnumber\nLow value threshold (visual emphasis, not suppression)\n\n\nmarkclass\nnumber\nHighlighted class index\n\n\nmarkclasses\narray\nArray of highlighted class indices\n\n\nmarkersize\nnumber\nLASTARROW arrow head size (default ~8)\n\n\nmaxvalue\nnumber\nSuppress rendering for values above this threshold\n\n\nminaggregation\nstring\nMinimum scale denominator for aggregation\n\n\nminvalue\nnumber\nSuppress rendering for values below this threshold\n\n\nminvaluesize\nnumber\nMinimum pixel size — no symbol drawn below this\n\n\nnodatacolor\nstring\nColor for features with no joined data, e.g. \"#ccc\"\n\n\nnormalsizevalue\nstring\nReference data value mapping to nominal display size\n\n\noffsetx\nnumber\nHorizontal symbol offset in pixels\n\n\noffsety\nnumber\nVertical symbol offset in pixels\n\n\nopacity\nnumber\nOverall opacity — prefer fillopacity for fill transparency\n\n\noutlierscale\nnumber\nScale factor applied to outlier values\n\n\noverviewchart\nstring\nOverview chart mode flag\n\n\nrangecentervalue\nnumber\nDiverging scale center value — requires even color count\n\n\nrangescale\nnumber\nScale factor applied after range computation\n\n\nranges\nstring / array\nExplicit class breaks: n+1 values for n classes\n\n\nrotation\nnumber\nSymbol rotation in degrees\n\n\nscale\nnumber\nDirect size multiplier on top of all sizing logic\n\n\nshadow\nboolean\nDrop shadow flag\n\n\nshadowblur\nnumber\nShadow blur radius\n\n\nshadowcolor\nstring\nShadow color\n\n\nshadowlower\nstring\nScale below which shadow is hidden\n\n\nshadowoffsetx\nnumber\nShadow X offset\n\n\nshadowoffsety\nnumber\nShadow Y offset\n\n\nshadowopacity\nnumber\nShadow opacity\n\n\nshadowupper\nstring\nScale above which shadow is hidden\n\n\nshowdata\nstring\nSet \"true\" to expose the data record on click (needed for {theme.item.data} tooltips); not required for rendering\n\n\nsizefield\nstring\nData field driving symbol size independently of value (color) field\n\n\nsizepow\nnumber\nPower curve for size scaling — 2 = square root (default)\n\n\nsizevalueunits\nstring\nUnits for the size value field\n\n\nsnippetfield\nstring\nData field used as subtitle / snippet\n\n\n~~strokecolor~~\nstring\nDeprecated — use linecolor\n\n\n~~strokewidth~~\nnumber\nDeprecated — use linewidth\n\n\nsymbols\narray\nSymbol shape list for multi-symbol layers, e.g. [\"circle\",\"square\"]\n\n\nsymbolvalues\narray\nSymbol values array\n\n\ntextcolor\nstring\nLabel / value text color\n\n\ntextplacement\nstring\nLabel placement hint\n\n\ntextscale\nnumber\nScale factor for label text\n\n\ntimefield\nstring\nField name driving time-series animation\n\n\ntitlefield\nstring\nData field used as chart title label\n\n\ntitlelower\nstring\nScale below which titles are hidden\n\n\ntitleunits\nstring\nTitle units label\n\n\ntitleupper\nstring\nScale above which titles are hidden\n\n\nunits\nstring\nUnits appended to value labels, e.g. \"%\", \"€\"\n\n\nunits100\nstring\nUnits for 100%-normalised values\n\n\nuserdraw\nstring\nName of custom D3 draw function (requires CHART\\|USER type)\n\n\nvaluecolor\nstring\nValue label color\n\n\nvaluedecimals\nnumber\nDecimal places for rendered value labels\n\n\nvaluelower\nstring\nScale below which value labels are hidden\n\n\nvaluemap\nobject\nKey → display-value mapping object\n\n\nvaluescale\nnumber\nScale factor applied to displayed values\n\n\nvalueupper\nstring\nScale above which value labels are hidden\n\n\nvalues\narray\nCategory list for CATEGORICAL — must be strings\n\n\nvisible\nboolean\nfalse = layer starts hidden; toggle with showTheme/hideTheme\n\n\nweights\nstring\nWeight values for weighted aggregation\n\n\nxaxis\narray\nX-axis labels for sparklines, e.g. [\"2020\",\"2021\",\"2022\"]\n\n\nxfield\nstring\nLongitude data field (alternative to geo binding)\n\n\nyfield\nstring\nLatitude data field (alternative to geo binding)\n\n\n\n\n\n\n\n\n\nNoteDeprecated aliases\n\n\n\nfillcolor → colorscheme: [\"#hex\"] · strokecolor → linecolor · strokewidth → linewidth",
-    "crumbs": [
-      "Home",
-      "Reference",
-      "Chart Scaling"
     ]
   }
 ]
