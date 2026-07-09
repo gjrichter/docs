@@ -195,6 +195,7 @@ Instead of changing the basemap, try reducing its opacity to let your data stand
 
 ## Next steps
 
+- **[Layers & Themes](layers_themes.qmd)** — the four steps that define what's drawn on this canvas
 - **[Visualization Types & Modifiers](map_types.qmd)** — choose how the data is drawn
 - **[Colors & Classification](colors_classification.qmd)** — color schemes and class methods
 - **[Sizing & Scaling](chart_scaling.qmd)** — symbol sizing across themes and zoom levels

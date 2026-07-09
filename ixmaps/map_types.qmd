@@ -3,7 +3,7 @@ title: "Visualization Types & Modifiers"
 description: "Reference for the iXMaps .type() string: the three base types, the decision tree by data shape, and the complete modifier vocabulary."
 ---
 
-Reference for the `.type()` string of an iXMaps layer: the base types, how to choose one by data shape, and the complete modifier vocabulary.
+Reference for the `.type()` string of an iXMaps layer: the base types, how to choose one by data shape, and the complete modifier vocabulary. `.type()` is step ③ of the four defining steps of a layer — see [Layers & Themes](layers_themes.qmd) for how it relates to `.data()`, `.binding()` and `.style()`.
 
 For the map context and basemaps see [Map Setup](map_setup.qmd); for color schemes and classification see [Colors & Classification](colors_classification.qmd); for symbol sizing see [Sizing & Scaling](chart_scaling.qmd).
 

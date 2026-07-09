@@ -1,0 +1,116 @@
+---
+title: "Layers & Themes"
+description: "The iXMaps layer model: what a theme is, and the four defining steps — data, binding, type, style — that turn a data source into a visualization."
+---
+
+[Map Setup](map_setup.qmd) configures the canvas. Everything drawn on top of it — a choropleth, a set of bubbles, a boundary outline — is a **layer**, and every layer is defined by the same four steps. This page explains that model before the following guides go into each step in depth.
+
+---
+
+## Layer and theme — one thing, two names
+
+`myMap.layer("name")` starts a definition; internally, and in the JSON project format, the result is called a **theme**. The two words refer to the same object at different points in its life:
+
+- **Layer** — the name you address it by (`myMap.layer("countries")`, `api.removeTheme("countries")`) and the geometric slot it occupies on the map.
+- **Theme** — the resolved definition object once `.define()` registers it (`{ layer, data, binding, style }`), and the vocabulary of the runtime API (`changeThemeStyle`, `removeTheme`, `showTheme`).
+
+You will see both words depending on context; nothing changes between them.
+
+---
+
+## The four defining steps
+
+Every theme answers four questions, always in the same order:
+
+```
+.data({...})       ①  Where does the data come from?
+.binding({...})    ②  Which fields map to which visual roles?
+.type("...")       ③  What geometric form represents it?
+.style({...})      ④  How does that form look?
+.define()             Register the theme — closes the chain
+```
+
+| Step | Question it answers | Example |
+|------|---------------------|---------|
+| **① `.data()`** | Where is the data? | `{ url: "cities.csv", type: "csv" }` |
+| **② `.binding()`** | Which fields play which role? | `{ geo: "lat\|lon", value: "pop", title: "name" }` |
+| **③ `.type()`** | What form draws it? | `"CHART\|BUBBLE\|SIZE\|VALUES"` |
+| **④ `.style()`** | How does that form look? | `{ colorscheme: ["#0066cc"], fillopacity: 0.7 }` |
+
+```javascript
+myMap.layer("cities")
+    .data({ url: "cities.csv", type: "csv" })                        // ① source
+    .binding({ geo: "lat|lon", value: "pop", title: "name" })         // ② field roles
+    .type("CHART|BUBBLE|SIZE|VALUES")                                 // ③ form
+    .style({ colorscheme: ["#0066cc"], fillopacity: 0.7, showdata: "true" })  // ④ appearance
+    .define();                                                        // register
+```
+
+Each step depends only on the one before it — binding needs to know what data exists, type needs to know what's bound, style needs to know what form it's dressing. That dependency order is also the reason the chain always reads in this sequence, regardless of visualization.
+
+:::{.callout-note}
+## `type` is a style property
+Structurally, `.type("...")` is shorthand for `.style({ type: "..." })` — both write into the same underlying `style` object (as does `.filter()`). They are presented as separate steps because they answer conceptually different questions — *what form* vs. *how it looks* — not because they are stored separately. See [Visualization Types & Modifiers § Type and style](map_types.qmd#type-and-style-two-orthogonal-dimensions) for why keeping them conceptually apart is useful: you can swap the form while keeping every style value unchanged.
+:::
+
+---
+
+## Beyond the four: the rest of the chain
+
+Three more links complete the full chain documented in the [API Reference](api_documentation.qmd#layer-chain) — none of them define *what* the theme is, they refine or register it:
+
+```javascript
+myMap.layer("layerName")
+    .data({...}) .binding({...})            // the four defining steps
+    .filter("...")     // optional — restrict rows before rendering
+    .type("...") .style({...})
+    .meta({...})        // optional — tooltip template, theme name
+    .title("...")       // optional — legend label
+    .define()           // required — must close every chain
+```
+
+- **`.filter()`** narrows the rows the other three steps ever see — it changes *how much* data reaches the theme, not what the fields mean or how they render.
+- **`.meta()`** attaches the tooltip template and, importantly, the `name` the runtime API uses to address this specific theme later (`changeThemeStyle`, `removeTheme` — see [Tooltips & Interaction](tooltips_interaction.qmd)).
+- **`.title()`** only labels the legend entry.
+- **`.define()`** is not optional — the chain does nothing until it runs.
+
+---
+
+## The layer name is a join key, not just a label
+
+The string passed to `.layer("...")` has a second job beyond identifying the layer for later reference: **two theme definitions that share the same layer name occupy the same geometric slot**, and iXMaps composes them rather than replacing one with the other. This is how a choropleth is actually built — not as one theme, but as two:
+
+```javascript
+// ① FEATURE — provides the geometry, no data value needed
+myMap.layer("countries")
+    .data({ url: GEO_URL, type: "topojson" })
+    .binding({ geo: "geometry", id: "CNTR_ID", title: "NAME_ENGL" })
+    .type("FEATURE")
+    .style({ colorscheme: ["#ddd"], linecolor: "#888", linewidth: 0.5 })
+    .define();
+
+// ② CHOROPLETH — SAME layer name "countries": joins onto ①'s geometry
+myMap.layer("countries")
+    .data({ url: DATA_URL, type: "csv" })
+    .binding({ lookup: "iso2", value: "gdp_per_capita" })
+    .type("CHOROPLETH|QUANTILE")
+    .style({ colorscheme: ["#ffffcc","#253494"], showdata: "true" })
+    .meta({ name: "gdp", tooltip: "{{NAME_ENGL}}: {{gdp_per_capita}}" })
+    .define();
+```
+
+The second definition's `lookup` (in `.binding()`) is matched against the first's `id` — that pairing is what joins the CSV row to the right polygon. Give the overlay a *different* layer name and it has no geometry to draw on; it renders nothing, silently (see [Troubleshooting](troubleshooting.qmd#silent-failure-hotspots), row 2).
+
+:::{.callout-tip}
+## Naming convention
+Use the layer name for the geometric role ("countries", "comuni", "regions") and `.meta({ name: ... })` for the runtime-addressable identity of a specific data overlay ("gdp", "population-2023"). Multiple data overlays can share one geometry layer name while each keeping a distinct `meta.name` for the runtime API.
+:::
+
+---
+
+## Next steps
+
+- **[Sizing & Scaling](chart_scaling.qmd)** — the sizing side of step ④
+- **[Colors & Classification](colors_classification.qmd)** — the color side of step ④
+- **[Visualization Types & Modifiers](map_types.qmd)** — the complete step ③ reference
+- **[Tooltips & Interaction](tooltips_interaction.qmd)** — `.meta()`, events, and runtime changes to a defined theme

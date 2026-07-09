@@ -7,6 +7,7 @@ project:
       - index.qmd
       - getting_started.qmd
       - map_setup.qmd
+      - layers_themes.qmd
       - chart_scaling.qmd
       - colors_classification.qmd
       - tooltips_interaction.qmd
@@ -54,6 +55,8 @@ website:
         contents:
           - href: map_setup.qmd
             text: "Map Setup"
+          - href: layers_themes.qmd
+            text: "Layers & Themes"
           - href: chart_scaling.qmd
             text: "Sizing & Scaling"
           - href: colors_classification.qmd

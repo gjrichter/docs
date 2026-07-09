@@ -6,9 +6,9 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="description" content="How iXMaps maps data values to colors: continuous classification methods, categorical color binding, colorscheme formats, diverging scales and data-driven palettes.">
+<meta name="description" content="The iXMaps layer model: what a theme is, and the four defining steps — data, binding, type, style — that turn a data source into a visualization.">
 
-<title>Colors &amp; Classification – iXMaps Documentation</title>
+<title>Layers &amp; Themes – iXMaps Documentation</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -66,8 +66,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./tooltips_interaction.html" rel="next">
-<link href="./chart_scaling.html" rel="prev">
+<link href="./chart_scaling.html" rel="next">
+<link href="./map_setup.html" rel="prev">
 <link href="./pics/favicon.png" rel="icon" type="image/png">
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
@@ -110,7 +110,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 <link rel="stylesheet" href="styles.css">
-<link rel="canonical" href="https://www.ixmaps.com/docs/colors_classification.html">
+<link rel="canonical" href="https://www.ixmaps.com/docs/layers_themes.html">
 </head>
 
 <body class="nav-sidebar docked nav-fixed quarto-light">
@@ -162,7 +162,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./map_setup.html">Guides</a></li><li class="breadcrumb-item"><a href="./colors_classification.html">Colors &amp; Classification</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./map_setup.html">Guides</a></li><li class="breadcrumb-item"><a href="./layers_themes.html">Layers &amp; Themes</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -228,7 +228,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./layers_themes.html" class="sidebar-item-text sidebar-link">
+  <a href="./layers_themes.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text">Layers &amp; Themes</span></a>
   </div>
 </li>
@@ -240,7 +240,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./colors_classification.html" class="sidebar-item-text sidebar-link active">
+  <a href="./colors_classification.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Colors &amp; Classification</span></a>
   </div>
 </li>
@@ -325,18 +325,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#continuous-vs.-discrete-classification" id="toc-continuous-vs.-discrete-classification" class="nav-link active" data-scroll-target="#continuous-vs.-discrete-classification">Continuous vs.&nbsp;discrete classification</a></li>
-  <li><a href="#color-schemes" id="toc-color-schemes" class="nav-link" data-scroll-target="#color-schemes">Color schemes</a>
-  <ul class="collapse">
-  <li><a href="#single-color" id="toc-single-color" class="nav-link" data-scroll-target="#single-color">Single color</a></li>
-  <li><a href="#gradient-two-colors-auto-interpolated" id="toc-gradient-two-colors-auto-interpolated" class="nav-link" data-scroll-target="#gradient-two-colors-auto-interpolated">Gradient (two colors, auto-interpolated)</a></li>
-  <li><a href="#multi-stop-palette" id="toc-multi-stop-palette" class="nav-link" data-scroll-target="#multi-stop-palette">Multi-stop palette</a></li>
-  <li><a href="#named-palettes" id="toc-named-palettes" class="nav-link" data-scroll-target="#named-palettes">Named palettes</a></li>
-  <li><a href="#categorical-color-binding" id="toc-categorical-color-binding" class="nav-link" data-scroll-target="#categorical-color-binding">CATEGORICAL color binding</a></li>
-  <li><a href="#diverging-scales" id="toc-diverging-scales" class="nav-link" data-scroll-target="#diverging-scales">Diverging scales</a></li>
-  <li><a href="#flow-line-gradients" id="toc-flow-line-gradients" class="nav-link" data-scroll-target="#flow-line-gradients">Flow line gradients</a></li>
-  <li><a href="#data-driven-colorschemes" id="toc-data-driven-colorschemes" class="nav-link" data-scroll-target="#data-driven-colorschemes">Data-driven colorschemes</a></li>
-  </ul></li>
+  <li><a href="#layer-and-theme-one-thing-two-names" id="toc-layer-and-theme-one-thing-two-names" class="nav-link active" data-scroll-target="#layer-and-theme-one-thing-two-names">Layer and theme — one thing, two names</a></li>
+  <li><a href="#the-four-defining-steps" id="toc-the-four-defining-steps" class="nav-link" data-scroll-target="#the-four-defining-steps">The four defining steps</a></li>
+  <li><a href="#beyond-the-four-the-rest-of-the-chain" id="toc-beyond-the-four-the-rest-of-the-chain" class="nav-link" data-scroll-target="#beyond-the-four-the-rest-of-the-chain">Beyond the four: the rest of the chain</a></li>
+  <li><a href="#the-layer-name-is-a-join-key-not-just-a-label" id="toc-the-layer-name-is-a-join-key-not-just-a-label" class="nav-link" data-scroll-target="#the-layer-name-is-a-join-key-not-just-a-label">The layer name is a join key, not just a label</a></li>
   <li><a href="#next-steps" id="toc-next-steps" class="nav-link" data-scroll-target="#next-steps">Next steps</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/gjrichter/ixmaps-flat/issues/new" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div></nav>
@@ -344,14 +336,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./map_setup.html">Guides</a></li><li class="breadcrumb-item"><a href="./colors_classification.html">Colors &amp; Classification</a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./map_setup.html">Guides</a></li><li class="breadcrumb-item"><a href="./layers_themes.html">Layers &amp; Themes</a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title">Colors &amp; Classification</h1>
+<h1 class="title">Layers &amp; Themes</h1>
 </div>
 
 <div>
   <div class="description">
-    How iXMaps maps data values to colors: continuous classification methods, categorical color binding, colorscheme formats, diverging scales and data-driven palettes.
+    The iXMaps layer model: what a theme is, and the four defining steps — data, binding, type, style — that turn a data source into a visualization.
   </div>
 </div>
 
@@ -368,195 +360,144 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<p>A <code>CHOROPLETH</code> or <code>CHART</code> layer maps a value field to a color. This guide covers the two halves of that mapping: <strong>classification</strong> (how values are grouped into classes) and <strong>color schemes</strong> (which colors those classes get).</p>
+<p><a href="./map_setup.html">Map Setup</a> configures the canvas. Everything drawn on top of it — a choropleth, a set of bubbles, a boundary outline — is a <strong>layer</strong>, and every layer is defined by the same four steps. This page explains that model before the following guides go into each step in depth.</p>
 <hr>
-<section id="continuous-vs.-discrete-classification" class="level2">
-<h2 class="anchored" data-anchor-id="continuous-vs.-discrete-classification">Continuous vs.&nbsp;discrete classification</h2>
-<p>How the value→color mapping is done depends on whether the data is <strong>continuous numeric</strong> or <strong>discrete categorical</strong>.</p>
-<p><strong>Continuous numeric values</strong> — a number that can take any value in a range (population, temperature, GDP). Classification groups the range into classes and assigns a colour to each class:</p>
+<section id="layer-and-theme-one-thing-two-names" class="level2">
+<h2 class="anchored" data-anchor-id="layer-and-theme-one-thing-two-names">Layer and theme — one thing, two names</h2>
+<p><code>myMap.layer("name")</code> starts a definition; internally, and in the JSON project format, the result is called a <strong>theme</strong>. The two words refer to the same object at different points in its life:</p>
+<ul>
+<li><strong>Layer</strong> — the name you address it by (<code>myMap.layer("countries")</code>, <code>api.removeTheme("countries")</code>) and the geometric slot it occupies on the map.</li>
+<li><strong>Theme</strong> — the resolved definition object once <code>.define()</code> registers it (<code>{ layer, data, binding, style }</code>), and the vocabulary of the runtime API (<code>changeThemeStyle</code>, <code>removeTheme</code>, <code>showTheme</code>).</li>
+</ul>
+<p>You will see both words depending on context; nothing changes between them.</p>
+<hr>
+</section>
+<section id="the-four-defining-steps" class="level2">
+<h2 class="anchored" data-anchor-id="the-four-defining-steps">The four defining steps</h2>
+<p>Every theme answers four questions, always in the same order:</p>
+<pre><code>.data({...})       ①  Where does the data come from?
+.binding({...})    ②  Which fields map to which visual roles?
+.type("...")       ③  What geometric form represents it?
+.style({...})      ④  How does that form look?
+.define()             Register the theme — closes the chain</code></pre>
 <table class="caption-top table">
 <colgroup>
-<col style="width: 26%">
-<col style="width: 73%">
+<col style="width: 16%">
+<col style="width: 58%">
+<col style="width: 25%">
 </colgroup>
 <thead>
 <tr class="header">
-<th>Method</th>
-<th>How classes are built</th>
+<th>Step</th>
+<th>Question it answers</th>
+<th>Example</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td><code>EQUIDISTANT</code></td>
-<td>Equal-width intervals across the data range</td>
+<td><strong>① <code>.data()</code></strong></td>
+<td>Where is the data?</td>
+<td><code>{ url: "cities.csv", type: "csv" }</code></td>
 </tr>
 <tr class="even">
-<td><code>QUANTILE</code></td>
-<td>Equal-count — same number of features per class</td>
+<td><strong>② <code>.binding()</code></strong></td>
+<td>Which fields play which role?</td>
+<td><code>{ geo: "lat\|lon", value: "pop", title: "name" }</code></td>
 </tr>
 <tr class="odd">
-<td><code>HEADTAIL</code></td>
-<td>Iterative mean split — best for heavy-tailed distributions</td>
+<td><strong>③ <code>.type()</code></strong></td>
+<td>What form draws it?</td>
+<td><code>"CHART\|BUBBLE\|SIZE\|VALUES"</code></td>
 </tr>
 <tr class="even">
-<td><code>NATURAL</code></td>
-<td>Jenks natural breaks — minimises within-class variance</td>
-</tr>
-<tr class="odd">
-<td><code>LOG</code></td>
-<td>Logarithmic intervals — for data spanning orders of magnitude</td>
+<td><strong>④ <code>.style()</code></strong></td>
+<td>How does that form look?</td>
+<td><code>{ colorscheme: ["#0066cc"], fillopacity: 0.7 }</code></td>
 </tr>
 </tbody>
 </table>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Continuous: 5 quantile classes, yellow → dark blue</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">type</span>(<span class="st">"CHOROPLETH|QUANTILE"</span>)</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">style</span>({ <span class="dt">colorscheme</span><span class="op">:</span> [<span class="st">"#ffffcc"</span><span class="op">,</span><span class="st">"#41b6c4"</span><span class="op">,</span><span class="st">"#253494"</span>]<span class="op">,</span> <span class="dt">showdata</span><span class="op">:</span> <span class="st">"true"</span> })</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Discrete categorical values</strong> — a label or code that belongs to a fixed set (<code>"forest"</code>, <code>"urban"</code>, <code>"water"</code>; or species names, party names, land-use codes). Use <code>CATEGORICAL</code> and pair it with a <code>values</code> array that maps each category to a colour slot:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Discrete: three categories, each pinned to a colour</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">type</span>(<span class="st">"CHART|BUBBLE|CATEGORICAL"</span>)</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">style</span>({</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">colorscheme</span><span class="op">:</span> [<span class="st">"#4fc3f7"</span><span class="op">,</span> <span class="st">"#ffb300"</span><span class="op">,</span> <span class="st">"#ef5350"</span>]<span class="op">,</span></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">values</span><span class="op">:</span>      [<span class="st">"low"</span><span class="op">,</span>     <span class="st">"medium"</span><span class="op">,</span>  <span class="st">"high"</span>]<span class="op">,</span>   <span class="co">// strings — not numbers!</span></span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    <span class="dt">showdata</span><span class="op">:</span>    <span class="st">"true"</span></span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>})</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="callout callout-style-simple callout-warning callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Warning</span><code>values</code> must be strings
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>iXMaps matches category values as strings. Numeric categories like <code>1</code>, <code>2</code>, <code>3</code> are silently ignored — always pass <code>["1","2","3"]</code>.</p>
-</div>
-</div>
-<p>The classification methods work with both <code>CHOROPLETH</code> (polygon fill) and <code>CHART</code> (symbol colour).</p>
-<p>In all cases — continuous or discrete — the colour scheme maps to classes in order: first colour → first class, second colour → second class, and so on. With continuous methods the classes are numeric ranges computed automatically; with <code>CATEGORICAL</code> the classes are the entries in the <code>values</code> array. The colour assignment mechanism is the same.</p>
-<p>To set class breaks explicitly instead of computing them, use the <code>ranges</code> style property (<code>n+1</code> values for <code>n</code> classes) — see <a href="./theme_styles.html#classification-and-ranges">Style Properties</a>.</p>
-<hr>
-</section>
-<section id="color-schemes" class="level2">
-<h2 class="anchored" data-anchor-id="color-schemes">Color schemes</h2>
-<p>The <code>colorscheme</code> property accepts several formats.</p>
-<section id="single-color" class="level3">
-<h3 class="anchored" data-anchor-id="single-color">Single color</h3>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>colorscheme<span class="op">:</span> [<span class="st">"#0066cc"</span>]          <span class="co">// single hex color</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>colorscheme<span class="op">:</span> [<span class="st">"blue"</span>]             <span class="co">// named color</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</section>
-<section id="gradient-two-colors-auto-interpolated" class="level3">
-<h3 class="anchored" data-anchor-id="gradient-two-colors-auto-interpolated">Gradient (two colors, auto-interpolated)</h3>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>colorscheme<span class="op">:</span> [<span class="st">"5"</span><span class="op">,</span> <span class="st">"#ffffcc"</span><span class="op">,</span> <span class="st">"#253494"</span>]   <span class="co">// 5 classes, yellow → dark blue</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>colorscheme<span class="op">:</span> [<span class="st">"#fee5d9"</span><span class="op">,</span> <span class="st">"#a50f15"</span>]        <span class="co">// implied 2-class gradient</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>The first element can be a number (class count) or omitted; iXMaps infers it from the array length.</p>
-</section>
-<section id="multi-stop-palette" class="level3">
-<h3 class="anchored" data-anchor-id="multi-stop-palette">Multi-stop palette</h3>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>colorscheme<span class="op">:</span> [<span class="st">"#ffffcc"</span><span class="op">,</span><span class="st">"#c7e9b4"</span><span class="op">,</span><span class="st">"#41b6c4"</span><span class="op">,</span><span class="st">"#2c7fb8"</span><span class="op">,</span><span class="st">"#253494"</span>]  <span class="co">// 5 explicit colors</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</section>
-<section id="named-palettes" class="level3">
-<h3 class="anchored" data-anchor-id="named-palettes">Named palettes</h3>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>colorscheme<span class="op">:</span> [<span class="st">"5"</span><span class="op">,</span> <span class="st">"tableau10"</span>]   <span class="co">// 5 classes from Tableau 10</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>colorscheme<span class="op">:</span> [<span class="st">"7"</span><span class="op">,</span> <span class="st">"viridis"</span>]     <span class="co">// 7 classes viridis</span></span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>colorscheme<span class="op">:</span> [<span class="st">"7"</span><span class="op">,</span> <span class="st">"plasma"</span>]      <span class="co">// 7 classes plasma</span></span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>colorscheme<span class="op">:</span> [<span class="st">"100"</span><span class="op">,</span> <span class="st">"tableau"</span>]   <span class="co">// auto-palette, 100 classes</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</section>
-<section id="categorical-color-binding" class="level3">
-<h3 class="anchored" data-anchor-id="categorical-color-binding">CATEGORICAL color binding</h3>
-<p>For categorical data, the <code>values</code> array pins specific categories to specific colors (in the same order as <code>colorscheme</code>):</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">type</span>(<span class="st">"CHART|BUBBLE|CATEGORICAL"</span>)</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">style</span>({</span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">colorscheme</span><span class="op">:</span> [<span class="st">"#4fc3f7"</span><span class="op">,</span> <span class="st">"#ffb300"</span><span class="op">,</span> <span class="st">"#ef5350"</span>]<span class="op">,</span></span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">values</span><span class="op">:</span>      [<span class="st">"low"</span><span class="op">,</span>     <span class="st">"medium"</span><span class="op">,</span>  <span class="st">"high"</span>]<span class="op">,</span>    <span class="co">// strings — not numbers!</span></span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">showdata</span><span class="op">:</span>    <span class="st">"true"</span></span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>})</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="callout callout-style-simple callout-warning callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Warning</span>Always use <code>values</code> with CATEGORICAL
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>Without <code>values</code>, iXMaps assigns colors by order of first occurrence — unpredictable and data-order dependent.</p>
-<p>Always cast values to strings: <code>["1","2","3"]</code> not <code>[1,2,3]</code>.</p>
-</div>
-</div>
-</section>
-<section id="diverging-scales" class="level3">
-<h3 class="anchored" data-anchor-id="diverging-scales">Diverging scales</h3>
-<p>Use an even number of colors and set <code>rangecentervalue</code>:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">style</span>({</span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>    <span class="dt">colorscheme</span><span class="op">:</span>      [<span class="st">"#d73027"</span><span class="op">,</span><span class="st">"#f46d43"</span><span class="op">,</span><span class="st">"#fdae61"</span><span class="op">,</span><span class="st">"#abd9e9"</span><span class="op">,</span><span class="st">"#74add1"</span><span class="op">,</span><span class="st">"#4575b4"</span>]<span class="op">,</span></span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">rangecentervalue</span><span class="op">:</span> <span class="dv">0</span><span class="op">,</span></span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">showdata</span><span class="op">:</span>         <span class="st">"true"</span></span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>})</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</section>
-<section id="flow-line-gradients" class="level3">
-<h3 class="anchored" data-anchor-id="flow-line-gradients">Flow line gradients</h3>
-<p>For <code>CHART|VECTOR|BEZIER|GRADIENT</code>, use <code>linecolor</code> as a two-element array — not <code>colorscheme</code>:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">type</span>(<span class="st">"CHART|VECTOR|BEZIER|POINTER|GRADIENT"</span>)</span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">style</span>({</span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">linecolor</span><span class="op">:</span>  [<span class="st">"#00aabb"</span><span class="op">,</span> <span class="st">"#ff4400"</span>]<span class="op">,</span>  <span class="co">// origin color → destination color</span></span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">showdata</span><span class="op">:</span>   <span class="st">"true"</span></span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>})</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</section>
-<section id="data-driven-colorschemes" class="level3">
-<h3 class="anchored" data-anchor-id="data-driven-colorschemes">Data-driven colorschemes</h3>
-<p>Every format above is a <strong>static</strong> palette, fixed when you write <code>.style({...})</code>. For a palette <strong>computed from the layer’s own data</strong> — e.g.&nbsp;color assigned by matching each class’s label against a pattern, once the classes are actually known — pass a function reference instead of colors:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">style</span>({ <span class="dt">colorscheme</span><span class="op">:</span> <span class="st">"ixmaps.colorScheme_speedmap"</span> })</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Define the function on the <code>ixmaps</code> namespace (same convention as <code>userdraw</code> — see <a href="./user_charts.html">Custom Charts</a>). This is a real, shipping example — a <code>CATEGORICAL</code> speed-limit layer where the color depends on the text of each class label, not a fixed palette:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>ixmaps<span class="op">.</span><span class="at">colorScheme_speedmap</span> <span class="op">=</span> <span class="kw">function</span> (theme) {</span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">// theme.szLabelA     — one label per class, in class order</span></span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>    <span class="co">// theme.colorScheme  — mutate in place: one hex string per class</span></span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> (<span class="kw">var</span> i <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> i <span class="op">&lt;</span> theme<span class="op">.</span><span class="at">szLabelA</span><span class="op">.</span><span class="at">length</span><span class="op">;</span> i<span class="op">++</span>) {</span>
-<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> (theme<span class="op">.</span><span class="at">szLabelA</span>[i]<span class="op">.</span><span class="fu">match</span>(<span class="ss">/</span><span class="sc">^(</span><span class="ss">45</span><span class="sc">|</span><span class="ss">50</span><span class="sc">|</span><span class="ss">55</span><span class="sc">|</span><span class="ss">60</span><span class="sc">|</span><span class="ss">65</span><span class="sc">|</span><span class="ss">70</span><span class="sc">|</span><span class="ss">75</span><span class="sc">)</span><span class="ss"> mph/i</span>)) {</span>
-<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>            theme<span class="op">.</span><span class="at">colorScheme</span>[i] <span class="op">=</span> <span class="st">"#CE517F"</span><span class="op">;</span></span>
-<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>        } <span class="cf">else</span> <span class="cf">if</span> (theme<span class="op">.</span><span class="at">szLabelA</span>[i]<span class="op">.</span><span class="fu">match</span>(<span class="ss">/</span><span class="sc">^</span><span class="ss">40 mph/i</span>)) {</span>
-<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>            theme<span class="op">.</span><span class="at">colorScheme</span>[i] <span class="op">=</span> <span class="st">"#CC6166"</span><span class="op">;</span></span>
-<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>        } <span class="cf">else</span> <span class="cf">if</span> (theme<span class="op">.</span><span class="at">szLabelA</span>[i]<span class="op">.</span><span class="fu">match</span>(<span class="ss">/</span><span class="sc">^</span><span class="ss">30/i</span>)) {</span>
-<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>            theme<span class="op">.</span><span class="at">colorScheme</span>[i] <span class="op">=</span> <span class="st">"#D0A148"</span><span class="op">;</span></span>
-<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>        }</span>
-<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>        <span class="co">// ... remaining bands, then a fallback for unmatched labels</span></span>
-<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a>    }</span>
-<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a>}<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Load the required helper script and reference the layer as usual:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>ixmaps<span class="op">.</span><span class="fu">Map</span>(<span class="st">"map_div"</span><span class="op">,</span> { <span class="co">/* ... */</span> })</span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">require</span>(<span class="st">"../../ui/js/tools/colorscheme.js"</span>)   <span class="co">// ColorScheme.createColorScheme(), used below</span></span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">layer</span>(ixmaps<span class="op">.</span><span class="fu">layer</span>(<span class="st">"osm"</span><span class="op">,</span> layer <span class="kw">=&gt;</span> layer</span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>        <span class="op">.</span><span class="fu">data</span>({ <span class="dt">type</span><span class="op">:</span> <span class="st">"ext"</span><span class="op">,</span> <span class="dt">name</span><span class="op">:</span> <span class="st">"OSM_dataquery_stressmap"</span> })</span>
-<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>        <span class="op">.</span><span class="fu">binding</span>({ <span class="dt">position</span><span class="op">:</span> <span class="st">"geometry"</span><span class="op">,</span> <span class="dt">id</span><span class="op">:</span> <span class="st">"id"</span><span class="op">,</span> <span class="dt">value</span><span class="op">:</span> <span class="st">"maxspeed"</span> })</span>
-<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>        <span class="op">.</span><span class="fu">type</span>(<span class="st">"CHART|FEATURES|CATEGORICAL|LINES"</span>)</span>
-<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>        <span class="op">.</span><span class="fu">style</span>({ <span class="dt">colorscheme</span><span class="op">:</span> <span class="st">"ixmaps.colorScheme_speedmap"</span><span class="op">,</span> <span class="dt">linewidth</span><span class="op">:</span> <span class="st">"3"</span> })</span>
-<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>        <span class="op">.</span><span class="fu">meta</span>({ <span class="dt">title</span><span class="op">:</span> <span class="st">"Speed limits"</span> })</span>
-<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>    ))<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>iXMaps calls the function once the theme’s classes are resolved (<code>theme.szLabelA</code> populated), then reads <code>theme.colorScheme[i]</code> to paint each class — so this is the way to base color on values the layer only knows after loading (its actual set of categories, quantile breaks, etc.). To start from a named palette and only override specific entries, <code>ColorScheme.createColorScheme(...)</code> (from the same <code>colorscheme.js</code> tool) returns a color array you can index into before selectively overwriting entries — see <code>ixmaps.colorScheme_surfacemap</code> alongside <code>colorScheme_speedmap</code> in the source above for that combined pattern.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>myMap<span class="op">.</span><span class="fu">layer</span>(<span class="st">"cities"</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">data</span>({ <span class="dt">url</span><span class="op">:</span> <span class="st">"cities.csv"</span><span class="op">,</span> <span class="dt">type</span><span class="op">:</span> <span class="st">"csv"</span> })                        <span class="co">// ① source</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">binding</span>({ <span class="dt">geo</span><span class="op">:</span> <span class="st">"lat|lon"</span><span class="op">,</span> <span class="dt">value</span><span class="op">:</span> <span class="st">"pop"</span><span class="op">,</span> <span class="dt">title</span><span class="op">:</span> <span class="st">"name"</span> })         <span class="co">// ② field roles</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">type</span>(<span class="st">"CHART|BUBBLE|SIZE|VALUES"</span>)                                 <span class="co">// ③ form</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">style</span>({ <span class="dt">colorscheme</span><span class="op">:</span> [<span class="st">"#0066cc"</span>]<span class="op">,</span> <span class="dt">fillopacity</span><span class="op">:</span> <span class="fl">0.7</span><span class="op">,</span> <span class="dt">showdata</span><span class="op">:</span> <span class="st">"true"</span> })  <span class="co">// ④ appearance</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">define</span>()<span class="op">;</span>                                                        <span class="co">// register</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Each step depends only on the one before it — binding needs to know what data exists, type needs to know what’s bound, style needs to know what form it’s dressing. That dependency order is also the reason the chain always reads in this sequence, regardless of visualization.</p>
 <div class="callout callout-style-simple callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Note</span>Reference by name, not by array, not inline
+<span class="screen-reader-only">Note</span><code>type</code> is a style property
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p><code>colorscheme: "ixmaps.myFunc"</code> works as a bare string (<code>["ixmaps.myFunc"]</code> also works — both are normalized the same way). Never pass an inline function body as the string — the property parser splits on <code>,</code> and <code>|</code>, which corrupts multi-statement source.</p>
+<p>Structurally, <code>.type("...")</code> is shorthand for <code>.style({ type: "..." })</code> — both write into the same underlying <code>style</code> object (as does <code>.filter()</code>). They are presented as separate steps because they answer conceptually different questions — <em>what form</em> vs.&nbsp;<em>how it looks</em> — not because they are stored separately. See <a href="./map_types.html#type-and-style-two-orthogonal-dimensions">Visualization Types &amp; Modifiers § Type and style</a> for why keeping them conceptually apart is useful: you can swap the form while keeping every style value unchanged.</p>
 </div>
 </div>
-<p>A plain JS array built dynamically <em>before</em> the layer is defined works too — <code>colorscheme: buildPalette(n)</code> is just a normal array by the time <code>.style()</code> sees it — but it can’t reflect anything about data this same layer hasn’t loaded yet. Use the function form for anything that depends on the layer’s own resolved classes.</p>
 <hr>
 </section>
+<section id="beyond-the-four-the-rest-of-the-chain" class="level2">
+<h2 class="anchored" data-anchor-id="beyond-the-four-the-rest-of-the-chain">Beyond the four: the rest of the chain</h2>
+<p>Three more links complete the full chain documented in the <a href="./api_documentation.html#layer-chain">API Reference</a> — none of them define <em>what</em> the theme is, they refine or register it:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>myMap<span class="op">.</span><span class="fu">layer</span>(<span class="st">"layerName"</span>)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">data</span>({<span class="op">...</span>}) <span class="op">.</span><span class="fu">binding</span>({<span class="op">...</span>})            <span class="co">// the four defining steps</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">filter</span>(<span class="st">"..."</span>)     <span class="co">// optional — restrict rows before rendering</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">type</span>(<span class="st">"..."</span>) <span class="op">.</span><span class="fu">style</span>({<span class="op">...</span>})</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">meta</span>({<span class="op">...</span>})        <span class="co">// optional — tooltip template, theme name</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">title</span>(<span class="st">"..."</span>)       <span class="co">// optional — legend label</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">define</span>()           <span class="co">// required — must close every chain</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<ul>
+<li><strong><code>.filter()</code></strong> narrows the rows the other three steps ever see — it changes <em>how much</em> data reaches the theme, not what the fields mean or how they render.</li>
+<li><strong><code>.meta()</code></strong> attaches the tooltip template and, importantly, the <code>name</code> the runtime API uses to address this specific theme later (<code>changeThemeStyle</code>, <code>removeTheme</code> — see <a href="./tooltips_interaction.html">Tooltips &amp; Interaction</a>).</li>
+<li><strong><code>.title()</code></strong> only labels the legend entry.</li>
+<li><strong><code>.define()</code></strong> is not optional — the chain does nothing until it runs.</li>
+</ul>
+<hr>
+</section>
+<section id="the-layer-name-is-a-join-key-not-just-a-label" class="level2">
+<h2 class="anchored" data-anchor-id="the-layer-name-is-a-join-key-not-just-a-label">The layer name is a join key, not just a label</h2>
+<p>The string passed to <code>.layer("...")</code> has a second job beyond identifying the layer for later reference: <strong>two theme definitions that share the same layer name occupy the same geometric slot</strong>, and iXMaps composes them rather than replacing one with the other. This is how a choropleth is actually built — not as one theme, but as two:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co">// ① FEATURE — provides the geometry, no data value needed</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>myMap<span class="op">.</span><span class="fu">layer</span>(<span class="st">"countries"</span>)</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">data</span>({ <span class="dt">url</span><span class="op">:</span> GEO_URL<span class="op">,</span> <span class="dt">type</span><span class="op">:</span> <span class="st">"topojson"</span> })</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">binding</span>({ <span class="dt">geo</span><span class="op">:</span> <span class="st">"geometry"</span><span class="op">,</span> <span class="dt">id</span><span class="op">:</span> <span class="st">"CNTR_ID"</span><span class="op">,</span> <span class="dt">title</span><span class="op">:</span> <span class="st">"NAME_ENGL"</span> })</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">type</span>(<span class="st">"FEATURE"</span>)</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">style</span>({ <span class="dt">colorscheme</span><span class="op">:</span> [<span class="st">"#ddd"</span>]<span class="op">,</span> <span class="dt">linecolor</span><span class="op">:</span> <span class="st">"#888"</span><span class="op">,</span> <span class="dt">linewidth</span><span class="op">:</span> <span class="fl">0.5</span> })</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">define</span>()<span class="op">;</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="co">// ② CHOROPLETH — SAME layer name "countries": joins onto ①'s geometry</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>myMap<span class="op">.</span><span class="fu">layer</span>(<span class="st">"countries"</span>)</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">data</span>({ <span class="dt">url</span><span class="op">:</span> DATA_URL<span class="op">,</span> <span class="dt">type</span><span class="op">:</span> <span class="st">"csv"</span> })</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">binding</span>({ <span class="dt">lookup</span><span class="op">:</span> <span class="st">"iso2"</span><span class="op">,</span> <span class="dt">value</span><span class="op">:</span> <span class="st">"gdp_per_capita"</span> })</span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">type</span>(<span class="st">"CHOROPLETH|QUANTILE"</span>)</span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">style</span>({ <span class="dt">colorscheme</span><span class="op">:</span> [<span class="st">"#ffffcc"</span><span class="op">,</span><span class="st">"#253494"</span>]<span class="op">,</span> <span class="dt">showdata</span><span class="op">:</span> <span class="st">"true"</span> })</span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">meta</span>({ <span class="dt">name</span><span class="op">:</span> <span class="st">"gdp"</span><span class="op">,</span> <span class="dt">tooltip</span><span class="op">:</span> <span class="st">"{{NAME_ENGL}}: {{gdp_per_capita}}"</span> })</span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">define</span>()<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>The second definition’s <code>lookup</code> (in <code>.binding()</code>) is matched against the first’s <code>id</code> — that pairing is what joins the CSV row to the right polygon. Give the overlay a <em>different</em> layer name and it has no geometry to draw on; it renders nothing, silently (see <a href="./troubleshooting.html#silent-failure-hotspots">Troubleshooting</a>, row 2).</p>
+<div class="callout callout-style-simple callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Naming convention
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Use the layer name for the geometric role (“countries”, “comuni”, “regions”) and <code>.meta({ name: ... })</code> for the runtime-addressable identity of a specific data overlay (“gdp”, “population-2023”). Multiple data overlays can share one geometry layer name while each keeping a distinct <code>meta.name</code> for the runtime API.</p>
+</div>
+</div>
+<hr>
 </section>
 <section id="next-steps" class="level2">
 <h2 class="anchored" data-anchor-id="next-steps">Next steps</h2>
 <ul>
-<li><strong><a href="./map_types.html">Visualization Types &amp; Modifiers</a></strong> — the full <code>.type()</code> token reference</li>
-<li><strong><a href="./theme_styles.html">Style Properties</a></strong> — <code>ranges</code>, <code>rangecentervalue</code>, <code>values</code>, <code>nodatacolor</code> and all other color-related style properties</li>
+<li><strong><a href="./chart_scaling.html">Sizing &amp; Scaling</a></strong> — the sizing side of step ④</li>
+<li><strong><a href="./colors_classification.html">Colors &amp; Classification</a></strong> — the color side of step ④</li>
+<li><strong><a href="./map_types.html">Visualization Types &amp; Modifiers</a></strong> — the complete step ③ reference</li>
+<li><strong><a href="./tooltips_interaction.html">Tooltips &amp; Interaction</a></strong> — <code>.meta()</code>, events, and runtime changes to a defined theme</li>
 </ul>
 
 
@@ -965,13 +906,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./chart_scaling.html" class="pagination-link" aria-label="Sizing &amp; Scaling">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Sizing &amp; Scaling</span>
+      <a href="./map_setup.html" class="pagination-link" aria-label="Map Setup">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Map Setup</span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./tooltips_interaction.html" class="pagination-link" aria-label="Tooltips &amp; Interaction">
-        <span class="nav-page-text">Tooltips &amp; Interaction</span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./chart_scaling.html" class="pagination-link" aria-label="Sizing &amp; Scaling">
+        <span class="nav-page-text">Sizing &amp; Scaling</span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

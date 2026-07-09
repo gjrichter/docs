@@ -257,7 +257,7 @@
     "href": "map_types.html",
     "title": "Visualization Types & Modifiers",
     "section": "",
-    "text": "Reference for the .type() string of an iXMaps layer: the base types, how to choose one by data shape, and the complete modifier vocabulary.\nFor the map context and basemaps see Map Setup; for color schemes and classification see Colors & Classification; for symbol sizing see Sizing & Scaling.",
+    "text": "Reference for the .type() string of an iXMaps layer: the base types, how to choose one by data shape, and the complete modifier vocabulary. .type() is step ③ of the four defining steps of a layer — see Layers & Themes for how it relates to .data(), .binding() and .style().\nFor the map context and basemaps see Map Setup; for color schemes and classification see Colors & Classification; for symbol sizing see Sizing & Scaling.",
     "crumbs": [
       "Home",
       "Reference",
@@ -589,111 +589,51 @@
     ]
   },
   {
-    "objectID": "getting_started.html",
-    "href": "getting_started.html",
-    "title": "Quick Start",
+    "objectID": "map_setup.html",
+    "href": "map_setup.html",
+    "title": "Map Setup",
     "section": "",
-    "text": "This guide walks you through creating your first interactive iXMaps map — from a blank HTML file to a map with a working data layer.",
+    "text": "Before adding any data, decide how the map itself is set up: which map context (tiles, SVG Mercator, or an alternative projection), and which basemap or background. These choices determine what geographic context is provided automatically and what you must load yourself.",
     "crumbs": [
       "Home",
-      "Getting Started",
-      "Quick Start"
+      "Guides",
+      "Map Setup"
     ]
   },
   {
-    "objectID": "getting_started.html#fastest-path-let-an-ai-build-it",
-    "href": "getting_started.html#fastest-path-let-an-ai-build-it",
-    "title": "Quick Start",
-    "section": "Fastest path: let an AI build it",
-    "text": "Fastest path: let an AI build it\nYou don’t have to write any of this by hand. Two AI-powered options turn a plain-language description of your data into a working iXMaps map:\n\nChat2Map.it — explore your data, describe the visualization you want in plain language, and get a live, shareable map. No code, nothing to install.\nAgent-ready skills — drop the iXMaps skills into Claude Code, Codex, or Cursor, and your AI agent writes runnable iXMaps code right in your editor.\n\nBoth know the iXMaps API and its common pitfalls. The hand-written walkthrough below is still worth reading — it explains what the generated code does, so you can adjust the result with confidence.",
+    "objectID": "map_setup.html#three-map-contexts",
+    "href": "map_setup.html#three-map-contexts",
+    "title": "Map Setup",
+    "section": "Three map contexts",
+    "text": "Three map contexts\niXMaps supports three fundamentally different setups that affect both the visual result and what layers you must provide.\n\n1 · Tile-based Mercator (Leaflet)\nThe default setup. A tile service (Stamen, CartoDB, OSM, …) renders the geographic background — streets, labels, terrain, water — and iXMaps draws your data layers on top as SVG. This is the easiest starting point: geographic context is provided automatically, so a bubble map with just lat/lon points already makes geographic sense.\nconst myMap = ixmaps.Map(\"map\", {\n    mapType: \"VT_TONER_LITE\",   // any tile basemap\n    mode:    \"info\",\n    legend:  \"closed\"\n})\n.view({ center: { lat: 42.5, lng: 12.5 }, zoom: 6 })\n.options({ basemapopacity: 0.6 });\nUse this for: city-level detail, regional maps, any situation where street-level context matters. Tile maps are always Mercator.\n\n\n\n2 · SVG Mercator (no tiles)\nMercator projection rendered entirely in SVG, with no tile background. The map canvas is a plain color. Like tile-based maps this is Mercator, so data-driven symbols and graphs can be positioned by lat/lon — but you must provide geographic context yourself by loading at least one geometry layer (countries, regions, or coastlines) as a FEATURE layer.\nconst myMap = ixmaps.Map(\"map\", {\n    mapType:       \"white\",       // canvas color — no tile layer\n    mapProjection: \"mercator\"     // explicit SVG Mercator\n})\n.view({ center: { lat: 48, lng: 10 }, zoom: 4 })\n.options({ basemapopacity: 0 });\n\n// Geographic context must be explicit:\nmyMap.layer(\"countries\")\n    .data({ url: COUNTRIES_TOPOJSON_URL, type: \"topojson\" })\n    .binding({ geo: \"geometry\" })\n    .type(\"FEATURE|SILENT\")\n    .style({ colorscheme: [\"#e8e8e8\"], linecolor: \"#fff\", linewidth: 0.5 })\n    .define();\nUse this for: Europe, continental maps, or any Mercator-based visualization where tile textures interfere with the data.\n\n\n\n3 · Alternative projection (no basemap)\nLambert, Equal Earth, Winkel Tripel, Albers, Orthographic — all SVG-only. Tile layers do not exist for these projections; all geographic context must come from data-driven layers. Load at minimum a country or coastline geometry before adding any thematic data.\nconst myMap = ixmaps.Map(\"map\", {\n    mapType:       \"#0a1929\",     // ocean / background color\n    mapProjection: \"equalearth\"\n})\n.view([0, 0], 1)\n.options({ basemapopacity: 0, flushChartDraw: 1000000 });\n\n// Mandatory: geography as a data layer\nmyMap.layer(\"countries\")\n    .data({ url: WORLD_COUNTRIES_URL, type: \"topojson\" })\n    .binding({ geo: \"geometry\" })\n    .type(\"FEATURE|SILENT\")\n    .style({ colorscheme: [\"#1c3a52\"], linecolor: \"#2a5a7a\", linewidth: 0.4 })\n    .define();\n\n// Only then add thematic data:\nmyMap.layer(\"countries\")\n    .data({ url: DATA_URL, type: \"csv\" })\n    .binding({ lookup: \"iso_a3\", value: \"gdp_per_capita\" })\n    .type(\"CHOROPLETH|QUANTILE\")\n    .style({ colorscheme: [\"#ffffb2\",\"#fd8d3c\",\"#bd0026\"], showdata: \"true\" })\n    .meta({ name: \"gdp\", tooltip: \"{{name}}: {{gdp_per_capita}}\" })\n    .define();\nUse this for: world maps, Eurostat-style Europe maps, thematic atlases where equal-area or minimal-distortion projections matter.\n\nAvailable projections\n\n\n\n\n\n\n\n\n\nmapProjection\nAlso accepted\nProjection\nBest for\n\n\n\n\n(omit)\n—\nWeb Mercator + tiles\nDefault tile-based maps\n\n\n\"mercator\"\n—\nMercator SVG, no tiles\nClean Mercator, no tile texture\n\n\n\"lambert\"\n\"lambertazimuthalequalarea\"\nLambert Azimuthal Equal-Area (EPSG:3035)\nEurope (Eurostat style)\n\n\n\"equalearth\"\n—\nEqual Earth\nWorld maps\n\n\n\"winkel\"\n—\nWinkel Tripel\nWorld maps (minimal distortion)\n\n\n\"albers\"\n\"albersequalarea\"\nAlbers Equal-Area Conic\nContinental US, large regions\n\n\n\"orthographic\"\n—\nOrthographic\nGlobe view\n\n\n\nLookup is case-insensitive. Albers accepts custom standard parallels / center via the projectionParams constructor option.\nLambert — Europe (Eurostat style):\nconst myMap = ixmaps.Map(\"map\", {\n    mapType:       \"white\",\n    mapProjection: \"lambert\",\n    mode:          \"pan\",\n    legend:        \"closed\",\n    tools:         false\n})\n.view([53.4, 16.9], 3.7)\n.options({ basemapopacity: 0, flushChartDraw: 1000000 });\nEqual Earth — world map:\nconst myMap = ixmaps.Map(\"map\", {\n    mapType:       \"#0a1929\",\n    mapProjection: \"equalearth\",\n    mode:          \"info\",\n    legend:        \"closed\"\n})\n.view([0, 0], 1)\n.options({ basemapopacity: 0, flushChartDraw: 1000000 });\n\n\n\n\n\n\nTipPrefer the array form .view([lat, lng], zoom)\n\n\n\nThe two-argument array form is the convention across all iXMaps examples — use it for consistency. The object form is also accepted and works with projections too; the two are equivalent:\n.view([53.4, 16.9], 3.7)                                 // ← preferred\n.view({ center: { lat: 53.4, lng: 16.9 }, zoom: 3.7 })   // equivalent, projections included\n\n\n\n\n\nSummary\n\n\n\n\n\n\n\n\n\nSetup\nTiles\nGeographic context\nLat/lon positioning\n\n\n\n\nTile Mercator\n✅ automatic\nProvided by tile service\n✅ native\n\n\nSVG Mercator\n❌ none\nMust load geometry layers\n✅ native\n\n\nAlternative projection\n❌ none\nMust load geometry layers\n✅ native\n\n\n\n\nIn every setup, data symbols (bubbles, dots, flow lines) are positioned by lat/lon coordinates from your data. The only difference is whether the map background is automatic or something you must explicitly provide.",
     "crumbs": [
       "Home",
-      "Getting Started",
-      "Quick Start"
+      "Guides",
+      "Map Setup"
     ]
   },
   {
-    "objectID": "getting_started.html#step-1-the-html-skeleton",
-    "href": "getting_started.html#step-1-the-html-skeleton",
-    "title": "Quick Start",
-    "section": "Step 1: The HTML skeleton",
-    "text": "Step 1: The HTML skeleton\nCreate an HTML file and include the iXMaps library from the CDN:\n&lt;!DOCTYPE html&gt;\n&lt;html lang=\"en\"&gt;\n&lt;head&gt;\n    &lt;meta charset=\"UTF-8\"&gt;\n    &lt;meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"&gt;\n    &lt;title&gt;My First ixMap&lt;/title&gt;\n    &lt;style&gt;\n        html, body { width: 100%; height: 100%; margin: 0; overflow: hidden; }\n        #map { width: 100%; height: 100%; }\n    &lt;/style&gt;\n    &lt;!-- iXMaps library — single script, no other dependencies needed --&gt;\n    &lt;script src=\"https://cdn.jsdelivr.net/gh/gjrichter/ixmaps-flat@1/ixmaps.js\"&gt;&lt;/script&gt;\n&lt;/head&gt;\n&lt;body&gt;\n    &lt;div id=\"map\"&gt;&lt;/div&gt;\n    &lt;script&gt;\n        // your map code goes here\n    &lt;/script&gt;\n&lt;/body&gt;\n&lt;/html&gt;\n\n\n\n\n\n\nImportantCSS rule required\n\n\n\nNever use width: 100vw; height: 100vh on the map &lt;div&gt;. When a scrollbar appears, vw/vh exceed the viewport and trigger a feedback loop. Always use the width/height: 100% pattern shown above.\n\n\n\n\n\n\n\n\nNoteNo extra scripts needed\n\n\n\ndata.js is loaded automatically when ixmaps.Map() initializes — Data.* functions are available in any code that runs after that (layer callbacks, .then(), event handlers). Only if you need Data before creating the map do you add its own &lt;script&gt; tag — see Data Preprocessing.",
+    "objectID": "map_setup.html#basemap-types",
+    "href": "map_setup.html#basemap-types",
+    "title": "Map Setup",
+    "section": "Basemap types",
+    "text": "Basemap types\nThe mapType option in ixmaps.Map() sets the basemap. Names are case-sensitive and must match exactly.\n\nVerified basemaps\n\n\n\n\n\n\n\n\nmapType value\nAppearance\nBest for\n\n\n\n\n\"VT_TONER_LITE\"\nClean minimal toner\nDefault — use this when in doubt\n\n\n\"white\"\nPlain white, no tiles\nData-heavy visualisations\n\n\n\"CartoDB - Positron\"\nLight grey minimal\nModern data journalism\n\n\n\"CartoDB - Dark matter\"\nDark theme\nDark-mode dashboards\n\n\n\"Stamen Terrain\"\nTopographic\nElevation, physical geography\n\n\n\"OpenStreetMap - Osmarenderer\"\nStandard OSM\nGeneral reference\n\n\n\n\n\n\n\n\n\nWarningCase and spacing matter\n\n\n\n\n\"CartoDB - Positron\" — note the spaces around the dash\n\"VT_TONER_LITE\" — all uppercase\n\"OpenStreetMap - Osmarenderer\" — must include the renderer suffix\n\n❌ \"CartoDB Positron\" · \"vt_toner_lite\" · \"OpenStreetMap\" all fail silently.\n\n\n\n\nHex / keyword backgrounds\nFor projection-based maps (no tile layer), set mapType to a color directly:\nixmaps.Map(\"map\", {\n    mapType:       \"#0a1929\",   // dark ocean\n    mapProjection: \"equalearth\"\n})\nAccepted: any hex color (\"#rrggbb\"), \"white\", \"dark\", \"black\".\n\n\nAdjusting basemap opacity\nInstead of changing the basemap, try reducing its opacity to let your data stand out:\n.options({ basemapopacity: 0.3 })  // subtle background",
     "crumbs": [
       "Home",
-      "Getting Started",
-      "Quick Start"
+      "Guides",
+      "Map Setup"
     ]
   },
   {
-    "objectID": "getting_started.html#step-2-create-a-map",
-    "href": "getting_started.html#step-2-create-a-map",
-    "title": "Quick Start",
-    "section": "Step 2: Create a map",
-    "text": "Step 2: Create a map\nThe entry point is ixmaps.Map(). Always assign the result to a const — discarding the return value silently breaks all subsequent calls.\nconst myMap = ixmaps.Map(\"map\", {\n    mapType: \"VT_TONER_LITE\",  // basemap style\n    mode:    \"info\",            // \"info\" = show tooltips on hover\n    legend:  \"closed\",          // legend panel starts collapsed\n    tools:   true               // show toolbar (zoom, search)\n})\n.view({ center: { lat: 42.5, lng: 12.5 }, zoom: 6 })\n.options({\n    basemapopacity: 0.6,\n    flushChartDraw:  1000000    // instant rendering (no animation)\n});\nOpen this in a browser — you should see a clean toner basemap centred on Italy.",
-    "crumbs": [
-      "Home",
-      "Getting Started",
-      "Quick Start"
-    ]
-  },
-  {
-    "objectID": "getting_started.html#step-3-add-a-data-layer",
-    "href": "getting_started.html#step-3-add-a-data-layer",
-    "title": "Quick Start",
-    "section": "Step 3: Add a data layer",
-    "text": "Step 3: Add a data layer\nEvery data layer follows the same chain of methods:\nmyMap.layer(\"name\")\n    .data({...})       ← data source\n    .binding({...})    ← field mapping\n    .type(\"...\")        ← visualization type\n    .style({...})      ← visual properties\n    .meta({...})       ← tooltip template\n    .define()          ← register the layer (required)\nHere is a complete layer with five Italian cities displayed as sized bubbles:\nconst cities = [\n    { name: \"Rome\",    lat: 41.90, lon: 12.50, pop: 2873000 },\n    { name: \"Milan\",   lat: 45.46, lon: 9.19,  pop: 1372000 },\n    { name: \"Naples\",  lat: 40.85, lon: 14.27, pop:  966000 },\n    { name: \"Turin\",   lat: 45.07, lon: 7.69,  pop:  875000 },\n    { name: \"Palermo\", lat: 38.12, lon: 13.36, pop:  657000 }\n];\n\nmyMap.layer(\"cities\")\n    .data({ obj: cities, type: \"json\" })\n    .binding({ geo: \"lat|lon\", value: \"pop\", title: \"name\" })\n    .type(\"CHART|BUBBLE|SIZE|VALUES\")\n    .style({\n        colorscheme: [\"#0066cc\"],\n        fillopacity: 0.7,\n        normalsizevalue: \"3000000\",\n        showdata: \"true\"           // exposes the data record on click (needed for {{theme.item.data}} tooltips)\n    })\n    .meta({ tooltip: \"&lt;b&gt;{{name}}&lt;/b&gt;&lt;br&gt;Population: {{pop}}\" })\n    .title(\"Italian Cities\")\n    .define();",
-    "crumbs": [
-      "Home",
-      "Getting Started",
-      "Quick Start"
-    ]
-  },
-  {
-    "objectID": "getting_started.html#complete-working-example",
-    "href": "getting_started.html#complete-working-example",
-    "title": "Quick Start",
-    "section": "Complete working example",
-    "text": "Complete working example\n&lt;!DOCTYPE html&gt;\n&lt;html lang=\"en\"&gt;\n&lt;head&gt;\n    &lt;meta charset=\"UTF-8\"&gt;\n    &lt;meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"&gt;\n    &lt;title&gt;Italian Cities&lt;/title&gt;\n    &lt;style&gt;\n        html, body { width: 100%; height: 100%; margin: 0; overflow: hidden; }\n        #map { width: 100%; height: 100%; }\n    &lt;/style&gt;\n    &lt;script src=\"https://cdn.jsdelivr.net/gh/gjrichter/ixmaps-flat@1/ixmaps.js\"&gt;&lt;/script&gt;\n&lt;/head&gt;\n&lt;body&gt;\n    &lt;div id=\"map\"&gt;&lt;/div&gt;\n    &lt;script&gt;\n        const cities = [\n            { name: \"Rome\",    lat: 41.90, lon: 12.50, pop: 2873000 },\n            { name: \"Milan\",   lat: 45.46, lon: 9.19,  pop: 1372000 },\n            { name: \"Naples\",  lat: 40.85, lon: 14.27, pop:  966000 },\n            { name: \"Turin\",   lat: 45.07, lon: 7.69,  pop:  875000 },\n            { name: \"Palermo\", lat: 38.12, lon: 13.36, pop:  657000 }\n        ];\n\n        const myMap = ixmaps.Map(\"map\", {\n            mapType: \"VT_TONER_LITE\",\n            mode:    \"info\",\n            legend:  \"closed\",\n            tools:   true\n        })\n        .view({ center: { lat: 42.5, lng: 12.5 }, zoom: 6 })\n        .options({ basemapopacity: 0.6, flushChartDraw: 1000000 });\n\n        myMap.layer(\"cities\")\n            .data({ obj: cities, type: \"json\" })\n            .binding({ geo: \"lat|lon\", value: \"pop\", title: \"name\" })\n            .type(\"CHART|BUBBLE|SIZE|VALUES\")\n            .style({\n                colorscheme:     [\"#0066cc\"],\n                fillopacity:     0.7,\n                normalsizevalue: \"3000000\",\n                showdata:        \"true\"\n            })\n            .meta({ tooltip: \"&lt;b&gt;{{name}}&lt;/b&gt;&lt;br&gt;Population: {{pop}}\" })\n            .title(\"Italian Cities\")\n            .define();\n    &lt;/script&gt;\n&lt;/body&gt;\n&lt;/html&gt;\nSave the file and open it in any modern browser. No web server needed for inline data like this.\n\n\n\n\n\n\nTipSee it live\n\n\n\nOpen a live, editable version of this kind of bubble map in the iXMaps code viewer — edit the code on the left and watch the map update on the right.",
-    "crumbs": [
-      "Home",
-      "Getting Started",
-      "Quick Start"
-    ]
-  },
-  {
-    "objectID": "getting_started.html#loading-external-data",
-    "href": "getting_started.html#loading-external-data",
-    "title": "Quick Start",
-    "section": "Loading external data",
-    "text": "Loading external data\nFor CSV or JSON files hosted online, replace .data({ obj: ... }) with .data({ url: ... }):\nmyMap.layer(\"cities\")\n    .data({\n        url:  \"https://cdn.jsdelivr.net/gh/your-user/your-repo@main/cities.csv\",\n        type: \"csv\"\n    })\n    .binding({ geo: \"lat|lon\", value: \"pop\", title: \"name\" })\n    .type(\"CHART|BUBBLE|SIZE|VALUES\")\n    .style({ colorscheme: [\"#0066cc\"], fillopacity: 0.7, showdata: \"true\" })\n    .meta({ tooltip: \"&lt;b&gt;{{name}}&lt;/b&gt;&lt;br&gt;Population: {{pop}}\" })\n    .define();\n\n\n\n\n\n\nWarningCORS restriction\n\n\n\nBrowsers block loading files from file:// URLs. External data must be served from a web server or a CDN. For development, use a local server (python3 -m http.server, VS Code Live Server, etc.) or host data on GitHub + jsDelivr.",
-    "crumbs": [
-      "Home",
-      "Getting Started",
-      "Quick Start"
-    ]
-  },
-  {
-    "objectID": "getting_started.html#adding-a-choropleth-layer",
-    "href": "getting_started.html#adding-a-choropleth-layer",
-    "title": "Quick Start",
-    "section": "Adding a choropleth layer",
-    "text": "Adding a choropleth layer\nTo colour polygons (countries, regions) by a data value, you need two layers with the same name: a FEATURE base layer that loads the geometry, and an overlay layer that joins your data to it.\n// 1. Base layer — loads the geometry\nmyMap.layer(\"countries\")\n    .data({\n        url:  \"https://gisco-services.ec.europa.eu/distribution/v2/countries/topojson/CNTR_RG_60M_2020_4326.json\",\n        type: \"topojson\"\n    })\n    .binding({ geo: \"geometry\", id: \"CNTR_ID\", title: \"NAME_ENGL\" })\n    .type(\"FEATURE\")\n    .style({\n        colorscheme: [\"#ddd\"],\n        fillopacity: 0.4,\n        linecolor:   \"#888\",\n        linewidth:   0.5,\n        showdata:    \"true\"\n    })\n    .define();\n\n// 2. Overlay — joins CSV data to the geometry (SAME layer name \"countries\")\nmyMap.layer(\"countries\")\n    .data({\n        url:  \"https://example.com/gdp.csv\",\n        type: \"csv\"\n    })\n    .binding({ lookup: \"iso2\", value: \"gdp_per_capita\" })\n    .type(\"CHOROPLETH|QUANTILE\")\n    .style({\n        colorscheme: [\"#ffffcc\", \"#a1dab4\", \"#41b6c4\", \"#2c7fb8\", \"#253494\"],\n        fillopacity: 0.8,\n        showdata:    \"true\"\n    })\n    .meta({ tooltip: \"{{NAME_ENGL}}: {{gdp_per_capita}}\" })\n    .define();\n\n\n\n\n\n\nImportantSame name = geometry reuse\n\n\n\nThe overlay layer must use the exact same name as the FEATURE base layer. A different name means no geometry to draw on — the layer renders nothing with no error message.",
-    "crumbs": [
-      "Home",
-      "Getting Started",
-      "Quick Start"
-    ]
-  },
-  {
-    "objectID": "getting_started.html#next-steps",
-    "href": "getting_started.html#next-steps",
-    "title": "Quick Start",
+    "objectID": "map_setup.html#next-steps",
+    "href": "map_setup.html#next-steps",
+    "title": "Map Setup",
     "section": "Next steps",
-    "text": "Next steps\n\nAPI Reference — complete reference for all methods and options\nStyle Properties — every style property explained\nMap Setup — map contexts, basemaps, projections\nVisualization Types & Modifiers — the full .type() reference\nColors & Classification — color schemes and class methods\nSizing & Scaling — symbol sizing across themes and zoom\nTooltips & Interaction — tooltips, events, runtime changes\nExamples — copy-paste examples for common use cases\nTroubleshooting — when things don’t work",
+    "text": "Next steps\n\nLayers & Themes — the four steps that define what’s drawn on this canvas\nVisualization Types & Modifiers — choose how the data is drawn\nColors & Classification — color schemes and class methods\nSizing & Scaling — symbol sizing across themes and zoom levels",
     "crumbs": [
       "Home",
-      "Getting Started",
-      "Quick Start"
+      "Guides",
+      "Map Setup"
     ]
   },
   {
@@ -829,51 +769,183 @@
     ]
   },
   {
-    "objectID": "map_setup.html",
-    "href": "map_setup.html",
-    "title": "Map Setup",
+    "objectID": "getting_started.html",
+    "href": "getting_started.html",
+    "title": "Quick Start",
     "section": "",
-    "text": "Before adding any data, decide how the map itself is set up: which map context (tiles, SVG Mercator, or an alternative projection), and which basemap or background. These choices determine what geographic context is provided automatically and what you must load yourself.",
+    "text": "This guide walks you through creating your first interactive iXMaps map — from a blank HTML file to a map with a working data layer.",
     "crumbs": [
       "Home",
-      "Guides",
-      "Map Setup"
+      "Getting Started",
+      "Quick Start"
     ]
   },
   {
-    "objectID": "map_setup.html#three-map-contexts",
-    "href": "map_setup.html#three-map-contexts",
-    "title": "Map Setup",
-    "section": "Three map contexts",
-    "text": "Three map contexts\niXMaps supports three fundamentally different setups that affect both the visual result and what layers you must provide.\n\n1 · Tile-based Mercator (Leaflet)\nThe default setup. A tile service (Stamen, CartoDB, OSM, …) renders the geographic background — streets, labels, terrain, water — and iXMaps draws your data layers on top as SVG. This is the easiest starting point: geographic context is provided automatically, so a bubble map with just lat/lon points already makes geographic sense.\nconst myMap = ixmaps.Map(\"map\", {\n    mapType: \"VT_TONER_LITE\",   // any tile basemap\n    mode:    \"info\",\n    legend:  \"closed\"\n})\n.view({ center: { lat: 42.5, lng: 12.5 }, zoom: 6 })\n.options({ basemapopacity: 0.6 });\nUse this for: city-level detail, regional maps, any situation where street-level context matters. Tile maps are always Mercator.\n\n\n\n2 · SVG Mercator (no tiles)\nMercator projection rendered entirely in SVG, with no tile background. The map canvas is a plain color. Like tile-based maps this is Mercator, so data-driven symbols and graphs can be positioned by lat/lon — but you must provide geographic context yourself by loading at least one geometry layer (countries, regions, or coastlines) as a FEATURE layer.\nconst myMap = ixmaps.Map(\"map\", {\n    mapType:       \"white\",       // canvas color — no tile layer\n    mapProjection: \"mercator\"     // explicit SVG Mercator\n})\n.view({ center: { lat: 48, lng: 10 }, zoom: 4 })\n.options({ basemapopacity: 0 });\n\n// Geographic context must be explicit:\nmyMap.layer(\"countries\")\n    .data({ url: COUNTRIES_TOPOJSON_URL, type: \"topojson\" })\n    .binding({ geo: \"geometry\" })\n    .type(\"FEATURE|SILENT\")\n    .style({ colorscheme: [\"#e8e8e8\"], linecolor: \"#fff\", linewidth: 0.5 })\n    .define();\nUse this for: Europe, continental maps, or any Mercator-based visualization where tile textures interfere with the data.\n\n\n\n3 · Alternative projection (no basemap)\nLambert, Equal Earth, Winkel Tripel, Albers, Orthographic — all SVG-only. Tile layers do not exist for these projections; all geographic context must come from data-driven layers. Load at minimum a country or coastline geometry before adding any thematic data.\nconst myMap = ixmaps.Map(\"map\", {\n    mapType:       \"#0a1929\",     // ocean / background color\n    mapProjection: \"equalearth\"\n})\n.view([0, 0], 1)\n.options({ basemapopacity: 0, flushChartDraw: 1000000 });\n\n// Mandatory: geography as a data layer\nmyMap.layer(\"countries\")\n    .data({ url: WORLD_COUNTRIES_URL, type: \"topojson\" })\n    .binding({ geo: \"geometry\" })\n    .type(\"FEATURE|SILENT\")\n    .style({ colorscheme: [\"#1c3a52\"], linecolor: \"#2a5a7a\", linewidth: 0.4 })\n    .define();\n\n// Only then add thematic data:\nmyMap.layer(\"countries\")\n    .data({ url: DATA_URL, type: \"csv\" })\n    .binding({ lookup: \"iso_a3\", value: \"gdp_per_capita\" })\n    .type(\"CHOROPLETH|QUANTILE\")\n    .style({ colorscheme: [\"#ffffb2\",\"#fd8d3c\",\"#bd0026\"], showdata: \"true\" })\n    .meta({ name: \"gdp\", tooltip: \"{{name}}: {{gdp_per_capita}}\" })\n    .define();\nUse this for: world maps, Eurostat-style Europe maps, thematic atlases where equal-area or minimal-distortion projections matter.\n\nAvailable projections\n\n\n\n\n\n\n\n\n\nmapProjection\nAlso accepted\nProjection\nBest for\n\n\n\n\n(omit)\n—\nWeb Mercator + tiles\nDefault tile-based maps\n\n\n\"mercator\"\n—\nMercator SVG, no tiles\nClean Mercator, no tile texture\n\n\n\"lambert\"\n\"lambertazimuthalequalarea\"\nLambert Azimuthal Equal-Area (EPSG:3035)\nEurope (Eurostat style)\n\n\n\"equalearth\"\n—\nEqual Earth\nWorld maps\n\n\n\"winkel\"\n—\nWinkel Tripel\nWorld maps (minimal distortion)\n\n\n\"albers\"\n\"albersequalarea\"\nAlbers Equal-Area Conic\nContinental US, large regions\n\n\n\"orthographic\"\n—\nOrthographic\nGlobe view\n\n\n\nLookup is case-insensitive. Albers accepts custom standard parallels / center via the projectionParams constructor option.\nLambert — Europe (Eurostat style):\nconst myMap = ixmaps.Map(\"map\", {\n    mapType:       \"white\",\n    mapProjection: \"lambert\",\n    mode:          \"pan\",\n    legend:        \"closed\",\n    tools:         false\n})\n.view([53.4, 16.9], 3.7)\n.options({ basemapopacity: 0, flushChartDraw: 1000000 });\nEqual Earth — world map:\nconst myMap = ixmaps.Map(\"map\", {\n    mapType:       \"#0a1929\",\n    mapProjection: \"equalearth\",\n    mode:          \"info\",\n    legend:        \"closed\"\n})\n.view([0, 0], 1)\n.options({ basemapopacity: 0, flushChartDraw: 1000000 });\n\n\n\n\n\n\nTipPrefer the array form .view([lat, lng], zoom)\n\n\n\nThe two-argument array form is the convention across all iXMaps examples — use it for consistency. The object form is also accepted and works with projections too; the two are equivalent:\n.view([53.4, 16.9], 3.7)                                 // ← preferred\n.view({ center: { lat: 53.4, lng: 16.9 }, zoom: 3.7 })   // equivalent, projections included\n\n\n\n\n\nSummary\n\n\n\n\n\n\n\n\n\nSetup\nTiles\nGeographic context\nLat/lon positioning\n\n\n\n\nTile Mercator\n✅ automatic\nProvided by tile service\n✅ native\n\n\nSVG Mercator\n❌ none\nMust load geometry layers\n✅ native\n\n\nAlternative projection\n❌ none\nMust load geometry layers\n✅ native\n\n\n\n\nIn every setup, data symbols (bubbles, dots, flow lines) are positioned by lat/lon coordinates from your data. The only difference is whether the map background is automatic or something you must explicitly provide.",
+    "objectID": "getting_started.html#fastest-path-let-an-ai-build-it",
+    "href": "getting_started.html#fastest-path-let-an-ai-build-it",
+    "title": "Quick Start",
+    "section": "Fastest path: let an AI build it",
+    "text": "Fastest path: let an AI build it\nYou don’t have to write any of this by hand. Two AI-powered options turn a plain-language description of your data into a working iXMaps map:\n\nChat2Map.it — explore your data, describe the visualization you want in plain language, and get a live, shareable map. No code, nothing to install.\nAgent-ready skills — drop the iXMaps skills into Claude Code, Codex, or Cursor, and your AI agent writes runnable iXMaps code right in your editor.\n\nBoth know the iXMaps API and its common pitfalls. The hand-written walkthrough below is still worth reading — it explains what the generated code does, so you can adjust the result with confidence.",
     "crumbs": [
       "Home",
-      "Guides",
-      "Map Setup"
+      "Getting Started",
+      "Quick Start"
     ]
   },
   {
-    "objectID": "map_setup.html#basemap-types",
-    "href": "map_setup.html#basemap-types",
-    "title": "Map Setup",
-    "section": "Basemap types",
-    "text": "Basemap types\nThe mapType option in ixmaps.Map() sets the basemap. Names are case-sensitive and must match exactly.\n\nVerified basemaps\n\n\n\n\n\n\n\n\nmapType value\nAppearance\nBest for\n\n\n\n\n\"VT_TONER_LITE\"\nClean minimal toner\nDefault — use this when in doubt\n\n\n\"white\"\nPlain white, no tiles\nData-heavy visualisations\n\n\n\"CartoDB - Positron\"\nLight grey minimal\nModern data journalism\n\n\n\"CartoDB - Dark matter\"\nDark theme\nDark-mode dashboards\n\n\n\"Stamen Terrain\"\nTopographic\nElevation, physical geography\n\n\n\"OpenStreetMap - Osmarenderer\"\nStandard OSM\nGeneral reference\n\n\n\n\n\n\n\n\n\nWarningCase and spacing matter\n\n\n\n\n\"CartoDB - Positron\" — note the spaces around the dash\n\"VT_TONER_LITE\" — all uppercase\n\"OpenStreetMap - Osmarenderer\" — must include the renderer suffix\n\n❌ \"CartoDB Positron\" · \"vt_toner_lite\" · \"OpenStreetMap\" all fail silently.\n\n\n\n\nHex / keyword backgrounds\nFor projection-based maps (no tile layer), set mapType to a color directly:\nixmaps.Map(\"map\", {\n    mapType:       \"#0a1929\",   // dark ocean\n    mapProjection: \"equalearth\"\n})\nAccepted: any hex color (\"#rrggbb\"), \"white\", \"dark\", \"black\".\n\n\nAdjusting basemap opacity\nInstead of changing the basemap, try reducing its opacity to let your data stand out:\n.options({ basemapopacity: 0.3 })  // subtle background",
+    "objectID": "getting_started.html#step-1-the-html-skeleton",
+    "href": "getting_started.html#step-1-the-html-skeleton",
+    "title": "Quick Start",
+    "section": "Step 1: The HTML skeleton",
+    "text": "Step 1: The HTML skeleton\nCreate an HTML file and include the iXMaps library from the CDN:\n&lt;!DOCTYPE html&gt;\n&lt;html lang=\"en\"&gt;\n&lt;head&gt;\n    &lt;meta charset=\"UTF-8\"&gt;\n    &lt;meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"&gt;\n    &lt;title&gt;My First ixMap&lt;/title&gt;\n    &lt;style&gt;\n        html, body { width: 100%; height: 100%; margin: 0; overflow: hidden; }\n        #map { width: 100%; height: 100%; }\n    &lt;/style&gt;\n    &lt;!-- iXMaps library — single script, no other dependencies needed --&gt;\n    &lt;script src=\"https://cdn.jsdelivr.net/gh/gjrichter/ixmaps-flat@1/ixmaps.js\"&gt;&lt;/script&gt;\n&lt;/head&gt;\n&lt;body&gt;\n    &lt;div id=\"map\"&gt;&lt;/div&gt;\n    &lt;script&gt;\n        // your map code goes here\n    &lt;/script&gt;\n&lt;/body&gt;\n&lt;/html&gt;\n\n\n\n\n\n\nImportantCSS rule required\n\n\n\nNever use width: 100vw; height: 100vh on the map &lt;div&gt;. When a scrollbar appears, vw/vh exceed the viewport and trigger a feedback loop. Always use the width/height: 100% pattern shown above.\n\n\n\n\n\n\n\n\nNoteNo extra scripts needed\n\n\n\ndata.js is loaded automatically when ixmaps.Map() initializes — Data.* functions are available in any code that runs after that (layer callbacks, .then(), event handlers). Only if you need Data before creating the map do you add its own &lt;script&gt; tag — see Data Preprocessing.",
     "crumbs": [
       "Home",
-      "Guides",
-      "Map Setup"
+      "Getting Started",
+      "Quick Start"
     ]
   },
   {
-    "objectID": "map_setup.html#next-steps",
-    "href": "map_setup.html#next-steps",
-    "title": "Map Setup",
+    "objectID": "getting_started.html#step-2-create-a-map",
+    "href": "getting_started.html#step-2-create-a-map",
+    "title": "Quick Start",
+    "section": "Step 2: Create a map",
+    "text": "Step 2: Create a map\nThe entry point is ixmaps.Map(). Always assign the result to a const — discarding the return value silently breaks all subsequent calls.\nconst myMap = ixmaps.Map(\"map\", {\n    mapType: \"VT_TONER_LITE\",  // basemap style\n    mode:    \"info\",            // \"info\" = show tooltips on hover\n    legend:  \"closed\",          // legend panel starts collapsed\n    tools:   true               // show toolbar (zoom, search)\n})\n.view({ center: { lat: 42.5, lng: 12.5 }, zoom: 6 })\n.options({\n    basemapopacity: 0.6,\n    flushChartDraw:  1000000    // instant rendering (no animation)\n});\nOpen this in a browser — you should see a clean toner basemap centred on Italy.",
+    "crumbs": [
+      "Home",
+      "Getting Started",
+      "Quick Start"
+    ]
+  },
+  {
+    "objectID": "getting_started.html#step-3-add-a-data-layer",
+    "href": "getting_started.html#step-3-add-a-data-layer",
+    "title": "Quick Start",
+    "section": "Step 3: Add a data layer",
+    "text": "Step 3: Add a data layer\nEvery data layer follows the same chain of methods:\nmyMap.layer(\"name\")\n    .data({...})       ← data source\n    .binding({...})    ← field mapping\n    .type(\"...\")        ← visualization type\n    .style({...})      ← visual properties\n    .meta({...})       ← tooltip template\n    .define()          ← register the layer (required)\nHere is a complete layer with five Italian cities displayed as sized bubbles:\nconst cities = [\n    { name: \"Rome\",    lat: 41.90, lon: 12.50, pop: 2873000 },\n    { name: \"Milan\",   lat: 45.46, lon: 9.19,  pop: 1372000 },\n    { name: \"Naples\",  lat: 40.85, lon: 14.27, pop:  966000 },\n    { name: \"Turin\",   lat: 45.07, lon: 7.69,  pop:  875000 },\n    { name: \"Palermo\", lat: 38.12, lon: 13.36, pop:  657000 }\n];\n\nmyMap.layer(\"cities\")\n    .data({ obj: cities, type: \"json\" })\n    .binding({ geo: \"lat|lon\", value: \"pop\", title: \"name\" })\n    .type(\"CHART|BUBBLE|SIZE|VALUES\")\n    .style({\n        colorscheme: [\"#0066cc\"],\n        fillopacity: 0.7,\n        normalsizevalue: \"3000000\",\n        showdata: \"true\"           // exposes the data record on click (needed for {{theme.item.data}} tooltips)\n    })\n    .meta({ tooltip: \"&lt;b&gt;{{name}}&lt;/b&gt;&lt;br&gt;Population: {{pop}}\" })\n    .title(\"Italian Cities\")\n    .define();",
+    "crumbs": [
+      "Home",
+      "Getting Started",
+      "Quick Start"
+    ]
+  },
+  {
+    "objectID": "getting_started.html#complete-working-example",
+    "href": "getting_started.html#complete-working-example",
+    "title": "Quick Start",
+    "section": "Complete working example",
+    "text": "Complete working example\n&lt;!DOCTYPE html&gt;\n&lt;html lang=\"en\"&gt;\n&lt;head&gt;\n    &lt;meta charset=\"UTF-8\"&gt;\n    &lt;meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"&gt;\n    &lt;title&gt;Italian Cities&lt;/title&gt;\n    &lt;style&gt;\n        html, body { width: 100%; height: 100%; margin: 0; overflow: hidden; }\n        #map { width: 100%; height: 100%; }\n    &lt;/style&gt;\n    &lt;script src=\"https://cdn.jsdelivr.net/gh/gjrichter/ixmaps-flat@1/ixmaps.js\"&gt;&lt;/script&gt;\n&lt;/head&gt;\n&lt;body&gt;\n    &lt;div id=\"map\"&gt;&lt;/div&gt;\n    &lt;script&gt;\n        const cities = [\n            { name: \"Rome\",    lat: 41.90, lon: 12.50, pop: 2873000 },\n            { name: \"Milan\",   lat: 45.46, lon: 9.19,  pop: 1372000 },\n            { name: \"Naples\",  lat: 40.85, lon: 14.27, pop:  966000 },\n            { name: \"Turin\",   lat: 45.07, lon: 7.69,  pop:  875000 },\n            { name: \"Palermo\", lat: 38.12, lon: 13.36, pop:  657000 }\n        ];\n\n        const myMap = ixmaps.Map(\"map\", {\n            mapType: \"VT_TONER_LITE\",\n            mode:    \"info\",\n            legend:  \"closed\",\n            tools:   true\n        })\n        .view({ center: { lat: 42.5, lng: 12.5 }, zoom: 6 })\n        .options({ basemapopacity: 0.6, flushChartDraw: 1000000 });\n\n        myMap.layer(\"cities\")\n            .data({ obj: cities, type: \"json\" })\n            .binding({ geo: \"lat|lon\", value: \"pop\", title: \"name\" })\n            .type(\"CHART|BUBBLE|SIZE|VALUES\")\n            .style({\n                colorscheme:     [\"#0066cc\"],\n                fillopacity:     0.7,\n                normalsizevalue: \"3000000\",\n                showdata:        \"true\"\n            })\n            .meta({ tooltip: \"&lt;b&gt;{{name}}&lt;/b&gt;&lt;br&gt;Population: {{pop}}\" })\n            .title(\"Italian Cities\")\n            .define();\n    &lt;/script&gt;\n&lt;/body&gt;\n&lt;/html&gt;\nSave the file and open it in any modern browser. No web server needed for inline data like this.\n\n\n\n\n\n\nTipSee it live\n\n\n\nOpen a live, editable version of this kind of bubble map in the iXMaps code viewer — edit the code on the left and watch the map update on the right.",
+    "crumbs": [
+      "Home",
+      "Getting Started",
+      "Quick Start"
+    ]
+  },
+  {
+    "objectID": "getting_started.html#loading-external-data",
+    "href": "getting_started.html#loading-external-data",
+    "title": "Quick Start",
+    "section": "Loading external data",
+    "text": "Loading external data\nFor CSV or JSON files hosted online, replace .data({ obj: ... }) with .data({ url: ... }):\nmyMap.layer(\"cities\")\n    .data({\n        url:  \"https://cdn.jsdelivr.net/gh/your-user/your-repo@main/cities.csv\",\n        type: \"csv\"\n    })\n    .binding({ geo: \"lat|lon\", value: \"pop\", title: \"name\" })\n    .type(\"CHART|BUBBLE|SIZE|VALUES\")\n    .style({ colorscheme: [\"#0066cc\"], fillopacity: 0.7, showdata: \"true\" })\n    .meta({ tooltip: \"&lt;b&gt;{{name}}&lt;/b&gt;&lt;br&gt;Population: {{pop}}\" })\n    .define();\n\n\n\n\n\n\nWarningCORS restriction\n\n\n\nBrowsers block loading files from file:// URLs. External data must be served from a web server or a CDN. For development, use a local server (python3 -m http.server, VS Code Live Server, etc.) or host data on GitHub + jsDelivr.",
+    "crumbs": [
+      "Home",
+      "Getting Started",
+      "Quick Start"
+    ]
+  },
+  {
+    "objectID": "getting_started.html#adding-a-choropleth-layer",
+    "href": "getting_started.html#adding-a-choropleth-layer",
+    "title": "Quick Start",
+    "section": "Adding a choropleth layer",
+    "text": "Adding a choropleth layer\nTo colour polygons (countries, regions) by a data value, you need two layers with the same name: a FEATURE base layer that loads the geometry, and an overlay layer that joins your data to it.\n// 1. Base layer — loads the geometry\nmyMap.layer(\"countries\")\n    .data({\n        url:  \"https://gisco-services.ec.europa.eu/distribution/v2/countries/topojson/CNTR_RG_60M_2020_4326.json\",\n        type: \"topojson\"\n    })\n    .binding({ geo: \"geometry\", id: \"CNTR_ID\", title: \"NAME_ENGL\" })\n    .type(\"FEATURE\")\n    .style({\n        colorscheme: [\"#ddd\"],\n        fillopacity: 0.4,\n        linecolor:   \"#888\",\n        linewidth:   0.5,\n        showdata:    \"true\"\n    })\n    .define();\n\n// 2. Overlay — joins CSV data to the geometry (SAME layer name \"countries\")\nmyMap.layer(\"countries\")\n    .data({\n        url:  \"https://example.com/gdp.csv\",\n        type: \"csv\"\n    })\n    .binding({ lookup: \"iso2\", value: \"gdp_per_capita\" })\n    .type(\"CHOROPLETH|QUANTILE\")\n    .style({\n        colorscheme: [\"#ffffcc\", \"#a1dab4\", \"#41b6c4\", \"#2c7fb8\", \"#253494\"],\n        fillopacity: 0.8,\n        showdata:    \"true\"\n    })\n    .meta({ tooltip: \"{{NAME_ENGL}}: {{gdp_per_capita}}\" })\n    .define();\n\n\n\n\n\n\nImportantSame name = geometry reuse\n\n\n\nThe overlay layer must use the exact same name as the FEATURE base layer. A different name means no geometry to draw on — the layer renders nothing with no error message.",
+    "crumbs": [
+      "Home",
+      "Getting Started",
+      "Quick Start"
+    ]
+  },
+  {
+    "objectID": "getting_started.html#next-steps",
+    "href": "getting_started.html#next-steps",
+    "title": "Quick Start",
     "section": "Next steps",
-    "text": "Next steps\n\nVisualization Types & Modifiers — choose how the data is drawn\nColors & Classification — color schemes and class methods\nSizing & Scaling — symbol sizing across themes and zoom levels",
+    "text": "Next steps\n\nAPI Reference — complete reference for all methods and options\nStyle Properties — every style property explained\nMap Setup — map contexts, basemaps, projections\nLayers & Themes — the four steps that define every layer\nVisualization Types & Modifiers — the full .type() reference\nColors & Classification — color schemes and class methods\nSizing & Scaling — symbol sizing across themes and zoom\nTooltips & Interaction — tooltips, events, runtime changes\nExamples — copy-paste examples for common use cases\nTroubleshooting — when things don’t work",
+    "crumbs": [
+      "Home",
+      "Getting Started",
+      "Quick Start"
+    ]
+  },
+  {
+    "objectID": "layers_themes.html",
+    "href": "layers_themes.html",
+    "title": "Layers & Themes",
+    "section": "",
+    "text": "Map Setup configures the canvas. Everything drawn on top of it — a choropleth, a set of bubbles, a boundary outline — is a layer, and every layer is defined by the same four steps. This page explains that model before the following guides go into each step in depth.",
     "crumbs": [
       "Home",
       "Guides",
-      "Map Setup"
+      "Layers & Themes"
+    ]
+  },
+  {
+    "objectID": "layers_themes.html#layer-and-theme-one-thing-two-names",
+    "href": "layers_themes.html#layer-and-theme-one-thing-two-names",
+    "title": "Layers & Themes",
+    "section": "Layer and theme — one thing, two names",
+    "text": "Layer and theme — one thing, two names\nmyMap.layer(\"name\") starts a definition; internally, and in the JSON project format, the result is called a theme. The two words refer to the same object at different points in its life:\n\nLayer — the name you address it by (myMap.layer(\"countries\"), api.removeTheme(\"countries\")) and the geometric slot it occupies on the map.\nTheme — the resolved definition object once .define() registers it ({ layer, data, binding, style }), and the vocabulary of the runtime API (changeThemeStyle, removeTheme, showTheme).\n\nYou will see both words depending on context; nothing changes between them.",
+    "crumbs": [
+      "Home",
+      "Guides",
+      "Layers & Themes"
+    ]
+  },
+  {
+    "objectID": "layers_themes.html#the-four-defining-steps",
+    "href": "layers_themes.html#the-four-defining-steps",
+    "title": "Layers & Themes",
+    "section": "The four defining steps",
+    "text": "The four defining steps\nEvery theme answers four questions, always in the same order:\n.data({...})       ①  Where does the data come from?\n.binding({...})    ②  Which fields map to which visual roles?\n.type(\"...\")       ③  What geometric form represents it?\n.style({...})      ④  How does that form look?\n.define()             Register the theme — closes the chain\n\n\n\n\n\n\n\n\nStep\nQuestion it answers\nExample\n\n\n\n\n① .data()\nWhere is the data?\n{ url: \"cities.csv\", type: \"csv\" }\n\n\n② .binding()\nWhich fields play which role?\n{ geo: \"lat\\|lon\", value: \"pop\", title: \"name\" }\n\n\n③ .type()\nWhat form draws it?\n\"CHART\\|BUBBLE\\|SIZE\\|VALUES\"\n\n\n④ .style()\nHow does that form look?\n{ colorscheme: [\"#0066cc\"], fillopacity: 0.7 }\n\n\n\nmyMap.layer(\"cities\")\n    .data({ url: \"cities.csv\", type: \"csv\" })                        // ① source\n    .binding({ geo: \"lat|lon\", value: \"pop\", title: \"name\" })         // ② field roles\n    .type(\"CHART|BUBBLE|SIZE|VALUES\")                                 // ③ form\n    .style({ colorscheme: [\"#0066cc\"], fillopacity: 0.7, showdata: \"true\" })  // ④ appearance\n    .define();                                                        // register\nEach step depends only on the one before it — binding needs to know what data exists, type needs to know what’s bound, style needs to know what form it’s dressing. That dependency order is also the reason the chain always reads in this sequence, regardless of visualization.\n\n\n\n\n\n\nNotetype is a style property\n\n\n\nStructurally, .type(\"...\") is shorthand for .style({ type: \"...\" }) — both write into the same underlying style object (as does .filter()). They are presented as separate steps because they answer conceptually different questions — what form vs. how it looks — not because they are stored separately. See Visualization Types & Modifiers § Type and style for why keeping them conceptually apart is useful: you can swap the form while keeping every style value unchanged.",
+    "crumbs": [
+      "Home",
+      "Guides",
+      "Layers & Themes"
+    ]
+  },
+  {
+    "objectID": "layers_themes.html#beyond-the-four-the-rest-of-the-chain",
+    "href": "layers_themes.html#beyond-the-four-the-rest-of-the-chain",
+    "title": "Layers & Themes",
+    "section": "Beyond the four: the rest of the chain",
+    "text": "Beyond the four: the rest of the chain\nThree more links complete the full chain documented in the API Reference — none of them define what the theme is, they refine or register it:\nmyMap.layer(\"layerName\")\n    .data({...}) .binding({...})            // the four defining steps\n    .filter(\"...\")     // optional — restrict rows before rendering\n    .type(\"...\") .style({...})\n    .meta({...})        // optional — tooltip template, theme name\n    .title(\"...\")       // optional — legend label\n    .define()           // required — must close every chain\n\n.filter() narrows the rows the other three steps ever see — it changes how much data reaches the theme, not what the fields mean or how they render.\n.meta() attaches the tooltip template and, importantly, the name the runtime API uses to address this specific theme later (changeThemeStyle, removeTheme — see Tooltips & Interaction).\n.title() only labels the legend entry.\n.define() is not optional — the chain does nothing until it runs.",
+    "crumbs": [
+      "Home",
+      "Guides",
+      "Layers & Themes"
+    ]
+  },
+  {
+    "objectID": "layers_themes.html#the-layer-name-is-a-join-key-not-just-a-label",
+    "href": "layers_themes.html#the-layer-name-is-a-join-key-not-just-a-label",
+    "title": "Layers & Themes",
+    "section": "The layer name is a join key, not just a label",
+    "text": "The layer name is a join key, not just a label\nThe string passed to .layer(\"...\") has a second job beyond identifying the layer for later reference: two theme definitions that share the same layer name occupy the same geometric slot, and iXMaps composes them rather than replacing one with the other. This is how a choropleth is actually built — not as one theme, but as two:\n// ① FEATURE — provides the geometry, no data value needed\nmyMap.layer(\"countries\")\n    .data({ url: GEO_URL, type: \"topojson\" })\n    .binding({ geo: \"geometry\", id: \"CNTR_ID\", title: \"NAME_ENGL\" })\n    .type(\"FEATURE\")\n    .style({ colorscheme: [\"#ddd\"], linecolor: \"#888\", linewidth: 0.5 })\n    .define();\n\n// ② CHOROPLETH — SAME layer name \"countries\": joins onto ①'s geometry\nmyMap.layer(\"countries\")\n    .data({ url: DATA_URL, type: \"csv\" })\n    .binding({ lookup: \"iso2\", value: \"gdp_per_capita\" })\n    .type(\"CHOROPLETH|QUANTILE\")\n    .style({ colorscheme: [\"#ffffcc\",\"#253494\"], showdata: \"true\" })\n    .meta({ name: \"gdp\", tooltip: \"{{NAME_ENGL}}: {{gdp_per_capita}}\" })\n    .define();\nThe second definition’s lookup (in .binding()) is matched against the first’s id — that pairing is what joins the CSV row to the right polygon. Give the overlay a different layer name and it has no geometry to draw on; it renders nothing, silently (see Troubleshooting, row 2).\n\n\n\n\n\n\nTipNaming convention\n\n\n\nUse the layer name for the geometric role (“countries”, “comuni”, “regions”) and .meta({ name: ... }) for the runtime-addressable identity of a specific data overlay (“gdp”, “population-2023”). Multiple data overlays can share one geometry layer name while each keeping a distinct meta.name for the runtime API.",
+    "crumbs": [
+      "Home",
+      "Guides",
+      "Layers & Themes"
+    ]
+  },
+  {
+    "objectID": "layers_themes.html#next-steps",
+    "href": "layers_themes.html#next-steps",
+    "title": "Layers & Themes",
+    "section": "Next steps",
+    "text": "Next steps\n\nSizing & Scaling — the sizing side of step ④\nColors & Classification — the color side of step ④\nVisualization Types & Modifiers — the complete step ③ reference\nTooltips & Interaction — .meta(), events, and runtime changes to a defined theme",
+    "crumbs": [
+      "Home",
+      "Guides",
+      "Layers & Themes"
     ]
   },
   {
