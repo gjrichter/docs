@@ -6,12 +6,15 @@ project:
   render:
       - index.qmd
       - getting_started.qmd
+      - map_setup.qmd
+      - chart_scaling.qmd
+      - colors_classification.qmd
+      - tooltips_interaction.qmd
+      - data_preprocessing.qmd
+      - user_charts.qmd
       - api_documentation.qmd
       - map_types.qmd
       - theme_styles.qmd
-      - chart_scaling.qmd
-      - user_charts.qmd
-      - data_preprocessing.qmd
       - examples.qmd
       - troubleshooting.qmd
       - about.qmd
@@ -47,20 +50,29 @@ website:
           - href: getting_started.qmd
             text: "Quick Start"
       - text: "---"
+      - section: "Guides"
+        contents:
+          - href: map_setup.qmd
+            text: "Map Setup"
+          - href: chart_scaling.qmd
+            text: "Sizing & Scaling"
+          - href: colors_classification.qmd
+            text: "Colors & Classification"
+          - href: tooltips_interaction.qmd
+            text: "Tooltips & Interaction"
+          - href: data_preprocessing.qmd
+            text: "Data Preprocessing"
+          - href: user_charts.qmd
+            text: "Custom Charts"
+      - text: "---"
       - section: "Reference"
         contents:
           - href: api_documentation.qmd
             text: "API Reference"
           - href: map_types.qmd
-            text: "Map Types, Sizing & Colors"
+            text: "Visualization Types & Modifiers"
           - href: theme_styles.qmd
             text: "Style Properties"
-          - href: chart_scaling.qmd
-            text: "Chart Scaling"
-          - href: user_charts.qmd
-            text: "User Charts"
-          - href: data_preprocessing.qmd
-            text: "Data Preprocessing"
       - text: "---"
       - href: examples.qmd
         text: "Examples"

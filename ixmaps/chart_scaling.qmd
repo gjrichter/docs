@@ -1,6 +1,6 @@
 ---
-title: "Chart Scaling"
-description: "How iXMaps sizes chart symbols: the three sizing levers — normalSizeScale, normalsizevalue, scale — plus sizepow power curves and zoom anchoring."
+title: "Sizing & Scaling"
+description: "How iXMaps sizes chart symbols: sizing principles, the three sizing levers — normalSizeScale, normalsizevalue, scale — plus the sizepow dimension and zoom anchoring."
 ---
 
 iXMaps provides several complementary mechanisms for controlling how symbols and charts are sized. Understanding how they interact helps you get the right visual density at every zoom level.

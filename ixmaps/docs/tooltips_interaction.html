@@ -6,9 +6,9 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="description" content="Reference for the iXMaps .type() string: the three base types, the decision tree by data shape, and the complete modifier vocabulary.">
+<meta name="description" content="Enable and template iXMaps tooltips with Mustache placeholders, style them, and react to user input with map events and runtime theme changes.">
 
-<title>Visualization Types &amp; Modifiers – iXMaps Documentation</title>
+<title>Tooltips &amp; Interaction – iXMaps Documentation</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -66,8 +66,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./theme_styles.html" rel="next">
-<link href="./api_documentation.html" rel="prev">
+<link href="./data_preprocessing.html" rel="next">
+<link href="./colors_classification.html" rel="prev">
 <link href="./pics/favicon.png" rel="icon" type="image/png">
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
@@ -110,7 +110,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 <link rel="stylesheet" href="styles.css">
-<link rel="canonical" href="https://www.ixmaps.com/docs/map_types.html">
+<link rel="canonical" href="https://www.ixmaps.com/docs/tooltips_interaction.html">
 </head>
 
 <body class="nav-sidebar docked nav-fixed quarto-light">
@@ -162,7 +162,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./api_documentation.html">Reference</a></li><li class="breadcrumb-item"><a href="./map_types.html">Visualization Types &amp; Modifiers</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./map_setup.html">Guides</a></li><li class="breadcrumb-item"><a href="./tooltips_interaction.html">Tooltips &amp; Interaction</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -240,7 +240,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./tooltips_interaction.html" class="sidebar-item-text sidebar-link">
+  <a href="./tooltips_interaction.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text">Tooltips &amp; Interaction</span></a>
   </div>
 </li>
@@ -276,7 +276,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./map_types.html" class="sidebar-item-text sidebar-link active">
+  <a href="./map_types.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Visualization Types &amp; Modifiers</span></a>
   </div>
 </li>
@@ -319,28 +319,30 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#visualization-types" id="toc-visualization-types" class="nav-link active" data-scroll-target="#visualization-types">Visualization types</a>
+  <li><a href="#enabling-tooltips" id="toc-enabling-tooltips" class="nav-link active" data-scroll-target="#enabling-tooltips">Enabling tooltips</a></li>
+  <li><a href="#the-tooltip-template" id="toc-the-tooltip-template" class="nav-link" data-scroll-target="#the-tooltip-template">The tooltip template</a>
   <ul class="collapse">
-  <li><a href="#type-and-style-two-orthogonal-dimensions" id="toc-type-and-style-two-orthogonal-dimensions" class="nav-link" data-scroll-target="#type-and-style-two-orthogonal-dimensions">Type and style — two orthogonal dimensions</a></li>
-  <li><a href="#the-three-base-types" id="toc-the-three-base-types" class="nav-link" data-scroll-target="#the-three-base-types">The three base types</a></li>
-  <li><a href="#classification-method-tokens" id="toc-classification-method-tokens" class="nav-link" data-scroll-target="#classification-method-tokens">Classification method tokens</a></li>
-  <li><a href="#choosing-by-data-shape" id="toc-choosing-by-data-shape" class="nav-link" data-scroll-target="#choosing-by-data-shape">Choosing by data shape</a></li>
-  <li><a href="#type-modifiers" id="toc-type-modifiers" class="nav-link" data-scroll-target="#type-modifiers">Type modifiers</a></li>
+  <li><a href="#placeholders" id="toc-placeholders" class="nav-link" data-scroll-target="#placeholders">Placeholders</a></li>
+  <li><a href="#extra-fields-in-the-data-table" id="toc-extra-fields-in-the-data-table" class="nav-link" data-scroll-target="#extra-fields-in-the-data-table">Extra fields in the data table</a></li>
+  <li><a href="#combining-chart-and-data" id="toc-combining-chart-and-data" class="nav-link" data-scroll-target="#combining-chart-and-data">Combining chart and data</a></li>
   </ul></li>
+  <li><a href="#styling-the-tooltip" id="toc-styling-the-tooltip" class="nav-link" data-scroll-target="#styling-the-tooltip">Styling the tooltip</a></li>
+  <li><a href="#reacting-to-map-events" id="toc-reacting-to-map-events" class="nav-link" data-scroll-target="#reacting-to-map-events">Reacting to map events</a></li>
+  <li><a href="#runtime-theme-changes" id="toc-runtime-theme-changes" class="nav-link" data-scroll-target="#runtime-theme-changes">Runtime theme changes</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/gjrichter/ixmaps-flat/issues/new" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./api_documentation.html">Reference</a></li><li class="breadcrumb-item"><a href="./map_types.html">Visualization Types &amp; Modifiers</a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./map_setup.html">Guides</a></li><li class="breadcrumb-item"><a href="./tooltips_interaction.html">Tooltips &amp; Interaction</a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title">Visualization Types &amp; Modifiers</h1>
+<h1 class="title">Tooltips &amp; Interaction</h1>
 </div>
 
 <div>
   <div class="description">
-    Reference for the iXMaps .type() string: the three base types, the decision tree by data shape, and the complete modifier vocabulary.
+    Enable and template iXMaps tooltips with Mustache placeholders, style them, and react to user input with map events and runtime theme changes.
   </div>
 </div>
 
@@ -357,574 +359,149 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<p>Reference for the <code>.type()</code> string of an iXMaps layer: the base types, how to choose one by data shape, and the complete modifier vocabulary.</p>
-<p>For the map context and basemaps see <a href="./map_setup.html">Map Setup</a>; for color schemes and classification see <a href="./colors_classification.html">Colors &amp; Classification</a>; for symbol sizing see <a href="./chart_scaling.html">Sizing &amp; Scaling</a>.</p>
+<p>Interactivity in iXMaps has three layers: <strong>tooltips</strong> shown on hover, <strong>events</strong> your code can subscribe to, and <strong>runtime changes</strong> to live themes. This guide collects all three.</p>
 <hr>
-<section id="visualization-types" class="level2">
-<h2 class="anchored" data-anchor-id="visualization-types">Visualization types</h2>
-<section id="type-and-style-two-orthogonal-dimensions" class="level3">
-<h3 class="anchored" data-anchor-id="type-and-style-two-orthogonal-dimensions">Type and style — two orthogonal dimensions</h3>
-<p>Every iXMaps layer is described by two independent specifications:</p>
+<section id="enabling-tooltips" class="level2">
+<h2 class="anchored" data-anchor-id="enabling-tooltips">Enabling tooltips</h2>
+<p>Tooltips require <code>mode: "info"</code> in the map constructor. This is a <strong>constructor-time decision</strong> — it cannot be switched on after initialization:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> myMap <span class="op">=</span> ixmaps<span class="op">.</span><span class="fu">Map</span>(<span class="st">"map"</span><span class="op">,</span> {</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    <span class="dt">mapType</span><span class="op">:</span> <span class="st">"VT_TONER_LITE"</span><span class="op">,</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">mode</span><span class="op">:</span>    <span class="st">"info"</span>          <span class="co">// ← required for hover tooltips</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>})<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>With <code>mode: "pan"</code> (the default) the map only pans and zooms; features do not respond to hover.</p>
+<hr>
+</section>
+<section id="the-tooltip-template" class="level2">
+<h2 class="anchored" data-anchor-id="the-tooltip-template">The tooltip template</h2>
+<p>The tooltip content is a <strong>Mustache template</strong> set per layer in <code>.meta()</code>:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">meta</span>({ <span class="dt">tooltip</span><span class="op">:</span> <span class="st">"&lt;b&gt;{{name}}&lt;/b&gt;&lt;br&gt;Population: {{pop}}"</span> })</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Any data field of the layer can be used as a placeholder. HTML is allowed.</p>
+<section id="placeholders" class="level3">
+<h3 class="anchored" data-anchor-id="placeholders">Placeholders</h3>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Syntax</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>{{fieldname}}</code></td>
+<td>iXMaps-formatted value (numbers get thousand separators)</td>
+</tr>
+<tr class="even">
+<td><code>{{raw.fieldname}}</code></td>
+<td>Raw unformatted value — bypasses all iXMaps formatting</td>
+</tr>
+<tr class="odd">
+<td><code>{{theme.item.chart}}</code></td>
+<td>Built-in chart SVG for this item</td>
+</tr>
+<tr class="even">
+<td><code>{{theme.item.data}}</code></td>
+<td>Built-in data table for this item</td>
+</tr>
+</tbody>
+</table>
+<div class="callout callout-style-simple callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Warning</span>Two pitfalls
+</div>
+</div>
+<div class="callout-body-container callout-body">
 <ul>
-<li><p><strong><code>.type()</code></strong> — determines the <em>form and method</em> of the visualization: what geometric shape is used, how values are mapped to that shape, and which algorithm classifies or aggregates the data. Examples: bubbles sized by value, choropleth filled by class, flow lines between origin and destination.</p></li>
-<li><p><strong><code>.style()</code></strong> — defines <em>appearance and numeric parameters</em>: colors, opacities, size references, power curves, label formatting, scale-dependent visibility. Style is purely about how the chosen form looks and how its quantities are tuned.</p></li>
+<li><strong><code>{{theme.item.data}}</code> requires <code>showdata: "true"</code></strong> in <code>.style()</code> — without it the data table renders empty (the layer itself still draws).</li>
+<li><strong>Field names are case-sensitive</strong>, and GeoJSON properties are addressed directly: <code>{NAME}</code>, not <code>{properties.NAME}</code>.</li>
 </ul>
-<p>Because the two are largely independent, <strong>swapping the chart type while keeping the style</strong> is often all it takes to explore a completely different representation of the same data. The sizing (<code>normalsizevalue</code>, <code>scale</code>, <code>sizepow</code>) and color (<code>colorscheme</code>, <code>fillopacity</code>) settings carry over unchanged, so the visual density and palette stay consistent across type changes.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Start with sized bubbles:</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">type</span>(<span class="st">"CHART|BUBBLE|SIZE|VALUES"</span>)</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">style</span>({ <span class="dt">colorscheme</span><span class="op">:</span> [<span class="st">"#0066cc"</span>]<span class="op">,</span> <span class="dt">normalsizevalue</span><span class="op">:</span> <span class="st">"500000"</span><span class="op">,</span> <span class="dt">scale</span><span class="op">:</span> <span class="dv">1</span><span class="op">,</span> <span class="dt">showdata</span><span class="op">:</span> <span class="st">"true"</span> })</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co">// Switch to a dot map — style unchanged:</span></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">type</span>(<span class="st">"CHART|DOT"</span>)</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">style</span>({ <span class="dt">colorscheme</span><span class="op">:</span> [<span class="st">"#0066cc"</span>]<span class="op">,</span> <span class="dt">normalsizevalue</span><span class="op">:</span> <span class="st">"500000"</span><span class="op">,</span> <span class="dt">scale</span><span class="op">:</span> <span class="dv">1</span><span class="op">,</span> <span class="dt">showdata</span><span class="op">:</span> <span class="st">"true"</span> })</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="co">// Or to a density grid — style unchanged:</span></span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">type</span>(<span class="st">"CHART|BUBBLE|SIZE|AGGREGATE"</span>)</span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">style</span>({ <span class="dt">colorscheme</span><span class="op">:</span> [<span class="st">"#0066cc"</span>]<span class="op">,</span> <span class="dt">normalsizevalue</span><span class="op">:</span> <span class="st">"500000"</span><span class="op">,</span> <span class="dt">scale</span><span class="op">:</span> <span class="dv">1</span><span class="op">,</span> <span class="dt">showdata</span><span class="op">:</span> <span class="st">"true"</span><span class="op">,</span></span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>         <span class="dt">gridwidth</span><span class="op">:</span> <span class="st">"8px"</span> })</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>The type string is a pipe-separated list of tokens — a base type followed by optional modifiers:</p>
-<pre><code>CHART | BUBBLE | SIZE | CATEGORICAL | GLOW | VALUES | NOLEGEND
-  ↑        ↑      ↑         ↑          ↑       ↑         ↑
-base   shape  sizing  coloring  effect  labels  visibility</code></pre>
+</div>
+</div>
+<div class="callout callout-style-simple callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Identifiers: use <code>raw.</code>
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Numeric identifiers (postal codes, ISTAT codes, IDs) get thousand-separator formatting like any number — <code>28001</code> renders as <code>28.001</code>. Use <code>{{raw.fieldname}}</code> for identifier fields.</p>
+</div>
+</div>
+</section>
+<section id="extra-fields-in-the-data-table" class="level3">
+<h3 class="anchored" data-anchor-id="extra-fields-in-the-data-table">Extra fields in the data table</h3>
+<p><code>{{theme.item.data}}</code> shows the layer’s bound fields. To include additional columns, list them in <code>datafields</code>:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">style</span>({ <span class="dt">showdata</span><span class="op">:</span> <span class="st">"true"</span><span class="op">,</span> <span class="dt">datafields</span><span class="op">:</span> [<span class="st">"region"</span><span class="op">,</span> <span class="st">"year"</span><span class="op">,</span> <span class="st">"source"</span>] })</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="combining-chart-and-data" class="level3">
+<h3 class="anchored" data-anchor-id="combining-chart-and-data">Combining chart and data</h3>
+<p>A common pattern for rich tooltips — the item’s chart plus its data table:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">meta</span>({ <span class="dt">tooltip</span><span class="op">:</span> <span class="st">"{{theme.item.chart}}{{theme.item.data}}"</span> })</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <hr>
 </section>
-<section id="the-three-base-types" class="level3">
-<h3 class="anchored" data-anchor-id="the-three-base-types">The three base types</h3>
-<p>Every iXMaps layer starts with one of three base types. Everything else — classification method, chart shape, visual modifiers — is appended to one of these roots.</p>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 45%">
-<col style="width: 54%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Base type</th>
-<th>What it does</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><code>FEATURE</code></td>
-<td>Renders geometry as-is: polygon fills, boundary lines, point markers. No data value required — used for base layers that provide geographic context.</td>
-</tr>
-<tr class="even">
-<td><code>CHOROPLETH</code></td>
-<td>Colours polygon fills by data value. Requires geometry already loaded (same layer name as a <code>FEATURE</code> base). A <strong>value field</strong> is mapped through a colour scheme via a classification method.</td>
-</tr>
-<tr class="odd">
-<td><code>CHART</code></td>
-<td>Creates new SVG objects (bubbles, bars, pies, flow lines, …) positioned by lat/lon coordinates or geometry centroids. A <strong>value field</strong> drives size, colour, or both.</td>
-</tr>
-</tbody>
-</table>
-<p><code>FEATURE</code> is a structural layer — it gives the map geography. <code>CHOROPLETH</code> and <code>CHART</code> are data layers — they need a value field and a classification or sizing method to translate numbers into visual marks.</p>
-<hr>
 </section>
-<section id="classification-method-tokens" class="level3">
-<h3 class="anchored" data-anchor-id="classification-method-tokens">Classification method tokens</h3>
-<p><code>CHOROPLETH</code> and <code>CHART</code> need one classification token that says how values are grouped into colour classes:</p>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 25%">
-<col style="width: 75%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Token</th>
-<th>Classes are built by</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><code>EQUIDISTANT</code></td>
-<td>Equal-width intervals</td>
-</tr>
-<tr class="even">
-<td><code>QUANTILE</code></td>
-<td>Equal feature count per class</td>
-</tr>
-<tr class="odd">
-<td><code>HEADTAIL</code></td>
-<td>Iterative mean split (heavy-tailed data)</td>
-</tr>
-<tr class="even">
-<td><code>NATURAL</code></td>
-<td>Jenks natural breaks</td>
-</tr>
-<tr class="odd">
-<td><code>LOG</code></td>
-<td>Logarithmic intervals</td>
-</tr>
-<tr class="even">
-<td><code>CATEGORICAL</code></td>
-<td>Discrete categories — requires the <code>values</code> style array (strings!)</td>
-</tr>
-</tbody>
-</table>
-<p>How classes map to colours, explicit <code>ranges</code>, diverging scales and data-driven palettes: see <a href="./colors_classification.html">Colors &amp; Classification</a>.</p>
-<hr>
-</section>
-<section id="choosing-by-data-shape" class="level3">
-<h3 class="anchored" data-anchor-id="choosing-by-data-shape">Choosing by data shape</h3>
-<pre><code>Is your data...
-│
-├─ Points (lat / lon)?
-│  ├─ Just locations?                     → CHART|DOT
-│  ├─ Coloured by category?               → CHART|BUBBLE|CATEGORICAL
-│  ├─ Sized by value?                     → CHART|BUBBLE|SIZE|VALUES
-│  ├─ Density grid (circles)?             → CHART|BUBBLE|SIZE|AGGREGATE  + gridwidth:"5px"
-│  ├─ Density grid (squares)?             → CHART|SYMBOL|GRIDSIZE|AGGREGATE|RECT|SUM|DOPACITY|VALUES
-│  ├─ Sparklines per grid cell?           → CHART|SYMBOL|PLOT|LINES
-│  ├─ Flows origin→destination?           → CHART|VECTOR|BEZIER|POINTER
-│  └─ Stacked / grouped bars?             → CHART|BAR|STACKED
-│
-└─ Polygons (GeoJSON / TopoJSON)?
-   ├─ Boundaries only?                    → FEATURE
-   ├─ Colour by data (inline)?            → FEATURE|CHOROPLETH|QUANTILE
-   └─ Join external data to geometry?     → CHOROPLETH|QUANTILE  (NEVER add FEATURE)</code></pre>
-</section>
-<section id="type-modifiers" class="level3">
-<h3 class="anchored" data-anchor-id="type-modifiers">Type modifiers</h3>
-<p><strong>Visual effect modifiers:</strong></p>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 55%">
-<col style="width: 44%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Modifier</th>
-<th>Effect</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><code>GLOW</code></td>
-<td>Glow halo around symbols</td>
-</tr>
-<tr class="even">
-<td><code>VALUES</code></td>
-<td>Render value labels inside / near symbols</td>
-</tr>
-<tr class="odd">
-<td><code>VALUESBACKGROUND</code></td>
-<td>Coloured background box behind value text</td>
-</tr>
-<tr class="even">
-<td><code>TEXTONLY</code></td>
-<td>Labels only, no symbol</td>
-</tr>
-<tr class="odd">
-<td><code>TEXTLEGEND</code></td>
-<td>Category labels on symbols instead of legend box</td>
-</tr>
-<tr class="even">
-<td><code>GRADIENT</code></td>
-<td>Gradient colour along flow lines (use <code>linecolor: ["#from","#to"]</code>)</td>
-</tr>
-<tr class="odd">
-<td><code>DASH</code></td>
-<td>Animated flowing dashes on flow lines</td>
-</tr>
-<tr class="even">
-<td><code>NOSCALE</code></td>
-<td>Disable dynamic zoom scaling</td>
-</tr>
-<tr class="odd">
-<td><code>CLIPTOGEOBOUNDS</code></td>
-<td>Clip chart rendering to polygon boundary</td>
-</tr>
-<tr class="even">
-<td><code>3D</code></td>
-<td>3D rendering for <code>BAR</code>, <code>PIE</code>, <code>DONUT</code></td>
-</tr>
-<tr class="odd">
-<td><code>BOX</code></td>
-<td>Background box behind each chart; customise with <code>boxopacity</code>, <code>boxmargin</code>, <code>bordercolor</code></td>
-</tr>
-<tr class="even">
-<td><code>MOVABLE</code></td>
-<td>Charts become draggable on the map</td>
-</tr>
-</tbody>
-</table>
+<section id="styling-the-tooltip" class="level2">
+<h2 class="anchored" data-anchor-id="styling-the-tooltip">Styling the tooltip</h2>
+<p>The tooltip is a regular HTML element with id <code>tooltip</code> — style it with CSS. On dark basemaps the default text color can be invisible:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode css code-with-copy"><code class="sourceCode css"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="pp">#tooltip</span>   { <span class="kw">color</span><span class="ch">:</span> <span class="cn">#e8eaf6</span> <span class="at">!important</span><span class="op">;</span> }</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="pp">#tooltip</span> <span class="op">*</span> { <span class="kw">color</span><span class="ch">:</span> <span class="cn">#e8eaf6</span> <span class="at">!important</span><span class="op">;</span> }</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="callout callout-style-simple callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Note</span>Scale-bounding <code>CLIPTOGEOBOUNDS</code>
+<span class="screen-reader-only">Note</span>Reserved element ids
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>When a layer uses <code>CLIPTOGEOBOUNDS</code>, the optional <code>clipupper</code> / <code>cliplower</code> style properties restrict the geo-bounds clipping to a map-scale range — same <code>"1:scale"</code> syntax as <code>chartupper</code> / <code>chartlower</code>. They are read only when <code>CLIPTOGEOBOUNDS</code> is present in the type string; on a layer without it they have no effect.</p>
+<p>iXMaps owns the element ids <code>tooltip</code>, <code>loading-div</code> and <code>contextmenu</code>. Never use them for your own page elements — see <a href="./troubleshooting.html#map-not-displaying">Troubleshooting</a>.</p>
 </div>
 </div>
-<p><strong>Filtering / visibility modifiers:</strong></p>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 55%">
-<col style="width: 44%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Modifier</th>
-<th>Effect</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><code>SILENT</code></td>
-<td>Excludes from legend AND suppresses tooltips</td>
-</tr>
-<tr class="even">
-<td><code>NOLEGEND</code></td>
-<td>Excludes from legend only (tooltips still work)</td>
-</tr>
-<tr class="odd">
-<td><code>ZEROISNOTVALUE</code></td>
-<td>Suppress rendering where value ≤ 0</td>
-</tr>
-<tr class="even">
-<td><code>NEGATIVEISVALUE</code></td>
-<td>Allow and render negative values</td>
-</tr>
-<tr class="odd">
-<td><code>ZEROISVALUE</code></td>
-<td>Treat zero as a valid value (opposite of <code>ZEROISNOTVALUE</code>)</td>
-</tr>
-<tr class="even">
-<td><code>NOOUTLIER</code></td>
-<td>Remove extreme outliers from classification</td>
-</tr>
-<tr class="odd">
-<td><code>NONEGATIVE</code></td>
-<td>Suppress rendering where computed value ≤ 0 (used with <code>DIFFERENCE</code>)</td>
-</tr>
-</tbody>
-</table>
-<p><strong>Value computation modifiers</strong> (derive a single value from two piped fields <code>"a|b"</code>):</p>
-<table class="caption-top table">
-<thead>
-<tr class="header">
-<th>Modifier</th>
-<th>Formula</th>
-<th>Use case</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><code>DIFFERENCE</code></td>
-<td><code>b − a</code></td>
-<td>Change, net gain/loss</td>
-</tr>
-<tr class="even">
-<td><code>FRACTION</code></td>
-<td><code>a / b</code></td>
-<td>Share, ratio</td>
-</tr>
-<tr class="odd">
-<td><code>PERCENT</code></td>
-<td><code>a / b × 100</code></td>
-<td>Percentage</td>
-</tr>
-<tr class="even">
-<td><code>PERMILLE</code></td>
-<td><code>a / b × 1000</code></td>
-<td>Per-mille rate</td>
-</tr>
-<tr class="odd">
-<td><code>RELATIVE</code></td>
-<td><code>a / b × 100 − 100</code></td>
-<td>Relative change vs.&nbsp;base</td>
-</tr>
-<tr class="even">
-<td><code>INVERT</code></td>
-<td><code>100 − a / b × 100</code></td>
-<td>Inverse share</td>
-</tr>
-<tr class="odd">
-<td><code>PRODUCT</code></td>
-<td><code>a × b</code></td>
-<td>Combined value</td>
-</tr>
-</tbody>
-</table>
-<p>Bind two fields with <code>|</code>: <code>.binding({ value: "field_a|field_b" })</code>. The modifier determines how the pair is collapsed to one value for colour/size mapping.</p>
-<p><strong>Multi-field coloring modifiers</strong> (for multiple piped fields):</p>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 55%">
-<col style="width: 44%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Modifier</th>
-<th>Effect</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><code>DOMINANT</code></td>
-<td>Colour by the field with the highest value</td>
-</tr>
-<tr class="even">
-<td><code>PERCENTOFMEAN</code></td>
-<td>Colour by the field whose value deviates most from the mean</td>
-</tr>
-<tr class="odd">
-<td><code>DEVIATION</code></td>
-<td>Colour by the field with the highest standard-deviation deviation</td>
-</tr>
-<tr class="even">
-<td><code>OFFSETMEAN</code></td>
-<td>Show deviation of all fields as +/− pointers (use with <code>CHART|BAR|POINTER</code>)</td>
-</tr>
-</tbody>
-</table>
-<p><strong>Dynamic opacity modifiers:</strong></p>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 55%">
-<col style="width: 44%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Modifier</th>
-<th>Effect</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><code>DOPACITY</code></td>
-<td>Opacity proportional to value — lower values become transparent</td>
-</tr>
-<tr class="even">
-<td><code>DOPACITYMIN</code></td>
-<td>Opacity emphasises minimum values — higher values become transparent</td>
-</tr>
-<tr class="odd">
-<td><code>DOPACITYMAX</code></td>
-<td>Opacity emphasises maximum values — tunable with <code>dopacitypow</code> / <code>dopacityscale</code></td>
-</tr>
-<tr class="even">
-<td><code>DOPACITYMINMAX</code></td>
-<td>Opacity emphasises both extremes — average values become transparent</td>
-</tr>
-<tr class="odd">
-<td><code>BIPOLAR</code></td>
-<td>Alias for <code>DOPACITYMINMAX</code></td>
-</tr>
-<tr class="even">
-<td><code>DOPACITYLOG</code></td>
-<td>Like <code>DOPACITYMAX</code> but uses the logarithm of the value</td>
-</tr>
-<tr class="odd">
-<td><code>DOPACITYMEAN</code></td>
-<td>Dynamic opacity for use with <code>DOMINANT</code> / <code>PERCENTOFMEAN</code></td>
-</tr>
-</tbody>
-</table>
-<p><strong>Chart composition modifiers:</strong></p>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 55%">
-<col style="width: 44%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Modifier</th>
-<th>Effect</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><code>SEQUENCE</code></td>
-<td>Composite chart: one symbol per piped field, arranged in sequence</td>
-</tr>
-<tr class="even">
-<td><code>STAR</code></td>
-<td>Like <code>SEQUENCE</code> but arranged in a star / sunburst around the centre</td>
-</tr>
-<tr class="odd">
-<td><code>STARBURST</code></td>
-<td><code>PIE</code> / <code>DONUT</code> modifier — radius varies by value</td>
-</tr>
-<tr class="even">
-<td><code>SIZE</code></td>
-<td>2D: surface area represents value; with <code>PIE</code>/<code>DONUT</code>: radius represents value</td>
-</tr>
-<tr class="odd">
-<td><code>HEIGHT</code></td>
-<td>With <code>PIE</code> / <code>DONUT</code>: height represents value</td>
-</tr>
-<tr class="even">
-<td><code>WIDTH</code></td>
-<td>With <code>PIE</code> / <code>DONUT</code>: like <code>SIZE</code>; with <code>POINTER</code>: makes width dynamic</td>
-</tr>
-<tr class="odd">
-<td><code>VOLUME</code></td>
-<td>3D: volume represents value</td>
-</tr>
-<tr class="even">
-<td><code>HORZ</code></td>
-<td>Arrange <code>BAR</code> / <code>SEQUENCE</code> charts horizontally instead of vertically</td>
-</tr>
-<tr class="odd">
-<td><code>MULTIPLE</code></td>
-<td>Offset repeated positions so overlapping points are all visible</td>
-</tr>
-<tr class="even">
-<td><code>DIFFUSE</code></td>
-<td>Like <code>AGGREGATE</code> but distributes each value to the 4 nearest grid points</td>
-</tr>
-</tbody>
-</table>
-<p>Sizing tokens (<code>LINEAR</code>, <code>SIZEP1</code>…<code>SIZEP10</code>, <code>SIZELOG</code>) set the <code>sizepow</code> dimension — see <a href="./chart_scaling.html#sizepow-which-symbol-dimension-carries-the-value">Sizing &amp; Scaling</a>.</p>
-<p><strong>Plot / sparkline modifiers</strong> (for <code>CHART|SYMBOL|PLOT|LINES</code>):</p>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 55%">
-<col style="width: 44%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Modifier</th>
-<th>Effect</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><code>AREA</code></td>
-<td>Fill the area under the plot curve</td>
-</tr>
-<tr class="even">
-<td><code>LASTARROW</code></td>
-<td>Arrowhead on the last plot segment — size via <code>markersize</code></td>
-</tr>
-<tr class="odd">
-<td><code>NOCLIP</code></td>
-<td>Don’t clip the plot to its grid cell</td>
-</tr>
-<tr class="even">
-<td><code>GRIDSIZE</code></td>
-<td>Derive chart size from the grid cell size (<code>gridwidth</code>)</td>
-</tr>
-<tr class="odd">
-<td><code>FIXSIZE</code></td>
-<td>Uniform chart size, independent of the data value</td>
-</tr>
-<tr class="even">
-<td><code>FADEIN</code></td>
-<td>Fade the plot line in from transparent to opaque</td>
-</tr>
-</tbody>
-</table>
-<p><strong>Chart positioning modifiers:</strong></p>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 55%">
-<col style="width: 44%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Modifier</th>
-<th>Effect</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><code>CENTER</code></td>
-<td>Chart centred on its anchor point (default)</td>
-</tr>
-<tr class="even">
-<td><code>LEFT</code> / <code>RIGHT</code></td>
-<td>Align chart to the left or right of the anchor</td>
-</tr>
-<tr class="odd">
-<td><code>TOP</code> / <code>BOTTOM</code></td>
-<td>Align chart above or below the anchor</td>
-</tr>
-<tr class="even">
-<td><code>ABOVE</code> / <code>BELOW</code></td>
-<td>Aliases for <code>TOP</code> / <code>BOTTOM</code></td>
-</tr>
-<tr class="odd">
-<td><code>RELOCATE</code></td>
-<td>Snap chart to geometry centroid</td>
-</tr>
-<tr class="even">
-<td><code>SORT</code></td>
-<td>Sort chart parts by value descending</td>
-</tr>
-<tr class="odd">
-<td><code>UP</code></td>
-<td>Sort ascending (smallest on top)</td>
-</tr>
-<tr class="even">
-<td><code>DOWN</code></td>
-<td>Sort descending (largest on top)</td>
-</tr>
-<tr class="odd">
-<td><code>RANDOM</code></td>
-<td>Random sort — useful with <code>STAR</code> to avoid pattern formation</td>
-</tr>
-</tbody>
-</table>
-<p><strong>Aggregation modifiers</strong> (replace cell value with aggregate):</p>
-<table class="caption-top table">
-<thead>
-<tr class="header">
-<th>Modifier</th>
-<th>Computes</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><code>SUM</code></td>
-<td>Sum of all values in cell</td>
-</tr>
-<tr class="even">
-<td><code>COUNT</code></td>
-<td>Count of rows in cell</td>
-</tr>
-<tr class="odd">
-<td><code>MEAN</code></td>
-<td>Arithmetic mean</td>
-</tr>
-<tr class="even">
-<td><code>MIN</code></td>
-<td>Minimum</td>
-</tr>
-<tr class="odd">
-<td><code>MAX</code></td>
-<td>Maximum</td>
-</tr>
-</tbody>
-</table>
-<p><strong>Special geometry modifiers:</strong></p>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 55%">
-<col style="width: 44%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Modifier</th>
-<th>Effect</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><code>BUFFER</code></td>
-<td>Draw buffer zones of <code>buffersize</code> metres around point, line, or polygon features</td>
-</tr>
-</tbody>
-</table>
-
-
+<hr>
 </section>
+<section id="reacting-to-map-events" class="level2">
+<h2 class="anchored" data-anchor-id="reacting-to-map-events">Reacting to map events</h2>
+<p>Subscribe with <code>.on()</code> — on the map builder or on the live API. Item events identify the feature under the pointer:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>myMap</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">on</span>(<span class="st">"mouseover"</span><span class="op">,</span> e <span class="kw">=&gt;</span> <span class="fu">highlight</span>(e<span class="op">.</span><span class="at">id</span>))     <span class="co">// e.theme = layer, e.id = item key</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">on</span>(<span class="st">"mouseout"</span><span class="op">,</span>  () <span class="kw">=&gt;</span> <span class="fu">clearHighlight</span>())</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">on</span>(<span class="st">"click"</span><span class="op">,</span>     e <span class="kw">=&gt;</span> <span class="fu">showDetail</span>(e<span class="op">.</span><span class="at">id</span>))</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">on</span>(<span class="st">"zoomend moveend"</span><span class="op">,</span> () <span class="kw">=&gt;</span> <span class="fu">updateStats</span>())<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>The item-event payload is <code>{ type, szId, id, theme, szMap }</code> — <code>theme</code> and <code>id</code> are the two halves of the compound SVG id <code>"themeId::itemKey"</code>, and <code>id</code> is what you use to look up the data record. Clicks on the map background are filtered out.</p>
+<p>For the complete event list (view, item, lifecycle and layer events, payloads, aliases, and <code>.off()</code>), see the <a href="./api_documentation.html#onevents-handler">API Reference</a>.</p>
+<hr>
+</section>
+<section id="runtime-theme-changes" class="level2">
+<h2 class="anchored" data-anchor-id="runtime-theme-changes">Runtime theme changes</h2>
+<p>React to user input by changing live themes through <code>myMap.then()</code>. All of these require a <code>name</code> in the layer’s <code>.meta()</code>:</p>
+<p><strong>Filter a theme:</strong></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>myMap<span class="op">.</span><span class="fu">then</span>(api <span class="kw">=&gt;</span> {</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    api<span class="op">.</span><span class="fu">changeThemeStyle</span>(<span class="st">"cities"</span><span class="op">,</span> <span class="st">'filter:WHERE pop &gt; 500000'</span><span class="op">,</span> <span class="st">"set"</span>)<span class="op">;</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    <span class="co">// and back:</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    api<span class="op">.</span><span class="fu">changeThemeStyle</span>(<span class="st">"cities"</span><span class="op">,</span> <span class="st">"filter"</span><span class="op">,</span> <span class="st">"remove"</span>)<span class="op">;</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>})<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>Toggle a layer with a checkbox:</strong></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>myMap<span class="op">.</span><span class="fu">layer</span>(<span class="st">"overlay"</span>)</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">style</span>({ <span class="co">/* ... */</span><span class="op">,</span> <span class="dt">visible</span><span class="op">:</span> <span class="kw">false</span> })   <span class="co">// starts hidden</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">meta</span>({ <span class="dt">name</span><span class="op">:</span> <span class="st">"overlay"</span> })</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">define</span>()<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode html code-with-copy"><code class="sourceCode html"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">input</span><span class="ot"> type</span><span class="op">=</span><span class="st">"checkbox"</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="ot">       onchange</span><span class="op">=</span><span class="st">"this.checked ? ixmaps.showTheme('overlay') : ixmaps.hideTheme('overlay')"</span><span class="dt">&gt;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>Swap the visualization</strong> (remove-then-define) — see <a href="./examples.html#swappable-themes-remove-then-define">Examples § Swappable themes</a> for the full pattern.</p>
+<p>For <code>changeThemeStyle</code> modes (<code>set</code>, <code>remove</code>, <code>factor</code>, <code>set|silent</code>) and the rest of the runtime API, see the <a href="./api_documentation.html#runtime-api">API Reference</a>.</p>
+
+
 </section>
 
 </main> <!-- /main -->
@@ -1330,13 +907,13 @@ base   shape  sizing  coloring  effect  labels  visibility</code></pre>
   </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./api_documentation.html" class="pagination-link" aria-label="API Reference">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">API Reference</span>
+      <a href="./colors_classification.html" class="pagination-link" aria-label="Colors &amp; Classification">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Colors &amp; Classification</span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./theme_styles.html" class="pagination-link" aria-label="Style Properties">
-        <span class="nav-page-text">Style Properties</span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./data_preprocessing.html" class="pagination-link" aria-label="Data Preprocessing">
+        <span class="nav-page-text">Data Preprocessing</span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

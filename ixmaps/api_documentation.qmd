@@ -33,7 +33,7 @@ const myMap = ixmaps.Map("map", {
 
 | Option | Type | Default | Description |
 |--------|------|---------|-------------|
-| `mapType` | string | `"VT_TONER_LITE"` | Basemap style — see [Map Types](map_types.qmd) |
+| `mapType` | string | `"VT_TONER_LITE"` | Basemap style — see [Map Setup](map_setup.qmd#basemap-types) |
 | `mapProjection` | string | *(web Mercator)* | Projection — `"lambert"`, `"equalearth"`, `"orthographic"`, etc. |
 | `mode` | string | `"pan"` | `"info"` enables tooltips on hover; `"pan"` pan/zoom only |
 | `legend` | string | `"closed"` | `"open"` or `"closed"` initial legend panel state |
@@ -94,7 +94,7 @@ Configure rendering and behaviour.
 
 ### `.on(events, handler)`
 
-Subscribe to map events. Multiple space-separated event names are accepted.
+Subscribe to map events. Multiple space-separated event names are accepted; names are case-insensitive.
 
 ```javascript
 myMap
@@ -106,15 +106,20 @@ myMap
     .on("zoomend moveend", () => updateStats());
 ```
 
-**View events:**
+**View events** — handler receives `{ nZoom, zoomChanged, panChanged, frozenDynamic, szMap }`:
 
 | Event | Fires when |
 |-------|-----------|
 | `zoomend` | Zoom changed |
-| `moveend` | Map panned |
-| `viewchange` / `zoompan` | Any zoom or pan |
+| `moveend` | Map panned **without** a zoom change |
+| `viewchange` / `zoompan` | Any zoom or pan (fires on every engine notification) |
 
-**Item (feature) events:** handler receives `{ szId, id, theme, szMap }` where `id` = item key.
+:::{.callout-note}
+## Zoom wins over pan
+A combined zoom-and-pan fires only `zoomend`, never `moveend` too. Subscribe to `"zoomend moveend"` (or `viewchange`) to catch every view change.
+:::
+
+**Item (feature) events** — handler receives `{ type, szId, id, theme, szMap }`:
 
 | Event | Fires when |
 |-------|-----------|
@@ -122,14 +127,46 @@ myMap
 | `mouseout` / `itemout` | Pointer leaves a feature |
 | `click` / `itemclick` | Feature clicked |
 
-**Lifecycle events:**
+| Payload key | Content |
+|-------------|---------|
+| `szId` | Full compound SVG id: `"themeId::itemKey"` |
+| `theme` | Theme/layer name — the part **before** `::` |
+| `id` | Item key — the part **after** `::` (use this to look up the data record) |
+
+Clicks on the map background are filtered out — item handlers only fire on real features.
+
+**Lifecycle events** — handler receives `{ type, szMap }`:
 
 | Event | Fires when |
 |-------|-----------|
 | `ready` / `mapready` | SVG engine fully loaded |
+| `resize` | Map container was resized |
+
+**Layer events** — handler receives `{ type, id, szMap }` where `id` = theme/layer id:
+
+| Event | Fires when |
+|-------|-----------|
 | `layerdraw` / `drawtheme` | A layer finishes drawing |
 | `layeradd` / `newtheme` | A layer is created |
 | `layerremove` / `removetheme` | A layer is removed |
+
+:::{.callout-note}
+## Multiple maps on one page
+View-event listeners registered on a named map instance only receive events from that map (`szMap` is matched). Errors thrown inside your handlers are caught and silently ignored — they never break the map engine.
+:::
+
+### `.off(events, handler)`
+
+Remove handlers previously registered with `.on()`. Same event names and aliases; the handler reference must be the **same function object** that was registered:
+
+```javascript
+const onZoom = e => updateStats(e.nZoom);
+myMap.then(api => {
+    api.on("zoomend", onZoom);
+    // later:
+    api.off("zoomend", onZoom);
+});
+```
 
 ---
 
@@ -265,7 +302,7 @@ Use **double quotes** for string values — single quotes are not string delimit
 
 ### `.type(vizType)` — visualization type
 
-The type string is composed by piping modifiers with `|`. See [Map Types, Sizing & Colors](map_types.qmd) for the full reference.
+The type string is composed by piping modifiers with `|`. See [Visualization Types & Modifiers](map_types.qmd) for the full reference.
 
 **Quick reference:**
 
@@ -421,34 +458,9 @@ myMap.then(function(m) {
 
 ## Projections
 
-All projections use SVG-based rendering. Omit `mapProjection` for the default Web Mercator / Leaflet tile setup.
+Set `mapProjection` in the constructor (`"mercator"`, `"lambert"`, `"equalearth"`, `"winkel"`, `"albers"`, `"orthographic"`); omit it for the default Web Mercator / Leaflet tile setup. For projection maps, use the array form `.view([lat, lng], zoom)` and set `mapType` to a background color (`"#0a1929"`, `"white"`, `"dark"`) — do not use CSS `background` on `#map`.
 
-| `mapProjection` | Alias | Projection |
-|---|---|---|
-| *(omit)* | — | Web Mercator (Leaflet tiles) |
-| `"mercator"` | — | Mercator (SVG, no tiles) |
-| `"winkel"` | — | Winkel Tripel |
-| `"equalearth"` | — | Equal Earth |
-| `"albersequalarea"` | `"albers"` | Albers Equal-Area Conic |
-| `"lambertazimuthalequalarea"` | `"lambert"` | Lambert Azimuthal Equal-Area (EPSG:3035) |
-| `"orthographic"` | — | Orthographic (globe) |
-
-- Lookup is **case-insensitive**
-- For any projection: `.view()` **must** use array syntax `.view([lat, lng], zoom)`
-- Set `mapType` to a hex color (`"#0a1929"`, `"white"`, `"dark"`) as background — do not use CSS `background` on `#map`
-
-**Lambert (Eurostat-style Europe):**
-```javascript
-const myMap = ixmaps.Map("map", {
-    mapType:       "white",
-    mapProjection: "lambert",
-    mode:          "info",
-    legend:        "closed",
-    tools:         false
-})
-.view([53.4, 16.9], 3.7)
-.options({ basemapopacity: 0, flushChartDraw: 1000000 });
-```
+The full projection table with aliases, per-projection examples and the three map contexts: **[Map Setup](map_setup.qmd#available-projections)**.
 
 ---
 

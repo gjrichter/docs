@@ -6,9 +6,9 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="description" content="How iXMaps sizes chart symbols: the three sizing levers — normalSizeScale, normalsizevalue, scale — plus sizepow power curves and zoom anchoring.">
+<meta name="description" content="How iXMaps sizes chart symbols: sizing principles, the three sizing levers — normalSizeScale, normalsizevalue, scale — plus the sizepow dimension and zoom anchoring.">
 
-<title>Chart Scaling – iXMaps Documentation</title>
+<title>Sizing &amp; Scaling – iXMaps Documentation</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -66,8 +66,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./user_charts.html" rel="next">
-<link href="./theme_styles.html" rel="prev">
+<link href="./colors_classification.html" rel="next">
+<link href="./map_setup.html" rel="prev">
 <link href="./pics/favicon.png" rel="icon" type="image/png">
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
@@ -162,7 +162,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./api_documentation.html">Reference</a></li><li class="breadcrumb-item"><a href="./chart_scaling.html">Chart Scaling</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./map_setup.html">Guides</a></li><li class="breadcrumb-item"><a href="./chart_scaling.html">Sizing &amp; Scaling</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -214,12 +214,60 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
- <span class="menu-text">Reference</span></a>
+ <span class="menu-text">Guides</span></a>
           <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
       <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./map_setup.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Map Setup</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./chart_scaling.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">Sizing &amp; Scaling</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./colors_classification.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Colors &amp; Classification</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./tooltips_interaction.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Tooltips &amp; Interaction</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./data_preprocessing.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Data Preprocessing</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./user_charts.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Custom Charts</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="px-0"><hr class="sidebar-divider hi "></li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
+ <span class="menu-text">Reference</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./api_documentation.html" class="sidebar-item-text sidebar-link">
@@ -229,31 +277,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./map_types.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Map Types, Sizing &amp; Colors</span></a>
+ <span class="menu-text">Visualization Types &amp; Modifiers</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./theme_styles.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Style Properties</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./chart_scaling.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text">Chart Scaling</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./user_charts.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">User Charts</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./data_preprocessing.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Data Preprocessing</span></a>
   </div>
 </li>
       </ul>
@@ -318,14 +348,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./api_documentation.html">Reference</a></li><li class="breadcrumb-item"><a href="./chart_scaling.html">Chart Scaling</a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./map_setup.html">Guides</a></li><li class="breadcrumb-item"><a href="./chart_scaling.html">Sizing &amp; Scaling</a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title">Chart Scaling</h1>
+<h1 class="title">Sizing &amp; Scaling</h1>
 </div>
 
 <div>
   <div class="description">
-    How iXMaps sizes chart symbols: the three sizing levers — normalSizeScale, normalsizevalue, scale — plus sizepow power curves and zoom anchoring.
+    How iXMaps sizes chart symbols: sizing principles, the three sizing levers — normalSizeScale, normalsizevalue, scale — plus the sizepow dimension and zoom anchoring.
   </div>
 </div>
 
@@ -1070,13 +1100,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./theme_styles.html" class="pagination-link" aria-label="Style Properties">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Style Properties</span>
+      <a href="./map_setup.html" class="pagination-link" aria-label="Map Setup">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Map Setup</span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./user_charts.html" class="pagination-link" aria-label="User Charts">
-        <span class="nav-page-text">User Charts</span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./colors_classification.html" class="pagination-link" aria-label="Colors &amp; Classification">
+        <span class="nav-page-text">Colors &amp; Classification</span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

@@ -1,0 +1,137 @@
+---
+title: "Tooltips & Interaction"
+description: "Enable and template iXMaps tooltips with Mustache placeholders, style them, and react to user input with map events and runtime theme changes."
+---
+
+Interactivity in iXMaps has three layers: **tooltips** shown on hover, **events** your code can subscribe to, and **runtime changes** to live themes. This guide collects all three.
+
+---
+
+## Enabling tooltips
+
+Tooltips require `mode: "info"` in the map constructor. This is a **constructor-time decision** — it cannot be switched on after initialization:
+
+```javascript
+const myMap = ixmaps.Map("map", {
+    mapType: "VT_TONER_LITE",
+    mode:    "info"          // ← required for hover tooltips
+});
+```
+
+With `mode: "pan"` (the default) the map only pans and zooms; features do not respond to hover.
+
+---
+
+## The tooltip template
+
+The tooltip content is a **Mustache template** set per layer in `.meta()`:
+
+```javascript
+.meta({ tooltip: "<b>{{name}}</b><br>Population: {{pop}}" })
+```
+
+Any data field of the layer can be used as a placeholder. HTML is allowed.
+
+### Placeholders
+
+| Syntax | Result |
+|--------|--------|
+| `{{{fieldname}}}` | iXMaps-formatted value (numbers get thousand separators) |
+| `{{{raw.fieldname}}}` | Raw unformatted value — bypasses all iXMaps formatting |
+| `{{{theme.item.chart}}}` | Built-in chart SVG for this item |
+| `{{{theme.item.data}}}` | Built-in data table for this item |
+
+:::{.callout-warning}
+## Two pitfalls
+- **`{{{theme.item.data}}}` requires `showdata: "true"`** in `.style()` — without it the data table renders empty (the layer itself still draws).
+- **Field names are case-sensitive**, and GeoJSON properties are addressed directly: `{{NAME}}`, not `{{properties.NAME}}`.
+:::
+
+:::{.callout-tip}
+## Identifiers: use `raw.`
+Numeric identifiers (postal codes, ISTAT codes, IDs) get thousand-separator formatting like any number — `28001` renders as `28.001`. Use `{{{raw.fieldname}}}` for identifier fields.
+:::
+
+### Extra fields in the data table
+
+`{{{theme.item.data}}}` shows the layer's bound fields. To include additional columns, list them in `datafields`:
+
+```javascript
+.style({ showdata: "true", datafields: ["region", "year", "source"] })
+```
+
+### Combining chart and data
+
+A common pattern for rich tooltips — the item's chart plus its data table:
+
+```javascript
+.meta({ tooltip: "{{theme.item.chart}}{{theme.item.data}}" })
+```
+
+---
+
+## Styling the tooltip
+
+The tooltip is a regular HTML element with id `tooltip` — style it with CSS. On dark basemaps the default text color can be invisible:
+
+```css
+#tooltip   { color: #e8eaf6 !important; }
+#tooltip * { color: #e8eaf6 !important; }
+```
+
+:::{.callout-note}
+## Reserved element ids
+iXMaps owns the element ids `tooltip`, `loading-div` and `contextmenu`. Never use them for your own page elements — see [Troubleshooting](troubleshooting.qmd#map-not-displaying).
+:::
+
+---
+
+## Reacting to map events
+
+Subscribe with `.on()` — on the map builder or on the live API. Item events identify the feature under the pointer:
+
+```javascript
+myMap
+    .on("mouseover", e => highlight(e.id))     // e.theme = layer, e.id = item key
+    .on("mouseout",  () => clearHighlight())
+    .on("click",     e => showDetail(e.id))
+    .on("zoomend moveend", () => updateStats());
+```
+
+The item-event payload is `{ type, szId, id, theme, szMap }` — `theme` and `id` are the two halves of the compound SVG id `"themeId::itemKey"`, and `id` is what you use to look up the data record. Clicks on the map background are filtered out.
+
+For the complete event list (view, item, lifecycle and layer events, payloads, aliases, and `.off()`), see the [API Reference](api_documentation.qmd#onevents-handler).
+
+---
+
+## Runtime theme changes
+
+React to user input by changing live themes through `myMap.then()`. All of these require a `name` in the layer's `.meta()`:
+
+**Filter a theme:**
+
+```javascript
+myMap.then(api => {
+    api.changeThemeStyle("cities", 'filter:WHERE pop > 500000', "set");
+    // and back:
+    api.changeThemeStyle("cities", "filter", "remove");
+});
+```
+
+**Toggle a layer with a checkbox:**
+
+```javascript
+myMap.layer("overlay")
+    .style({ /* ... */, visible: false })   // starts hidden
+    .meta({ name: "overlay" })
+    .define();
+```
+
+```html
+<input type="checkbox"
+       onchange="this.checked ? ixmaps.showTheme('overlay') : ixmaps.hideTheme('overlay')">
+```
+
+**Swap the visualization** (remove-then-define) — see [Examples § Swappable themes](examples.qmd#swappable-themes-remove-then-define) for the full pattern.
+
+For `changeThemeStyle` modes (`set`, `remove`, `factor`, `set|silent`) and the rest of the runtime API, see the [API Reference](api_documentation.qmd#runtime-api).

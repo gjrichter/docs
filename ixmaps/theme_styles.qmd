@@ -10,7 +10,7 @@ Complete reference for `.style({...})` properties in iXMaps layer definitions.
 | Property | Type | Description |
 |----------|------|-------------|
 | `showdata` | string | Set `"true"` to expose the feature's data record on click — needed for `{{{theme.item.data}}}` tooltips. Not required for rendering. |
-| `colorscheme` | array / string | Color palette — see [Color Schemes](map_types.qmd#color-schemes) |
+| `colorscheme` | array / string | Color palette — see [Colors & Classification](colors_classification.qmd#color-schemes) |
 | `fillopacity` | number (0–1) | Fill opacity. **Prefer `fillopacity` over `opacity`** |
 | `opacity` | number (0–1) | Overall opacity. Works, but **prefer `fillopacity`** for fill transparency |
 | `linecolor` | string / array | Polygon border color or flow-line color. Single string or `["#from","#to"]` for `VECTOR\|GRADIENT` |
@@ -31,7 +31,7 @@ Complete reference for `.style({...})` properties in iXMaps layer definitions.
 | Property | Type | Description |
 |----------|------|-------------|
 | `normalsizevalue` | string | Data value that maps to "normal" display size. **Higher = smaller bubbles** (most data values fall below it). E.g. `"1000"` → smaller than `"300"` |
-| `sizepow` | number | Symbol dimension carrying the value: `1` = width, `2` = area (default), `3` = volume. Higher = compressed contrast — see [Chart Scaling](chart_scaling.qmd#sizepow-which-symbol-dimension-carries-the-value) |
+| `sizepow` | number | Symbol dimension carrying the value: `1` = width, `2` = area (default), `3` = volume. Higher = compressed contrast — see [Sizing & Scaling](chart_scaling.qmd#sizepow-which-symbol-dimension-carries-the-value) |
 | `rangescale` | number | Scale factor applied after range computation |
 | `minvaluesize` | number | Minimum pixel size below which no symbol is drawn |
 | `scale` | number | Simple multiplier on top of all sizing logic |
@@ -402,7 +402,7 @@ All `.style()` properties drawn from the iXMaps source (`themeStyleTranslateA`).
 | `shadowupper` | string | Scale above which shadow is hidden |
 | `showdata` | string | Set `"true"` to expose the data record on click (needed for `{{{theme.item.data}}}` tooltips); not required for rendering |
 | `sizefield` | string | Data field driving symbol size independently of value (color) field |
-| `sizepow` | number | Symbol dimension carrying the value: `1` = width, `2` = area (default), `3` = volume — see [Chart Scaling](chart_scaling.qmd#sizepow-which-symbol-dimension-carries-the-value) |
+| `sizepow` | number | Symbol dimension carrying the value: `1` = width, `2` = area (default), `3` = volume — see [Sizing & Scaling](chart_scaling.qmd#sizepow-which-symbol-dimension-carries-the-value) |
 | `sizevalueunits` | string | Units for the size value field |
 | `snippetfield` | string | Data field used as subtitle / snippet |
 | `~~strokecolor~~` | string | **Deprecated** — use `linecolor` |

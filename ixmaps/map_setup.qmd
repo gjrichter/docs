@@ -1,0 +1,200 @@
+---
+title: "Map Setup"
+description: "Choosing the iXMaps map context — tile-based Mercator, SVG Mercator or an alternative projection — plus basemap types and background colors."
+---
+
+Before adding any data, decide how the map itself is set up: which **map context** (tiles, SVG Mercator, or an alternative projection), and which **basemap** or background. These choices determine what geographic context is provided automatically and what you must load yourself.
+
+---
+
+## Three map contexts
+
+iXMaps supports three fundamentally different setups that affect both the visual result and what layers you must provide.
+
+### 1 · Tile-based Mercator (Leaflet)
+
+The default setup. A tile service (Stamen, CartoDB, OSM, …) renders the geographic background — streets, labels, terrain, water — and iXMaps draws your data layers on top as SVG. This is the **easiest starting point**: geographic context is provided automatically, so a bubble map with just lat/lon points already makes geographic sense.
+
+```javascript
+const myMap = ixmaps.Map("map", {
+    mapType: "VT_TONER_LITE",   // any tile basemap
+    mode:    "info",
+    legend:  "closed"
+})
+.view({ center: { lat: 42.5, lng: 12.5 }, zoom: 6 })
+.options({ basemapopacity: 0.6 });
+```
+
+Use this for: city-level detail, regional maps, any situation where street-level context matters. Tile maps are always Mercator.
+
+---
+
+### 2 · SVG Mercator (no tiles)
+
+Mercator projection rendered entirely in SVG, with no tile background. The map canvas is a plain color. Like tile-based maps this is Mercator, so data-driven symbols and graphs can be positioned by lat/lon — but **you must provide geographic context yourself** by loading at least one geometry layer (countries, regions, or coastlines) as a `FEATURE` layer.
+
+```javascript
+const myMap = ixmaps.Map("map", {
+    mapType:       "white",       // canvas color — no tile layer
+    mapProjection: "mercator"     // explicit SVG Mercator
+})
+.view({ center: { lat: 48, lng: 10 }, zoom: 4 })
+.options({ basemapopacity: 0 });
+
+// Geographic context must be explicit:
+myMap.layer("countries")
+    .data({ url: COUNTRIES_TOPOJSON_URL, type: "topojson" })
+    .binding({ geo: "geometry" })
+    .type("FEATURE|SILENT")
+    .style({ colorscheme: ["#e8e8e8"], linecolor: "#fff", linewidth: 0.5 })
+    .define();
+```
+
+Use this for: Europe, continental maps, or any Mercator-based visualization where tile textures interfere with the data.
+
+---
+
+### 3 · Alternative projection (no basemap)
+
+Lambert, Equal Earth, Winkel Tripel, Albers, Orthographic — all SVG-only. Tile layers do not exist for these projections; **all geographic context must come from data-driven layers**. Load at minimum a country or coastline geometry before adding any thematic data.
+
+```javascript
+const myMap = ixmaps.Map("map", {
+    mapType:       "#0a1929",     // ocean / background color
+    mapProjection: "equalearth"
+})
+.view([0, 0], 1)
+.options({ basemapopacity: 0, flushChartDraw: 1000000 });
+
+// Mandatory: geography as a data layer
+myMap.layer("countries")
+    .data({ url: WORLD_COUNTRIES_URL, type: "topojson" })
+    .binding({ geo: "geometry" })
+    .type("FEATURE|SILENT")
+    .style({ colorscheme: ["#1c3a52"], linecolor: "#2a5a7a", linewidth: 0.4 })
+    .define();
+
+// Only then add thematic data:
+myMap.layer("countries")
+    .data({ url: DATA_URL, type: "csv" })
+    .binding({ lookup: "iso_a3", value: "gdp_per_capita" })
+    .type("CHOROPLETH|QUANTILE")
+    .style({ colorscheme: ["#ffffb2","#fd8d3c","#bd0026"], showdata: "true" })
+    .meta({ name: "gdp", tooltip: "{{name}}: {{gdp_per_capita}}" })
+    .define();
+```
+
+Use this for: world maps, Eurostat-style Europe maps, thematic atlases where equal-area or minimal-distortion projections matter.
+
+#### Available projections
+
+| `mapProjection` | Also accepted | Projection | Best for |
+|----------------|--------------|------------|---------|
+| *(omit)* | — | Web Mercator + tiles | Default tile-based maps |
+| `"mercator"` | — | Mercator SVG, no tiles | Clean Mercator, no tile texture |
+| `"lambert"` | `"lambertazimuthalequalarea"` | Lambert Azimuthal Equal-Area (EPSG:3035) | Europe (Eurostat style) |
+| `"equalearth"` | — | Equal Earth | World maps |
+| `"winkel"` | — | Winkel Tripel | World maps (minimal distortion) |
+| `"albers"` | `"albersequalarea"` | Albers Equal-Area Conic | Continental US, large regions |
+| `"orthographic"` | — | Orthographic | Globe view |
+
+Lookup is **case-insensitive**. Albers accepts custom standard parallels / center via the `projectionParams` constructor option.
+
+**Lambert — Europe (Eurostat style):**
+```javascript
+const myMap = ixmaps.Map("map", {
+    mapType:       "white",
+    mapProjection: "lambert",
+    mode:          "pan",
+    legend:        "closed",
+    tools:         false
+})
+.view([53.4, 16.9], 3.7)
+.options({ basemapopacity: 0, flushChartDraw: 1000000 });
+```
+
+**Equal Earth — world map:**
+```javascript
+const myMap = ixmaps.Map("map", {
+    mapType:       "#0a1929",
+    mapProjection: "equalearth",
+    mode:          "info",
+    legend:        "closed"
+})
+.view([0, 0], 1)
+.options({ basemapopacity: 0, flushChartDraw: 1000000 });
+```
+
+:::{.callout-tip}
+## Prefer the array form `.view([lat, lng], zoom)`
+The two-argument array form is the convention across all iXMaps examples — use it for consistency. The object form is also accepted and works with projections too; the two are equivalent:
+```javascript
+.view([53.4, 16.9], 3.7)                                 // ← preferred
+.view({ center: { lat: 53.4, lng: 16.9 }, zoom: 3.7 })   // equivalent, projections included
+```
+:::
+
+### Summary
+
+| Setup | Tiles | Geographic context | Lat/lon positioning |
+|-------|-------|--------------------|---------------------|
+| Tile Mercator | ✅ automatic | Provided by tile service | ✅ native |
+| SVG Mercator | ❌ none | **Must load geometry layers** | ✅ native |
+| Alternative projection | ❌ none | **Must load geometry layers** | ✅ native |
+
+> In every setup, data symbols (bubbles, dots, flow lines) are positioned by lat/lon coordinates from your data. The only difference is whether the map background is automatic or something you must explicitly provide.
+
+---
+
+## Basemap types
+
+The `mapType` option in `ixmaps.Map()` sets the basemap. Names are **case-sensitive** and must match exactly.
+
+### Verified basemaps
+
+| `mapType` value | Appearance | Best for |
+|-----------------|-----------|----------|
+| `"VT_TONER_LITE"` | Clean minimal toner | **Default — use this when in doubt** |
+| `"white"` | Plain white, no tiles | Data-heavy visualisations |
+| `"CartoDB - Positron"` | Light grey minimal | Modern data journalism |
+| `"CartoDB - Dark matter"` | Dark theme | Dark-mode dashboards |
+| `"Stamen Terrain"` | Topographic | Elevation, physical geography |
+| `"OpenStreetMap - Osmarenderer"` | Standard OSM | General reference |
+
+:::{.callout-warning}
+## Case and spacing matter
+- `"CartoDB - Positron"` — note the spaces around the dash
+- `"VT_TONER_LITE"` — all uppercase
+- `"OpenStreetMap - Osmarenderer"` — must include the renderer suffix
+
+❌ `"CartoDB Positron"` · `"vt_toner_lite"` · `"OpenStreetMap"` all fail silently.
+:::
+
+### Hex / keyword backgrounds
+
+For projection-based maps (no tile layer), set `mapType` to a color directly:
+
+```javascript
+ixmaps.Map("map", {
+    mapType:       "#0a1929",   // dark ocean
+    mapProjection: "equalearth"
+})
+```
+
+Accepted: any hex color (`"#rrggbb"`), `"white"`, `"dark"`, `"black"`.
+
+### Adjusting basemap opacity
+
+Instead of changing the basemap, try reducing its opacity to let your data stand out:
+
+```javascript
+.options({ basemapopacity: 0.3 })  // subtle background
+```
+
+---
+
+## Next steps
+
+- **[Visualization Types & Modifiers](map_types.qmd)** — choose how the data is drawn
+- **[Colors & Classification](colors_classification.qmd)** — color schemes and class methods
+- **[Sizing & Scaling](chart_scaling.qmd)** — symbol sizing across themes and zoom levels

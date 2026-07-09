@@ -263,6 +263,10 @@ The overlay layer **must** use the exact same name as the `FEATURE` base layer. 
 
 - **[API Reference](api_documentation.qmd)** — complete reference for all methods and options
 - **[Style Properties](theme_styles.qmd)** — every style property explained
-- **[Map Types, Sizing & Colors](map_types.qmd)** — basemaps, sizing methods, color schemes
+- **[Map Setup](map_setup.qmd)** — map contexts, basemaps, projections
+- **[Visualization Types & Modifiers](map_types.qmd)** — the full `.type()` reference
+- **[Colors & Classification](colors_classification.qmd)** — color schemes and class methods
+- **[Sizing & Scaling](chart_scaling.qmd)** — symbol sizing across themes and zoom
+- **[Tooltips & Interaction](tooltips_interaction.qmd)** — tooltips, events, runtime changes
 - **[Examples](examples.qmd)** — copy-paste examples for common use cases
 - **[Troubleshooting](troubleshooting.qmd)** — when things don't work

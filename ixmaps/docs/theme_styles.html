@@ -66,7 +66,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./chart_scaling.html" rel="next">
 <link href="./map_types.html" rel="prev">
 <link href="./pics/favicon.png" rel="icon" type="image/png">
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
@@ -214,12 +213,60 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
- <span class="menu-text">Reference</span></a>
+ <span class="menu-text">Guides</span></a>
           <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
       <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./map_setup.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Map Setup</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./chart_scaling.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Sizing &amp; Scaling</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./colors_classification.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Colors &amp; Classification</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./tooltips_interaction.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Tooltips &amp; Interaction</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./data_preprocessing.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Data Preprocessing</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./user_charts.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Custom Charts</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="px-0"><hr class="sidebar-divider hi "></li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
+ <span class="menu-text">Reference</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./api_documentation.html" class="sidebar-item-text sidebar-link">
@@ -229,31 +276,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./map_types.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Map Types, Sizing &amp; Colors</span></a>
+ <span class="menu-text">Visualization Types &amp; Modifiers</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./theme_styles.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text">Style Properties</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./chart_scaling.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Chart Scaling</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./user_charts.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">User Charts</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./data_preprocessing.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Data Preprocessing</span></a>
   </div>
 </li>
       </ul>
@@ -357,7 +386,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <tr class="even">
 <td><code>colorscheme</code></td>
 <td>array / string</td>
-<td>Color palette — see <a href="./map_types.html#color-schemes">Color Schemes</a></td>
+<td>Color palette — see <a href="./colors_classification.html#color-schemes">Colors &amp; Classification</a></td>
 </tr>
 <tr class="odd">
 <td><code>fillopacity</code></td>
@@ -428,7 +457,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <tr class="even">
 <td><code>sizepow</code></td>
 <td>number</td>
-<td>Symbol dimension carrying the value: <code>1</code> = width, <code>2</code> = area (default), <code>3</code> = volume. Higher = compressed contrast — see <a href="./chart_scaling.html#sizepow-which-symbol-dimension-carries-the-value">Chart Scaling</a></td>
+<td>Symbol dimension carrying the value: <code>1</code> = width, <code>2</code> = area (default), <code>3</code> = volume. Higher = compressed contrast — see <a href="./chart_scaling.html#sizepow-which-symbol-dimension-carries-the-value">Sizing &amp; Scaling</a></td>
 </tr>
 <tr class="odd">
 <td><code>rangescale</code></td>
@@ -1580,7 +1609,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <tr class="odd">
 <td><code>sizepow</code></td>
 <td>number</td>
-<td>Symbol dimension carrying the value: <code>1</code> = width, <code>2</code> = area (default), <code>3</code> = volume — see <a href="./chart_scaling.html#sizepow-which-symbol-dimension-carries-the-value">Chart Scaling</a></td>
+<td>Symbol dimension carrying the value: <code>1</code> = width, <code>2</code> = area (default), <code>3</code> = volume — see <a href="./chart_scaling.html#sizepow-which-symbol-dimension-carries-the-value">Sizing &amp; Scaling</a></td>
 </tr>
 <tr class="even">
 <td><code>sizevalueunits</code></td>
@@ -2149,14 +2178,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./map_types.html" class="pagination-link" aria-label="Map Types, Sizing &amp; Colors">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Map Types, Sizing &amp; Colors</span>
+      <a href="./map_types.html" class="pagination-link" aria-label="Visualization Types &amp; Modifiers">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Visualization Types &amp; Modifiers</span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./chart_scaling.html" class="pagination-link" aria-label="Chart Scaling">
-        <span class="nav-page-text">Chart Scaling</span> <i class="bi bi-arrow-right-short"></i>
-      </a>
   </div>
 </nav>
 </div> <!-- /content -->

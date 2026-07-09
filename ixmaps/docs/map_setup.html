@@ -6,9 +6,9 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="description" content="Reference for the iXMaps .type() string: the three base types, the decision tree by data shape, and the complete modifier vocabulary.">
+<meta name="description" content="Choosing the iXMaps map context — tile-based Mercator, SVG Mercator or an alternative projection — plus basemap types and background colors.">
 
-<title>Visualization Types &amp; Modifiers – iXMaps Documentation</title>
+<title>Map Setup – iXMaps Documentation</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -66,8 +66,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./theme_styles.html" rel="next">
-<link href="./api_documentation.html" rel="prev">
+<link href="./chart_scaling.html" rel="next">
 <link href="./pics/favicon.png" rel="icon" type="image/png">
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
@@ -110,7 +109,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 <link rel="stylesheet" href="styles.css">
-<link rel="canonical" href="https://www.ixmaps.com/docs/map_types.html">
+<link rel="canonical" href="https://www.ixmaps.com/docs/map_setup.html">
 </head>
 
 <body class="nav-sidebar docked nav-fixed quarto-light">
@@ -162,7 +161,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./api_documentation.html">Reference</a></li><li class="breadcrumb-item"><a href="./map_types.html">Visualization Types &amp; Modifiers</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./map_setup.html">Guides</a></li><li class="breadcrumb-item"><a href="./map_setup.html">Map Setup</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -222,7 +221,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./map_setup.html" class="sidebar-item-text sidebar-link">
+  <a href="./map_setup.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text">Map Setup</span></a>
   </div>
 </li>
@@ -276,7 +275,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./map_types.html" class="sidebar-item-text sidebar-link active">
+  <a href="./map_types.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Visualization Types &amp; Modifiers</span></a>
   </div>
 </li>
@@ -319,28 +318,34 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#visualization-types" id="toc-visualization-types" class="nav-link active" data-scroll-target="#visualization-types">Visualization types</a>
+  <li><a href="#three-map-contexts" id="toc-three-map-contexts" class="nav-link active" data-scroll-target="#three-map-contexts">Three map contexts</a>
   <ul class="collapse">
-  <li><a href="#type-and-style-two-orthogonal-dimensions" id="toc-type-and-style-two-orthogonal-dimensions" class="nav-link" data-scroll-target="#type-and-style-two-orthogonal-dimensions">Type and style — two orthogonal dimensions</a></li>
-  <li><a href="#the-three-base-types" id="toc-the-three-base-types" class="nav-link" data-scroll-target="#the-three-base-types">The three base types</a></li>
-  <li><a href="#classification-method-tokens" id="toc-classification-method-tokens" class="nav-link" data-scroll-target="#classification-method-tokens">Classification method tokens</a></li>
-  <li><a href="#choosing-by-data-shape" id="toc-choosing-by-data-shape" class="nav-link" data-scroll-target="#choosing-by-data-shape">Choosing by data shape</a></li>
-  <li><a href="#type-modifiers" id="toc-type-modifiers" class="nav-link" data-scroll-target="#type-modifiers">Type modifiers</a></li>
+  <li><a href="#tile-based-mercator-leaflet" id="toc-tile-based-mercator-leaflet" class="nav-link" data-scroll-target="#tile-based-mercator-leaflet">1 · Tile-based Mercator (Leaflet)</a></li>
+  <li><a href="#svg-mercator-no-tiles" id="toc-svg-mercator-no-tiles" class="nav-link" data-scroll-target="#svg-mercator-no-tiles">2 · SVG Mercator (no tiles)</a></li>
+  <li><a href="#alternative-projection-no-basemap" id="toc-alternative-projection-no-basemap" class="nav-link" data-scroll-target="#alternative-projection-no-basemap">3 · Alternative projection (no basemap)</a></li>
+  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary">Summary</a></li>
   </ul></li>
+  <li><a href="#basemap-types" id="toc-basemap-types" class="nav-link" data-scroll-target="#basemap-types">Basemap types</a>
+  <ul class="collapse">
+  <li><a href="#verified-basemaps" id="toc-verified-basemaps" class="nav-link" data-scroll-target="#verified-basemaps">Verified basemaps</a></li>
+  <li><a href="#hex-keyword-backgrounds" id="toc-hex-keyword-backgrounds" class="nav-link" data-scroll-target="#hex-keyword-backgrounds">Hex / keyword backgrounds</a></li>
+  <li><a href="#adjusting-basemap-opacity" id="toc-adjusting-basemap-opacity" class="nav-link" data-scroll-target="#adjusting-basemap-opacity">Adjusting basemap opacity</a></li>
+  </ul></li>
+  <li><a href="#next-steps" id="toc-next-steps" class="nav-link" data-scroll-target="#next-steps">Next steps</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/gjrichter/ixmaps-flat/issues/new" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./api_documentation.html">Reference</a></li><li class="breadcrumb-item"><a href="./map_types.html">Visualization Types &amp; Modifiers</a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./map_setup.html">Guides</a></li><li class="breadcrumb-item"><a href="./map_setup.html">Map Setup</a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title">Visualization Types &amp; Modifiers</h1>
+<h1 class="title">Map Setup</h1>
 </div>
 
 <div>
   <div class="description">
-    Reference for the iXMaps .type() string: the three base types, the decision tree by data shape, and the complete modifier vocabulary.
+    Choosing the iXMaps map context — tile-based Mercator, SVG Mercator or an alternative projection — plus basemap types and background colors.
   </div>
 </div>
 
@@ -357,574 +362,309 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<p>Reference for the <code>.type()</code> string of an iXMaps layer: the base types, how to choose one by data shape, and the complete modifier vocabulary.</p>
-<p>For the map context and basemaps see <a href="./map_setup.html">Map Setup</a>; for color schemes and classification see <a href="./colors_classification.html">Colors &amp; Classification</a>; for symbol sizing see <a href="./chart_scaling.html">Sizing &amp; Scaling</a>.</p>
+<p>Before adding any data, decide how the map itself is set up: which <strong>map context</strong> (tiles, SVG Mercator, or an alternative projection), and which <strong>basemap</strong> or background. These choices determine what geographic context is provided automatically and what you must load yourself.</p>
 <hr>
-<section id="visualization-types" class="level2">
-<h2 class="anchored" data-anchor-id="visualization-types">Visualization types</h2>
-<section id="type-and-style-two-orthogonal-dimensions" class="level3">
-<h3 class="anchored" data-anchor-id="type-and-style-two-orthogonal-dimensions">Type and style — two orthogonal dimensions</h3>
-<p>Every iXMaps layer is described by two independent specifications:</p>
-<ul>
-<li><p><strong><code>.type()</code></strong> — determines the <em>form and method</em> of the visualization: what geometric shape is used, how values are mapped to that shape, and which algorithm classifies or aggregates the data. Examples: bubbles sized by value, choropleth filled by class, flow lines between origin and destination.</p></li>
-<li><p><strong><code>.style()</code></strong> — defines <em>appearance and numeric parameters</em>: colors, opacities, size references, power curves, label formatting, scale-dependent visibility. Style is purely about how the chosen form looks and how its quantities are tuned.</p></li>
-</ul>
-<p>Because the two are largely independent, <strong>swapping the chart type while keeping the style</strong> is often all it takes to explore a completely different representation of the same data. The sizing (<code>normalsizevalue</code>, <code>scale</code>, <code>sizepow</code>) and color (<code>colorscheme</code>, <code>fillopacity</code>) settings carry over unchanged, so the visual density and palette stay consistent across type changes.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Start with sized bubbles:</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">type</span>(<span class="st">"CHART|BUBBLE|SIZE|VALUES"</span>)</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">style</span>({ <span class="dt">colorscheme</span><span class="op">:</span> [<span class="st">"#0066cc"</span>]<span class="op">,</span> <span class="dt">normalsizevalue</span><span class="op">:</span> <span class="st">"500000"</span><span class="op">,</span> <span class="dt">scale</span><span class="op">:</span> <span class="dv">1</span><span class="op">,</span> <span class="dt">showdata</span><span class="op">:</span> <span class="st">"true"</span> })</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co">// Switch to a dot map — style unchanged:</span></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">type</span>(<span class="st">"CHART|DOT"</span>)</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">style</span>({ <span class="dt">colorscheme</span><span class="op">:</span> [<span class="st">"#0066cc"</span>]<span class="op">,</span> <span class="dt">normalsizevalue</span><span class="op">:</span> <span class="st">"500000"</span><span class="op">,</span> <span class="dt">scale</span><span class="op">:</span> <span class="dv">1</span><span class="op">,</span> <span class="dt">showdata</span><span class="op">:</span> <span class="st">"true"</span> })</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="co">// Or to a density grid — style unchanged:</span></span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">type</span>(<span class="st">"CHART|BUBBLE|SIZE|AGGREGATE"</span>)</span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">style</span>({ <span class="dt">colorscheme</span><span class="op">:</span> [<span class="st">"#0066cc"</span>]<span class="op">,</span> <span class="dt">normalsizevalue</span><span class="op">:</span> <span class="st">"500000"</span><span class="op">,</span> <span class="dt">scale</span><span class="op">:</span> <span class="dv">1</span><span class="op">,</span> <span class="dt">showdata</span><span class="op">:</span> <span class="st">"true"</span><span class="op">,</span></span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>         <span class="dt">gridwidth</span><span class="op">:</span> <span class="st">"8px"</span> })</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>The type string is a pipe-separated list of tokens — a base type followed by optional modifiers:</p>
-<pre><code>CHART | BUBBLE | SIZE | CATEGORICAL | GLOW | VALUES | NOLEGEND
-  ↑        ↑      ↑         ↑          ↑       ↑         ↑
-base   shape  sizing  coloring  effect  labels  visibility</code></pre>
+<section id="three-map-contexts" class="level2">
+<h2 class="anchored" data-anchor-id="three-map-contexts">Three map contexts</h2>
+<p>iXMaps supports three fundamentally different setups that affect both the visual result and what layers you must provide.</p>
+<section id="tile-based-mercator-leaflet" class="level3">
+<h3 class="anchored" data-anchor-id="tile-based-mercator-leaflet">1 · Tile-based Mercator (Leaflet)</h3>
+<p>The default setup. A tile service (Stamen, CartoDB, OSM, …) renders the geographic background — streets, labels, terrain, water — and iXMaps draws your data layers on top as SVG. This is the <strong>easiest starting point</strong>: geographic context is provided automatically, so a bubble map with just lat/lon points already makes geographic sense.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> myMap <span class="op">=</span> ixmaps<span class="op">.</span><span class="fu">Map</span>(<span class="st">"map"</span><span class="op">,</span> {</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    <span class="dt">mapType</span><span class="op">:</span> <span class="st">"VT_TONER_LITE"</span><span class="op">,</span>   <span class="co">// any tile basemap</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">mode</span><span class="op">:</span>    <span class="st">"info"</span><span class="op">,</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">legend</span><span class="op">:</span>  <span class="st">"closed"</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">view</span>({ <span class="dt">center</span><span class="op">:</span> { <span class="dt">lat</span><span class="op">:</span> <span class="fl">42.5</span><span class="op">,</span> <span class="dt">lng</span><span class="op">:</span> <span class="fl">12.5</span> }<span class="op">,</span> <span class="dt">zoom</span><span class="op">:</span> <span class="dv">6</span> })</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">options</span>({ <span class="dt">basemapopacity</span><span class="op">:</span> <span class="fl">0.6</span> })<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Use this for: city-level detail, regional maps, any situation where street-level context matters. Tile maps are always Mercator.</p>
 <hr>
 </section>
-<section id="the-three-base-types" class="level3">
-<h3 class="anchored" data-anchor-id="the-three-base-types">The three base types</h3>
-<p>Every iXMaps layer starts with one of three base types. Everything else — classification method, chart shape, visual modifiers — is appended to one of these roots.</p>
+<section id="svg-mercator-no-tiles" class="level3">
+<h3 class="anchored" data-anchor-id="svg-mercator-no-tiles">2 · SVG Mercator (no tiles)</h3>
+<p>Mercator projection rendered entirely in SVG, with no tile background. The map canvas is a plain color. Like tile-based maps this is Mercator, so data-driven symbols and graphs can be positioned by lat/lon — but <strong>you must provide geographic context yourself</strong> by loading at least one geometry layer (countries, regions, or coastlines) as a <code>FEATURE</code> layer.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> myMap <span class="op">=</span> ixmaps<span class="op">.</span><span class="fu">Map</span>(<span class="st">"map"</span><span class="op">,</span> {</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    <span class="dt">mapType</span><span class="op">:</span>       <span class="st">"white"</span><span class="op">,</span>       <span class="co">// canvas color — no tile layer</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">mapProjection</span><span class="op">:</span> <span class="st">"mercator"</span>     <span class="co">// explicit SVG Mercator</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">view</span>({ <span class="dt">center</span><span class="op">:</span> { <span class="dt">lat</span><span class="op">:</span> <span class="dv">48</span><span class="op">,</span> <span class="dt">lng</span><span class="op">:</span> <span class="dv">10</span> }<span class="op">,</span> <span class="dt">zoom</span><span class="op">:</span> <span class="dv">4</span> })</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">options</span>({ <span class="dt">basemapopacity</span><span class="op">:</span> <span class="dv">0</span> })<span class="op">;</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="co">// Geographic context must be explicit:</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>myMap<span class="op">.</span><span class="fu">layer</span>(<span class="st">"countries"</span>)</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">data</span>({ <span class="dt">url</span><span class="op">:</span> COUNTRIES_TOPOJSON_URL<span class="op">,</span> <span class="dt">type</span><span class="op">:</span> <span class="st">"topojson"</span> })</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">binding</span>({ <span class="dt">geo</span><span class="op">:</span> <span class="st">"geometry"</span> })</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">type</span>(<span class="st">"FEATURE|SILENT"</span>)</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">style</span>({ <span class="dt">colorscheme</span><span class="op">:</span> [<span class="st">"#e8e8e8"</span>]<span class="op">,</span> <span class="dt">linecolor</span><span class="op">:</span> <span class="st">"#fff"</span><span class="op">,</span> <span class="dt">linewidth</span><span class="op">:</span> <span class="fl">0.5</span> })</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">define</span>()<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Use this for: Europe, continental maps, or any Mercator-based visualization where tile textures interfere with the data.</p>
+<hr>
+</section>
+<section id="alternative-projection-no-basemap" class="level3">
+<h3 class="anchored" data-anchor-id="alternative-projection-no-basemap">3 · Alternative projection (no basemap)</h3>
+<p>Lambert, Equal Earth, Winkel Tripel, Albers, Orthographic — all SVG-only. Tile layers do not exist for these projections; <strong>all geographic context must come from data-driven layers</strong>. Load at minimum a country or coastline geometry before adding any thematic data.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> myMap <span class="op">=</span> ixmaps<span class="op">.</span><span class="fu">Map</span>(<span class="st">"map"</span><span class="op">,</span> {</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    <span class="dt">mapType</span><span class="op">:</span>       <span class="st">"#0a1929"</span><span class="op">,</span>     <span class="co">// ocean / background color</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">mapProjection</span><span class="op">:</span> <span class="st">"equalearth"</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">view</span>([<span class="dv">0</span><span class="op">,</span> <span class="dv">0</span>]<span class="op">,</span> <span class="dv">1</span>)</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">options</span>({ <span class="dt">basemapopacity</span><span class="op">:</span> <span class="dv">0</span><span class="op">,</span> <span class="dt">flushChartDraw</span><span class="op">:</span> <span class="dv">1000000</span> })<span class="op">;</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="co">// Mandatory: geography as a data layer</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>myMap<span class="op">.</span><span class="fu">layer</span>(<span class="st">"countries"</span>)</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">data</span>({ <span class="dt">url</span><span class="op">:</span> WORLD_COUNTRIES_URL<span class="op">,</span> <span class="dt">type</span><span class="op">:</span> <span class="st">"topojson"</span> })</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">binding</span>({ <span class="dt">geo</span><span class="op">:</span> <span class="st">"geometry"</span> })</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">type</span>(<span class="st">"FEATURE|SILENT"</span>)</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">style</span>({ <span class="dt">colorscheme</span><span class="op">:</span> [<span class="st">"#1c3a52"</span>]<span class="op">,</span> <span class="dt">linecolor</span><span class="op">:</span> <span class="st">"#2a5a7a"</span><span class="op">,</span> <span class="dt">linewidth</span><span class="op">:</span> <span class="fl">0.4</span> })</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">define</span>()<span class="op">;</span></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a><span class="co">// Only then add thematic data:</span></span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>myMap<span class="op">.</span><span class="fu">layer</span>(<span class="st">"countries"</span>)</span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">data</span>({ <span class="dt">url</span><span class="op">:</span> DATA_URL<span class="op">,</span> <span class="dt">type</span><span class="op">:</span> <span class="st">"csv"</span> })</span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">binding</span>({ <span class="dt">lookup</span><span class="op">:</span> <span class="st">"iso_a3"</span><span class="op">,</span> <span class="dt">value</span><span class="op">:</span> <span class="st">"gdp_per_capita"</span> })</span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">type</span>(<span class="st">"CHOROPLETH|QUANTILE"</span>)</span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">style</span>({ <span class="dt">colorscheme</span><span class="op">:</span> [<span class="st">"#ffffb2"</span><span class="op">,</span><span class="st">"#fd8d3c"</span><span class="op">,</span><span class="st">"#bd0026"</span>]<span class="op">,</span> <span class="dt">showdata</span><span class="op">:</span> <span class="st">"true"</span> })</span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">meta</span>({ <span class="dt">name</span><span class="op">:</span> <span class="st">"gdp"</span><span class="op">,</span> <span class="dt">tooltip</span><span class="op">:</span> <span class="st">"{{name}}: {{gdp_per_capita}}"</span> })</span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">define</span>()<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Use this for: world maps, Eurostat-style Europe maps, thematic atlases where equal-area or minimal-distortion projections matter.</p>
+<section id="available-projections" class="level4">
+<h4 class="anchored" data-anchor-id="available-projections">Available projections</h4>
 <table class="caption-top table">
 <colgroup>
-<col style="width: 45%">
-<col style="width: 54%">
+<col style="width: 31%">
+<col style="width: 27%">
+<col style="width: 23%">
+<col style="width: 17%">
 </colgroup>
 <thead>
 <tr class="header">
-<th>Base type</th>
-<th>What it does</th>
+<th><code>mapProjection</code></th>
+<th>Also accepted</th>
+<th>Projection</th>
+<th>Best for</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td><code>FEATURE</code></td>
-<td>Renders geometry as-is: polygon fills, boundary lines, point markers. No data value required — used for base layers that provide geographic context.</td>
+<td><em>(omit)</em></td>
+<td>—</td>
+<td>Web Mercator + tiles</td>
+<td>Default tile-based maps</td>
 </tr>
 <tr class="even">
-<td><code>CHOROPLETH</code></td>
-<td>Colours polygon fills by data value. Requires geometry already loaded (same layer name as a <code>FEATURE</code> base). A <strong>value field</strong> is mapped through a colour scheme via a classification method.</td>
+<td><code>"mercator"</code></td>
+<td>—</td>
+<td>Mercator SVG, no tiles</td>
+<td>Clean Mercator, no tile texture</td>
 </tr>
 <tr class="odd">
-<td><code>CHART</code></td>
-<td>Creates new SVG objects (bubbles, bars, pies, flow lines, …) positioned by lat/lon coordinates or geometry centroids. A <strong>value field</strong> drives size, colour, or both.</td>
+<td><code>"lambert"</code></td>
+<td><code>"lambertazimuthalequalarea"</code></td>
+<td>Lambert Azimuthal Equal-Area (EPSG:3035)</td>
+<td>Europe (Eurostat style)</td>
+</tr>
+<tr class="even">
+<td><code>"equalearth"</code></td>
+<td>—</td>
+<td>Equal Earth</td>
+<td>World maps</td>
+</tr>
+<tr class="odd">
+<td><code>"winkel"</code></td>
+<td>—</td>
+<td>Winkel Tripel</td>
+<td>World maps (minimal distortion)</td>
+</tr>
+<tr class="even">
+<td><code>"albers"</code></td>
+<td><code>"albersequalarea"</code></td>
+<td>Albers Equal-Area Conic</td>
+<td>Continental US, large regions</td>
+</tr>
+<tr class="odd">
+<td><code>"orthographic"</code></td>
+<td>—</td>
+<td>Orthographic</td>
+<td>Globe view</td>
 </tr>
 </tbody>
 </table>
-<p><code>FEATURE</code> is a structural layer — it gives the map geography. <code>CHOROPLETH</code> and <code>CHART</code> are data layers — they need a value field and a classification or sizing method to translate numbers into visual marks.</p>
-<hr>
-</section>
-<section id="classification-method-tokens" class="level3">
-<h3 class="anchored" data-anchor-id="classification-method-tokens">Classification method tokens</h3>
-<p><code>CHOROPLETH</code> and <code>CHART</code> need one classification token that says how values are grouped into colour classes:</p>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 25%">
-<col style="width: 75%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Token</th>
-<th>Classes are built by</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><code>EQUIDISTANT</code></td>
-<td>Equal-width intervals</td>
-</tr>
-<tr class="even">
-<td><code>QUANTILE</code></td>
-<td>Equal feature count per class</td>
-</tr>
-<tr class="odd">
-<td><code>HEADTAIL</code></td>
-<td>Iterative mean split (heavy-tailed data)</td>
-</tr>
-<tr class="even">
-<td><code>NATURAL</code></td>
-<td>Jenks natural breaks</td>
-</tr>
-<tr class="odd">
-<td><code>LOG</code></td>
-<td>Logarithmic intervals</td>
-</tr>
-<tr class="even">
-<td><code>CATEGORICAL</code></td>
-<td>Discrete categories — requires the <code>values</code> style array (strings!)</td>
-</tr>
-</tbody>
-</table>
-<p>How classes map to colours, explicit <code>ranges</code>, diverging scales and data-driven palettes: see <a href="./colors_classification.html">Colors &amp; Classification</a>.</p>
-<hr>
-</section>
-<section id="choosing-by-data-shape" class="level3">
-<h3 class="anchored" data-anchor-id="choosing-by-data-shape">Choosing by data shape</h3>
-<pre><code>Is your data...
-│
-├─ Points (lat / lon)?
-│  ├─ Just locations?                     → CHART|DOT
-│  ├─ Coloured by category?               → CHART|BUBBLE|CATEGORICAL
-│  ├─ Sized by value?                     → CHART|BUBBLE|SIZE|VALUES
-│  ├─ Density grid (circles)?             → CHART|BUBBLE|SIZE|AGGREGATE  + gridwidth:"5px"
-│  ├─ Density grid (squares)?             → CHART|SYMBOL|GRIDSIZE|AGGREGATE|RECT|SUM|DOPACITY|VALUES
-│  ├─ Sparklines per grid cell?           → CHART|SYMBOL|PLOT|LINES
-│  ├─ Flows origin→destination?           → CHART|VECTOR|BEZIER|POINTER
-│  └─ Stacked / grouped bars?             → CHART|BAR|STACKED
-│
-└─ Polygons (GeoJSON / TopoJSON)?
-   ├─ Boundaries only?                    → FEATURE
-   ├─ Colour by data (inline)?            → FEATURE|CHOROPLETH|QUANTILE
-   └─ Join external data to geometry?     → CHOROPLETH|QUANTILE  (NEVER add FEATURE)</code></pre>
-</section>
-<section id="type-modifiers" class="level3">
-<h3 class="anchored" data-anchor-id="type-modifiers">Type modifiers</h3>
-<p><strong>Visual effect modifiers:</strong></p>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 55%">
-<col style="width: 44%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Modifier</th>
-<th>Effect</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><code>GLOW</code></td>
-<td>Glow halo around symbols</td>
-</tr>
-<tr class="even">
-<td><code>VALUES</code></td>
-<td>Render value labels inside / near symbols</td>
-</tr>
-<tr class="odd">
-<td><code>VALUESBACKGROUND</code></td>
-<td>Coloured background box behind value text</td>
-</tr>
-<tr class="even">
-<td><code>TEXTONLY</code></td>
-<td>Labels only, no symbol</td>
-</tr>
-<tr class="odd">
-<td><code>TEXTLEGEND</code></td>
-<td>Category labels on symbols instead of legend box</td>
-</tr>
-<tr class="even">
-<td><code>GRADIENT</code></td>
-<td>Gradient colour along flow lines (use <code>linecolor: ["#from","#to"]</code>)</td>
-</tr>
-<tr class="odd">
-<td><code>DASH</code></td>
-<td>Animated flowing dashes on flow lines</td>
-</tr>
-<tr class="even">
-<td><code>NOSCALE</code></td>
-<td>Disable dynamic zoom scaling</td>
-</tr>
-<tr class="odd">
-<td><code>CLIPTOGEOBOUNDS</code></td>
-<td>Clip chart rendering to polygon boundary</td>
-</tr>
-<tr class="even">
-<td><code>3D</code></td>
-<td>3D rendering for <code>BAR</code>, <code>PIE</code>, <code>DONUT</code></td>
-</tr>
-<tr class="odd">
-<td><code>BOX</code></td>
-<td>Background box behind each chart; customise with <code>boxopacity</code>, <code>boxmargin</code>, <code>bordercolor</code></td>
-</tr>
-<tr class="even">
-<td><code>MOVABLE</code></td>
-<td>Charts become draggable on the map</td>
-</tr>
-</tbody>
-</table>
-<div class="callout callout-style-simple callout-note callout-titled">
+<p>Lookup is <strong>case-insensitive</strong>. Albers accepts custom standard parallels / center via the <code>projectionParams</code> constructor option.</p>
+<p><strong>Lambert — Europe (Eurostat style):</strong></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> myMap <span class="op">=</span> ixmaps<span class="op">.</span><span class="fu">Map</span>(<span class="st">"map"</span><span class="op">,</span> {</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    <span class="dt">mapType</span><span class="op">:</span>       <span class="st">"white"</span><span class="op">,</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">mapProjection</span><span class="op">:</span> <span class="st">"lambert"</span><span class="op">,</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">mode</span><span class="op">:</span>          <span class="st">"pan"</span><span class="op">,</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">legend</span><span class="op">:</span>        <span class="st">"closed"</span><span class="op">,</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    <span class="dt">tools</span><span class="op">:</span>         <span class="kw">false</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">view</span>([<span class="fl">53.4</span><span class="op">,</span> <span class="fl">16.9</span>]<span class="op">,</span> <span class="fl">3.7</span>)</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">options</span>({ <span class="dt">basemapopacity</span><span class="op">:</span> <span class="dv">0</span><span class="op">,</span> <span class="dt">flushChartDraw</span><span class="op">:</span> <span class="dv">1000000</span> })<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>Equal Earth — world map:</strong></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> myMap <span class="op">=</span> ixmaps<span class="op">.</span><span class="fu">Map</span>(<span class="st">"map"</span><span class="op">,</span> {</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    <span class="dt">mapType</span><span class="op">:</span>       <span class="st">"#0a1929"</span><span class="op">,</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">mapProjection</span><span class="op">:</span> <span class="st">"equalearth"</span><span class="op">,</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">mode</span><span class="op">:</span>          <span class="st">"info"</span><span class="op">,</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">legend</span><span class="op">:</span>        <span class="st">"closed"</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">view</span>([<span class="dv">0</span><span class="op">,</span> <span class="dv">0</span>]<span class="op">,</span> <span class="dv">1</span>)</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">options</span>({ <span class="dt">basemapopacity</span><span class="op">:</span> <span class="dv">0</span><span class="op">,</span> <span class="dt">flushChartDraw</span><span class="op">:</span> <span class="dv">1000000</span> })<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="callout callout-style-simple callout-tip callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Note</span>Scale-bounding <code>CLIPTOGEOBOUNDS</code>
+<span class="screen-reader-only">Tip</span>Prefer the array form <code>.view([lat, lng], zoom)</code>
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>When a layer uses <code>CLIPTOGEOBOUNDS</code>, the optional <code>clipupper</code> / <code>cliplower</code> style properties restrict the geo-bounds clipping to a map-scale range — same <code>"1:scale"</code> syntax as <code>chartupper</code> / <code>chartlower</code>. They are read only when <code>CLIPTOGEOBOUNDS</code> is present in the type string; on a layer without it they have no effect.</p>
+<p>The two-argument array form is the convention across all iXMaps examples — use it for consistency. The object form is also accepted and works with projections too; the two are equivalent:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">view</span>([<span class="fl">53.4</span><span class="op">,</span> <span class="fl">16.9</span>]<span class="op">,</span> <span class="fl">3.7</span>)                                 <span class="co">// ← preferred</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">view</span>({ <span class="dt">center</span><span class="op">:</span> { <span class="dt">lat</span><span class="op">:</span> <span class="fl">53.4</span><span class="op">,</span> <span class="dt">lng</span><span class="op">:</span> <span class="fl">16.9</span> }<span class="op">,</span> <span class="dt">zoom</span><span class="op">:</span> <span class="fl">3.7</span> })   <span class="co">// equivalent, projections included</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
-<p><strong>Filtering / visibility modifiers:</strong></p>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 55%">
-<col style="width: 44%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Modifier</th>
-<th>Effect</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><code>SILENT</code></td>
-<td>Excludes from legend AND suppresses tooltips</td>
-</tr>
-<tr class="even">
-<td><code>NOLEGEND</code></td>
-<td>Excludes from legend only (tooltips still work)</td>
-</tr>
-<tr class="odd">
-<td><code>ZEROISNOTVALUE</code></td>
-<td>Suppress rendering where value ≤ 0</td>
-</tr>
-<tr class="even">
-<td><code>NEGATIVEISVALUE</code></td>
-<td>Allow and render negative values</td>
-</tr>
-<tr class="odd">
-<td><code>ZEROISVALUE</code></td>
-<td>Treat zero as a valid value (opposite of <code>ZEROISNOTVALUE</code>)</td>
-</tr>
-<tr class="even">
-<td><code>NOOUTLIER</code></td>
-<td>Remove extreme outliers from classification</td>
-</tr>
-<tr class="odd">
-<td><code>NONEGATIVE</code></td>
-<td>Suppress rendering where computed value ≤ 0 (used with <code>DIFFERENCE</code>)</td>
-</tr>
-</tbody>
-</table>
-<p><strong>Value computation modifiers</strong> (derive a single value from two piped fields <code>"a|b"</code>):</p>
-<table class="caption-top table">
-<thead>
-<tr class="header">
-<th>Modifier</th>
-<th>Formula</th>
-<th>Use case</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><code>DIFFERENCE</code></td>
-<td><code>b − a</code></td>
-<td>Change, net gain/loss</td>
-</tr>
-<tr class="even">
-<td><code>FRACTION</code></td>
-<td><code>a / b</code></td>
-<td>Share, ratio</td>
-</tr>
-<tr class="odd">
-<td><code>PERCENT</code></td>
-<td><code>a / b × 100</code></td>
-<td>Percentage</td>
-</tr>
-<tr class="even">
-<td><code>PERMILLE</code></td>
-<td><code>a / b × 1000</code></td>
-<td>Per-mille rate</td>
-</tr>
-<tr class="odd">
-<td><code>RELATIVE</code></td>
-<td><code>a / b × 100 − 100</code></td>
-<td>Relative change vs.&nbsp;base</td>
-</tr>
-<tr class="even">
-<td><code>INVERT</code></td>
-<td><code>100 − a / b × 100</code></td>
-<td>Inverse share</td>
-</tr>
-<tr class="odd">
-<td><code>PRODUCT</code></td>
-<td><code>a × b</code></td>
-<td>Combined value</td>
-</tr>
-</tbody>
-</table>
-<p>Bind two fields with <code>|</code>: <code>.binding({ value: "field_a|field_b" })</code>. The modifier determines how the pair is collapsed to one value for colour/size mapping.</p>
-<p><strong>Multi-field coloring modifiers</strong> (for multiple piped fields):</p>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 55%">
-<col style="width: 44%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Modifier</th>
-<th>Effect</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><code>DOMINANT</code></td>
-<td>Colour by the field with the highest value</td>
-</tr>
-<tr class="even">
-<td><code>PERCENTOFMEAN</code></td>
-<td>Colour by the field whose value deviates most from the mean</td>
-</tr>
-<tr class="odd">
-<td><code>DEVIATION</code></td>
-<td>Colour by the field with the highest standard-deviation deviation</td>
-</tr>
-<tr class="even">
-<td><code>OFFSETMEAN</code></td>
-<td>Show deviation of all fields as +/− pointers (use with <code>CHART|BAR|POINTER</code>)</td>
-</tr>
-</tbody>
-</table>
-<p><strong>Dynamic opacity modifiers:</strong></p>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 55%">
-<col style="width: 44%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Modifier</th>
-<th>Effect</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><code>DOPACITY</code></td>
-<td>Opacity proportional to value — lower values become transparent</td>
-</tr>
-<tr class="even">
-<td><code>DOPACITYMIN</code></td>
-<td>Opacity emphasises minimum values — higher values become transparent</td>
-</tr>
-<tr class="odd">
-<td><code>DOPACITYMAX</code></td>
-<td>Opacity emphasises maximum values — tunable with <code>dopacitypow</code> / <code>dopacityscale</code></td>
-</tr>
-<tr class="even">
-<td><code>DOPACITYMINMAX</code></td>
-<td>Opacity emphasises both extremes — average values become transparent</td>
-</tr>
-<tr class="odd">
-<td><code>BIPOLAR</code></td>
-<td>Alias for <code>DOPACITYMINMAX</code></td>
-</tr>
-<tr class="even">
-<td><code>DOPACITYLOG</code></td>
-<td>Like <code>DOPACITYMAX</code> but uses the logarithm of the value</td>
-</tr>
-<tr class="odd">
-<td><code>DOPACITYMEAN</code></td>
-<td>Dynamic opacity for use with <code>DOMINANT</code> / <code>PERCENTOFMEAN</code></td>
-</tr>
-</tbody>
-</table>
-<p><strong>Chart composition modifiers:</strong></p>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 55%">
-<col style="width: 44%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Modifier</th>
-<th>Effect</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><code>SEQUENCE</code></td>
-<td>Composite chart: one symbol per piped field, arranged in sequence</td>
-</tr>
-<tr class="even">
-<td><code>STAR</code></td>
-<td>Like <code>SEQUENCE</code> but arranged in a star / sunburst around the centre</td>
-</tr>
-<tr class="odd">
-<td><code>STARBURST</code></td>
-<td><code>PIE</code> / <code>DONUT</code> modifier — radius varies by value</td>
-</tr>
-<tr class="even">
-<td><code>SIZE</code></td>
-<td>2D: surface area represents value; with <code>PIE</code>/<code>DONUT</code>: radius represents value</td>
-</tr>
-<tr class="odd">
-<td><code>HEIGHT</code></td>
-<td>With <code>PIE</code> / <code>DONUT</code>: height represents value</td>
-</tr>
-<tr class="even">
-<td><code>WIDTH</code></td>
-<td>With <code>PIE</code> / <code>DONUT</code>: like <code>SIZE</code>; with <code>POINTER</code>: makes width dynamic</td>
-</tr>
-<tr class="odd">
-<td><code>VOLUME</code></td>
-<td>3D: volume represents value</td>
-</tr>
-<tr class="even">
-<td><code>HORZ</code></td>
-<td>Arrange <code>BAR</code> / <code>SEQUENCE</code> charts horizontally instead of vertically</td>
-</tr>
-<tr class="odd">
-<td><code>MULTIPLE</code></td>
-<td>Offset repeated positions so overlapping points are all visible</td>
-</tr>
-<tr class="even">
-<td><code>DIFFUSE</code></td>
-<td>Like <code>AGGREGATE</code> but distributes each value to the 4 nearest grid points</td>
-</tr>
-</tbody>
-</table>
-<p>Sizing tokens (<code>LINEAR</code>, <code>SIZEP1</code>…<code>SIZEP10</code>, <code>SIZELOG</code>) set the <code>sizepow</code> dimension — see <a href="./chart_scaling.html#sizepow-which-symbol-dimension-carries-the-value">Sizing &amp; Scaling</a>.</p>
-<p><strong>Plot / sparkline modifiers</strong> (for <code>CHART|SYMBOL|PLOT|LINES</code>):</p>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 55%">
-<col style="width: 44%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Modifier</th>
-<th>Effect</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><code>AREA</code></td>
-<td>Fill the area under the plot curve</td>
-</tr>
-<tr class="even">
-<td><code>LASTARROW</code></td>
-<td>Arrowhead on the last plot segment — size via <code>markersize</code></td>
-</tr>
-<tr class="odd">
-<td><code>NOCLIP</code></td>
-<td>Don’t clip the plot to its grid cell</td>
-</tr>
-<tr class="even">
-<td><code>GRIDSIZE</code></td>
-<td>Derive chart size from the grid cell size (<code>gridwidth</code>)</td>
-</tr>
-<tr class="odd">
-<td><code>FIXSIZE</code></td>
-<td>Uniform chart size, independent of the data value</td>
-</tr>
-<tr class="even">
-<td><code>FADEIN</code></td>
-<td>Fade the plot line in from transparent to opaque</td>
-</tr>
-</tbody>
-</table>
-<p><strong>Chart positioning modifiers:</strong></p>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 55%">
-<col style="width: 44%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Modifier</th>
-<th>Effect</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><code>CENTER</code></td>
-<td>Chart centred on its anchor point (default)</td>
-</tr>
-<tr class="even">
-<td><code>LEFT</code> / <code>RIGHT</code></td>
-<td>Align chart to the left or right of the anchor</td>
-</tr>
-<tr class="odd">
-<td><code>TOP</code> / <code>BOTTOM</code></td>
-<td>Align chart above or below the anchor</td>
-</tr>
-<tr class="even">
-<td><code>ABOVE</code> / <code>BELOW</code></td>
-<td>Aliases for <code>TOP</code> / <code>BOTTOM</code></td>
-</tr>
-<tr class="odd">
-<td><code>RELOCATE</code></td>
-<td>Snap chart to geometry centroid</td>
-</tr>
-<tr class="even">
-<td><code>SORT</code></td>
-<td>Sort chart parts by value descending</td>
-</tr>
-<tr class="odd">
-<td><code>UP</code></td>
-<td>Sort ascending (smallest on top)</td>
-</tr>
-<tr class="even">
-<td><code>DOWN</code></td>
-<td>Sort descending (largest on top)</td>
-</tr>
-<tr class="odd">
-<td><code>RANDOM</code></td>
-<td>Random sort — useful with <code>STAR</code> to avoid pattern formation</td>
-</tr>
-</tbody>
-</table>
-<p><strong>Aggregation modifiers</strong> (replace cell value with aggregate):</p>
-<table class="caption-top table">
-<thead>
-<tr class="header">
-<th>Modifier</th>
-<th>Computes</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><code>SUM</code></td>
-<td>Sum of all values in cell</td>
-</tr>
-<tr class="even">
-<td><code>COUNT</code></td>
-<td>Count of rows in cell</td>
-</tr>
-<tr class="odd">
-<td><code>MEAN</code></td>
-<td>Arithmetic mean</td>
-</tr>
-<tr class="even">
-<td><code>MIN</code></td>
-<td>Minimum</td>
-</tr>
-<tr class="odd">
-<td><code>MAX</code></td>
-<td>Maximum</td>
-</tr>
-</tbody>
-</table>
-<p><strong>Special geometry modifiers:</strong></p>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 55%">
-<col style="width: 44%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Modifier</th>
-<th>Effect</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><code>BUFFER</code></td>
-<td>Draw buffer zones of <code>buffersize</code> metres around point, line, or polygon features</td>
-</tr>
-</tbody>
-</table>
-
-
 </section>
+</section>
+<section id="summary" class="level3">
+<h3 class="anchored" data-anchor-id="summary">Summary</h3>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 12%">
+<col style="width: 12%">
+<col style="width: 36%">
+<col style="width: 38%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Setup</th>
+<th>Tiles</th>
+<th>Geographic context</th>
+<th>Lat/lon positioning</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Tile Mercator</td>
+<td>✅ automatic</td>
+<td>Provided by tile service</td>
+<td>✅ native</td>
+</tr>
+<tr class="even">
+<td>SVG Mercator</td>
+<td>❌ none</td>
+<td><strong>Must load geometry layers</strong></td>
+<td>✅ native</td>
+</tr>
+<tr class="odd">
+<td>Alternative projection</td>
+<td>❌ none</td>
+<td><strong>Must load geometry layers</strong></td>
+<td>✅ native</td>
+</tr>
+</tbody>
+</table>
+<blockquote class="blockquote">
+<p>In every setup, data symbols (bubbles, dots, flow lines) are positioned by lat/lon coordinates from your data. The only difference is whether the map background is automatic or something you must explicitly provide.</p>
+</blockquote>
+<hr>
+</section>
+</section>
+<section id="basemap-types" class="level2">
+<h2 class="anchored" data-anchor-id="basemap-types">Basemap types</h2>
+<p>The <code>mapType</code> option in <code>ixmaps.Map()</code> sets the basemap. Names are <strong>case-sensitive</strong> and must match exactly.</p>
+<section id="verified-basemaps" class="level3">
+<h3 class="anchored" data-anchor-id="verified-basemaps">Verified basemaps</h3>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 44%">
+<col style="width: 28%">
+<col style="width: 26%">
+</colgroup>
+<thead>
+<tr class="header">
+<th><code>mapType</code> value</th>
+<th>Appearance</th>
+<th>Best for</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>"VT_TONER_LITE"</code></td>
+<td>Clean minimal toner</td>
+<td><strong>Default — use this when in doubt</strong></td>
+</tr>
+<tr class="even">
+<td><code>"white"</code></td>
+<td>Plain white, no tiles</td>
+<td>Data-heavy visualisations</td>
+</tr>
+<tr class="odd">
+<td><code>"CartoDB - Positron"</code></td>
+<td>Light grey minimal</td>
+<td>Modern data journalism</td>
+</tr>
+<tr class="even">
+<td><code>"CartoDB - Dark matter"</code></td>
+<td>Dark theme</td>
+<td>Dark-mode dashboards</td>
+</tr>
+<tr class="odd">
+<td><code>"Stamen Terrain"</code></td>
+<td>Topographic</td>
+<td>Elevation, physical geography</td>
+</tr>
+<tr class="even">
+<td><code>"OpenStreetMap - Osmarenderer"</code></td>
+<td>Standard OSM</td>
+<td>General reference</td>
+</tr>
+</tbody>
+</table>
+<div class="callout callout-style-simple callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Warning</span>Case and spacing matter
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li><code>"CartoDB - Positron"</code> — note the spaces around the dash</li>
+<li><code>"VT_TONER_LITE"</code> — all uppercase</li>
+<li><code>"OpenStreetMap - Osmarenderer"</code> — must include the renderer suffix</li>
+</ul>
+<p>❌ <code>"CartoDB Positron"</code> · <code>"vt_toner_lite"</code> · <code>"OpenStreetMap"</code> all fail silently.</p>
+</div>
+</div>
+</section>
+<section id="hex-keyword-backgrounds" class="level3">
+<h3 class="anchored" data-anchor-id="hex-keyword-backgrounds">Hex / keyword backgrounds</h3>
+<p>For projection-based maps (no tile layer), set <code>mapType</code> to a color directly:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>ixmaps<span class="op">.</span><span class="fu">Map</span>(<span class="st">"map"</span><span class="op">,</span> {</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    <span class="dt">mapType</span><span class="op">:</span>       <span class="st">"#0a1929"</span><span class="op">,</span>   <span class="co">// dark ocean</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">mapProjection</span><span class="op">:</span> <span class="st">"equalearth"</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>})</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Accepted: any hex color (<code>"#rrggbb"</code>), <code>"white"</code>, <code>"dark"</code>, <code>"black"</code>.</p>
+</section>
+<section id="adjusting-basemap-opacity" class="level3">
+<h3 class="anchored" data-anchor-id="adjusting-basemap-opacity">Adjusting basemap opacity</h3>
+<p>Instead of changing the basemap, try reducing its opacity to let your data stand out:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">options</span>({ <span class="dt">basemapopacity</span><span class="op">:</span> <span class="fl">0.3</span> })  <span class="co">// subtle background</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<hr>
+</section>
+</section>
+<section id="next-steps" class="level2">
+<h2 class="anchored" data-anchor-id="next-steps">Next steps</h2>
+<ul>
+<li><strong><a href="./map_types.html">Visualization Types &amp; Modifiers</a></strong> — choose how the data is drawn</li>
+<li><strong><a href="./colors_classification.html">Colors &amp; Classification</a></strong> — color schemes and class methods</li>
+<li><strong><a href="./chart_scaling.html">Sizing &amp; Scaling</a></strong> — symbol sizing across themes and zoom levels</li>
+</ul>
+
+
 </section>
 
 </main> <!-- /main -->
@@ -1330,13 +1070,10 @@ base   shape  sizing  coloring  effect  labels  visibility</code></pre>
   </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./api_documentation.html" class="pagination-link" aria-label="API Reference">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">API Reference</span>
-      </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./theme_styles.html" class="pagination-link" aria-label="Style Properties">
-        <span class="nav-page-text">Style Properties</span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./chart_scaling.html" class="pagination-link" aria-label="Sizing &amp; Scaling">
+        <span class="nav-page-text">Sizing &amp; Scaling</span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
