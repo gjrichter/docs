@@ -22,7 +22,7 @@ At its core, **iXMaps theme specifications are JSON objects** that describe visu
 - **Real-time Data** - Support for live data feeds and dynamic updates
 - **Multiple Formats** - CSV, JSON, GeoJSON, TopoJSON, KML, RSS, and more
 
-## Key Features
+## What you'll learn
 
 At the end of this documentation, you will be able to:
 

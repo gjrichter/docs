@@ -20,15 +20,9 @@ The vision behind iXMaps is to provide a **comprehensive solution** for interact
 
 ## History
 
-iXMaps was created by **Guenter Richter** to address the need for a flexible, powerful mapping framework that could handle:
+iXMaps was created by **Guenter Richter** to address the need for a flexible, powerful mapping framework that could handle multiple data sources and formats, complex data transformations, advanced visualization techniques, interactive features, and real-time data updates.
 
-- Multiple data sources and formats
-- Complex data transformations
-- Advanced visualization techniques
-- Interactive features and user engagement
-- Real-time data updates
-
-The framework has been used in numerous projects, from journalism and research to government transparency and civic engagement applications.
+The framework has been used in numerous projects, from data journalism and research to government transparency and civic engagement applications. The current engine — `ixmaps-flat`, with its declarative layer grammar and fluent API — supersedes the historical iframe-based framework ([gjrichter/ixmaps](https://github.com/gjrichter/ixmaps), now archived).
 
 ## Core Philosophy
 
@@ -49,104 +43,48 @@ Everything is driven by data:
 ### 3. **Open and Accessible**
 Free and open for everyone:
 
-- CC-BY 4.0 license
+- BSD 3-Clause license — free for personal and commercial use
 - Comprehensive documentation
 - Real-world examples
-- Active community support
 
 ## Technology Stack
 
 iXMaps is built on proven web technologies:
 
-### Core Technologies
-- **JavaScript (ES6+)** - Modern JavaScript with classes and modules
-- **SVG** - Scalable vector graphics for crisp maps at any zoom level
-- **HTML5** - Standard web markup
-
-### Libraries and Dependencies
-- **D3.js** - Data-driven visualizations
-- **jQuery** - DOM manipulation (optional)
-- **Mustache** - Template engine for tooltips
-- **Leaflet** - Optional tile-based mapping support
-
-### Data Processing
-- **Data.js** - Custom data processing library
-- Support for CSV, JSON, GeoJSON, TopoJSON, KML, RSS
-- Advanced transformations: pivot, filter, aggregate, join
+- **JavaScript (ES6+)** — core programming language
+- **SVG** — scalable vector graphics for crisp maps at any zoom level
+- **Leaflet** — optional tile-based basemap support
+- **Mustache** — template engine for tooltips and labels
+- **Papaparse** — CSV parsing
+- **DuckDB WASM** — Parquet, GeoParquet and GeoPackage reading
+- **flatgeobuf / geobuf** — binary geo-format reading
+- **D3.js** — optional, for custom user charts
+- **jQuery** — optional DOM utilities
+- **Data.js** — iXMaps's own data processing library (filter, pivot, aggregate, join)
 
 ## Use Cases
 
 iXMaps has been successfully used for:
 
-### Journalism and Media
-- Election results visualizations
-- Demographic analysis
-- Environmental data reporting
-- Investigative journalism with geographic data
-
-### Research and Academia
-- Scientific data visualization
-- Geographic analysis and patterns
-- Publication-ready figures
-- Interactive research papers
-
-### Government and NGOs
-- Open data portals
-- Transparency initiatives
-- Public health dashboards
-- Urban planning tools
-
-### Business Applications
-- Market analysis
-- Customer distribution maps
-- Sales territory visualization
-- Location intelligence
-
-## Features Comparison
-
-| Feature | iXMaps | Leaflet | Google Maps | D3.js Maps |
-|---------|--------|---------|-------------|------------|
-| Data Processing | ✅ Built-in | ❌ External | ❌ External | ⚠️ Manual |
-| Choropleth Maps | ✅ Easy | ⚠️ Plugins | ⚠️ Complex | ✅ Manual |
-| Custom Charts | ✅ Integrated | ❌ No | ❌ Limited | ✅ Full |
-| Multiple Data Sources | ✅ Yes | ❌ No | ❌ No | ⚠️ Manual |
-| Offline Capable | ✅ Yes | ✅ Yes | ❌ No | ✅ Yes |
-| Learning Curve | ⚠️ Moderate | ✅ Easy | ✅ Easy | ❌ Steep |
-
-## Community
-
-iXMaps is maintained by an active community of developers and users:
-
-- **GitHub Repository**: [github.com/gjrichter/ixmaps](https://github.com/gjrichter/ixmaps)
-- **Examples Gallery**: [gjrichter.github.io/pages](https://gjrichter.github.io/pages)
-- **Live Demos**: Dozens of real-world examples in the repository
+- **Journalism and media** — election results, demographic analysis, environmental reporting
+- **Research and academia** — scientific data visualization, geographic patterns, publication-ready figures
+- **Government and NGOs** — open data portals, transparency initiatives, public dashboards
+- **Business** — market analysis, customer distribution, location intelligence
 
 ## License
 
-iXMaps is released under the **Creative Commons Attribution 4.0 International (CC-BY 4.0)** license.
-
-This means you can:
-
-- ✅ Share - copy and redistribute in any medium or format
-- ✅ Adapt - remix, transform, and build upon the material
-- ✅ Commercial use - use for any purpose, even commercially
-
-As long as you:
-
-- 📝 Give appropriate credit
-- 🔗 Provide a link to the license
-- 📢 Indicate if changes were made
+iXMaps is released under the [**BSD 3-Clause License**](https://github.com/gjrichter/ixmaps-flat/blob/main/LICENSE.txt) — free for both personal and commercial use, provided the original copyright notice is included; the original authors' names may not be used to promote derived products.
 
 ## Credits and Acknowledgments
 
 ### Created By
-**Guenter Richter** - Framework architecture, core development, and maintenance
+**Guenter Richter** — framework architecture, core development, and maintenance
 
 ### Special Thanks To
-- **Andrea Borruso** - Urban fabric centroids data and valuable feedback
-- **D3.js Community** - Inspiration for data-driven visualizations
-- **OpenStreetMap Contributors** - Geographic data
-- **ISTAT** - Italian statistical data
+- **Andrea Borruso** — urban fabric centroids data, the [DeepWiki](https://deepwiki.com/gjrichter/ixmaps-flat) contribution, and valuable feedback
+- **D3.js Community** — inspiration for data-driven visualizations
+- **OpenStreetMap Contributors** — geographic data
+- **ISTAT** — Italian statistical data
 
 ### Built With
 - D3.js by Mike Bostock
@@ -156,24 +94,17 @@ As long as you:
 
 ## Contributing
 
-Contributions are welcome! Whether it's:
+Contributions are welcome — bug reports, feature requests, documentation improvements, code:
 
-- 🐛 Bug reports
-- 💡 Feature requests
-- 📝 Documentation improvements
-- 🔧 Code contributions
-- 💬 Community support
-
-Visit the [GitHub repository](https://github.com/gjrichter/ixmaps) to get involved.
+Visit the [GitHub repository](https://github.com/gjrichter/ixmaps-flat) to get involved.
 
 ## Contact
 
 For questions, suggestions, or collaboration:
 
-- **GitHub Issues**: [github.com/gjrichter/ixmaps/issues](https://github.com/gjrichter/ixmaps/issues)
+- **GitHub Issues**: [github.com/gjrichter/ixmaps-flat/issues](https://github.com/gjrichter/ixmaps-flat/issues)
 - **Email**: richter@ixmaps.com
 
 ---
 
-*iXMaps - Making geographic data visualization accessible and powerful for everyone.*
-
+*iXMaps — Making geographic data visualization accessible and powerful for everyone.*

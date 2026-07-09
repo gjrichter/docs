@@ -1,0 +1,1085 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.24">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="description" content="Load, transform and reshape data with Data.js before feeding it to an iXMaps layer: Data.feed, Data.provider, Data.Table and the addColumn/aggregate/pivot pipeline.">
+
+<title>Data Preprocessing – iXMaps Documentation</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./user_charts.html" rel="prev">
+<link href="./pics/favicon.png" rel="icon" type="image/png">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-dc55a5b9e770e841cd82e46aadbfb9b0.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-ba3d7e3108b965ef4c6892bc29f4f97a.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="styles.css">
+<link rel="canonical" href="https://www.ixmaps.com/docs/data_preprocessing.html">
+</head>
+
+<body class="nav-sidebar docked nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a href="./index.html" class="navbar-brand navbar-brand-logo">
+    </a>
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">iXMaps Documentation</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link active" href="./index.html" aria-current="page"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./getting_started.html"> 
+<span class="menu-text">Quick Start</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./api_documentation.html"> 
+<span class="menu-text">API</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/gjrichter/ixmaps-flat"> <i class="bi bi-github" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./api_documentation.html">Reference</a></li><li class="breadcrumb-item"><a href="./data_preprocessing.html">Data Preprocessing</a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+      <a href="./index.html" class="sidebar-logo-link">
+      </a>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Overview</span></a>
+  </div>
+</li>
+        <li class="px-0"><hr class="sidebar-divider hi "></li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">Getting Started</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./getting_started.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Quick Start</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="px-0"><hr class="sidebar-divider hi "></li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+ <span class="menu-text">Reference</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./api_documentation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">API Reference</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./map_types.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Map Types, Sizing &amp; Colors</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./theme_styles.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Style Properties</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./chart_scaling.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Chart Scaling</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./user_charts.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">User Charts</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./data_preprocessing.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">Data Preprocessing</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="px-0"><hr class="sidebar-divider hi "></li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./examples.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Examples</span></a>
+  </div>
+</li>
+        <li class="px-0"><hr class="sidebar-divider hi "></li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./troubleshooting.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Troubleshooting</span></a>
+  </div>
+</li>
+        <li class="px-0"><hr class="sidebar-divider hi "></li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./about.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">About</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#loading-the-library" id="toc-loading-the-library" class="nav-link active" data-scroll-target="#loading-the-library">Loading the library</a></li>
+  <li><a href="#three-ways-to-hook-a-function-into-.data" id="toc-three-ways-to-hook-a-function-into-.data" class="nav-link" data-scroll-target="#three-ways-to-hook-a-function-into-.data">Three ways to hook a function into <code>.data()</code></a>
+  <ul class="collapse">
+  <li><a href="#process-transform-data-after-its-loaded-from-a-url" id="toc-process-transform-data-after-its-loaded-from-a-url" class="nav-link" data-scroll-target="#process-transform-data-after-its-loaded-from-a-url">1. <code>process</code> — transform data after it’s loaded from a URL</a></li>
+  <li><a href="#query-declare-the-data-provider-inline" id="toc-query-declare-the-data-provider-inline" class="nav-link" data-scroll-target="#query-declare-the-data-provider-inline">2. <code>query</code> — declare the data provider inline</a></li>
+  <li><a href="#ext-reference-a-data-provider-declared-beforehand" id="toc-ext-reference-a-data-provider-declared-beforehand" class="nav-link" data-scroll-target="#ext-reference-a-data-provider-declared-beforehand">3. <code>ext</code> — reference a data provider declared beforehand</a></li>
+  </ul></li>
+  <li><a href="#loading-a-dataset-one-source-or-several" id="toc-loading-a-dataset-one-source-or-several" class="nav-link" data-scroll-target="#loading-a-dataset-one-source-or-several">Loading a dataset: one source or several</a>
+  <ul class="collapse">
+  <li><a href="#data.feed-a-single-source" id="toc-data.feed-a-single-source" class="nav-link" data-scroll-target="#data.feed-a-single-source">Data.feed — a single source</a></li>
+  <li><a href="#data.provider-several-sources-one-callback" id="toc-data.provider-several-sources-one-callback" class="nav-link" data-scroll-target="#data.provider-several-sources-one-callback">Data.provider — several sources, one callback</a></li>
+  </ul></li>
+  <li><a href="#data.table-the-loaded-shape" id="toc-data.table-the-loaded-shape" class="nav-link" data-scroll-target="#data.table-the-loaded-shape">Data.Table — the loaded shape</a>
+  <ul class="collapse">
+  <li><a href="#transform-methods" id="toc-transform-methods" class="nav-link" data-scroll-target="#transform-methods">Transform methods</a></li>
+  </ul></li>
+  <li><a href="#feeding-transformed-data-to-a-map-layer" id="toc-feeding-transformed-data-to-a-map-layer" class="nav-link" data-scroll-target="#feeding-transformed-data-to-a-map-layer">Feeding transformed data to a map layer</a>
+  <ul class="collapse">
+  <li><a href="#inline-at-layer-definition-time" id="toc-inline-at-layer-definition-time" class="nav-link" data-scroll-target="#inline-at-layer-definition-time">Inline, at layer-definition time</a></li>
+  <li><a href="#at-runtime-via-a-named-external-table" id="toc-at-runtime-via-a-named-external-table" class="nav-link" data-scroll-target="#at-runtime-via-a-named-external-table">At runtime, via a named external table</a></li>
+  <li><a href="#on-demand-via-a-layers-own-data-provider-type-ext" id="toc-on-demand-via-a-layers-own-data-provider-type-ext" class="nav-link" data-scroll-target="#on-demand-via-a-layers-own-data-provider-type-ext">On demand, via a layer’s own data provider (<code>type: "ext"</code>)</a></li>
+  </ul></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/gjrichter/ixmaps-flat/issues/new" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./api_documentation.html">Reference</a></li><li class="breadcrumb-item"><a href="./data_preprocessing.html">Data Preprocessing</a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title">Data Preprocessing</h1>
+</div>
+
+<div>
+  <div class="description">
+    Load, transform and reshape data with Data.js before feeding it to an iXMaps layer: Data.feed, Data.provider, Data.Table and the addColumn/aggregate/pivot pipeline.
+  </div>
+</div>
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p><code>.data({url, type})</code> covers the common case: point a layer at a file, iXMaps fetches and binds it. When you need to <strong>transform data before it reaches the map</strong> — derive a column, aggregate rows, reshape a table — use <code>Data.js</code>, iXMaps’s own data-table library, which every layer’s data pipeline is built on.</p>
+<hr>
+<section id="loading-the-library" class="level2">
+<h2 class="anchored" data-anchor-id="loading-the-library">Loading the library</h2>
+<p><code>Data</code> lives in its own repo (<code>../data.js/data.js</code>, sibling to <code>ixmaps-flat</code>). It’s one entry in the flat engine’s own bootstrap manifest (<code>fileUrls</code> in <code>htmlgui_flat.js</code>), fetched and evaluated automatically as part of every <code>ixmaps.Map()</code>/<code>ixmaps.embed()</code> call — so any code that runs <strong>after</strong> the map has initialized can use <code>Data</code> as a global with no extra include:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode html code-with-copy"><code class="sourceCode html"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">script</span><span class="ot"> src</span><span class="op">=</span><span class="st">"https://cdn.jsdelivr.net/gh/gjrichter/ixmaps-flat@1/ixmaps.js"</span><span class="dt">&gt;&lt;/</span><span class="kw">script</span><span class="dt">&gt;</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="co">&lt;!-- Data is already available here once ixmaps.Map()/embed() has run --&gt;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="callout callout-style-simple callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Warning</span>Preprocessing before the map exists — add your own include
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The automatic load only happens as a side effect of <code>ixmaps.Map()</code>/<code>ixmaps.embed()</code>. If you need to fetch and preprocess data <strong>before</strong> creating the map — e.g.&nbsp;to decide layer config from the data, or to have a ready <code>Data.Table</code> at hand for <code>.data({obj: ...})</code> on the very first layer — <code>Data</code> isn’t defined yet at that point. Add an explicit script tag for it:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode html code-with-copy"><code class="sourceCode html"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">script</span><span class="ot"> src</span><span class="op">=</span><span class="st">"https://cdn.jsdelivr.net/gh/gjrichter/data.js@1/data.js"</span><span class="dt">&gt;&lt;/</span><span class="kw">script</span><span class="dt">&gt;</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">script</span><span class="dt">&gt;</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  Data<span class="op">.</span><span class="fu">feed</span>({ <span class="dt">source</span><span class="op">:</span> url<span class="op">,</span> <span class="dt">type</span><span class="op">:</span> <span class="st">"csv"</span> })<span class="op">.</span><span class="fu">load</span>(<span class="kw">function</span> (table) {</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>      <span class="co">// preprocess, then create the map and .data({ obj: table })</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  })<span class="op">;</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;/</span><span class="kw">script</span><span class="dt">&gt;</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">script</span><span class="ot"> src</span><span class="op">=</span><span class="st">"https://cdn.jsdelivr.net/gh/gjrichter/ixmaps-flat@1/ixmaps.js"</span><span class="dt">&gt;&lt;/</span><span class="kw">script</span><span class="dt">&gt;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+<hr>
+</section>
+<section id="three-ways-to-hook-a-function-into-.data" class="level2">
+<h2 class="anchored" data-anchor-id="three-ways-to-hook-a-function-into-.data">Three ways to hook a function into <code>.data()</code></h2>
+<p>Beyond <code>{ url, type }</code>, a layer’s <code>.data({...})</code> accepts three different function hooks — each normalizes to a distinct <code>style.dbtable*</code> property under the hood, and each runs at a different point in the load. All three take the function <strong>as a string</strong> (an inline function expression, or the name of one already defined) — <code>.data()</code> values get serialized, so a live <code>Function</code> object doesn’t survive the round-trip.</p>
+<section id="process-transform-data-after-its-loaded-from-a-url" class="level3">
+<h3 class="anchored" data-anchor-id="process-transform-data-after-its-loaded-from-a-url">1. <code>process</code> — transform data after it’s loaded from a URL</h3>
+<p>Pairs with a normal <code>url</code>/<code>type</code> source. iXMaps fetches and parses the file as usual, then calls your function with the resulting <code>Data.Table</code> before binding it — for cleanup or derived columns that belong with this one layer’s data, not the whole page.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">data</span>({</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    <span class="dt">url</span><span class="op">:</span> dataUrl<span class="op">,</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">type</span><span class="op">:</span> <span class="st">"csv"</span><span class="op">,</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">process</span><span class="op">:</span> <span class="vs">`data =&gt; {</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="vs">        data.column("n_killed").map(v =&gt; isNaN(v) ? 0 : v);</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="vs">        data.column("n_wounded").map(v =&gt; isNaN(v) ? 0 : v);</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="vs">        var killed = data.column("n_killed").index, wounded = data.column("n_wounded").index;</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="vs">        data.addColumn({ destination: "n_victims" }, row =&gt; Number(row[killed]) + Number(row[wounded]));</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="vs">    }`</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>})</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Real example (from a production project config): normalizes <code>NaN</code>s in two numeric columns, then derives a <code>n_victims</code> column as their sum. The function receives <code>(data, options)</code> — <code>data</code> is the loaded <code>Data.Table</code> — and may either mutate it in place (as above) or return a new table; iXMaps uses the return value if there is one, otherwise keeps the original (<code>process(data,options) || data</code>).</p>
+</section>
+<section id="query-declare-the-data-provider-inline" class="level3">
+<h3 class="anchored" data-anchor-id="query-declare-the-data-provider-inline">2. <code>query</code> — declare the data provider inline</h3>
+<p>Same calling convention as the <code>ext</code> pattern below (<code>function(theme, options)</code>, must eventually call <code>ixmaps.setExternalData(...)</code>), but written directly inside <code>.data({...})</code> instead of as a separately-declared global. Passing <code>query</code> implicitly sets <code>type: "ext"</code> for you:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">data</span>({</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    <span class="dt">name</span><span class="op">:</span> <span class="st">"myProvider"</span><span class="op">,</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">query</span><span class="op">:</span> <span class="vs">`function(theme, options) {</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="vs">        var bounds = ixmaps.getBoundingBox();</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="vs">        Data.feed({ source: buildQueryURL(bounds), type: "json" }).load(function (raw) {</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="vs">            ixmaps.setExternalData(preprocess(raw), { type: "geojson", name: options.name });</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="vs">        });</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="vs">    }`</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>})</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Use this when the provider logic is short enough to keep next to the layer definition; reach for <code>ext</code> (below) once it’s substantial enough to want its own named function, reused across layers, or defined in a separate script.</p>
+<div class="callout callout-style-simple callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Warning</span><code>query</code> only takes effect together with <code>type: "ext"</code>
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Passing <code>query</code> inside the same <code>.data({...})</code> object auto-defaults <code>type</code> to <code>"ext"</code> — that’s the supported form. The standalone <code>.query(fn)</code> chain method only <em>sets</em> the query string; it does <strong>not</strong> set <code>type</code>, so pairing it with a <code>.data({name: "x"})</code> call that omits <code>type</code> leaves the provider registered but never invoked. If you use the chain form, also set <code>.data({ name: "x", type: "ext" })</code> explicitly.</p>
+</div>
+</div>
+</section>
+<section id="ext-reference-a-data-provider-declared-beforehand" class="level3">
+<h3 class="anchored" data-anchor-id="ext-reference-a-data-provider-declared-beforehand">3. <code>ext</code> — reference a data provider declared beforehand</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">data</span>({ <span class="dt">type</span><span class="op">:</span> <span class="st">"ext"</span><span class="op">,</span> <span class="dt">name</span><span class="op">:</span> <span class="st">"myDataProvider"</span> })</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Same runtime contract as <code>query</code>, except the function must already exist on <code>ixmaps</code> — declared earlier in the page (or a separately loaded script) rather than inline. See <a href="#on-demand-via-a-layers-own-data-provider-type-ext">On demand, via a layer’s own data provider</a> below for the full pattern and a real working example.</p>
+<hr>
+<p>Whichever hook you use, the actual data manipulation inside it goes through the same <code>Data.js</code> API — <code>Data.feed</code>, <code>Data.Table</code> and its transform methods — covered next.</p>
+</section>
+</section>
+<section id="loading-a-dataset-one-source-or-several" class="level2">
+<h2 class="anchored" data-anchor-id="loading-a-dataset-one-source-or-several">Loading a dataset: one source or several</h2>
+<section id="data.feed-a-single-source" class="level3">
+<h3 class="anchored" data-anchor-id="data.feed-a-single-source">Data.feed — a single source</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>Data<span class="op">.</span><span class="fu">feed</span>({ <span class="dt">source</span><span class="op">:</span> url<span class="op">,</span> <span class="dt">type</span><span class="op">:</span> <span class="st">"csv"</span> })<span class="op">.</span><span class="fu">load</span>(<span class="kw">function</span> (table) {</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">// table is a Data.Table, already parsed</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>})<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><code>Data.feed(options)</code> takes a <strong>single</strong> options object:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 57%">
+<col style="width: 42%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Option</th>
+<th>Role</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>source</code> / <code>src</code> / <code>url</code> / <code>ext</code></td>
+<td>Location of the data (first one present wins)</td>
+</tr>
+<tr class="even">
+<td><code>type</code></td>
+<td><code>csv</code>, <code>json</code>, <code>jsonl</code>/<code>ndjson</code>, <code>geojson</code>, <code>topojson</code>, <code>kml</code>, <code>gml</code>, <code>rss</code>, <code>jsonDB</code>, <code>jsonstat</code>, <code>parquet</code>, <code>geoparquet</code>, <code>gpkg</code>, <code>fgb</code>/<code>flatgeobuf</code>, <code>pbf</code>/<code>geobuf</code></td>
+</tr>
+<tr class="odd">
+<td><code>cache</code></td>
+<td>Boolean, default <code>true</code></td>
+</tr>
+</tbody>
+</table>
+<div class="callout callout-style-simple callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Warning</span>Some in-source examples show a two-argument form — don’t use it
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Older comments and examples (including inside <code>data.js</code> itself, and the legacy <code>ixmaps</code> engine) show <code>Data.feed("name", {source, type})</code> or <code>new Data.Feed("name", {...})</code>. The current constructor takes <strong>one</strong> argument: <code>Data.Feed = function (options) {...}</code>. Passing a name as the first argument silently misassigns it — always call <code>Data.feed({ source, type })</code>.</p>
+</div>
+</div>
+<p><code>.load(callback)</code> calls <code>callback(table)</code> once parsing finishes — <code>table</code> is a <code>Data.Table</code>, not raw JSON.</p>
+<div class="callout callout-style-simple callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span><code>this</code> inside the <code>.load()</code> callback is not the feed
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Because iXMaps invokes the callback as <code>opt.success(this.dbtable)</code>, <code>this</code> inside your callback is the feed’s <strong>options object</strong> — it has <code>.source</code>/<code>.type</code>, not the loaded data. Read the callback’s own argument for the table; if you need feed-level details, capture the feed in an outer variable instead of relying on <code>this</code>.</p>
+</div>
+</div>
+<p><code>.error(callback)</code> registers an error handler and is chainable: <code>Data.feed({...}).error(fn).load(fn)</code>.</p>
+</section>
+<section id="data.provider-several-sources-one-callback" class="level3">
+<h3 class="anchored" data-anchor-id="data.provider-several-sources-one-callback">Data.provider — several sources, one callback</h3>
+<p>When a transform needs <strong>more than one</strong> dataset at once — joining two files, looking up one table against another — loading them with separate <code>Data.feed</code> calls means juggling nested callbacks. <code>Data.provider()</code> loads any number of sources in parallel and calls your function once <strong>all</strong> of them are ready:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>Data<span class="op">.</span><span class="fu">provider</span>()</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">addSource</span>(scrutiniUrl<span class="op">,</span> <span class="st">"csv"</span>)</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">addSource</span>(comuniUrl<span class="op">,</span> <span class="st">"csv"</span>)</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">addSource</span>(camercaUrl<span class="op">,</span> <span class="st">"csv"</span>)</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">realize</span>(<span class="kw">function</span> (dataA) {</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>        <span class="kw">var</span> scrutini          <span class="op">=</span> dataA[<span class="dv">0</span>]<span class="op">;</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>        <span class="kw">var</span> comuniViminaleISTAT <span class="op">=</span> dataA[<span class="dv">1</span>]<span class="op">;</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>        <span class="kw">var</span> camera             <span class="op">=</span> dataA[<span class="dv">2</span>]<span class="op">;</span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>        scrutini <span class="op">=</span> scrutini<span class="op">.</span><span class="fu">select</span>(<span class="st">"WHERE tipo_riga == LI"</span>)<span class="op">;</span></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>        <span class="co">// ... join/transform across the three tables</span></span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>    })<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<ul>
+<li><code>.addSource(url, type)</code> — queue one source; call it once per dataset, in the order you want them back</li>
+<li><code>.realize(callback)</code> — starts loading; <code>callback(dataA)</code> receives a <code>Data.Table</code> <strong>array</strong>, indexed in <code>addSource</code> call order</li>
+<li><code>.error(fn)</code> / <code>.notify(fn)</code> — error handler / per-source progress hook, both chainable like <code>Data.feed</code>’s <code>.error()</code></li>
+</ul>
+<p>This is what iXMaps itself uses internally to load a layer’s data (<code>new Data.Broker(options).addSource(url, type).realize(...)</code>, inside <code>htmlgui.js</code>) — reach for it directly whenever a <code>process</code>/<code>query</code> function (see above) needs to combine more than one source before handing data back to the map.</p>
+<div class="callout callout-style-simple callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Warning</span>Use <code>Data.provider()</code>, not <code>Data.broker()</code>
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Both return the same underlying object, but <code>Data.broker()</code> is the deprecated name — kept only for old code, not a second recommended entry point. It also collides conceptually with unrelated “broker” activities elsewhere; <code>Data.provider()</code> is the current, unambiguous name and the one to use in new code.</p>
+</div>
+</div>
+<hr>
+</section>
+</section>
+<section id="data.table-the-loaded-shape" class="level2">
+<h2 class="anchored" data-anchor-id="data.table-the-loaded-shape">Data.Table — the loaded shape</h2>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">table</span><span class="op">:</span>   { <span class="dt">records</span><span class="op">:</span> <span class="dv">2</span><span class="op">,</span> <span class="dt">fields</span><span class="op">:</span> <span class="dv">3</span> }<span class="op">,</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">fields</span><span class="op">:</span>  [ {<span class="dt">id</span><span class="op">:</span><span class="st">"column 1"</span>}<span class="op">,</span> {<span class="dt">id</span><span class="op">:</span><span class="st">"column 2"</span>}<span class="op">,</span> {<span class="dt">id</span><span class="op">:</span><span class="st">"column 3"</span>} ]<span class="op">,</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">records</span><span class="op">:</span> [ [<span class="st">"value11"</span><span class="op">,</span><span class="st">"value12"</span><span class="op">,</span><span class="st">"value13"</span>]<span class="op">,</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>             [<span class="st">"value21"</span><span class="op">,</span><span class="st">"value22"</span><span class="op">,</span><span class="st">"value23"</span>] ]</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><code>fields</code> is column metadata (order matches each row in <code>records</code>); <code>records</code> is a plain array of row-arrays. <code>.getArray()</code> / <code>.setArray()</code> convert to/from a single 2D array with the header as row 0.</p>
+<section id="transform-methods" class="level3">
+<h3 class="anchored" data-anchor-id="transform-methods">Transform methods</h3>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 57%">
+<col style="width: 42%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Method</th>
+<th>Role</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>.column(name)</code></td>
+<td>Returns a <code>Data.Column</code> handle — <code>.values()</code> reads all cell values, <code>.map(fn)</code> transforms them in place</td>
+</tr>
+<tr class="even">
+<td><code>.addColumn(options, callback)</code></td>
+<td>Derive a new column from one or more existing columns</td>
+</tr>
+<tr class="odd">
+<td><code>.select(expression)</code></td>
+<td>Filter rows</td>
+</tr>
+<tr class="even">
+<td><code>.aggregate(column, aggregateType)</code></td>
+<td>Group/summarize</td>
+</tr>
+<tr class="odd">
+<td><code>.pivot(options)</code></td>
+<td>Reshape rows ↔︎ columns</td>
+</tr>
+<tr class="even">
+<td><code>.subtable(options)</code></td>
+<td>Extract a row/column subset</td>
+</tr>
+<tr class="odd">
+<td><code>.addTimeColumns(options)</code></td>
+<td>Derive date/time parts from a source column</td>
+</tr>
+<tr class="even">
+<td><code>.revert()</code> / <code>.reverse()</code></td>
+<td>Reverse row order</td>
+</tr>
+</tbody>
+</table>
+<p><code>addColumn</code> is the core preprocessing primitive — derive a column from one source:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>mydata <span class="op">=</span> mydata<span class="op">.</span><span class="fu">addColumn</span>(</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>    { <span class="dt">source</span><span class="op">:</span> <span class="st">"created_at"</span><span class="op">,</span> <span class="dt">destination</span><span class="op">:</span> <span class="st">"date"</span> }<span class="op">,</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>    <span class="kw">function</span> (value<span class="op">,</span> row) {</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>        <span class="kw">var</span> d <span class="op">=</span> <span class="kw">new</span> <span class="bu">Date</span>(value)<span class="op">;</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="bu">String</span>(d<span class="op">.</span><span class="fu">getDate</span>()) <span class="op">+</span> <span class="st">"."</span> <span class="op">+</span> <span class="bu">String</span>(d<span class="op">.</span><span class="fu">getMonth</span>() <span class="op">+</span> <span class="dv">1</span>) <span class="op">+</span> <span class="st">"."</span> <span class="op">+</span> <span class="bu">String</span>(d<span class="op">.</span><span class="fu">getFullYear</span>())<span class="op">;</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>)<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>or from several source columns at once:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>mydata <span class="op">=</span> mydata<span class="op">.</span><span class="fu">addColumn</span>(</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>    { <span class="dt">source</span><span class="op">:</span> [<span class="st">"first_name"</span><span class="op">,</span> <span class="st">"last_name"</span>]<span class="op">,</span> <span class="dt">destination</span><span class="op">:</span> <span class="st">"full_name"</span> }<span class="op">,</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    <span class="kw">function</span> (firstName<span class="op">,</span> lastName<span class="op">,</span> row) {</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> firstName <span class="op">+</span> <span class="st">" "</span> <span class="op">+</span> lastName<span class="op">;</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>)<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<hr>
+</section>
+</section>
+<section id="feeding-transformed-data-to-a-map-layer" class="level2">
+<h2 class="anchored" data-anchor-id="feeding-transformed-data-to-a-map-layer">Feeding transformed data to a map layer</h2>
+<p>Two ways to hand a <code>Data.Table</code> to iXMaps once you’re done transforming it.</p>
+<section id="inline-at-layer-definition-time" class="level3">
+<h3 class="anchored" data-anchor-id="inline-at-layer-definition-time">Inline, at layer-definition time</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">data</span>({ <span class="dt">obj</span><span class="op">:</span> myTransformedTable })   <span class="co">// or { data: myTransformedTable }</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Use this when the transform finishes before you build the layer chain.</p>
+</section>
+<section id="at-runtime-via-a-named-external-table" class="level3">
+<h3 class="anchored" data-anchor-id="at-runtime-via-a-named-external-table">At runtime, via a named external table</h3>
+<p>For a one-off load/transform after the map already exists (e.g.&nbsp;on a timer, or in response to a UI action), register the result with <code>ixmaps.setExternalData(table, options)</code>:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>Data<span class="op">.</span><span class="fu">feed</span>({ <span class="dt">source</span><span class="op">:</span> queryURL<span class="op">,</span> <span class="dt">type</span><span class="op">:</span> <span class="st">"csv"</span> })<span class="op">.</span><span class="fu">load</span>(<span class="kw">function</span> (table) {</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>    table<span class="op">.</span><span class="fu">addTimeColumns</span>({ <span class="dt">source</span><span class="op">:</span> <span class="st">"Time"</span> })<span class="op">;</span>   <span class="co">// preprocess in place</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>    ixmaps<span class="op">.</span><span class="fu">setExternalData</span>(table<span class="op">,</span> { <span class="dt">name</span><span class="op">:</span> <span class="st">"myLayerData"</span><span class="op">,</span> <span class="dt">type</span><span class="op">:</span> <span class="st">"jsonDB"</span> })<span class="op">;</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>})<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Condensed from a production iXMaps page, loading an earthquake feed and deriving time columns before handing it to the map:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> queryURL <span class="op">=</span> <span class="fu">buildQueryURL</span>(startDate)<span class="op">;</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>Data<span class="op">.</span><span class="fu">feed</span>({ <span class="dt">source</span><span class="op">:</span> queryURL<span class="op">,</span> <span class="dt">type</span><span class="op">:</span> <span class="st">"csv"</span> })<span class="op">.</span><span class="fu">load</span>(<span class="kw">function</span> (newData) {</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>    newData<span class="op">.</span><span class="fu">addTimeColumns</span>({ <span class="dt">source</span><span class="op">:</span> <span class="st">"Time"</span> })<span class="op">;</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>    ixmaps<span class="op">.</span><span class="fu">setExternalData</span>(newData<span class="op">,</span> { <span class="dt">name</span><span class="op">:</span> <span class="st">"quakes"</span><span class="op">,</span> <span class="dt">type</span><span class="op">:</span> <span class="st">"jsonDB"</span> })<span class="op">;</span></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>})<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="on-demand-via-a-layers-own-data-provider-type-ext" class="level3">
+<h3 class="anchored" data-anchor-id="on-demand-via-a-layers-own-data-provider-type-ext">On demand, via a layer’s own data provider (<code>type: "ext"</code>)</h3>
+<p>The pattern above runs once, imperatively. For a layer that fetches and preprocesses <strong>its own</strong> data whenever it’s needed — first load, a map pan/zoom, a filter change — bind it to <code>type: "ext"</code> and register a same-named function on <code>ixmaps</code>:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">data</span>({ <span class="dt">type</span><span class="op">:</span> <span class="st">"ext"</span><span class="op">,</span> <span class="dt">name</span><span class="op">:</span> <span class="st">"myDataProvider"</span> })</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb15"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>ixmaps<span class="op">.</span><span class="at">myDataProvider</span> <span class="op">=</span> <span class="kw">function</span> (theme<span class="op">,</span> options) {</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">var</span> bounds <span class="op">=</span> ixmaps<span class="op">.</span><span class="fu">getBoundingBox</span>()<span class="op">;</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>    <span class="kw">var</span> url <span class="op">=</span> <span class="fu">buildQueryURL</span>(bounds)<span class="op">;</span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>    Data<span class="op">.</span><span class="fu">feed</span>({ <span class="dt">source</span><span class="op">:</span> url<span class="op">,</span> <span class="dt">type</span><span class="op">:</span> <span class="st">"json"</span> })<span class="op">.</span><span class="fu">load</span>(<span class="kw">function</span> (raw) {</span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>        <span class="kw">var</span> transformed <span class="op">=</span> <span class="fu">preprocess</span>(raw)<span class="op">;</span>           <span class="co">// your own transform step</span></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>        ixmaps<span class="op">.</span><span class="fu">setExternalData</span>(transformed<span class="op">,</span> { <span class="dt">type</span><span class="op">:</span> <span class="st">"geojson"</span><span class="op">,</span> <span class="dt">name</span><span class="op">:</span> options<span class="op">.</span><span class="at">name</span> })<span class="op">;</span></span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>    })</span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">error</span>(<span class="kw">function</span> (e) {</span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>        ixmaps<span class="op">.</span><span class="fu">setExternalData</span>(<span class="kw">null</span><span class="op">,</span> { <span class="dt">type</span><span class="op">:</span> <span class="st">"geojson"</span><span class="op">,</span> <span class="dt">name</span><span class="op">:</span> options<span class="op">.</span><span class="at">name</span> })<span class="op">;</span></span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>    })<span class="op">;</span></span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a>}<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>iXMaps calls <code>ixmaps.&lt;name&gt;(theme, options)</code> whenever the layer needs data — the function does its own fetch (<code>Data.feed</code> or otherwise), transforms it, and delivers the result via <code>ixmaps.setExternalData(data, {type, name: options.name})</code>. Because the call happens through the theme lifecycle rather than a one-off script, this is the pattern to reach for when data must be re-fetched as the map changes (e.g.&nbsp;a bounding-box query against a live API), not just loaded once at page load.</p>
+<p>Real example — a cycling-stress layer that re-queries OpenStreetMap’s Overpass API for the current map view, derives a <code>level</code> field from OSM tags, and converts to GeoJSON before delivering it:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb16"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>ixmaps<span class="op">.</span><span class="at">OSM_dataquery_stressmap</span> <span class="op">=</span> <span class="kw">function</span> (theme<span class="op">,</span> options) {</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">var</span> bounds <span class="op">=</span> ixmaps<span class="op">.</span><span class="fu">getBoundingBox</span>()<span class="op">;</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>    <span class="kw">var</span> query <span class="op">=</span> <span class="fu">buildOverpassQuery</span>(bounds)<span class="op">;</span>   <span class="co">// Overpass QL string</span></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>    <span class="kw">var</span> url <span class="op">=</span> <span class="st">"https://overpass-api.de/api/interpreter?data="</span> <span class="op">+</span> query<span class="op">;</span></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>    <span class="kw">var</span> myfeed <span class="op">=</span> Data<span class="op">.</span><span class="fu">feed</span>({ <span class="dt">source</span><span class="op">:</span> url<span class="op">,</span> <span class="dt">type</span><span class="op">:</span> <span class="st">"json"</span> })<span class="op">.</span><span class="fu">load</span>(<span class="kw">function</span> (mydata) {</span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> (myfeed<span class="op">.</span><span class="at">data</span><span class="op">.</span><span class="at">elements</span>) {</span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>            ixmaps<span class="op">.</span><span class="fu">addStressLevel</span>(myfeed<span class="op">.</span><span class="at">data</span>)<span class="op">;</span>          <span class="co">// derive the "level" field in place</span></span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>            <span class="kw">var</span> geo <span class="op">=</span> <span class="fu">osmtogeojson</span>(myfeed<span class="op">.</span><span class="at">data</span>)<span class="op">;</span>         <span class="co">// OSM JSON -&gt; GeoJSON</span></span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>            ixmaps<span class="op">.</span><span class="fu">setExternalData</span>(geo<span class="op">,</span> { <span class="dt">type</span><span class="op">:</span> <span class="st">"geojson"</span><span class="op">,</span> <span class="dt">name</span><span class="op">:</span> options<span class="op">.</span><span class="at">name</span> })<span class="op">;</span></span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>        }</span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a>    })</span>
+<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">error</span>(<span class="kw">function</span> (e) {</span>
+<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a>        ixmaps<span class="op">.</span><span class="fu">setExternalData</span>(<span class="kw">null</span><span class="op">,</span> { <span class="dt">type</span><span class="op">:</span> <span class="st">"geojson"</span><span class="op">,</span> <span class="dt">name</span><span class="op">:</span> options<span class="op">.</span><span class="at">name</span> })<span class="op">;</span></span>
+<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a>    })<span class="op">;</span></span>
+<span id="cb16-16"><a href="#cb16-16" aria-hidden="true" tabindex="-1"></a>}<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb17"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>ixmaps<span class="op">.</span><span class="fu">layer</span>(<span class="st">"osm"</span><span class="op">,</span> layer <span class="kw">=&gt;</span> layer</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">data</span>({ <span class="dt">type</span><span class="op">:</span> <span class="st">"ext"</span><span class="op">,</span> <span class="dt">name</span><span class="op">:</span> <span class="st">"OSM_dataquery_stressmap"</span> })</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">binding</span>({ <span class="dt">position</span><span class="op">:</span> <span class="st">"geometry"</span><span class="op">,</span> <span class="dt">id</span><span class="op">:</span> <span class="st">"id"</span><span class="op">,</span> <span class="dt">value</span><span class="op">:</span> <span class="st">"level"</span> })</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">type</span>(<span class="st">"CHART|FEATURES|CATEGORICAL|LINES"</span>)</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">style</span>({ <span class="dt">colorscheme</span><span class="op">:</span> [<span class="st">"#0099CC"</span><span class="op">,</span> <span class="st">"#1C9C54"</span><span class="op">,</span> <span class="st">"#F0C808"</span><span class="op">,</span> <span class="st">"#DD5454"</span>]<span class="op">,</span> <span class="dt">values</span><span class="op">:</span> [<span class="st">"1"</span><span class="op">,</span> <span class="st">"2"</span><span class="op">,</span> <span class="st">"3"</span><span class="op">,</span> <span class="st">"4"</span>] })</span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">meta</span>({ <span class="dt">title</span><span class="op">:</span> <span class="st">"Cycling Stress Map"</span> })</span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>)<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Note <code>myfeed.data</code> here, not the callback’s own <code>mydata</code> argument — for JSON-family feeds the raw parsed payload is also stored on the feed instance (<code>this.data</code> inside <code>data.js</code>), and capturing the feed in an outer variable is how real code reads it. This isn’t a general <code>Data.Feed</code> guarantee (CSV imports never populate it — see the callout above) — treat it as specific to JSON sources.</p>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/www\.ixmaps\.com\/docs");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./user_charts.html" class="pagination-link" aria-label="User Charts">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">User Charts</span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/gjrichter/ixmaps-flat/issues/new" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div></div></div></footer></body></html>

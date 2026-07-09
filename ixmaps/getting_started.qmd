@@ -56,7 +56,7 @@ Never use `width: 100vw; height: 100vh` on the map `<div>`. When a scrollbar app
 
 :::{.callout-note}
 ## No extra scripts needed
-`data.js` is already bundled inside `ixmaps.js`. `Data.*` functions are always available — do not add a second `<script>` tag for data.js unless you need it outside a layer callback.
+`data.js` is loaded automatically when `ixmaps.Map()` initializes — `Data.*` functions are available in any code that runs after that (layer callbacks, `.then()`, event handlers). Only if you need `Data` *before* creating the map do you add its own `<script>` tag — see [Data Preprocessing](data_preprocessing.qmd#loading-the-library).
 :::
 
 ---

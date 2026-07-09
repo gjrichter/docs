@@ -392,6 +392,17 @@ Bind two fields with `|`: `.binding({ value: "field_a|field_b" })`. The modifier
 | `MULTIPLE` | Offset repeated positions so overlapping points are all visible |
 | `DIFFUSE` | Like `AGGREGATE` but distributes each value to the 4 nearest grid points |
 
+**Plot / sparkline modifiers** (for `CHART|SYMBOL|PLOT|LINES`):
+
+| Modifier | Effect |
+|----------|--------|
+| `AREA` | Fill the area under the plot curve |
+| `LASTARROW` | Arrowhead on the last plot segment — size via `markersize` |
+| `NOCLIP` | Don't clip the plot to its grid cell |
+| `GRIDSIZE` | Derive chart size from the grid cell size (`gridwidth`) |
+| `FIXSIZE` | Uniform chart size, independent of the data value |
+| `FADEIN` | Fade the plot line in from transparent to opaque |
+
 **Chart positioning modifiers:**
 
 | Modifier | Effect |
@@ -459,13 +470,13 @@ A direct multiplier applied on top of all other sizing logic. Start at `1` and a
 .style({ scale: 2.0 })  // double size
 ```
 
-### `sizepow` — power curve
+### `sizepow` — which symbol dimension carries the value
 
-Controls how aggressively size differences are exaggerated. A power of `2` = quadratic — small differences become visually obvious:
+Declares whether the value is represented by the symbol's length (`1`), area (`2`, default) or volume (`3`); higher values compress contrast, values below `1` exaggerate it. See [Chart Scaling](chart_scaling.qmd#sizepow-which-symbol-dimension-carries-the-value) for the full definition and effect table:
 
 ```javascript
-.style({ sizepow: 2 })  // quadratic — high contrast
-.style({ sizepow: 1 })  // linear — proportional
+.style({ sizepow: 2 })  // area-proportional (default) — the cartographic standard
+.style({ sizepow: 1 })  // width proportional to value — reads as exaggerated
 ```
 
 ### `objectscaling: "dynamic"` — zoom-adaptive scaling
@@ -580,4 +591,55 @@ For `CHART|VECTOR|BEZIER|GRADIENT`, use `linecolor` as a two-element array — n
     showdata:   "true"
 })
 ```
+
+### Data-driven colorschemes
+
+Every format above is a **static** palette, fixed when you write `.style({...})`. For a palette **computed from the layer's own data** — e.g. color assigned by matching each class's label against a pattern, once the classes are actually known — pass a function reference instead of colors:
+
+```javascript
+.style({ colorscheme: "ixmaps.colorScheme_speedmap" })
+```
+
+Define the function on the `ixmaps` namespace (same convention as `userdraw` — see [User Charts](user_charts.qmd)). This is a real, shipping example — a `CATEGORICAL` speed-limit layer where the color depends on the text of each class label, not a fixed palette:
+
+```javascript
+ixmaps.colorScheme_speedmap = function (theme) {
+    // theme.szLabelA     — one label per class, in class order
+    // theme.colorScheme  — mutate in place: one hex string per class
+
+    for (var i = 0; i < theme.szLabelA.length; i++) {
+        if (theme.szLabelA[i].match(/^(45|50|55|60|65|70|75) mph/i)) {
+            theme.colorScheme[i] = "#CE517F";
+        } else if (theme.szLabelA[i].match(/^40 mph/i)) {
+            theme.colorScheme[i] = "#CC6166";
+        } else if (theme.szLabelA[i].match(/^30/i)) {
+            theme.colorScheme[i] = "#D0A148";
+        }
+        // ... remaining bands, then a fallback for unmatched labels
+    }
+};
+```
+
+Load the required helper script and reference the layer as usual:
+
+```javascript
+ixmaps.Map("map_div", { /* ... */ })
+    .require("../../ui/js/tools/colorscheme.js")   // ColorScheme.createColorScheme(), used below
+    .layer(ixmaps.layer("osm", layer => layer
+        .data({ type: "ext", name: "OSM_dataquery_stressmap" })
+        .binding({ position: "geometry", id: "id", value: "maxspeed" })
+        .type("CHART|FEATURES|CATEGORICAL|LINES")
+        .style({ colorscheme: "ixmaps.colorScheme_speedmap", linewidth: "3" })
+        .meta({ title: "Speed limits" })
+    ));
+```
+
+iXMaps calls the function once the theme's classes are resolved (`theme.szLabelA` populated), then reads `theme.colorScheme[i]` to paint each class — so this is the way to base color on values the layer only knows after loading (its actual set of categories, quantile breaks, etc.). To start from a named palette and only override specific entries, `ColorScheme.createColorScheme(...)` (from the same `colorscheme.js` tool) returns a color array you can index into before selectively overwriting entries — see `ixmaps.colorScheme_surfacemap` alongside `colorScheme_speedmap` in the source above for that combined pattern.
+
+:::{.callout-note}
+## Reference by name, not by array, not inline
+`colorscheme: "ixmaps.myFunc"` works as a bare string (`["ixmaps.myFunc"]` also works — both are normalized the same way). Never pass an inline function body as the string — the property parser splits on `,` and `|`, which corrupts multi-statement source.
+:::
+
+A plain JS array built dynamically *before* the layer is defined works too — `colorscheme: buildPalette(n)` is just a normal array by the time `.style()` sees it — but it can't reflect anything about data this same layer hasn't loaded yet. Use the function form for anything that depends on the layer's own resolved classes.
 

@@ -250,6 +250,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
  <span class="menu-text">User Charts</span></a>
   </div>
 </li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./data_preprocessing.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Data Preprocessing</span></a>
+  </div>
+</li>
       </ul>
   </li>
         <li class="px-0"><hr class="sidebar-divider hi "></li>
@@ -308,7 +314,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <ul class="collapse">
   <li><a href="#normalsizevalue-reference-based-sizing" id="toc-normalsizevalue-reference-based-sizing" class="nav-link" data-scroll-target="#normalsizevalue-reference-based-sizing"><code>normalsizevalue</code> — reference-based sizing</a></li>
   <li><a href="#scale-uniform-multiplier" id="toc-scale-uniform-multiplier" class="nav-link" data-scroll-target="#scale-uniform-multiplier"><code>scale</code> — uniform multiplier</a></li>
-  <li><a href="#sizepow-power-curve" id="toc-sizepow-power-curve" class="nav-link" data-scroll-target="#sizepow-power-curve"><code>sizepow</code> — power curve</a></li>
+  <li><a href="#sizepow-which-symbol-dimension-carries-the-value" id="toc-sizepow-which-symbol-dimension-carries-the-value" class="nav-link" data-scroll-target="#sizepow-which-symbol-dimension-carries-the-value"><code>sizepow</code> — which symbol dimension carries the value</a></li>
   <li><a href="#objectscaling-dynamic-zoom-adaptive-scaling" id="toc-objectscaling-dynamic-zoom-adaptive-scaling" class="nav-link" data-scroll-target="#objectscaling-dynamic-zoom-adaptive-scaling"><code>objectscaling: "dynamic"</code> — zoom-adaptive scaling</a></li>
   <li><a href="#urban-trees-baseline" id="toc-urban-trees-baseline" class="nav-link" data-scroll-target="#urban-trees-baseline">Urban trees baseline</a></li>
   </ul></li>
@@ -321,6 +327,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#categorical-color-binding" id="toc-categorical-color-binding" class="nav-link" data-scroll-target="#categorical-color-binding">CATEGORICAL color binding</a></li>
   <li><a href="#diverging-scales" id="toc-diverging-scales" class="nav-link" data-scroll-target="#diverging-scales">Diverging scales</a></li>
   <li><a href="#flow-line-gradients" id="toc-flow-line-gradients" class="nav-link" data-scroll-target="#flow-line-gradients">Flow line gradients</a></li>
+  <li><a href="#data-driven-colorschemes" id="toc-data-driven-colorschemes" class="nav-link" data-scroll-target="#data-driven-colorschemes">Data-driven colorschemes</a></li>
   </ul></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/gjrichter/ixmaps-flat/issues/new" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div></nav>
@@ -1088,6 +1095,45 @@ base   shape  sizing  coloring  effect  labels  visibility</code></pre>
 </tr>
 </tbody>
 </table>
+<p><strong>Plot / sparkline modifiers</strong> (for <code>CHART|SYMBOL|PLOT|LINES</code>):</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 55%">
+<col style="width: 44%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Modifier</th>
+<th>Effect</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>AREA</code></td>
+<td>Fill the area under the plot curve</td>
+</tr>
+<tr class="even">
+<td><code>LASTARROW</code></td>
+<td>Arrowhead on the last plot segment — size via <code>markersize</code></td>
+</tr>
+<tr class="odd">
+<td><code>NOCLIP</code></td>
+<td>Don’t clip the plot to its grid cell</td>
+</tr>
+<tr class="even">
+<td><code>GRIDSIZE</code></td>
+<td>Derive chart size from the grid cell size (<code>gridwidth</code>)</td>
+</tr>
+<tr class="odd">
+<td><code>FIXSIZE</code></td>
+<td>Uniform chart size, independent of the data value</td>
+</tr>
+<tr class="even">
+<td><code>FADEIN</code></td>
+<td>Fade the plot line in from transparent to opaque</td>
+</tr>
+</tbody>
+</table>
 <p><strong>Chart positioning modifiers:</strong></p>
 <table class="caption-top table">
 <colgroup>
@@ -1246,11 +1292,11 @@ base   shape  sizing  coloring  effect  labels  visibility</code></pre>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb15"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">style</span>({ <span class="dt">scale</span><span class="op">:</span> <span class="fl">0.5</span> })  <span class="co">// half size</span></span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">style</span>({ <span class="dt">scale</span><span class="op">:</span> <span class="fl">2.0</span> })  <span class="co">// double size</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
-<section id="sizepow-power-curve" class="level3">
-<h3 class="anchored" data-anchor-id="sizepow-power-curve"><code>sizepow</code> — power curve</h3>
-<p>Controls how aggressively size differences are exaggerated. A power of <code>2</code> = quadratic — small differences become visually obvious:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb16"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">style</span>({ <span class="dt">sizepow</span><span class="op">:</span> <span class="dv">2</span> })  <span class="co">// quadratic — high contrast</span></span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">style</span>({ <span class="dt">sizepow</span><span class="op">:</span> <span class="dv">1</span> })  <span class="co">// linear — proportional</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<section id="sizepow-which-symbol-dimension-carries-the-value" class="level3">
+<h3 class="anchored" data-anchor-id="sizepow-which-symbol-dimension-carries-the-value"><code>sizepow</code> — which symbol dimension carries the value</h3>
+<p>Declares whether the value is represented by the symbol’s length (<code>1</code>), area (<code>2</code>, default) or volume (<code>3</code>); higher values compress contrast, values below <code>1</code> exaggerate it. See <a href="./chart_scaling.html#sizepow-which-symbol-dimension-carries-the-value">Chart Scaling</a> for the full definition and effect table:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb16"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">style</span>({ <span class="dt">sizepow</span><span class="op">:</span> <span class="dv">2</span> })  <span class="co">// area-proportional (default) — the cartographic standard</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">style</span>({ <span class="dt">sizepow</span><span class="op">:</span> <span class="dv">1</span> })  <span class="co">// width proportional to value — reads as exaggerated</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="objectscaling-dynamic-zoom-adaptive-scaling" class="level3">
 <h3 class="anchored" data-anchor-id="objectscaling-dynamic-zoom-adaptive-scaling"><code>objectscaling: "dynamic"</code> — zoom-adaptive scaling</h3>
@@ -1354,6 +1400,52 @@ base   shape  sizing  coloring  effect  labels  visibility</code></pre>
 <span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">linecolor</span><span class="op">:</span>  [<span class="st">"#00aabb"</span><span class="op">,</span> <span class="st">"#ff4400"</span>]<span class="op">,</span>  <span class="co">// origin color → destination color</span></span>
 <span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">showdata</span><span class="op">:</span>   <span class="st">"true"</span></span>
 <span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>})</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="data-driven-colorschemes" class="level3">
+<h3 class="anchored" data-anchor-id="data-driven-colorschemes">Data-driven colorschemes</h3>
+<p>Every format above is a <strong>static</strong> palette, fixed when you write <code>.style({...})</code>. For a palette <strong>computed from the layer’s own data</strong> — e.g.&nbsp;color assigned by matching each class’s label against a pattern, once the classes are actually known — pass a function reference instead of colors:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb26"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">style</span>({ <span class="dt">colorscheme</span><span class="op">:</span> <span class="st">"ixmaps.colorScheme_speedmap"</span> })</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Define the function on the <code>ixmaps</code> namespace (same convention as <code>userdraw</code> — see <a href="./user_charts.html">User Charts</a>). This is a real, shipping example — a <code>CATEGORICAL</code> speed-limit layer where the color depends on the text of each class label, not a fixed palette:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb27"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>ixmaps<span class="op">.</span><span class="at">colorScheme_speedmap</span> <span class="op">=</span> <span class="kw">function</span> (theme) {</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">// theme.szLabelA     — one label per class, in class order</span></span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>    <span class="co">// theme.colorScheme  — mutate in place: one hex string per class</span></span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> (<span class="kw">var</span> i <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> i <span class="op">&lt;</span> theme<span class="op">.</span><span class="at">szLabelA</span><span class="op">.</span><span class="at">length</span><span class="op">;</span> i<span class="op">++</span>) {</span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> (theme<span class="op">.</span><span class="at">szLabelA</span>[i]<span class="op">.</span><span class="fu">match</span>(<span class="ss">/</span><span class="sc">^(</span><span class="ss">45</span><span class="sc">|</span><span class="ss">50</span><span class="sc">|</span><span class="ss">55</span><span class="sc">|</span><span class="ss">60</span><span class="sc">|</span><span class="ss">65</span><span class="sc">|</span><span class="ss">70</span><span class="sc">|</span><span class="ss">75</span><span class="sc">)</span><span class="ss"> mph/i</span>)) {</span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a>            theme<span class="op">.</span><span class="at">colorScheme</span>[i] <span class="op">=</span> <span class="st">"#CE517F"</span><span class="op">;</span></span>
+<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a>        } <span class="cf">else</span> <span class="cf">if</span> (theme<span class="op">.</span><span class="at">szLabelA</span>[i]<span class="op">.</span><span class="fu">match</span>(<span class="ss">/</span><span class="sc">^</span><span class="ss">40 mph/i</span>)) {</span>
+<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a>            theme<span class="op">.</span><span class="at">colorScheme</span>[i] <span class="op">=</span> <span class="st">"#CC6166"</span><span class="op">;</span></span>
+<span id="cb27-10"><a href="#cb27-10" aria-hidden="true" tabindex="-1"></a>        } <span class="cf">else</span> <span class="cf">if</span> (theme<span class="op">.</span><span class="at">szLabelA</span>[i]<span class="op">.</span><span class="fu">match</span>(<span class="ss">/</span><span class="sc">^</span><span class="ss">30/i</span>)) {</span>
+<span id="cb27-11"><a href="#cb27-11" aria-hidden="true" tabindex="-1"></a>            theme<span class="op">.</span><span class="at">colorScheme</span>[i] <span class="op">=</span> <span class="st">"#D0A148"</span><span class="op">;</span></span>
+<span id="cb27-12"><a href="#cb27-12" aria-hidden="true" tabindex="-1"></a>        }</span>
+<span id="cb27-13"><a href="#cb27-13" aria-hidden="true" tabindex="-1"></a>        <span class="co">// ... remaining bands, then a fallback for unmatched labels</span></span>
+<span id="cb27-14"><a href="#cb27-14" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb27-15"><a href="#cb27-15" aria-hidden="true" tabindex="-1"></a>}<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Load the required helper script and reference the layer as usual:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb28"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>ixmaps<span class="op">.</span><span class="fu">Map</span>(<span class="st">"map_div"</span><span class="op">,</span> { <span class="co">/* ... */</span> })</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">require</span>(<span class="st">"../../ui/js/tools/colorscheme.js"</span>)   <span class="co">// ColorScheme.createColorScheme(), used below</span></span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">layer</span>(ixmaps<span class="op">.</span><span class="fu">layer</span>(<span class="st">"osm"</span><span class="op">,</span> layer <span class="kw">=&gt;</span> layer</span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>        <span class="op">.</span><span class="fu">data</span>({ <span class="dt">type</span><span class="op">:</span> <span class="st">"ext"</span><span class="op">,</span> <span class="dt">name</span><span class="op">:</span> <span class="st">"OSM_dataquery_stressmap"</span> })</span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>        <span class="op">.</span><span class="fu">binding</span>({ <span class="dt">position</span><span class="op">:</span> <span class="st">"geometry"</span><span class="op">,</span> <span class="dt">id</span><span class="op">:</span> <span class="st">"id"</span><span class="op">,</span> <span class="dt">value</span><span class="op">:</span> <span class="st">"maxspeed"</span> })</span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>        <span class="op">.</span><span class="fu">type</span>(<span class="st">"CHART|FEATURES|CATEGORICAL|LINES"</span>)</span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a>        <span class="op">.</span><span class="fu">style</span>({ <span class="dt">colorscheme</span><span class="op">:</span> <span class="st">"ixmaps.colorScheme_speedmap"</span><span class="op">,</span> <span class="dt">linewidth</span><span class="op">:</span> <span class="st">"3"</span> })</span>
+<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a>        <span class="op">.</span><span class="fu">meta</span>({ <span class="dt">title</span><span class="op">:</span> <span class="st">"Speed limits"</span> })</span>
+<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a>    ))<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>iXMaps calls the function once the theme’s classes are resolved (<code>theme.szLabelA</code> populated), then reads <code>theme.colorScheme[i]</code> to paint each class — so this is the way to base color on values the layer only knows after loading (its actual set of categories, quantile breaks, etc.). To start from a named palette and only override specific entries, <code>ColorScheme.createColorScheme(...)</code> (from the same <code>colorscheme.js</code> tool) returns a color array you can index into before selectively overwriting entries — see <code>ixmaps.colorScheme_surfacemap</code> alongside <code>colorScheme_speedmap</code> in the source above for that combined pattern.</p>
+<div class="callout callout-style-simple callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Reference by name, not by array, not inline
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><code>colorscheme: "ixmaps.myFunc"</code> works as a bare string (<code>["ixmaps.myFunc"]</code> also works — both are normalized the same way). Never pass an inline function body as the string — the property parser splits on <code>,</code> and <code>|</code>, which corrupts multi-statement source.</p>
+</div>
+</div>
+<p>A plain JS array built dynamically <em>before</em> the layer is defined works too — <code>colorscheme: buildPalette(n)</code> is just a normal array by the time <code>.style()</code> sees it — but it can’t reflect anything about data this same layer hasn’t loaded yet. Use the function form for anything that depends on the layer’s own resolved classes.</p>
 
 
 </section>

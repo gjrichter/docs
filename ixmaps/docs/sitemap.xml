@@ -2,39 +2,43 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://www.ixmaps.com/docs/about.html</loc>
-    <lastmod>2026-07-07T21:28:50.710Z</lastmod>
+    <lastmod>2026-07-09T10:49:45.134Z</lastmod>
   </url>
   <url>
     <loc>https://www.ixmaps.com/docs/examples.html</loc>
-    <lastmod>2026-07-07T21:28:50.709Z</lastmod>
-  </url>
-  <url>
-    <loc>https://www.ixmaps.com/docs/chart_scaling.html</loc>
-    <lastmod>2026-07-07T21:28:50.709Z</lastmod>
-  </url>
-  <url>
-    <loc>https://www.ixmaps.com/docs/map_types.html</loc>
-    <lastmod>2026-07-07T21:28:50.708Z</lastmod>
-  </url>
-  <url>
-    <loc>https://www.ixmaps.com/docs/getting_started.html</loc>
-    <lastmod>2026-07-07T21:28:50.708Z</lastmod>
-  </url>
-  <url>
-    <loc>https://www.ixmaps.com/docs/index.html</loc>
-    <lastmod>2026-07-07T21:28:50.707Z</lastmod>
-  </url>
-  <url>
-    <loc>https://www.ixmaps.com/docs/api_documentation.html</loc>
-    <lastmod>2026-07-07T21:28:50.708Z</lastmod>
-  </url>
-  <url>
-    <loc>https://www.ixmaps.com/docs/theme_styles.html</loc>
-    <lastmod>2026-07-07T21:28:50.709Z</lastmod>
+    <lastmod>2026-07-09T10:47:44.347Z</lastmod>
   </url>
   <url>
     <loc>https://www.ixmaps.com/docs/user_charts.html</loc>
-    <lastmod>2026-07-07T21:28:50.709Z</lastmod>
+    <lastmod>2026-07-09T11:24:41.133Z</lastmod>
+  </url>
+  <url>
+    <loc>https://www.ixmaps.com/docs/theme_styles.html</loc>
+    <lastmod>2026-07-09T10:45:19.930Z</lastmod>
+  </url>
+  <url>
+    <loc>https://www.ixmaps.com/docs/api_documentation.html</loc>
+    <lastmod>2026-07-09T10:46:43.788Z</lastmod>
+  </url>
+  <url>
+    <loc>https://www.ixmaps.com/docs/index.html</loc>
+    <lastmod>2026-07-09T10:49:05.248Z</lastmod>
+  </url>
+  <url>
+    <loc>https://www.ixmaps.com/docs/getting_started.html</loc>
+    <lastmod>2026-07-09T10:45:46.960Z</lastmod>
+  </url>
+  <url>
+    <loc>https://www.ixmaps.com/docs/map_types.html</loc>
+    <lastmod>2026-07-09T10:47:16.428Z</lastmod>
+  </url>
+  <url>
+    <loc>https://www.ixmaps.com/docs/chart_scaling.html</loc>
+    <lastmod>2026-07-09T11:01:48.898Z</lastmod>
+  </url>
+  <url>
+    <loc>https://www.ixmaps.com/docs/data_preprocessing.html</loc>
+    <lastmod>2026-07-09T09:34:14.278Z</lastmod>
   </url>
   <url>
     <loc>https://www.ixmaps.com/docs/troubleshooting.html</loc>

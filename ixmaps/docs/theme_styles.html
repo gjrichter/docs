@@ -250,6 +250,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
  <span class="menu-text">User Charts</span></a>
   </div>
 </li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./data_preprocessing.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Data Preprocessing</span></a>
+  </div>
+</li>
       </ul>
   </li>
         <li class="px-0"><hr class="sidebar-divider hi "></li>
@@ -406,11 +412,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="sizing-properties" class="level2">
 <h2 class="anchored" data-anchor-id="sizing-properties">Sizing properties</h2>
 <table class="caption-top table">
-<colgroup>
-<col style="width: 34%">
-<col style="width: 20%">
-<col style="width: 44%">
-</colgroup>
 <thead>
 <tr class="header">
 <th>Property</th>
@@ -427,7 +428,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <tr class="even">
 <td><code>sizepow</code></td>
 <td>number</td>
-<td>Power curve for size scaling. <code>2</code> = quadratic (exaggerates contrast)</td>
+<td>Symbol dimension carrying the value: <code>1</code> = width, <code>2</code> = area (default), <code>3</code> = volume. Higher = compressed contrast — see <a href="./chart_scaling.html#sizepow-which-symbol-dimension-carries-the-value">Chart Scaling</a></td>
 </tr>
 <tr class="odd">
 <td><code>rangescale</code></td>
@@ -1048,11 +1049,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h2 class="anchored" data-anchor-id="alphabetical-property-reference">Alphabetical property reference</h2>
 <p>All <code>.style()</code> properties drawn from the iXMaps source (<code>themeStyleTranslateA</code>). <strong>Deprecated</strong> properties have preferred replacements shown; <strong>Required</strong> means the layer will not render without it.</p>
 <table class="caption-top table">
-<colgroup>
-<col style="width: 34%">
-<col style="width: 20%">
-<col style="width: 44%">
-</colgroup>
 <thead>
 <tr class="header">
 <th>Property</th>
@@ -1584,7 +1580,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <tr class="odd">
 <td><code>sizepow</code></td>
 <td>number</td>
-<td>Power curve for size scaling — <code>2</code> = square root (default)</td>
+<td>Symbol dimension carrying the value: <code>1</code> = width, <code>2</code> = area (default), <code>3</code> = volume — see <a href="./chart_scaling.html#sizepow-which-symbol-dimension-carries-the-value">Chart Scaling</a></td>
 </tr>
 <tr class="even">
 <td><code>sizevalueunits</code></td>

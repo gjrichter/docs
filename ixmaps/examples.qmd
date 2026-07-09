@@ -316,7 +316,7 @@ const DATA = [
 myMap.layer("trends")
     .data({ obj: DATA, type: "json" })
     .binding({ geo: "lat|lon", value: "v2020|v2021|v2022|v2023", title: "city" })
-    .type("CHART|SYMBOL|PLOT|LINES|AREA|FADE|LASTARROW|NOCLIP|GRIDSIZE|FIXSIZE")
+    .type("CHART|SYMBOL|PLOT|LINES|AREA|LASTARROW|NOCLIP|GRIDSIZE|FIXSIZE")
     .style({
         gridwidth:       "100px",
         normalsizevalue: "30",

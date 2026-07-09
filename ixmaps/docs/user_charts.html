@@ -66,6 +66,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
+<link href="./data_preprocessing.html" rel="next">
 <link href="./chart_scaling.html" rel="prev">
 <link href="./pics/favicon.png" rel="icon" type="image/png">
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
@@ -249,6 +250,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
  <span class="menu-text">User Charts</span></a>
   </div>
 </li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./data_preprocessing.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Data Preprocessing</span></a>
+  </div>
+</li>
       </ul>
   </li>
         <li class="px-0"><hr class="sidebar-divider hi "></li>
@@ -282,8 +289,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#how-custom-chart-functions-work" id="toc-how-custom-chart-functions-work" class="nav-link active" data-scroll-target="#how-custom-chart-functions-work">How custom chart functions work</a></li>
-  <li><a href="#required-scripts" id="toc-required-scripts" class="nav-link" data-scroll-target="#required-scripts">Required scripts</a></li>
+  <li><a href="#the-plugin-principle" id="toc-the-plugin-principle" class="nav-link active" data-scroll-target="#the-plugin-principle">The plugin principle</a>
+  <ul class="collapse">
+  <li><a href="#svg-library-your-choice" id="toc-svg-library-your-choice" class="nav-link" data-scroll-target="#svg-library-your-choice">SVG library — your choice</a></li>
+  </ul></li>
+  <li><a href="#the-shipped-plugins" id="toc-the-shipped-plugins" class="nav-link" data-scroll-target="#the-shipped-plugins">The shipped plugins</a></li>
+  <li><a href="#how-custom-chart-functions-work" id="toc-how-custom-chart-functions-work" class="nav-link" data-scroll-target="#how-custom-chart-functions-work">How custom chart functions work</a></li>
+  <li><a href="#required-scripts-shipped-plugins" id="toc-required-scripts-shipped-plugins" class="nav-link" data-scroll-target="#required-scripts-shipped-plugins">Required scripts (shipped plugins)</a></li>
   <li><a href="#type-flags" id="toc-type-flags" class="nav-link" data-scroll-target="#type-flags">Type flags</a></li>
   <li><a href="#pinnaclechart" id="toc-pinnaclechart" class="nav-link" data-scroll-target="#pinnaclechart">pinnacleChart</a></li>
   <li><a href="#split-winner-pattern" id="toc-split-winner-pattern" class="nav-link" data-scroll-target="#split-winner-pattern">Split-winner pattern</a></li>
@@ -318,26 +330,85 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<p>iXMaps supports custom D3-based chart functions that replace the built-in symbol renderer. Two functions are currently available: <code>pinnacleChart</code> (vertical bar/pillar) and <code>arrowChart</code>.</p>
+<p>iXMaps chart symbols are not limited to the built-in shapes. The <code>userdraw</code> style property is a <strong>general plugin API</strong> for drawing arbitrary SVG-based graphics as map charts: any JavaScript function that produces SVG can act as the renderer for a layer’s symbols.</p>
 <hr>
+<section id="the-plugin-principle" class="level2">
+<h2 class="anchored" data-anchor-id="the-plugin-principle">The plugin principle</h2>
+<p>The API rests on a strict division of labour:</p>
+<p><strong>iXMaps does everything around the drawing</strong> — loading and filtering the data, aggregating values, positioning the chart (lat/lon anchor, geometry centroid with <code>RELOCATE</code>, or grid cell), computing its size through the regular <a href="./chart_scaling.html">sizing system</a> (<code>normalsizevalue</code>, <code>sizepow</code>, zoom scaling), resolving the color class from <code>colorscheme</code>, and integrating legend and tooltips.</p>
+<p><strong>The plugin does one thing</strong>: draw its SVG code into the SVG target that iXMaps hands it (<code>args.target</code>, a prepared <code>&lt;g&gt;</code> group). It reads the precomputed value, size and color from <code>args</code> and produces shapes — nothing else. That is why plugin code stays small: each of the shipped plugins is essentially one SVG path plus an optional label.</p>
+<section id="svg-library-your-choice" class="level3">
+<h3 class="anchored" data-anchor-id="svg-library-your-choice">SVG library — your choice</h3>
+<p>The three shipped plugins draw with <strong>D3</strong> (v3), which is comfortable for SVG generation — but D3 is <strong>not mandatory</strong>. The plugin contract is only “put SVG into <code>args.target</code>”; any technique works, including native DOM:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>ixmaps<span class="op">.</span><span class="at">squareChart</span> <span class="op">=</span> <span class="kw">function</span> (SVGDocument<span class="op">,</span> args) {</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">var</span> size <span class="op">=</span> args<span class="op">.</span><span class="at">size</span> <span class="op">||</span> <span class="dv">50</span><span class="op">;</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    <span class="kw">var</span> rect <span class="op">=</span> SVGDocument<span class="op">.</span><span class="fu">createElementNS</span>(<span class="st">"http://www.w3.org/2000/svg"</span><span class="op">,</span> <span class="st">"rect"</span>)<span class="op">;</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    rect<span class="op">.</span><span class="fu">setAttribute</span>(<span class="st">"x"</span><span class="op">,</span> <span class="op">-</span>size <span class="op">/</span> <span class="dv">2</span>)<span class="op">;</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    rect<span class="op">.</span><span class="fu">setAttribute</span>(<span class="st">"y"</span><span class="op">,</span> <span class="op">-</span>size <span class="op">/</span> <span class="dv">2</span>)<span class="op">;</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    rect<span class="op">.</span><span class="fu">setAttribute</span>(<span class="st">"width"</span><span class="op">,</span>  size)<span class="op">;</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    rect<span class="op">.</span><span class="fu">setAttribute</span>(<span class="st">"height"</span><span class="op">,</span> size)<span class="op">;</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    rect<span class="op">.</span><span class="fu">setAttribute</span>(<span class="st">"fill"</span><span class="op">,</span> args<span class="op">.</span><span class="at">theme</span><span class="op">.</span><span class="at">colorScheme</span>[args<span class="op">.</span><span class="at">class</span>])<span class="op">;</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    args<span class="op">.</span><span class="at">target</span><span class="op">.</span><span class="fu">appendChild</span>(rect)<span class="op">;</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>}<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>The D3 <code>&lt;script&gt;</code> include shown below is required by the three shipped plugins; a plugin of your own only needs whatever it uses itself.</p>
+<hr>
+</section>
+</section>
+<section id="the-shipped-plugins" class="level2">
+<h2 class="anchored" data-anchor-id="the-shipped-plugins">The shipped plugins</h2>
+<p>Three ready-made chart functions ship with the framework:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 40%">
+<col style="width: 28%">
+<col style="width: 32%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Function</th>
+<th>Shape</th>
+<th>Script</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>pinnacleChart</code></td>
+<td>Vertical pillar/bar — height encodes the value</td>
+<td><code>usercharts/d3/chart.js</code></td>
+</tr>
+<tr class="even">
+<td><code>arrowChart</code></td>
+<td>Up-arrow for positive values, down-arrow for negative ones</td>
+<td><code>usercharts/d3/arrow_chart.js</code></td>
+</tr>
+<tr class="odd">
+<td><code>lolliChart</code></td>
+<td>Lollipop pin — a circle on a stem, height encodes the value</td>
+<td><code>usercharts/d3/lolli_chart.js</code></td>
+</tr>
+</tbody>
+</table>
+<p>All three share the same sizing logic (<code>normalsizevalue</code>, <code>rangescale</code>) and read their color from the layer’s <code>colorscheme</code> class; <code>GRADIENT</code> in the type string switches the fill to a vertical gradient, and <code>NONEGATIVE</code> suppresses negative values.</p>
+<hr>
+</section>
 <section id="how-custom-chart-functions-work" class="level2">
 <h2 class="anchored" data-anchor-id="how-custom-chart-functions-work">How custom chart functions work</h2>
 <p>You write a JavaScript function, attach it to the <code>ixmaps</code> namespace, then reference it by name in <code>.style({ userdraw: "functionName" })</code>. iXMaps calls your function once per rendered feature, passing the SVG context and data.</p>
 <p><strong>Function signature:</strong></p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>ixmaps<span class="op">.</span><span class="at">myChart</span> <span class="op">=</span> <span class="kw">function</span>(SVGDocument<span class="op">,</span> args) {</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">// args properties:</span></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    <span class="co">//   args.target   — the SVG group element to draw into</span></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    <span class="co">//   args.value    — the primary data value for this feature</span></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    <span class="co">//   args.values   — array of all values (for multi-value bindings)</span></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    <span class="co">//   args.theme    — theme object (contains style, color scheme, etc.)</span></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    <span class="co">//   args.item     — the raw data item/row</span></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    <span class="co">//   args.class    — color class index (maps to colorscheme)</span></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>    <span class="kw">var</span> svg <span class="op">=</span> d3<span class="op">.</span><span class="fu">select</span>(args<span class="op">.</span><span class="at">target</span>)<span class="op">;</span></span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>    <span class="co">// ... draw with D3 or SVG DOM methods ...</span></span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> { <span class="dt">x</span><span class="op">:</span> <span class="dv">0</span><span class="op">,</span> <span class="dt">y</span><span class="op">:</span> <span class="dv">0</span> }<span class="op">;</span>  <span class="co">// optional offset for chaining</span></span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>}<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>ixmaps<span class="op">.</span><span class="at">myChart</span> <span class="op">=</span> <span class="kw">function</span>(SVGDocument<span class="op">,</span> args) {</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">// args properties:</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    <span class="co">//   args.target   — the SVG group element to draw into</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    <span class="co">//   args.value    — the primary data value for this feature</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    <span class="co">//   args.values   — array of all values (for multi-value bindings)</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    <span class="co">//   args.theme    — theme object (contains style, color scheme, etc.)</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    <span class="co">//   args.item     — the raw data item/row</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    <span class="co">//   args.class    — color class index (maps to colorscheme)</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>    <span class="kw">var</span> svg <span class="op">=</span> d3<span class="op">.</span><span class="fu">select</span>(args<span class="op">.</span><span class="at">target</span>)<span class="op">;</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>    <span class="co">// ... draw with D3 or SVG DOM methods ...</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> { <span class="dt">x</span><span class="op">:</span> <span class="dv">0</span><span class="op">,</span> <span class="dt">y</span><span class="op">:</span> <span class="dv">0</span> }<span class="op">;</span>  <span class="co">// optional offset for chaining</span></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>}<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="callout callout-style-simple callout-warning callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -353,13 +424,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <hr>
 </section>
-<section id="required-scripts" class="level2">
-<h2 class="anchored" data-anchor-id="required-scripts">Required scripts</h2>
-<p>Three extra CDN scripts are required in addition to <code>ixmaps.js</code>:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode html code-with-copy"><code class="sourceCode html"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">script</span><span class="ot"> src</span><span class="op">=</span><span class="st">"https://cdn.jsdelivr.net/gh/gjrichter/ixmaps-flat@1/ixmaps.js"</span><span class="dt">&gt;&lt;/</span><span class="kw">script</span><span class="dt">&gt;</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">script</span><span class="ot"> src</span><span class="op">=</span><span class="st">"https://d3js.org/d3.v3.min.js"</span><span class="dt">&gt;&lt;/</span><span class="kw">script</span><span class="dt">&gt;</span></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">script</span><span class="ot"> src</span><span class="op">=</span><span class="st">"https://cdn.jsdelivr.net/gh/gjrichter/ixmaps-flat@1/usercharts/d3/chart.js"</span><span class="dt">&gt;&lt;/</span><span class="kw">script</span><span class="dt">&gt;</span></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">script</span><span class="ot"> src</span><span class="op">=</span><span class="st">"https://cdn.jsdelivr.net/gh/gjrichter/ixmaps-flat@1/usercharts/d3/arrow_chart.js"</span><span class="dt">&gt;&lt;/</span><span class="kw">script</span><span class="dt">&gt;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<section id="required-scripts-shipped-plugins" class="level2">
+<h2 class="anchored" data-anchor-id="required-scripts-shipped-plugins">Required scripts (shipped plugins)</h2>
+<p>For the three shipped plugins, D3 plus the script of each chart function you use are required in addition to <code>ixmaps.js</code> — a plugin of your own needs neither unless it draws with D3 itself:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode html code-with-copy"><code class="sourceCode html"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">script</span><span class="ot"> src</span><span class="op">=</span><span class="st">"https://cdn.jsdelivr.net/gh/gjrichter/ixmaps-flat@1/ixmaps.js"</span><span class="dt">&gt;&lt;/</span><span class="kw">script</span><span class="dt">&gt;</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">script</span><span class="ot"> src</span><span class="op">=</span><span class="st">"https://d3js.org/d3.v3.min.js"</span><span class="dt">&gt;&lt;/</span><span class="kw">script</span><span class="dt">&gt;</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">script</span><span class="ot"> src</span><span class="op">=</span><span class="st">"https://cdn.jsdelivr.net/gh/gjrichter/ixmaps-flat@1/usercharts/d3/chart.js"</span><span class="dt">&gt;&lt;/</span><span class="kw">script</span><span class="dt">&gt;</span>       <span class="co">&lt;!-- pinnacleChart --&gt;</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">script</span><span class="ot"> src</span><span class="op">=</span><span class="st">"https://cdn.jsdelivr.net/gh/gjrichter/ixmaps-flat@1/usercharts/d3/arrow_chart.js"</span><span class="dt">&gt;&lt;/</span><span class="kw">script</span><span class="dt">&gt;</span> <span class="co">&lt;!-- arrowChart --&gt;</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">script</span><span class="ot"> src</span><span class="op">=</span><span class="st">"https://cdn.jsdelivr.net/gh/gjrichter/ixmaps-flat@1/usercharts/d3/lolli_chart.js"</span><span class="dt">&gt;&lt;/</span><span class="kw">script</span><span class="dt">&gt;</span> <span class="co">&lt;!-- lolliChart --&gt;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Script load order relative to <code>ixmaps.js</code> does not matter.</p>
 <hr>
 </section>
@@ -409,78 +481,78 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="pinnaclechart" class="level2">
 <h2 class="anchored" data-anchor-id="pinnaclechart">pinnacleChart</h2>
 <p>A vertical pillar/bar chart rendered at each feature location. Size encodes a numeric value.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>myMap<span class="op">.</span><span class="fu">layer</span>(<span class="st">"comuni"</span>)</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">data</span>({ <span class="dt">url</span><span class="op">:</span> DATA_URL<span class="op">,</span> <span class="dt">type</span><span class="op">:</span> <span class="st">"csv"</span> })</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">binding</span>({ <span class="dt">lookup</span><span class="op">:</span> <span class="st">"cod_istat"</span><span class="op">,</span> <span class="dt">value</span><span class="op">:</span> <span class="st">"value"</span><span class="op">,</span> <span class="dt">title</span><span class="op">:</span> <span class="st">"name"</span> })</span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">type</span>(<span class="st">"CHART|USER|3D|AGGREGATE|RECT|RELOCATE|SUM|VALUES|BOX|BOTTOMTITLE|NOLEGEND"</span>)</span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">style</span>({</span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>        <span class="dt">userdraw</span><span class="op">:</span>         <span class="st">"pinnacleChart"</span><span class="op">,</span></span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>        <span class="dt">colorscheme</span><span class="op">:</span>      [<span class="st">"#0066cc"</span><span class="op">,</span><span class="st">"#004499"</span>]<span class="op">,</span></span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>        <span class="dt">normalsizevalue</span><span class="op">:</span>  <span class="dv">1000000</span><span class="op">,</span></span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>        <span class="dt">sizepow</span><span class="op">:</span>          <span class="dv">2</span><span class="op">,</span></span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>        <span class="dt">aggregationfield</span><span class="op">:</span> <span class="st">"name"</span><span class="op">,</span></span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>        <span class="dt">titlefield</span><span class="op">:</span>       <span class="st">"name"</span><span class="op">,</span></span>
-<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>        <span class="dt">showdata</span><span class="op">:</span>         <span class="st">"true"</span></span>
-<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>    })</span>
-<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">meta</span>({ <span class="dt">name</span><span class="op">:</span> <span class="st">"pinnacles"</span><span class="op">,</span> <span class="dt">tooltip</span><span class="op">:</span> <span class="st">"{{name}}: {{value}}"</span> })</span>
-<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">define</span>()<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>myMap<span class="op">.</span><span class="fu">layer</span>(<span class="st">"comuni"</span>)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">data</span>({ <span class="dt">url</span><span class="op">:</span> DATA_URL<span class="op">,</span> <span class="dt">type</span><span class="op">:</span> <span class="st">"csv"</span> })</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">binding</span>({ <span class="dt">lookup</span><span class="op">:</span> <span class="st">"cod_istat"</span><span class="op">,</span> <span class="dt">value</span><span class="op">:</span> <span class="st">"value"</span><span class="op">,</span> <span class="dt">title</span><span class="op">:</span> <span class="st">"name"</span> })</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">type</span>(<span class="st">"CHART|USER|3D|AGGREGATE|RECT|RELOCATE|SUM|VALUES|BOX|BOTTOMTITLE|NOLEGEND"</span>)</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">style</span>({</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>        <span class="dt">userdraw</span><span class="op">:</span>         <span class="st">"pinnacleChart"</span><span class="op">,</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>        <span class="dt">colorscheme</span><span class="op">:</span>      [<span class="st">"#0066cc"</span><span class="op">,</span><span class="st">"#004499"</span>]<span class="op">,</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>        <span class="dt">normalsizevalue</span><span class="op">:</span>  <span class="dv">1000000</span><span class="op">,</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>        <span class="dt">sizepow</span><span class="op">:</span>          <span class="dv">2</span><span class="op">,</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>        <span class="dt">aggregationfield</span><span class="op">:</span> <span class="st">"name"</span><span class="op">,</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>        <span class="dt">titlefield</span><span class="op">:</span>       <span class="st">"name"</span><span class="op">,</span></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>        <span class="dt">showdata</span><span class="op">:</span>         <span class="st">"true"</span></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>    })</span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">meta</span>({ <span class="dt">name</span><span class="op">:</span> <span class="st">"pinnacles"</span><span class="op">,</span> <span class="dt">tooltip</span><span class="op">:</span> <span class="st">"{{name}}: {{value}}"</span> })</span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">define</span>()<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <hr>
 </section>
 <section id="split-winner-pattern" class="level2">
 <h2 class="anchored" data-anchor-id="split-winner-pattern">Split-winner pattern</h2>
 <p>Two layers from the same dataset — one for each “winner” — without pre-filtering. The <code>DIFFERENCE</code> modifier computes <code>b − a</code>; <code>NONEGATIVE</code> skips locations where the difference is ≤ 0.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Layer A — shows locations where "sì" &gt; "no"</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>myMap<span class="op">.</span><span class="fu">layer</span>(<span class="st">"comuni"</span>)</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">data</span>({ <span class="dt">url</span><span class="op">:</span> DATA_URL<span class="op">,</span> <span class="dt">type</span><span class="op">:</span> <span class="st">"csv"</span> })</span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">binding</span>({ <span class="dt">lookup</span><span class="op">:</span> <span class="st">"cod_istat"</span><span class="op">,</span> <span class="dt">value</span><span class="op">:</span> <span class="st">"voti_no|voti_si"</span><span class="op">,</span> <span class="dt">title</span><span class="op">:</span> <span class="st">"comune"</span> })</span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">type</span>(<span class="st">"CHART|USER|3D|DIFFERENCE|AGGREGATE|RECT|RELOCATE|SUM|VALUES|NONEGATIVE|BOX|BOTTOMTITLE|NOLEGEND"</span>)</span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">style</span>({</span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>        <span class="dt">userdraw</span><span class="op">:</span>         <span class="st">"pinnacleChart"</span><span class="op">,</span></span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>        <span class="dt">colorscheme</span><span class="op">:</span>      [<span class="st">"#2e7d32"</span><span class="op">,</span><span class="st">"#4caf50"</span>]<span class="op">,</span></span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>        <span class="dt">normalsizevalue</span><span class="op">:</span>  <span class="dv">500000</span><span class="op">,</span></span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>        <span class="dt">sizepow</span><span class="op">:</span>          <span class="dv">2</span><span class="op">,</span></span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>        <span class="dt">aggregationfield</span><span class="op">:</span> <span class="st">"comune"</span><span class="op">,</span></span>
-<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>        <span class="dt">titlefield</span><span class="op">:</span>       <span class="st">"comune"</span><span class="op">,</span></span>
-<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>        <span class="dt">showdata</span><span class="op">:</span>         <span class="st">"true"</span></span>
-<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>    })</span>
-<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">meta</span>({ <span class="dt">name</span><span class="op">:</span> <span class="st">"si_wins"</span><span class="op">,</span> <span class="dt">tooltip</span><span class="op">:</span> <span class="st">"{{comune}}: Sì wins by {{$value}}"</span> })</span>
-<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">define</span>()<span class="op">;</span></span>
-<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a><span class="co">// Layer B — shows locations where "no" &gt; "sì" (binding order swapped)</span></span>
-<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>myMap<span class="op">.</span><span class="fu">layer</span>(<span class="st">"comuni"</span>)</span>
-<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">data</span>({ <span class="dt">url</span><span class="op">:</span> DATA_URL<span class="op">,</span> <span class="dt">type</span><span class="op">:</span> <span class="st">"csv"</span> })</span>
-<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">binding</span>({ <span class="dt">lookup</span><span class="op">:</span> <span class="st">"cod_istat"</span><span class="op">,</span> <span class="dt">value</span><span class="op">:</span> <span class="st">"voti_si|voti_no"</span><span class="op">,</span> <span class="dt">title</span><span class="op">:</span> <span class="st">"comune"</span> })</span>
-<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">type</span>(<span class="st">"CHART|USER|3D|DIFFERENCE|AGGREGATE|RECT|RELOCATE|SUM|VALUES|NONEGATIVE|BOX|BOTTOMTITLE|NOLEGEND"</span>)</span>
-<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">style</span>({</span>
-<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a>        <span class="dt">userdraw</span><span class="op">:</span>         <span class="st">"pinnacleChart"</span><span class="op">,</span></span>
-<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a>        <span class="dt">colorscheme</span><span class="op">:</span>      [<span class="st">"#b71c1c"</span><span class="op">,</span><span class="st">"#ef5350"</span>]<span class="op">,</span></span>
-<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a>        <span class="dt">normalsizevalue</span><span class="op">:</span>  <span class="dv">500000</span><span class="op">,</span></span>
-<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a>        <span class="dt">sizepow</span><span class="op">:</span>          <span class="dv">2</span><span class="op">,</span></span>
-<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a>        <span class="dt">aggregationfield</span><span class="op">:</span> <span class="st">"comune"</span><span class="op">,</span></span>
-<span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a>        <span class="dt">titlefield</span><span class="op">:</span>       <span class="st">"comune"</span><span class="op">,</span></span>
-<span id="cb4-30"><a href="#cb4-30" aria-hidden="true" tabindex="-1"></a>        <span class="dt">showdata</span><span class="op">:</span>         <span class="st">"true"</span></span>
-<span id="cb4-31"><a href="#cb4-31" aria-hidden="true" tabindex="-1"></a>    })</span>
-<span id="cb4-32"><a href="#cb4-32" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">meta</span>({ <span class="dt">name</span><span class="op">:</span> <span class="st">"no_wins"</span><span class="op">,</span> <span class="dt">tooltip</span><span class="op">:</span> <span class="st">"{{comune}}: No wins by {{$value}}"</span> })</span>
-<span id="cb4-33"><a href="#cb4-33" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">define</span>()<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Layer A — shows locations where "sì" &gt; "no"</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>myMap<span class="op">.</span><span class="fu">layer</span>(<span class="st">"comuni"</span>)</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">data</span>({ <span class="dt">url</span><span class="op">:</span> DATA_URL<span class="op">,</span> <span class="dt">type</span><span class="op">:</span> <span class="st">"csv"</span> })</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">binding</span>({ <span class="dt">lookup</span><span class="op">:</span> <span class="st">"cod_istat"</span><span class="op">,</span> <span class="dt">value</span><span class="op">:</span> <span class="st">"voti_no|voti_si"</span><span class="op">,</span> <span class="dt">title</span><span class="op">:</span> <span class="st">"comune"</span> })</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">type</span>(<span class="st">"CHART|USER|3D|DIFFERENCE|AGGREGATE|RECT|RELOCATE|SUM|VALUES|NONEGATIVE|BOX|BOTTOMTITLE|NOLEGEND"</span>)</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">style</span>({</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>        <span class="dt">userdraw</span><span class="op">:</span>         <span class="st">"pinnacleChart"</span><span class="op">,</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>        <span class="dt">colorscheme</span><span class="op">:</span>      [<span class="st">"#2e7d32"</span><span class="op">,</span><span class="st">"#4caf50"</span>]<span class="op">,</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>        <span class="dt">normalsizevalue</span><span class="op">:</span>  <span class="dv">500000</span><span class="op">,</span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>        <span class="dt">sizepow</span><span class="op">:</span>          <span class="dv">2</span><span class="op">,</span></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>        <span class="dt">aggregationfield</span><span class="op">:</span> <span class="st">"comune"</span><span class="op">,</span></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>        <span class="dt">titlefield</span><span class="op">:</span>       <span class="st">"comune"</span><span class="op">,</span></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>        <span class="dt">showdata</span><span class="op">:</span>         <span class="st">"true"</span></span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>    })</span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">meta</span>({ <span class="dt">name</span><span class="op">:</span> <span class="st">"si_wins"</span><span class="op">,</span> <span class="dt">tooltip</span><span class="op">:</span> <span class="st">"{{comune}}: Sì wins by {{$value}}"</span> })</span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">define</span>()<span class="op">;</span></span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a><span class="co">// Layer B — shows locations where "no" &gt; "sì" (binding order swapped)</span></span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>myMap<span class="op">.</span><span class="fu">layer</span>(<span class="st">"comuni"</span>)</span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">data</span>({ <span class="dt">url</span><span class="op">:</span> DATA_URL<span class="op">,</span> <span class="dt">type</span><span class="op">:</span> <span class="st">"csv"</span> })</span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">binding</span>({ <span class="dt">lookup</span><span class="op">:</span> <span class="st">"cod_istat"</span><span class="op">,</span> <span class="dt">value</span><span class="op">:</span> <span class="st">"voti_si|voti_no"</span><span class="op">,</span> <span class="dt">title</span><span class="op">:</span> <span class="st">"comune"</span> })</span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">type</span>(<span class="st">"CHART|USER|3D|DIFFERENCE|AGGREGATE|RECT|RELOCATE|SUM|VALUES|NONEGATIVE|BOX|BOTTOMTITLE|NOLEGEND"</span>)</span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">style</span>({</span>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a>        <span class="dt">userdraw</span><span class="op">:</span>         <span class="st">"pinnacleChart"</span><span class="op">,</span></span>
+<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a>        <span class="dt">colorscheme</span><span class="op">:</span>      [<span class="st">"#b71c1c"</span><span class="op">,</span><span class="st">"#ef5350"</span>]<span class="op">,</span></span>
+<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a>        <span class="dt">normalsizevalue</span><span class="op">:</span>  <span class="dv">500000</span><span class="op">,</span></span>
+<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a>        <span class="dt">sizepow</span><span class="op">:</span>          <span class="dv">2</span><span class="op">,</span></span>
+<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a>        <span class="dt">aggregationfield</span><span class="op">:</span> <span class="st">"comune"</span><span class="op">,</span></span>
+<span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a>        <span class="dt">titlefield</span><span class="op">:</span>       <span class="st">"comune"</span><span class="op">,</span></span>
+<span id="cb5-30"><a href="#cb5-30" aria-hidden="true" tabindex="-1"></a>        <span class="dt">showdata</span><span class="op">:</span>         <span class="st">"true"</span></span>
+<span id="cb5-31"><a href="#cb5-31" aria-hidden="true" tabindex="-1"></a>    })</span>
+<span id="cb5-32"><a href="#cb5-32" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">meta</span>({ <span class="dt">name</span><span class="op">:</span> <span class="st">"no_wins"</span><span class="op">,</span> <span class="dt">tooltip</span><span class="op">:</span> <span class="st">"{{comune}}: No wins by {{$value}}"</span> })</span>
+<span id="cb5-33"><a href="#cb5-33" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">define</span>()<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Binding order determines sign: <code>"a|b"</code> computes <code>b − a</code>. Swapping <code>a</code> and <code>b</code> between two layers gives “A wins” vs “B wins” without any data preprocessing.</p>
 <hr>
 </section>
 <section id="invisible-centroid-anchor-layer" class="level2">
 <h2 class="anchored" data-anchor-id="invisible-centroid-anchor-layer">Invisible centroid anchor layer</h2>
 <p>When <code>CHART|USER</code> layers need to snap to precise centroids (not grid positions), load a centroid geometry layer first without rendering it visually:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>myMap<span class="op">.</span><span class="fu">layer</span>(<span class="st">"centroids"</span>)</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">data</span>({ <span class="dt">url</span><span class="op">:</span> CENTROIDS_GEOJSON_URL<span class="op">,</span> <span class="dt">type</span><span class="op">:</span> <span class="st">"geojson"</span> })</span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">binding</span>({ <span class="dt">geo</span><span class="op">:</span> <span class="st">"geometry"</span><span class="op">,</span> <span class="dt">id</span><span class="op">:</span> <span class="st">"PRO_COM"</span><span class="op">,</span> <span class="dt">title</span><span class="op">:</span> <span class="st">"PRO_COM"</span> })</span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">type</span>(<span class="st">"FEATURE|NOLEGEND"</span>)</span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">style</span>({</span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>        <span class="dt">colorscheme</span><span class="op">:</span> [<span class="st">"none"</span>]<span class="op">,</span></span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>        <span class="dt">scale</span><span class="op">:</span>       <span class="dv">0</span><span class="op">,</span>          <span class="co">// scale:0 fully suppresses rendering for point geometry</span></span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>        <span class="dt">fillopacity</span><span class="op">:</span> <span class="dv">0</span><span class="op">,</span></span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>        <span class="dt">linecolor</span><span class="op">:</span>   <span class="st">"none"</span><span class="op">,</span></span>
-<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>        <span class="dt">linewidth</span><span class="op">:</span>   <span class="dv">0</span><span class="op">,</span></span>
-<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>        <span class="dt">showdata</span><span class="op">:</span>    <span class="st">"true"</span></span>
-<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>    })</span>
-<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">define</span>()<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>myMap<span class="op">.</span><span class="fu">layer</span>(<span class="st">"centroids"</span>)</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">data</span>({ <span class="dt">url</span><span class="op">:</span> CENTROIDS_GEOJSON_URL<span class="op">,</span> <span class="dt">type</span><span class="op">:</span> <span class="st">"geojson"</span> })</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">binding</span>({ <span class="dt">geo</span><span class="op">:</span> <span class="st">"geometry"</span><span class="op">,</span> <span class="dt">id</span><span class="op">:</span> <span class="st">"PRO_COM"</span><span class="op">,</span> <span class="dt">title</span><span class="op">:</span> <span class="st">"PRO_COM"</span> })</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">type</span>(<span class="st">"FEATURE|NOLEGEND"</span>)</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">style</span>({</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>        <span class="dt">colorscheme</span><span class="op">:</span> [<span class="st">"none"</span>]<span class="op">,</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>        <span class="dt">scale</span><span class="op">:</span>       <span class="dv">0</span><span class="op">,</span>          <span class="co">// scale:0 fully suppresses rendering for point geometry</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>        <span class="dt">fillopacity</span><span class="op">:</span> <span class="dv">0</span><span class="op">,</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>        <span class="dt">linecolor</span><span class="op">:</span>   <span class="st">"none"</span><span class="op">,</span></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>        <span class="dt">linewidth</span><span class="op">:</span>   <span class="dv">0</span><span class="op">,</span></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>        <span class="dt">showdata</span><span class="op">:</span>    <span class="st">"true"</span></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>    })</span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">define</span>()<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>For point geometry, <code>fillopacity: 0</code> alone still renders a tiny dot. <code>scale: 0</code> suppresses the draw entirely.</p>
 
 
@@ -894,6 +966,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       </a>          
   </div>
   <div class="nav-page nav-page-next">
+      <a href="./data_preprocessing.html" class="pagination-link" aria-label="Data Preprocessing">
+        <span class="nav-page-text">Data Preprocessing</span> <i class="bi bi-arrow-right-short"></i>
+      </a>
   </div>
 </nav>
 </div> <!-- /content -->

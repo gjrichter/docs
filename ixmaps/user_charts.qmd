@@ -3,7 +3,50 @@ title: "User Charts"
 description: "Draw custom chart symbols in iXMaps with userdraw and chartdraw functions: required scripts, type flags and patterns like pinnacleChart."
 ---
 
-iXMaps supports custom D3-based chart functions that replace the built-in symbol renderer. Two functions are currently available: `pinnacleChart` (vertical bar/pillar) and `arrowChart`.
+iXMaps chart symbols are not limited to the built-in shapes. The `userdraw` style property is a **general plugin API** for drawing arbitrary SVG-based graphics as map charts: any JavaScript function that produces SVG can act as the renderer for a layer's symbols.
+
+---
+
+## The plugin principle
+
+The API rests on a strict division of labour:
+
+**iXMaps does everything around the drawing** — loading and filtering the data, aggregating values, positioning the chart (lat/lon anchor, geometry centroid with `RELOCATE`, or grid cell), computing its size through the regular [sizing system](chart_scaling.qmd) (`normalsizevalue`, `sizepow`, zoom scaling), resolving the color class from `colorscheme`, and integrating legend and tooltips.
+
+**The plugin does one thing**: draw its SVG code into the SVG target that iXMaps hands it (`args.target`, a prepared `<g>` group). It reads the precomputed value, size and color from `args` and produces shapes — nothing else. That is why plugin code stays small: each of the shipped plugins is essentially one SVG path plus an optional label.
+
+### SVG library — your choice
+
+The three shipped plugins draw with **D3** (v3), which is comfortable for SVG generation — but D3 is **not mandatory**. The plugin contract is only "put SVG into `args.target`"; any technique works, including native DOM:
+
+```javascript
+ixmaps.squareChart = function (SVGDocument, args) {
+    var size = args.size || 50;
+    var rect = SVGDocument.createElementNS("http://www.w3.org/2000/svg", "rect");
+    rect.setAttribute("x", -size / 2);
+    rect.setAttribute("y", -size / 2);
+    rect.setAttribute("width",  size);
+    rect.setAttribute("height", size);
+    rect.setAttribute("fill", args.theme.colorScheme[args.class]);
+    args.target.appendChild(rect);
+};
+```
+
+The D3 `<script>` include shown below is required by the three shipped plugins; a plugin of your own only needs whatever it uses itself.
+
+---
+
+## The shipped plugins
+
+Three ready-made chart functions ship with the framework:
+
+| Function | Shape | Script |
+|----------|-------|--------|
+| `pinnacleChart` | Vertical pillar/bar — height encodes the value | `usercharts/d3/chart.js` |
+| `arrowChart` | Up-arrow for positive values, down-arrow for negative ones | `usercharts/d3/arrow_chart.js` |
+| `lolliChart` | Lollipop pin — a circle on a stem, height encodes the value | `usercharts/d3/lolli_chart.js` |
+
+All three share the same sizing logic (`normalsizevalue`, `rangescale`) and read their color from the layer's `colorscheme` class; `GRADIENT` in the type string switches the fill to a vertical gradient, and `NONEGATIVE` suppresses negative values.
 
 ---
 
@@ -36,15 +79,16 @@ The current flat API uses **`userdraw`** as the style property name. Older iXMap
 
 ---
 
-## Required scripts
+## Required scripts (shipped plugins)
 
-Three extra CDN scripts are required in addition to `ixmaps.js`:
+For the three shipped plugins, D3 plus the script of each chart function you use are required in addition to `ixmaps.js` — a plugin of your own needs neither unless it draws with D3 itself:
 
 ```html
 <script src="https://cdn.jsdelivr.net/gh/gjrichter/ixmaps-flat@1/ixmaps.js"></script>
 <script src="https://d3js.org/d3.v3.min.js"></script>
-<script src="https://cdn.jsdelivr.net/gh/gjrichter/ixmaps-flat@1/usercharts/d3/chart.js"></script>
-<script src="https://cdn.jsdelivr.net/gh/gjrichter/ixmaps-flat@1/usercharts/d3/arrow_chart.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/gjrichter/ixmaps-flat@1/usercharts/d3/chart.js"></script>       <!-- pinnacleChart -->
+<script src="https://cdn.jsdelivr.net/gh/gjrichter/ixmaps-flat@1/usercharts/d3/arrow_chart.js"></script> <!-- arrowChart -->
+<script src="https://cdn.jsdelivr.net/gh/gjrichter/ixmaps-flat@1/usercharts/d3/lolli_chart.js"></script> <!-- lolliChart -->
 ```
 
 Script load order relative to `ixmaps.js` does not matter.

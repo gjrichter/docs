@@ -7,13 +7,52 @@ iXMaps provides several complementary mechanisms for controlling how symbols and
 
 ---
 
+## Sizing principles
+
+Before the individual parameters, four principles explain *why* the sizing system is built the way it is. Keeping them apart prevents the most common sizing mistakes.
+
+### 1 · Size contrast within a theme
+
+Inside one theme, the **ratio between symbol sizes encodes the ratio between data values**. How strongly that contrast appears is controlled by [`sizepow`](#sizepow-which-symbol-dimension-carries-the-value) — whether the value is carried by the symbol's width, area (default), or volume. This is a property of the *theme's internal comparison* and has nothing to do with how big the theme looks overall.
+
+### 2 · Same-size rule between themes
+
+When two themes should be comparable — the same indicator for two years, two indicators on the same map, or a swappable-theme setup — **the same data value must render at the same symbol size in every theme**. That is achieved by giving all comparable themes the same explicit `normalsizevalue` (and the same `sizepow`). If each theme is left to size itself, equal values will render at different sizes and the visual comparison silently lies.
+
+### 3 · Zoom adaptation — one setting for the whole map
+
+How symbols grow and shrink while zooming is a **map-level** decision, made once in `.options()` (`objectscaling: "dynamic"` + `normalSizeScale`), and it applies equally to all themes. This keeps the size relations between themes stable at every zoom level. Never try to emulate zoom behaviour per theme — that breaks the same-size rule the moment the user zooms.
+
+### 4 · Reserve `scale` for the runtime API
+
+`scale` is a bare multiplier with no data meaning. Using it at design time to "fix" a theme's size hides the real reference (`normalsizevalue`) and breaks comparability between themes. Leave it at `1` in layer definitions and treat it as the lever for **interactive, runtime adjustments**:
+
+```javascript
+myMap.then(api => api.changeThemeStyle("layerName", "scale:1.2", "factor"));
+```
+
+(Exception: compensating a purely visual effect — e.g. `scale: 0.32` to offset a `|GLOW` halo — is legitimate, because it corrects appearance, not data mapping.)
+
+### Defaults and automatic sizing
+
+If a theme defines **no `normalsizevalue`**, iXMaps sizes it automatically: the reference becomes the **maximum value of the theme's currently loaded data**. The remaining defaults are `sizepow: 2` (area-proportional) and `scale: 1`.
+
+Automatic sizing is convenient for a first look at a single layer, but it makes the size mapping *data-dependent*, with two consequences:
+
+- **Filtering changes symbol sizes.** After a filter, the data maximum may change — and with it the reference, so *all* symbols rescale. The same feature with the same value can render larger after filtering, which reads as a change in the data when only the selection changed.
+- **Themes are not comparable.** Each auto-sized theme normalizes against its own maximum, so a value of `1000` renders at a different size in every theme.
+
+For any map with filters, swappable themes, or side-by-side comparison, set `normalsizevalue` explicitly — it pins the value→size mapping independently of what data happens to be loaded.
+
+---
+
 ## The three sizing levers
 
 | Lever | Scope | Where | Effect |
 |-------|-------|-------|--------|
 | `normalSizeScale` | Map | `.options()` | Reference map scale denominator — sets the zoom level at which symbols appear at their "nominal" size |
 | `normalsizevalue` | Layer | `.style()` | Reference data value that maps to nominal size — higher value = smaller symbols |
-| `scale` | Layer | `.style()` | Direct multiplier applied on top of everything else |
+| `scale` | Layer | `.style()` | Direct multiplier applied on top of everything else — reserve for runtime adjustments (principle 4) |
 
 They multiply together. A symbol's screen size is approximately:
 
@@ -69,50 +108,70 @@ Higher value → smaller symbols (because most real data values fall below it).
 
 ## `scale` — direct multiplier
 
-The simplest lever. Applied after everything else. Start at `1` and adjust:
+The simplest lever: a bare multiplier applied after everything else. Per [principle 4](#reserve-scale-for-the-runtime-api), keep it at `1` in layer definitions and size themes via `normalsizevalue`; use `scale` for runtime adjustments and for compensating visual effects:
 
 ```javascript
-.style({ scale: 0.5 })   // half size
-.style({ scale: 2.0 })   // double size
-.style({ scale: 0.32 })  // recommended with |GLOW (glow halo adds apparent size)
+.style({ scale: 0.32 })  // legitimate: offset the |GLOW halo's apparent size
+
+// runtime — interactive size adjustment:
+myMap.then(api => api.changeThemeStyle("layerName", "scale:0.9", "factor"));
 ```
 
 ---
 
-## `sizepow` — power curve
+## `sizepow` — which symbol dimension carries the value
 
-Controls how aggressively size contrasts between large and small data values.
+### Purpose
 
-**Formula:**
+A numeric data value has to become a symbol size on screen — but "size" is ambiguous: it could mean the symbol's **width** (linear), its **area** (2D), or its apparent **volume** (3D). `sizepow` resolves that ambiguity. It declares the geometric dimension of the symbol that represents the data value, and thereby controls how strongly size differences between small and large values appear.
+
+The cartographic convention for 2D symbols (circles, squares) is **area-proportional**: a value twice as large gets a symbol with twice the *area* — not twice the diameter, which would quadruple the area and grossly exaggerate differences. That convention is `sizepow: 2`, and it is the iXMaps default.
+
+### Definition
+
+The symbol's linear dimension (radius, side, height) is proportional to the value raised to `1/sizepow`:
+
 ```
-Adjusted Size = BaseSize × (dataValue ^ (1/sizePow)) / (maxValue ^ (1/sizePow))
+symbolSize = referenceSize × (value ^ (1/sizepow)) / (referenceValue ^ (1/sizepow))
 ```
 
-**Effect of different values:**
+where `referenceValue` is `normalsizevalue` if set, otherwise the layer's maximum value. Read `sizepow` as a dimension: with `sizepow: 2` the value is carried by the symbol's *surface* (radius grows with the square root), with `sizepow: 3` by its *volume*, with `sizepow: 1` by its *length*.
 
-| `sizepow` | Curve | Use case |
-|-----------|-------|----------|
-| `1` | Linear — size directly proportional to value | Equal-weight comparison |
-| `2` *(default)* | Square root — dampens extremes | Most bubble/symbol maps |
-| `0.5` | Quadratic — amplifies large values | When you want large values to dominate |
-| `3` | Cubic root — strongly dampens extremes | Very wide value ranges |
-| `10` | Near-logarithmic — almost equal visual size for all values | Revenue, orders-of-magnitude data |
+### Possibilities
 
-**Defaults set automatically by type modifier:**
-
-| Type modifier | Auto `sizepow` |
-|--------------|----------------|
-| `LINEAR` / `SIZEP1` | `1` |
-| `SIZEP1H` | `1.5` |
-| `SIZEP3` / `SIZEVOLUME` | `3` |
-| `SIZELOG` | `10` |
-| *(none of the above)* | `2` |
+Set it directly in `.style()` — any positive number works:
 
 ```javascript
-.style({ sizepow: 2 })   // default — square root
-.style({ sizepow: 0.5 }) // amplify large values
-.style({ sizepow: 10 })  // near-logarithmic
+.style({ sizepow: 1 })    // linear — width directly proportional to value
+.style({ sizepow: 2 })    // area-proportional (default)
+.style({ sizepow: 0.5 })  // amplification — exaggerates large values
+.style({ sizepow: 10 })   // near-logarithmic — compresses wide ranges
 ```
+
+Or implicitly through a type modifier, which overrides the style property:
+
+| Type modifier | Sets `sizepow` | Meaning |
+|--------------|----------------|---------|
+| `LINEAR` / `SIZEP1` | `1` | Length represents the value |
+| `SIZEP1H` | `1.5` | Between linear and area |
+| *(none — default)* | `2` | **Area represents the value** |
+| `SIZEP3` / `SIZEVOLUME` | `3` | Volume represents the value |
+| `SIZEP4` | `4` | Stronger compression |
+| `SIZEP10` / `SIZELOG` | `10` | Near-logarithmic |
+
+### Effect
+
+Higher `sizepow` → contrast between small and large values is **compressed**. Lower → **exaggerated**. Concretely, for two data values `100` and `10 000` (a 1:100 ratio), the rendered symbol-width ratio is:
+
+| `sizepow` | Width ratio | Visual result |
+|-----------|------------|---------------|
+| `0.5` | 1 : 10 000 | Extreme exaggeration — small values disappear |
+| `1` | 1 : 100 | Honest in width, but area differs 1 : 10 000 — reads as exaggerated |
+| `2` *(default)* | 1 : 10 | Area differs 1 : 100 — perceptually matches the data ratio |
+| `3` | 1 : 4.6 | Compressed — good for heavy-tailed data |
+| `10` | 1 : 1.6 | Nearly uniform — only the ordering remains visible |
+
+Use the default for most maps. Reach for `3`–`10` when a few extreme values would otherwise drown everything else (revenue, city population), and for values below `1` only when you deliberately want the largest values to dominate the picture.
 
 ---
 

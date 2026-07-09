@@ -11,6 +11,7 @@ project:
       - theme_styles.qmd
       - chart_scaling.qmd
       - user_charts.qmd
+      - data_preprocessing.qmd
       - examples.qmd
       - troubleshooting.qmd
       - about.qmd
@@ -58,6 +59,8 @@ website:
             text: "Chart Scaling"
           - href: user_charts.qmd
             text: "User Charts"
+          - href: data_preprocessing.qmd
+            text: "Data Preprocessing"
       - text: "---"
       - href: examples.qmd
         text: "Examples"

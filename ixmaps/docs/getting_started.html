@@ -248,6 +248,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
  <span class="menu-text">User Charts</span></a>
   </div>
 </li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./data_preprocessing.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Data Preprocessing</span></a>
+  </div>
+</li>
       </ul>
   </li>
         <li class="px-0"><hr class="sidebar-divider hi "></li>
@@ -376,7 +382,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p><code>data.js</code> is already bundled inside <code>ixmaps.js</code>. <code>Data.*</code> functions are always available — do not add a second <code>&lt;script&gt;</code> tag for data.js unless you need it outside a layer callback.</p>
+<p><code>data.js</code> is loaded automatically when <code>ixmaps.Map()</code> initializes — <code>Data.*</code> functions are available in any code that runs after that (layer callbacks, <code>.then()</code>, event handlers). Only if you need <code>Data</code> <em>before</em> creating the map do you add its own <code>&lt;script&gt;</code> tag — see <a href="./data_preprocessing.html#loading-the-library">Data Preprocessing</a>.</p>
 </div>
 </div>
 <hr>

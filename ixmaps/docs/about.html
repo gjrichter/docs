@@ -213,6 +213,12 @@ ul.task-list li input[type="checkbox"] {
  <span class="menu-text">User Charts</span></a>
   </div>
 </li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./data_preprocessing.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Data Preprocessing</span></a>
+  </div>
+</li>
       </ul>
   </li>
         <li class="px-0"><hr class="sidebar-divider hi "></li>
@@ -257,21 +263,8 @@ ul.task-list li input[type="checkbox"] {
   <li><a href="#data-driven" id="toc-data-driven" class="nav-link" data-scroll-target="#data-driven">2. <strong>Data-Driven</strong></a></li>
   <li><a href="#open-and-accessible" id="toc-open-and-accessible" class="nav-link" data-scroll-target="#open-and-accessible">3. <strong>Open and Accessible</strong></a></li>
   </ul></li>
-  <li><a href="#technology-stack" id="toc-technology-stack" class="nav-link" data-scroll-target="#technology-stack">Technology Stack</a>
-  <ul class="collapse">
-  <li><a href="#core-technologies" id="toc-core-technologies" class="nav-link" data-scroll-target="#core-technologies">Core Technologies</a></li>
-  <li><a href="#libraries-and-dependencies" id="toc-libraries-and-dependencies" class="nav-link" data-scroll-target="#libraries-and-dependencies">Libraries and Dependencies</a></li>
-  <li><a href="#data-processing" id="toc-data-processing" class="nav-link" data-scroll-target="#data-processing">Data Processing</a></li>
-  </ul></li>
-  <li><a href="#use-cases" id="toc-use-cases" class="nav-link" data-scroll-target="#use-cases">Use Cases</a>
-  <ul class="collapse">
-  <li><a href="#journalism-and-media" id="toc-journalism-and-media" class="nav-link" data-scroll-target="#journalism-and-media">Journalism and Media</a></li>
-  <li><a href="#research-and-academia" id="toc-research-and-academia" class="nav-link" data-scroll-target="#research-and-academia">Research and Academia</a></li>
-  <li><a href="#government-and-ngos" id="toc-government-and-ngos" class="nav-link" data-scroll-target="#government-and-ngos">Government and NGOs</a></li>
-  <li><a href="#business-applications" id="toc-business-applications" class="nav-link" data-scroll-target="#business-applications">Business Applications</a></li>
-  </ul></li>
-  <li><a href="#features-comparison" id="toc-features-comparison" class="nav-link" data-scroll-target="#features-comparison">Features Comparison</a></li>
-  <li><a href="#community" id="toc-community" class="nav-link" data-scroll-target="#community">Community</a></li>
+  <li><a href="#technology-stack" id="toc-technology-stack" class="nav-link" data-scroll-target="#technology-stack">Technology Stack</a></li>
+  <li><a href="#use-cases" id="toc-use-cases" class="nav-link" data-scroll-target="#use-cases">Use Cases</a></li>
   <li><a href="#license" id="toc-license" class="nav-link" data-scroll-target="#license">License</a></li>
   <li><a href="#credits-and-acknowledgments" id="toc-credits-and-acknowledgments" class="nav-link" data-scroll-target="#credits-and-acknowledgments">Credits and Acknowledgments</a>
   <ul class="collapse">
@@ -310,15 +303,8 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="history" class="level2">
 <h2 class="anchored" data-anchor-id="history">History</h2>
-<p>iXMaps was created by <strong>Guenter Richter</strong> to address the need for a flexible, powerful mapping framework that could handle:</p>
-<ul>
-<li>Multiple data sources and formats</li>
-<li>Complex data transformations</li>
-<li>Advanced visualization techniques</li>
-<li>Interactive features and user engagement</li>
-<li>Real-time data updates</li>
-</ul>
-<p>The framework has been used in numerous projects, from journalism and research to government transparency and civic engagement applications.</p>
+<p>iXMaps was created by <strong>Guenter Richter</strong> to address the need for a flexible, powerful mapping framework that could handle multiple data sources and formats, complex data transformations, advanced visualization techniques, interactive features, and real-time data updates.</p>
+<p>The framework has been used in numerous projects, from data journalism and research to government transparency and civic engagement applications. The current engine — <code>ixmaps-flat</code>, with its declarative layer grammar and fluent API — supersedes the historical iframe-based framework (<a href="https://github.com/gjrichter/ixmaps">gjrichter/ixmaps</a>, now archived).</p>
 </section>
 <section id="core-philosophy" class="level2">
 <h2 class="anchored" data-anchor-id="core-philosophy">Core Philosophy</h2>
@@ -344,185 +330,55 @@ ul.task-list li input[type="checkbox"] {
 <h3 class="anchored" data-anchor-id="open-and-accessible">3. <strong>Open and Accessible</strong></h3>
 <p>Free and open for everyone:</p>
 <ul>
-<li>CC-BY 4.0 license</li>
+<li>BSD 3-Clause license — free for personal and commercial use</li>
 <li>Comprehensive documentation</li>
 <li>Real-world examples</li>
-<li>Active community support</li>
 </ul>
 </section>
 </section>
 <section id="technology-stack" class="level2">
 <h2 class="anchored" data-anchor-id="technology-stack">Technology Stack</h2>
 <p>iXMaps is built on proven web technologies:</p>
-<section id="core-technologies" class="level3">
-<h3 class="anchored" data-anchor-id="core-technologies">Core Technologies</h3>
 <ul>
-<li><strong>JavaScript (ES6+)</strong> - Modern JavaScript with classes and modules</li>
-<li><strong>SVG</strong> - Scalable vector graphics for crisp maps at any zoom level</li>
-<li><strong>HTML5</strong> - Standard web markup</li>
+<li><strong>JavaScript (ES6+)</strong> — core programming language</li>
+<li><strong>SVG</strong> — scalable vector graphics for crisp maps at any zoom level</li>
+<li><strong>Leaflet</strong> — optional tile-based basemap support</li>
+<li><strong>Mustache</strong> — template engine for tooltips and labels</li>
+<li><strong>Papaparse</strong> — CSV parsing</li>
+<li><strong>DuckDB WASM</strong> — Parquet, GeoParquet and GeoPackage reading</li>
+<li><strong>flatgeobuf / geobuf</strong> — binary geo-format reading</li>
+<li><strong>D3.js</strong> — optional, for custom user charts</li>
+<li><strong>jQuery</strong> — optional DOM utilities</li>
+<li><strong>Data.js</strong> — iXMaps’s own data processing library (filter, pivot, aggregate, join)</li>
 </ul>
-</section>
-<section id="libraries-and-dependencies" class="level3">
-<h3 class="anchored" data-anchor-id="libraries-and-dependencies">Libraries and Dependencies</h3>
-<ul>
-<li><strong>D3.js</strong> - Data-driven visualizations</li>
-<li><strong>jQuery</strong> - DOM manipulation (optional)</li>
-<li><strong>Mustache</strong> - Template engine for tooltips</li>
-<li><strong>Leaflet</strong> - Optional tile-based mapping support</li>
-</ul>
-</section>
-<section id="data-processing" class="level3">
-<h3 class="anchored" data-anchor-id="data-processing">Data Processing</h3>
-<ul>
-<li><strong>Data.js</strong> - Custom data processing library</li>
-<li>Support for CSV, JSON, GeoJSON, TopoJSON, KML, RSS</li>
-<li>Advanced transformations: pivot, filter, aggregate, join</li>
-</ul>
-</section>
 </section>
 <section id="use-cases" class="level2">
 <h2 class="anchored" data-anchor-id="use-cases">Use Cases</h2>
 <p>iXMaps has been successfully used for:</p>
-<section id="journalism-and-media" class="level3">
-<h3 class="anchored" data-anchor-id="journalism-and-media">Journalism and Media</h3>
 <ul>
-<li>Election results visualizations</li>
-<li>Demographic analysis</li>
-<li>Environmental data reporting</li>
-<li>Investigative journalism with geographic data</li>
-</ul>
-</section>
-<section id="research-and-academia" class="level3">
-<h3 class="anchored" data-anchor-id="research-and-academia">Research and Academia</h3>
-<ul>
-<li>Scientific data visualization</li>
-<li>Geographic analysis and patterns</li>
-<li>Publication-ready figures</li>
-<li>Interactive research papers</li>
-</ul>
-</section>
-<section id="government-and-ngos" class="level3">
-<h3 class="anchored" data-anchor-id="government-and-ngos">Government and NGOs</h3>
-<ul>
-<li>Open data portals</li>
-<li>Transparency initiatives</li>
-<li>Public health dashboards</li>
-<li>Urban planning tools</li>
-</ul>
-</section>
-<section id="business-applications" class="level3">
-<h3 class="anchored" data-anchor-id="business-applications">Business Applications</h3>
-<ul>
-<li>Market analysis</li>
-<li>Customer distribution maps</li>
-<li>Sales territory visualization</li>
-<li>Location intelligence</li>
-</ul>
-</section>
-</section>
-<section id="features-comparison" class="level2">
-<h2 class="anchored" data-anchor-id="features-comparison">Features Comparison</h2>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 17%">
-<col style="width: 15%">
-<col style="width: 17%">
-<col style="width: 25%">
-<col style="width: 23%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Feature</th>
-<th>iXMaps</th>
-<th>Leaflet</th>
-<th>Google Maps</th>
-<th>D3.js Maps</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>Data Processing</td>
-<td>✅ Built-in</td>
-<td>❌ External</td>
-<td>❌ External</td>
-<td>⚠️ Manual</td>
-</tr>
-<tr class="even">
-<td>Choropleth Maps</td>
-<td>✅ Easy</td>
-<td>⚠️ Plugins</td>
-<td>⚠️ Complex</td>
-<td>✅ Manual</td>
-</tr>
-<tr class="odd">
-<td>Custom Charts</td>
-<td>✅ Integrated</td>
-<td>❌ No</td>
-<td>❌ Limited</td>
-<td>✅ Full</td>
-</tr>
-<tr class="even">
-<td>Multiple Data Sources</td>
-<td>✅ Yes</td>
-<td>❌ No</td>
-<td>❌ No</td>
-<td>⚠️ Manual</td>
-</tr>
-<tr class="odd">
-<td>Offline Capable</td>
-<td>✅ Yes</td>
-<td>✅ Yes</td>
-<td>❌ No</td>
-<td>✅ Yes</td>
-</tr>
-<tr class="even">
-<td>Learning Curve</td>
-<td>⚠️ Moderate</td>
-<td>✅ Easy</td>
-<td>✅ Easy</td>
-<td>❌ Steep</td>
-</tr>
-</tbody>
-</table>
-</section>
-<section id="community" class="level2">
-<h2 class="anchored" data-anchor-id="community">Community</h2>
-<p>iXMaps is maintained by an active community of developers and users:</p>
-<ul>
-<li><strong>GitHub Repository</strong>: <a href="https://github.com/gjrichter/ixmaps">github.com/gjrichter/ixmaps</a></li>
-<li><strong>Examples Gallery</strong>: <a href="https://gjrichter.github.io/pages">gjrichter.github.io/pages</a></li>
-<li><strong>Live Demos</strong>: Dozens of real-world examples in the repository</li>
+<li><strong>Journalism and media</strong> — election results, demographic analysis, environmental reporting</li>
+<li><strong>Research and academia</strong> — scientific data visualization, geographic patterns, publication-ready figures</li>
+<li><strong>Government and NGOs</strong> — open data portals, transparency initiatives, public dashboards</li>
+<li><strong>Business</strong> — market analysis, customer distribution, location intelligence</li>
 </ul>
 </section>
 <section id="license" class="level2">
 <h2 class="anchored" data-anchor-id="license">License</h2>
-<p>iXMaps is released under the <strong>Creative Commons Attribution 4.0 International (CC-BY 4.0)</strong> license.</p>
-<p>This means you can:</p>
-<ul>
-<li>✅ Share - copy and redistribute in any medium or format</li>
-<li>✅ Adapt - remix, transform, and build upon the material</li>
-<li>✅ Commercial use - use for any purpose, even commercially</li>
-</ul>
-<p>As long as you:</p>
-<ul>
-<li>📝 Give appropriate credit</li>
-<li>🔗 Provide a link to the license</li>
-<li>📢 Indicate if changes were made</li>
-</ul>
+<p>iXMaps is released under the <a href="https://github.com/gjrichter/ixmaps-flat/blob/main/LICENSE.txt"><strong>BSD 3-Clause License</strong></a> — free for both personal and commercial use, provided the original copyright notice is included; the original authors’ names may not be used to promote derived products.</p>
 </section>
 <section id="credits-and-acknowledgments" class="level2">
 <h2 class="anchored" data-anchor-id="credits-and-acknowledgments">Credits and Acknowledgments</h2>
 <section id="created-by" class="level3">
 <h3 class="anchored" data-anchor-id="created-by">Created By</h3>
-<p><strong>Guenter Richter</strong> - Framework architecture, core development, and maintenance</p>
+<p><strong>Guenter Richter</strong> — framework architecture, core development, and maintenance</p>
 </section>
 <section id="special-thanks-to" class="level3">
 <h3 class="anchored" data-anchor-id="special-thanks-to">Special Thanks To</h3>
 <ul>
-<li><strong>Andrea Borruso</strong> - Urban fabric centroids data and valuable feedback</li>
-<li><strong>D3.js Community</strong> - Inspiration for data-driven visualizations</li>
-<li><strong>OpenStreetMap Contributors</strong> - Geographic data</li>
-<li><strong>ISTAT</strong> - Italian statistical data</li>
+<li><strong>Andrea Borruso</strong> — urban fabric centroids data, the <a href="https://deepwiki.com/gjrichter/ixmaps-flat">DeepWiki</a> contribution, and valuable feedback</li>
+<li><strong>D3.js Community</strong> — inspiration for data-driven visualizations</li>
+<li><strong>OpenStreetMap Contributors</strong> — geographic data</li>
+<li><strong>ISTAT</strong> — Italian statistical data</li>
 </ul>
 </section>
 <section id="built-with" class="level3">
@@ -537,25 +393,18 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="contributing" class="level2">
 <h2 class="anchored" data-anchor-id="contributing">Contributing</h2>
-<p>Contributions are welcome! Whether it’s:</p>
-<ul>
-<li>🐛 Bug reports</li>
-<li>💡 Feature requests</li>
-<li>📝 Documentation improvements</li>
-<li>🔧 Code contributions</li>
-<li>💬 Community support</li>
-</ul>
-<p>Visit the <a href="https://github.com/gjrichter/ixmaps">GitHub repository</a> to get involved.</p>
+<p>Contributions are welcome — bug reports, feature requests, documentation improvements, code:</p>
+<p>Visit the <a href="https://github.com/gjrichter/ixmaps-flat">GitHub repository</a> to get involved.</p>
 </section>
 <section id="contact" class="level2">
 <h2 class="anchored" data-anchor-id="contact">Contact</h2>
 <p>For questions, suggestions, or collaboration:</p>
 <ul>
-<li><strong>GitHub Issues</strong>: <a href="https://github.com/gjrichter/ixmaps/issues">github.com/gjrichter/ixmaps/issues</a></li>
+<li><strong>GitHub Issues</strong>: <a href="https://github.com/gjrichter/ixmaps-flat/issues">github.com/gjrichter/ixmaps-flat/issues</a></li>
 <li><strong>Email</strong>: richter@ixmaps.com</li>
 </ul>
 <hr>
-<p><em>iXMaps - Making geographic data visualization accessible and powerful for everyone.</em></p>
+<p><em>iXMaps — Making geographic data visualization accessible and powerful for everyone.</em></p>
 
 
 </section>

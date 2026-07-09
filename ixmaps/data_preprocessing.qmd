@@ -1,0 +1,299 @@
+---
+title: "Data Preprocessing"
+description: "Load, transform and reshape data with Data.js before feeding it to an iXMaps layer: Data.feed, Data.provider, Data.Table and the addColumn/aggregate/pivot pipeline."
+---
+
+`.data({url, type})` covers the common case: point a layer at a file, iXMaps fetches and binds it. When you need to **transform data before it reaches the map** — derive a column, aggregate rows, reshape a table — use `Data.js`, iXMaps's own data-table library, which every layer's data pipeline is built on.
+
+---
+
+## Loading the library
+
+`Data` lives in its own repo (`../data.js/data.js`, sibling to `ixmaps-flat`). It's one entry in the flat engine's own bootstrap manifest (`fileUrls` in `htmlgui_flat.js`), fetched and evaluated automatically as part of every `ixmaps.Map()`/`ixmaps.embed()` call — so any code that runs **after** the map has initialized can use `Data` as a global with no extra include:
+
+```html
+<script src="https://cdn.jsdelivr.net/gh/gjrichter/ixmaps-flat@1/ixmaps.js"></script>
+<!-- Data is already available here once ixmaps.Map()/embed() has run -->
+```
+
+:::{.callout-warning}
+## Preprocessing before the map exists — add your own include
+The automatic load only happens as a side effect of `ixmaps.Map()`/`ixmaps.embed()`. If you need to fetch and preprocess data **before** creating the map — e.g. to decide layer config from the data, or to have a ready `Data.Table` at hand for `.data({obj: ...})` on the very first layer — `Data` isn't defined yet at that point. Add an explicit script tag for it:
+
+```html
+<script src="https://cdn.jsdelivr.net/gh/gjrichter/data.js@1/data.js"></script>
+<script>
+  Data.feed({ source: url, type: "csv" }).load(function (table) {
+      // preprocess, then create the map and .data({ obj: table })
+  });
+</script>
+<script src="https://cdn.jsdelivr.net/gh/gjrichter/ixmaps-flat@1/ixmaps.js"></script>
+```
+:::
+
+---
+
+## Three ways to hook a function into `.data()`
+
+Beyond `{ url, type }`, a layer's `.data({...})` accepts three different function hooks — each normalizes to a distinct `style.dbtable*` property under the hood, and each runs at a different point in the load. All three take the function **as a string** (an inline function expression, or the name of one already defined) — `.data()` values get serialized, so a live `Function` object doesn't survive the round-trip.
+
+### 1. `process` — transform data after it's loaded from a URL
+
+Pairs with a normal `url`/`type` source. iXMaps fetches and parses the file as usual, then calls your function with the resulting `Data.Table` before binding it — for cleanup or derived columns that belong with this one layer's data, not the whole page.
+
+```javascript
+.data({
+    url: dataUrl,
+    type: "csv",
+    process: `data => {
+        data.column("n_killed").map(v => isNaN(v) ? 0 : v);
+        data.column("n_wounded").map(v => isNaN(v) ? 0 : v);
+        var killed = data.column("n_killed").index, wounded = data.column("n_wounded").index;
+        data.addColumn({ destination: "n_victims" }, row => Number(row[killed]) + Number(row[wounded]));
+    }`
+})
+```
+
+Real example (from a production project config): normalizes `NaN`s in two numeric columns, then derives a `n_victims` column as their sum. The function receives `(data, options)` — `data` is the loaded `Data.Table` — and may either mutate it in place (as above) or return a new table; iXMaps uses the return value if there is one, otherwise keeps the original (`process(data,options) || data`).
+
+### 2. `query` — declare the data provider inline
+
+Same calling convention as the `ext` pattern below (`function(theme, options)`, must eventually call `ixmaps.setExternalData(...)`), but written directly inside `.data({...})` instead of as a separately-declared global. Passing `query` implicitly sets `type: "ext"` for you:
+
+```javascript
+.data({
+    name: "myProvider",
+    query: `function(theme, options) {
+        var bounds = ixmaps.getBoundingBox();
+        Data.feed({ source: buildQueryURL(bounds), type: "json" }).load(function (raw) {
+            ixmaps.setExternalData(preprocess(raw), { type: "geojson", name: options.name });
+        });
+    }`
+})
+```
+
+Use this when the provider logic is short enough to keep next to the layer definition; reach for `ext` (below) once it's substantial enough to want its own named function, reused across layers, or defined in a separate script.
+
+:::{.callout-warning}
+## `query` only takes effect together with `type: "ext"`
+Passing `query` inside the same `.data({...})` object auto-defaults `type` to `"ext"` — that's the supported form. The standalone `.query(fn)` chain method only *sets* the query string; it does **not** set `type`, so pairing it with a `.data({name: "x"})` call that omits `type` leaves the provider registered but never invoked. If you use the chain form, also set `.data({ name: "x", type: "ext" })` explicitly.
+:::
+
+### 3. `ext` — reference a data provider declared beforehand
+
+```javascript
+.data({ type: "ext", name: "myDataProvider" })
+```
+
+Same runtime contract as `query`, except the function must already exist on `ixmaps` — declared earlier in the page (or a separately loaded script) rather than inline. See [On demand, via a layer's own data provider](#on-demand-via-a-layers-own-data-provider-type-ext) below for the full pattern and a real working example.
+
+---
+
+Whichever hook you use, the actual data manipulation inside it goes through the same `Data.js` API — `Data.feed`, `Data.Table` and its transform methods — covered next.
+
+## Loading a dataset: one source or several
+
+### Data.feed — a single source
+
+```javascript
+Data.feed({ source: url, type: "csv" }).load(function (table) {
+    // table is a Data.Table, already parsed
+});
+```
+
+`Data.feed(options)` takes a **single** options object:
+
+| Option | Role |
+|--------|------|
+| `source` / `src` / `url` / `ext` | Location of the data (first one present wins) |
+| `type` | `csv`, `json`, `jsonl`/`ndjson`, `geojson`, `topojson`, `kml`, `gml`, `rss`, `jsonDB`, `jsonstat`, `parquet`, `geoparquet`, `gpkg`, `fgb`/`flatgeobuf`, `pbf`/`geobuf` |
+| `cache` | Boolean, default `true` |
+
+:::{.callout-warning}
+## Some in-source examples show a two-argument form — don't use it
+Older comments and examples (including inside `data.js` itself, and the legacy `ixmaps` engine) show `Data.feed("name", {source, type})` or `new Data.Feed("name", {...})`. The current constructor takes **one** argument: `Data.Feed = function (options) {...}`. Passing a name as the first argument silently misassigns it — always call `Data.feed({ source, type })`.
+:::
+
+`.load(callback)` calls `callback(table)` once parsing finishes — `table` is a `Data.Table`, not raw JSON.
+
+:::{.callout-note}
+## `this` inside the `.load()` callback is not the feed
+Because iXMaps invokes the callback as `opt.success(this.dbtable)`, `this` inside your callback is the feed's **options object** — it has `.source`/`.type`, not the loaded data. Read the callback's own argument for the table; if you need feed-level details, capture the feed in an outer variable instead of relying on `this`.
+:::
+
+`.error(callback)` registers an error handler and is chainable: `Data.feed({...}).error(fn).load(fn)`.
+
+### Data.provider — several sources, one callback
+
+When a transform needs **more than one** dataset at once — joining two files, looking up one table against another — loading them with separate `Data.feed` calls means juggling nested callbacks. `Data.provider()` loads any number of sources in parallel and calls your function once **all** of them are ready:
+
+```javascript
+Data.provider()
+    .addSource(scrutiniUrl, "csv")
+    .addSource(comuniUrl, "csv")
+    .addSource(camercaUrl, "csv")
+    .realize(function (dataA) {
+        var scrutini          = dataA[0];
+        var comuniViminaleISTAT = dataA[1];
+        var camera             = dataA[2];
+
+        scrutini = scrutini.select("WHERE tipo_riga == LI");
+        // ... join/transform across the three tables
+    });
+```
+
+- `.addSource(url, type)` — queue one source; call it once per dataset, in the order you want them back
+- `.realize(callback)` — starts loading; `callback(dataA)` receives a `Data.Table` **array**, indexed in `addSource` call order
+- `.error(fn)` / `.notify(fn)` — error handler / per-source progress hook, both chainable like `Data.feed`'s `.error()`
+
+This is what iXMaps itself uses internally to load a layer's data (`new Data.Broker(options).addSource(url, type).realize(...)`, inside `htmlgui.js`) — reach for it directly whenever a `process`/`query` function (see above) needs to combine more than one source before handing data back to the map.
+
+:::{.callout-warning}
+## Use `Data.provider()`, not `Data.broker()`
+Both return the same underlying object, but `Data.broker()` is the deprecated name — kept only for old code, not a second recommended entry point. It also collides conceptually with unrelated "broker" activities elsewhere; `Data.provider()` is the current, unambiguous name and the one to use in new code.
+:::
+
+---
+
+## Data.Table — the loaded shape
+
+```javascript
+{
+  table:   { records: 2, fields: 3 },
+  fields:  [ {id:"column 1"}, {id:"column 2"}, {id:"column 3"} ],
+  records: [ ["value11","value12","value13"],
+             ["value21","value22","value23"] ]
+}
+```
+
+`fields` is column metadata (order matches each row in `records`); `records` is a plain array of row-arrays. `.getArray()` / `.setArray()` convert to/from a single 2D array with the header as row 0.
+
+### Transform methods
+
+| Method | Role |
+|--------|------|
+| `.column(name)` | Returns a `Data.Column` handle — `.values()` reads all cell values, `.map(fn)` transforms them in place |
+| `.addColumn(options, callback)` | Derive a new column from one or more existing columns |
+| `.select(expression)` | Filter rows |
+| `.aggregate(column, aggregateType)` | Group/summarize |
+| `.pivot(options)` | Reshape rows ↔ columns |
+| `.subtable(options)` | Extract a row/column subset |
+| `.addTimeColumns(options)` | Derive date/time parts from a source column |
+| `.revert()` / `.reverse()` | Reverse row order |
+
+`addColumn` is the core preprocessing primitive — derive a column from one source:
+
+```javascript
+mydata = mydata.addColumn(
+    { source: "created_at", destination: "date" },
+    function (value, row) {
+        var d = new Date(value);
+        return String(d.getDate()) + "." + String(d.getMonth() + 1) + "." + String(d.getFullYear());
+    }
+);
+```
+
+or from several source columns at once:
+
+```javascript
+mydata = mydata.addColumn(
+    { source: ["first_name", "last_name"], destination: "full_name" },
+    function (firstName, lastName, row) {
+        return firstName + " " + lastName;
+    }
+);
+```
+
+---
+
+## Feeding transformed data to a map layer
+
+Two ways to hand a `Data.Table` to iXMaps once you're done transforming it.
+
+### Inline, at layer-definition time
+
+```javascript
+.data({ obj: myTransformedTable })   // or { data: myTransformedTable }
+```
+
+Use this when the transform finishes before you build the layer chain.
+
+### At runtime, via a named external table
+
+For a one-off load/transform after the map already exists (e.g. on a timer, or in response to a UI action), register the result with `ixmaps.setExternalData(table, options)`:
+
+```javascript
+Data.feed({ source: queryURL, type: "csv" }).load(function (table) {
+    table.addTimeColumns({ source: "Time" });   // preprocess in place
+    ixmaps.setExternalData(table, { name: "myLayerData", type: "jsonDB" });
+});
+```
+
+Condensed from a production iXMaps page, loading an earthquake feed and deriving time columns before handing it to the map:
+
+```javascript
+const queryURL = buildQueryURL(startDate);
+
+Data.feed({ source: queryURL, type: "csv" }).load(function (newData) {
+    newData.addTimeColumns({ source: "Time" });
+    ixmaps.setExternalData(newData, { name: "quakes", type: "jsonDB" });
+});
+```
+
+### On demand, via a layer's own data provider (`type: "ext"`)
+
+The pattern above runs once, imperatively. For a layer that fetches and preprocesses **its own** data whenever it's needed — first load, a map pan/zoom, a filter change — bind it to `type: "ext"` and register a same-named function on `ixmaps`:
+
+```javascript
+.data({ type: "ext", name: "myDataProvider" })
+```
+
+```javascript
+ixmaps.myDataProvider = function (theme, options) {
+    var bounds = ixmaps.getBoundingBox();
+    var url = buildQueryURL(bounds);
+
+    Data.feed({ source: url, type: "json" }).load(function (raw) {
+        var transformed = preprocess(raw);           // your own transform step
+        ixmaps.setExternalData(transformed, { type: "geojson", name: options.name });
+    })
+    .error(function (e) {
+        ixmaps.setExternalData(null, { type: "geojson", name: options.name });
+    });
+};
+```
+
+iXMaps calls `ixmaps.<name>(theme, options)` whenever the layer needs data — the function does its own fetch (`Data.feed` or otherwise), transforms it, and delivers the result via `ixmaps.setExternalData(data, {type, name: options.name})`. Because the call happens through the theme lifecycle rather than a one-off script, this is the pattern to reach for when data must be re-fetched as the map changes (e.g. a bounding-box query against a live API), not just loaded once at page load.
+
+Real example — a cycling-stress layer that re-queries OpenStreetMap's Overpass API for the current map view, derives a `level` field from OSM tags, and converts to GeoJSON before delivering it:
+
+```javascript
+ixmaps.OSM_dataquery_stressmap = function (theme, options) {
+    var bounds = ixmaps.getBoundingBox();
+    var query = buildOverpassQuery(bounds);   // Overpass QL string
+    var url = "https://overpass-api.de/api/interpreter?data=" + query;
+
+    var myfeed = Data.feed({ source: url, type: "json" }).load(function (mydata) {
+        if (myfeed.data.elements) {
+            ixmaps.addStressLevel(myfeed.data);          // derive the "level" field in place
+            var geo = osmtogeojson(myfeed.data);         // OSM JSON -> GeoJSON
+            ixmaps.setExternalData(geo, { type: "geojson", name: options.name });
+        }
+    })
+    .error(function (e) {
+        ixmaps.setExternalData(null, { type: "geojson", name: options.name });
+    });
+};
+```
+
+```javascript
+ixmaps.layer("osm", layer => layer
+    .data({ type: "ext", name: "OSM_dataquery_stressmap" })
+    .binding({ position: "geometry", id: "id", value: "level" })
+    .type("CHART|FEATURES|CATEGORICAL|LINES")
+    .style({ colorscheme: ["#0099CC", "#1C9C54", "#F0C808", "#DD5454"], values: ["1", "2", "3", "4"] })
+    .meta({ title: "Cycling Stress Map" })
+);
+```
+
+Note `myfeed.data` here, not the callback's own `mydata` argument — for JSON-family feeds the raw parsed payload is also stored on the feed instance (`this.data` inside `data.js`), and capturing the feed in an outer variable is how real code reads it. This isn't a general `Data.Feed` guarantee (CSV imports never populate it — see the callout above) — treat it as specific to JSON sources.

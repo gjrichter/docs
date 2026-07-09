@@ -250,6 +250,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
  <span class="menu-text">User Charts</span></a>
   </div>
 </li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./data_preprocessing.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Data Preprocessing</span></a>
+  </div>
+</li>
       </ul>
   </li>
         <li class="px-0"><hr class="sidebar-divider hi "></li>
@@ -283,11 +289,25 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#the-three-sizing-levers" id="toc-the-three-sizing-levers" class="nav-link active" data-scroll-target="#the-three-sizing-levers">The three sizing levers</a></li>
+  <li><a href="#sizing-principles" id="toc-sizing-principles" class="nav-link active" data-scroll-target="#sizing-principles">Sizing principles</a>
+  <ul class="collapse">
+  <li><a href="#size-contrast-within-a-theme" id="toc-size-contrast-within-a-theme" class="nav-link" data-scroll-target="#size-contrast-within-a-theme">1 · Size contrast within a theme</a></li>
+  <li><a href="#same-size-rule-between-themes" id="toc-same-size-rule-between-themes" class="nav-link" data-scroll-target="#same-size-rule-between-themes">2 · Same-size rule between themes</a></li>
+  <li><a href="#zoom-adaptation-one-setting-for-the-whole-map" id="toc-zoom-adaptation-one-setting-for-the-whole-map" class="nav-link" data-scroll-target="#zoom-adaptation-one-setting-for-the-whole-map">3 · Zoom adaptation — one setting for the whole map</a></li>
+  <li><a href="#reserve-scale-for-the-runtime-api" id="toc-reserve-scale-for-the-runtime-api" class="nav-link" data-scroll-target="#reserve-scale-for-the-runtime-api">4 · Reserve <code>scale</code> for the runtime API</a></li>
+  <li><a href="#defaults-and-automatic-sizing" id="toc-defaults-and-automatic-sizing" class="nav-link" data-scroll-target="#defaults-and-automatic-sizing">Defaults and automatic sizing</a></li>
+  </ul></li>
+  <li><a href="#the-three-sizing-levers" id="toc-the-three-sizing-levers" class="nav-link" data-scroll-target="#the-three-sizing-levers">The three sizing levers</a></li>
   <li><a href="#normalsizescale-the-zoom-anchor" id="toc-normalsizescale-the-zoom-anchor" class="nav-link" data-scroll-target="#normalsizescale-the-zoom-anchor"><code>normalSizeScale</code> — the zoom anchor</a></li>
   <li><a href="#normalsizevalue-the-data-anchor" id="toc-normalsizevalue-the-data-anchor" class="nav-link" data-scroll-target="#normalsizevalue-the-data-anchor"><code>normalsizevalue</code> — the data anchor</a></li>
   <li><a href="#scale-direct-multiplier" id="toc-scale-direct-multiplier" class="nav-link" data-scroll-target="#scale-direct-multiplier"><code>scale</code> — direct multiplier</a></li>
-  <li><a href="#sizepow-power-curve" id="toc-sizepow-power-curve" class="nav-link" data-scroll-target="#sizepow-power-curve"><code>sizepow</code> — power curve</a></li>
+  <li><a href="#sizepow-which-symbol-dimension-carries-the-value" id="toc-sizepow-which-symbol-dimension-carries-the-value" class="nav-link" data-scroll-target="#sizepow-which-symbol-dimension-carries-the-value"><code>sizepow</code> — which symbol dimension carries the value</a>
+  <ul class="collapse">
+  <li><a href="#purpose" id="toc-purpose" class="nav-link" data-scroll-target="#purpose">Purpose</a></li>
+  <li><a href="#definition" id="toc-definition" class="nav-link" data-scroll-target="#definition">Definition</a></li>
+  <li><a href="#possibilities" id="toc-possibilities" class="nav-link" data-scroll-target="#possibilities">Possibilities</a></li>
+  <li><a href="#effect" id="toc-effect" class="nav-link" data-scroll-target="#effect">Effect</a></li>
+  </ul></li>
   <li><a href="#dynamicscalepow-zoom-rate" id="toc-dynamicscalepow-zoom-rate" class="nav-link" data-scroll-target="#dynamicscalepow-zoom-rate"><code>dynamicScalePow</code> — zoom rate</a></li>
   <li><a href="#urban-trees-preset" id="toc-urban-trees-preset" class="nav-link" data-scroll-target="#urban-trees-preset">Urban trees preset</a></li>
   <li><a href="#scale-dependent-visibility" id="toc-scale-dependent-visibility" class="nav-link" data-scroll-target="#scale-dependent-visibility">Scale-dependent visibility</a></li>
@@ -324,6 +344,39 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <p>iXMaps provides several complementary mechanisms for controlling how symbols and charts are sized. Understanding how they interact helps you get the right visual density at every zoom level.</p>
 <hr>
+<section id="sizing-principles" class="level2">
+<h2 class="anchored" data-anchor-id="sizing-principles">Sizing principles</h2>
+<p>Before the individual parameters, four principles explain <em>why</em> the sizing system is built the way it is. Keeping them apart prevents the most common sizing mistakes.</p>
+<section id="size-contrast-within-a-theme" class="level3">
+<h3 class="anchored" data-anchor-id="size-contrast-within-a-theme">1 · Size contrast within a theme</h3>
+<p>Inside one theme, the <strong>ratio between symbol sizes encodes the ratio between data values</strong>. How strongly that contrast appears is controlled by <a href="#sizepow-which-symbol-dimension-carries-the-value"><code>sizepow</code></a> — whether the value is carried by the symbol’s width, area (default), or volume. This is a property of the <em>theme’s internal comparison</em> and has nothing to do with how big the theme looks overall.</p>
+</section>
+<section id="same-size-rule-between-themes" class="level3">
+<h3 class="anchored" data-anchor-id="same-size-rule-between-themes">2 · Same-size rule between themes</h3>
+<p>When two themes should be comparable — the same indicator for two years, two indicators on the same map, or a swappable-theme setup — <strong>the same data value must render at the same symbol size in every theme</strong>. That is achieved by giving all comparable themes the same explicit <code>normalsizevalue</code> (and the same <code>sizepow</code>). If each theme is left to size itself, equal values will render at different sizes and the visual comparison silently lies.</p>
+</section>
+<section id="zoom-adaptation-one-setting-for-the-whole-map" class="level3">
+<h3 class="anchored" data-anchor-id="zoom-adaptation-one-setting-for-the-whole-map">3 · Zoom adaptation — one setting for the whole map</h3>
+<p>How symbols grow and shrink while zooming is a <strong>map-level</strong> decision, made once in <code>.options()</code> (<code>objectscaling: "dynamic"</code> + <code>normalSizeScale</code>), and it applies equally to all themes. This keeps the size relations between themes stable at every zoom level. Never try to emulate zoom behaviour per theme — that breaks the same-size rule the moment the user zooms.</p>
+</section>
+<section id="reserve-scale-for-the-runtime-api" class="level3">
+<h3 class="anchored" data-anchor-id="reserve-scale-for-the-runtime-api">4 · Reserve <code>scale</code> for the runtime API</h3>
+<p><code>scale</code> is a bare multiplier with no data meaning. Using it at design time to “fix” a theme’s size hides the real reference (<code>normalsizevalue</code>) and breaks comparability between themes. Leave it at <code>1</code> in layer definitions and treat it as the lever for <strong>interactive, runtime adjustments</strong>:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>myMap<span class="op">.</span><span class="fu">then</span>(api <span class="kw">=&gt;</span> api<span class="op">.</span><span class="fu">changeThemeStyle</span>(<span class="st">"layerName"</span><span class="op">,</span> <span class="st">"scale:1.2"</span><span class="op">,</span> <span class="st">"factor"</span>))<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>(Exception: compensating a purely visual effect — e.g.&nbsp;<code>scale: 0.32</code> to offset a <code>|GLOW</code> halo — is legitimate, because it corrects appearance, not data mapping.)</p>
+</section>
+<section id="defaults-and-automatic-sizing" class="level3">
+<h3 class="anchored" data-anchor-id="defaults-and-automatic-sizing">Defaults and automatic sizing</h3>
+<p>If a theme defines <strong>no <code>normalsizevalue</code></strong>, iXMaps sizes it automatically: the reference becomes the <strong>maximum value of the theme’s currently loaded data</strong>. The remaining defaults are <code>sizepow: 2</code> (area-proportional) and <code>scale: 1</code>.</p>
+<p>Automatic sizing is convenient for a first look at a single layer, but it makes the size mapping <em>data-dependent</em>, with two consequences:</p>
+<ul>
+<li><strong>Filtering changes symbol sizes.</strong> After a filter, the data maximum may change — and with it the reference, so <em>all</em> symbols rescale. The same feature with the same value can render larger after filtering, which reads as a change in the data when only the selection changed.</li>
+<li><strong>Themes are not comparable.</strong> Each auto-sized theme normalizes against its own maximum, so a value of <code>1000</code> renders at a different size in every theme.</li>
+</ul>
+<p>For any map with filters, swappable themes, or side-by-side comparison, set <code>normalsizevalue</code> explicitly — it pins the value→size mapping independently of what data happens to be loaded.</p>
+<hr>
+</section>
+</section>
 <section id="the-three-sizing-levers" class="level2">
 <h2 class="anchored" data-anchor-id="the-three-sizing-levers">The three sizing levers</h2>
 <table class="caption-top table">
@@ -358,7 +411,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <td><code>scale</code></td>
 <td>Layer</td>
 <td><code>.style()</code></td>
-<td>Direct multiplier applied on top of everything else</td>
+<td>Direct multiplier applied on top of everything else — reserve for runtime adjustments (principle 4)</td>
 </tr>
 </tbody>
 </table>
@@ -407,10 +460,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </tr>
 </tbody>
 </table>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">options</span>({</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    <span class="dt">objectscaling</span><span class="op">:</span>   <span class="st">"dynamic"</span><span class="op">,</span></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">normalSizeScale</span><span class="op">:</span> <span class="st">"8000000"</span><span class="op">,</span>   <span class="co">// zoom 6 = nominal size</span></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>})</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">options</span>({</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    <span class="dt">objectscaling</span><span class="op">:</span>   <span class="st">"dynamic"</span><span class="op">,</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">normalSizeScale</span><span class="op">:</span> <span class="st">"8000000"</span><span class="op">,</span>   <span class="co">// zoom 6 = nominal size</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>})</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="callout callout-style-simple callout-warning callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -430,157 +483,186 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h2 class="anchored" data-anchor-id="normalsizevalue-the-data-anchor"><code>normalsizevalue</code> — the data anchor</h2>
 <p>Set in <code>.style()</code>. Declares: “a data value equal to <code>normalsizevalue</code> renders at the nominal symbol size.”</p>
 <p>Higher value → smaller symbols (because most real data values fall below it).</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co">// If your data has values up to 10 000 000:</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">style</span>({ <span class="dt">normalsizevalue</span><span class="op">:</span> <span class="st">"5000000"</span> })  <span class="co">// median-ish value → medium bubbles</span></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co">// If your values are small (0–100):</span></span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">style</span>({ <span class="dt">normalsizevalue</span><span class="op">:</span> <span class="st">"50"</span> })       <span class="co">// smaller reference → larger bubbles</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co">// If your data has values up to 10 000 000:</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">style</span>({ <span class="dt">normalsizevalue</span><span class="op">:</span> <span class="st">"5000000"</span> })  <span class="co">// median-ish value → medium bubbles</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="co">// If your values are small (0–100):</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">style</span>({ <span class="dt">normalsizevalue</span><span class="op">:</span> <span class="st">"50"</span> })       <span class="co">// smaller reference → larger bubbles</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <hr>
 </section>
 <section id="scale-direct-multiplier" class="level2">
 <h2 class="anchored" data-anchor-id="scale-direct-multiplier"><code>scale</code> — direct multiplier</h2>
-<p>The simplest lever. Applied after everything else. Start at <code>1</code> and adjust:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">style</span>({ <span class="dt">scale</span><span class="op">:</span> <span class="fl">0.5</span> })   <span class="co">// half size</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">style</span>({ <span class="dt">scale</span><span class="op">:</span> <span class="fl">2.0</span> })   <span class="co">// double size</span></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">style</span>({ <span class="dt">scale</span><span class="op">:</span> <span class="fl">0.32</span> })  <span class="co">// recommended with |GLOW (glow halo adds apparent size)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>The simplest lever: a bare multiplier applied after everything else. Per <a href="#reserve-scale-for-the-runtime-api">principle 4</a>, keep it at <code>1</code> in layer definitions and size themes via <code>normalsizevalue</code>; use <code>scale</code> for runtime adjustments and for compensating visual effects:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">style</span>({ <span class="dt">scale</span><span class="op">:</span> <span class="fl">0.32</span> })  <span class="co">// legitimate: offset the |GLOW halo's apparent size</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="co">// runtime — interactive size adjustment:</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>myMap<span class="op">.</span><span class="fu">then</span>(api <span class="kw">=&gt;</span> api<span class="op">.</span><span class="fu">changeThemeStyle</span>(<span class="st">"layerName"</span><span class="op">,</span> <span class="st">"scale:0.9"</span><span class="op">,</span> <span class="st">"factor"</span>))<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <hr>
 </section>
-<section id="sizepow-power-curve" class="level2">
-<h2 class="anchored" data-anchor-id="sizepow-power-curve"><code>sizepow</code> — power curve</h2>
-<p>Controls how aggressively size contrasts between large and small data values.</p>
-<p><strong>Formula:</strong></p>
-<pre><code>Adjusted Size = BaseSize × (dataValue ^ (1/sizePow)) / (maxValue ^ (1/sizePow))</code></pre>
-<p><strong>Effect of different values:</strong></p>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 39%">
-<col style="width: 25%">
-<col style="width: 35%">
-</colgroup>
-<thead>
-<tr class="header">
-<th><code>sizepow</code></th>
-<th>Curve</th>
-<th>Use case</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><code>1</code></td>
-<td>Linear — size directly proportional to value</td>
-<td>Equal-weight comparison</td>
-</tr>
-<tr class="even">
-<td><code>2</code> <em>(default)</em></td>
-<td>Square root — dampens extremes</td>
-<td>Most bubble/symbol maps</td>
-</tr>
-<tr class="odd">
-<td><code>0.5</code></td>
-<td>Quadratic — amplifies large values</td>
-<td>When you want large values to dominate</td>
-</tr>
-<tr class="even">
-<td><code>3</code></td>
-<td>Cubic root — strongly dampens extremes</td>
-<td>Very wide value ranges</td>
-</tr>
-<tr class="odd">
-<td><code>10</code></td>
-<td>Near-logarithmic — almost equal visual size for all values</td>
-<td>Revenue, orders-of-magnitude data</td>
-</tr>
-</tbody>
-</table>
-<p><strong>Defaults set automatically by type modifier:</strong></p>
+<section id="sizepow-which-symbol-dimension-carries-the-value" class="level2">
+<h2 class="anchored" data-anchor-id="sizepow-which-symbol-dimension-carries-the-value"><code>sizepow</code> — which symbol dimension carries the value</h2>
+<section id="purpose" class="level3">
+<h3 class="anchored" data-anchor-id="purpose">Purpose</h3>
+<p>A numeric data value has to become a symbol size on screen — but “size” is ambiguous: it could mean the symbol’s <strong>width</strong> (linear), its <strong>area</strong> (2D), or its apparent <strong>volume</strong> (3D). <code>sizepow</code> resolves that ambiguity. It declares the geometric dimension of the symbol that represents the data value, and thereby controls how strongly size differences between small and large values appear.</p>
+<p>The cartographic convention for 2D symbols (circles, squares) is <strong>area-proportional</strong>: a value twice as large gets a symbol with twice the <em>area</em> — not twice the diameter, which would quadruple the area and grossly exaggerate differences. That convention is <code>sizepow: 2</code>, and it is the iXMaps default.</p>
+</section>
+<section id="definition" class="level3">
+<h3 class="anchored" data-anchor-id="definition">Definition</h3>
+<p>The symbol’s linear dimension (radius, side, height) is proportional to the value raised to <code>1/sizepow</code>:</p>
+<pre><code>symbolSize = referenceSize × (value ^ (1/sizepow)) / (referenceValue ^ (1/sizepow))</code></pre>
+<p>where <code>referenceValue</code> is <code>normalsizevalue</code> if set, otherwise the layer’s maximum value. Read <code>sizepow</code> as a dimension: with <code>sizepow: 2</code> the value is carried by the symbol’s <em>surface</em> (radius grows with the square root), with <code>sizepow: 3</code> by its <em>volume</em>, with <code>sizepow: 1</code> by its <em>length</em>.</p>
+</section>
+<section id="possibilities" class="level3">
+<h3 class="anchored" data-anchor-id="possibilities">Possibilities</h3>
+<p>Set it directly in <code>.style()</code> — any positive number works:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">style</span>({ <span class="dt">sizepow</span><span class="op">:</span> <span class="dv">1</span> })    <span class="co">// linear — width directly proportional to value</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">style</span>({ <span class="dt">sizepow</span><span class="op">:</span> <span class="dv">2</span> })    <span class="co">// area-proportional (default)</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">style</span>({ <span class="dt">sizepow</span><span class="op">:</span> <span class="fl">0.5</span> })  <span class="co">// amplification — exaggerates large values</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">style</span>({ <span class="dt">sizepow</span><span class="op">:</span> <span class="dv">10</span> })   <span class="co">// near-logarithmic — compresses wide ranges</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Or implicitly through a type modifier, which overrides the style property:</p>
 <table class="caption-top table">
 <thead>
 <tr class="header">
 <th>Type modifier</th>
-<th>Auto <code>sizepow</code></th>
+<th>Sets <code>sizepow</code></th>
+<th>Meaning</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
 <td><code>LINEAR</code> / <code>SIZEP1</code></td>
 <td><code>1</code></td>
+<td>Length represents the value</td>
 </tr>
 <tr class="even">
 <td><code>SIZEP1H</code></td>
 <td><code>1.5</code></td>
+<td>Between linear and area</td>
 </tr>
 <tr class="odd">
-<td><code>SIZEP3</code> / <code>SIZEVOLUME</code></td>
-<td><code>3</code></td>
+<td><em>(none — default)</em></td>
+<td><code>2</code></td>
+<td><strong>Area represents the value</strong></td>
 </tr>
 <tr class="even">
-<td><code>SIZELOG</code></td>
-<td><code>10</code></td>
+<td><code>SIZEP3</code> / <code>SIZEVOLUME</code></td>
+<td><code>3</code></td>
+<td>Volume represents the value</td>
 </tr>
 <tr class="odd">
-<td><em>(none of the above)</em></td>
-<td><code>2</code></td>
+<td><code>SIZEP4</code></td>
+<td><code>4</code></td>
+<td>Stronger compression</td>
+</tr>
+<tr class="even">
+<td><code>SIZEP10</code> / <code>SIZELOG</code></td>
+<td><code>10</code></td>
+<td>Near-logarithmic</td>
 </tr>
 </tbody>
 </table>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">style</span>({ <span class="dt">sizepow</span><span class="op">:</span> <span class="dv">2</span> })   <span class="co">// default — square root</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">style</span>({ <span class="dt">sizepow</span><span class="op">:</span> <span class="fl">0.5</span> }) <span class="co">// amplify large values</span></span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">style</span>({ <span class="dt">sizepow</span><span class="op">:</span> <span class="dv">10</span> })  <span class="co">// near-logarithmic</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="effect" class="level3">
+<h3 class="anchored" data-anchor-id="effect">Effect</h3>
+<p>Higher <code>sizepow</code> → contrast between small and large values is <strong>compressed</strong>. Lower → <strong>exaggerated</strong>. Concretely, for two data values <code>100</code> and <code>10 000</code> (a 1:100 ratio), the rendered symbol-width ratio is:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 28%">
+<col style="width: 31%">
+<col style="width: 39%">
+</colgroup>
+<thead>
+<tr class="header">
+<th><code>sizepow</code></th>
+<th>Width ratio</th>
+<th>Visual result</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>0.5</code></td>
+<td>1 : 10 000</td>
+<td>Extreme exaggeration — small values disappear</td>
+</tr>
+<tr class="even">
+<td><code>1</code></td>
+<td>1 : 100</td>
+<td>Honest in width, but area differs 1 : 10 000 — reads as exaggerated</td>
+</tr>
+<tr class="odd">
+<td><code>2</code> <em>(default)</em></td>
+<td>1 : 10</td>
+<td>Area differs 1 : 100 — perceptually matches the data ratio</td>
+</tr>
+<tr class="even">
+<td><code>3</code></td>
+<td>1 : 4.6</td>
+<td>Compressed — good for heavy-tailed data</td>
+</tr>
+<tr class="odd">
+<td><code>10</code></td>
+<td>1 : 1.6</td>
+<td>Nearly uniform — only the ordering remains visible</td>
+</tr>
+</tbody>
+</table>
+<p>Use the default for most maps. Reach for <code>3</code>–<code>10</code> when a few extreme values would otherwise drown everything else (revenue, city population), and for values below <code>1</code> only when you deliberately want the largest values to dominate the picture.</p>
 <hr>
+</section>
 </section>
 <section id="dynamicscalepow-zoom-rate" class="level2">
 <h2 class="anchored" data-anchor-id="dynamicscalepow-zoom-rate"><code>dynamicScalePow</code> — zoom rate</h2>
 <p>Controls how quickly symbols grow or shrink as the user zooms. The default is <code>3</code> (cubic root), which provides smooth transitions without extreme size changes.</p>
 <p><strong>Formula:</strong> <code>DynamicScale = (1 / scaleRatio) ^ (1 / dynamicScalePow)</code></p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">options</span>({</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    <span class="dt">objectscaling</span><span class="op">:</span>   <span class="st">"dynamic"</span><span class="op">,</span></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">normalSizeScale</span><span class="op">:</span> <span class="st">"8000000"</span><span class="op">,</span></span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">dynamicScalePow</span><span class="op">:</span> <span class="st">"3"</span>    <span class="co">// default — cubic root, smooth transitions</span></span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    <span class="co">// dynamicScalePow: "1.8"  // more aggressive growth on zoom-in (dense datasets)</span></span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>})</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">options</span>({</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>    <span class="dt">objectscaling</span><span class="op">:</span>   <span class="st">"dynamic"</span><span class="op">,</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">normalSizeScale</span><span class="op">:</span> <span class="st">"8000000"</span><span class="op">,</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">dynamicScalePow</span><span class="op">:</span> <span class="st">"3"</span>    <span class="co">// default — cubic root, smooth transitions</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    <span class="co">// dynamicScalePow: "1.8"  // more aggressive growth on zoom-in (dense datasets)</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>})</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Higher values produce faster growth when zooming in. For dense point datasets where you want symbols to spread out noticeably on zoom, use <code>"1.8"</code>. For sparse data where continuity matters more, keep the default <code>"3"</code>.</p>
 <hr>
 </section>
 <section id="urban-trees-preset" class="level2">
 <h2 class="anchored" data-anchor-id="urban-trees-preset">Urban trees preset</h2>
 <p>A reliable starting point for street-level zoom (zoom 14–16) with species bubbles and <code>|GLOW</code>:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">options</span>({</span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>    <span class="dt">objectscaling</span><span class="op">:</span>   <span class="st">"dynamic"</span><span class="op">,</span></span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">normalSizeScale</span><span class="op">:</span> <span class="st">"5000"</span>      <span class="co">// street scale</span></span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>})</span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">style</span>({</span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>    <span class="dt">normalsizevalue</span><span class="op">:</span> <span class="st">"220"</span><span class="op">,</span>      <span class="co">// diameter in cm — controls relative sizing</span></span>
-<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>    <span class="dt">scale</span><span class="op">:</span>           <span class="fl">0.32</span><span class="op">,</span>       <span class="co">// reduce glow halo size</span></span>
-<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>    <span class="dt">fillopacity</span><span class="op">:</span>     <span class="fl">0.8</span><span class="op">,</span></span>
-<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>    <span class="dt">showdata</span><span class="op">:</span>        <span class="st">"true"</span></span>
-<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>})</span>
-<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">type</span>(<span class="st">"CHART|BUBBLE|CATEGORICAL|GLOW"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">options</span>({</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>    <span class="dt">objectscaling</span><span class="op">:</span>   <span class="st">"dynamic"</span><span class="op">,</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">normalSizeScale</span><span class="op">:</span> <span class="st">"5000"</span>      <span class="co">// street scale</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">style</span>({</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>    <span class="dt">normalsizevalue</span><span class="op">:</span> <span class="st">"220"</span><span class="op">,</span>      <span class="co">// diameter in cm — controls relative sizing</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>    <span class="dt">scale</span><span class="op">:</span>           <span class="fl">0.32</span><span class="op">,</span>       <span class="co">// reduce glow halo size</span></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>    <span class="dt">fillopacity</span><span class="op">:</span>     <span class="fl">0.8</span><span class="op">,</span></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>    <span class="dt">showdata</span><span class="op">:</span>        <span class="st">"true"</span></span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">type</span>(<span class="st">"CHART|BUBBLE|CATEGORICAL|GLOW"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <hr>
 </section>
 <section id="scale-dependent-visibility" class="level2">
 <h2 class="anchored" data-anchor-id="scale-dependent-visibility">Scale-dependent visibility</h2>
 <p>Hide a layer when the map is too zoomed out or too zoomed in:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">style</span>({</span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>    <span class="dt">chartupper</span><span class="op">:</span> <span class="st">"1:5000"</span><span class="op">,</span>   <span class="co">// hide when denominator &gt; 5000 (zoomed out)</span></span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">chartlower</span><span class="op">:</span> <span class="st">"1:500"</span>     <span class="co">// hide when denominator &lt; 500 (zoomed in)</span></span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>})</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Background boxes can also appear/disappear by scale:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">style</span>({</span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>    <span class="dt">boxupper</span><span class="op">:</span> <span class="st">"1:250000"</span>    <span class="co">// box visible only at denominator ≤ 250 000</span></span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>})</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>    <span class="dt">chartupper</span><span class="op">:</span> <span class="st">"1:5000"</span><span class="op">,</span>   <span class="co">// hide when denominator &gt; 5000 (zoomed out)</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">chartlower</span><span class="op">:</span> <span class="st">"1:500"</span>     <span class="co">// hide when denominator &lt; 500 (zoomed in)</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>})</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Background boxes can also appear/disappear by scale:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">style</span>({</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>    <span class="dt">boxupper</span><span class="op">:</span> <span class="st">"1:250000"</span>    <span class="co">// box visible only at denominator ≤ 250 000</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>})</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <hr>
 </section>
 <section id="runtime-size-adjustments" class="level2">
 <h2 class="anchored" data-anchor-id="runtime-size-adjustments">Runtime size adjustments</h2>
 <p>Change size interactively after the map loads:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Set scale to 2x:</span></span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>myMap<span class="op">.</span><span class="fu">then</span>(api <span class="kw">=&gt;</span> api<span class="op">.</span><span class="fu">changeThemeStyle</span>(<span class="st">"layerName"</span><span class="op">,</span> <span class="st">"scale:2.0"</span><span class="op">,</span> <span class="st">"set"</span>))<span class="op">;</span></span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="co">// Shrink by 10 %:</span></span>
-<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>myMap<span class="op">.</span><span class="fu">then</span>(api <span class="kw">=&gt;</span> api<span class="op">.</span><span class="fu">changeThemeStyle</span>(<span class="st">"layerName"</span><span class="op">,</span> <span class="st">"scale:0.9"</span><span class="op">,</span> <span class="st">"factor"</span>))<span class="op">;</span></span>
-<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a><span class="co">// Grow grid cells by 10 %:</span></span>
-<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>myMap<span class="op">.</span><span class="fu">then</span>(api <span class="kw">=&gt;</span> api<span class="op">.</span><span class="fu">changeThemeStyle</span>(<span class="st">"layerName"</span><span class="op">,</span> <span class="st">"gridwidthpx:1.1"</span><span class="op">,</span> <span class="st">"factor"</span>))<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Set scale to 2x:</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>myMap<span class="op">.</span><span class="fu">then</span>(api <span class="kw">=&gt;</span> api<span class="op">.</span><span class="fu">changeThemeStyle</span>(<span class="st">"layerName"</span><span class="op">,</span> <span class="st">"scale:2.0"</span><span class="op">,</span> <span class="st">"set"</span>))<span class="op">;</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="co">// Shrink by 10 %:</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>myMap<span class="op">.</span><span class="fu">then</span>(api <span class="kw">=&gt;</span> api<span class="op">.</span><span class="fu">changeThemeStyle</span>(<span class="st">"layerName"</span><span class="op">,</span> <span class="st">"scale:0.9"</span><span class="op">,</span> <span class="st">"factor"</span>))<span class="op">;</span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a><span class="co">// Grow grid cells by 10 %:</span></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>myMap<span class="op">.</span><span class="fu">then</span>(api <span class="kw">=&gt;</span> api<span class="op">.</span><span class="fu">changeThemeStyle</span>(<span class="st">"layerName"</span><span class="op">,</span> <span class="st">"gridwidthpx:1.1"</span><span class="op">,</span> <span class="st">"factor"</span>))<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 
 
 </section>

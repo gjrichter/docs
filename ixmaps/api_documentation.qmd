@@ -60,13 +60,13 @@ Set the initial center and zoom.
 .view([42.5, 12.5], 6)
 ```
 
-| Zoom | Scale | Coverage |
-|------|-------|----------|
-| 1–3 | world / continent | |
-| 4–6 | country | |
-| 7–10 | region / state | |
-| 11–14 | city | |
-| 15–18 | street / building | |
+| Zoom | Coverage |
+|------|----------|
+| 1–3 | world / continent |
+| 4–6 | country |
+| 7–10 | region / state |
+| 11–14 | city |
+| 15–18 | street / building |
 
 ### `.options(opts)`
 
@@ -229,6 +229,8 @@ Maps data fields to map properties.
 | Key | Purpose |
 |-----|---------|
 | `geo` | Coordinates: `"lat\|lon"` for columns, `"geometry"` for GeoJSON geometry |
+| `position` | Alias for `geo` — both are accepted; use one consistently |
+| `geo2` | Destination coordinates for flow maps (`CHART\|VECTOR\|BEZIER`): `"to_lat\|to_lon"` |
 | `id` | Feature identifier for later joins (FEATURE base layers) |
 | `lookup` | Join key on the data side (must match `id` in the geometry) |
 | `value` | Field(s) to visualise — pipe-separated for multi-value |
@@ -236,6 +238,11 @@ Maps data fields to map properties.
 | `size` | Independent size field when using CATEGORICAL with numeric sizing |
 | `alpha` | Field for dynamic opacity (`DOPACITYMAX` / `DOPACITYMINMAX`) |
 | `timefield` | Time field for animated / time-slider maps |
+
+**Flow map (origin → destination):**
+```javascript
+.binding({ geo: "from_lat|from_lon", geo2: "to_lat|to_lon", value: "volume", title: "from_name" })
+```
 
 ---
 
