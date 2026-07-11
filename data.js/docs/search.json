@@ -169,7 +169,7 @@
     "href": "examples.html#join-two-already-loaded-tables",
     "title": "Examples",
     "section": "Join two already-loaded tables",
-    "text": "Join two already-loaded tables\nnew Data.Merger()\n    .addSource(prezzi,   { lookup: \"idImpianto\", columns: [\"descCarburante\", \"prezzo\", \"isSelf\", \"dtComu\"] })\n    .addSource(impianti, { lookup: \"idImpianto\", columns: [\"Bandiera\", \"Latitudine\", \"Longitudine\"] })\n    .realize(function (mergedTable) {\n        console.log(mergedTable.columnNames());\n    });\n\nRan into something these don’t cover? Check Troubleshooting.",
+    "text": "Join two already-loaded tables\nData.merger()\n    .addSource(prezzi,   { lookup: \"idImpianto\", columns: [\"descCarburante\", \"prezzo\", \"isSelf\", \"dtComu\"] })\n    .addSource(impianti, { lookup: \"idImpianto\", columns: [\"Bandiera\", \"Latitudine\", \"Longitudine\"] })\n    .merge(function (mergedTable) {\n        console.log(mergedTable.columnNames());\n    });\n\nRan into something these don’t cover? Check Troubleshooting.",
     "crumbs": [
       "Home",
       "Examples"
@@ -251,8 +251,8 @@
     "objectID": "api_reference.html#data.merger-joining-already-loaded-tables",
     "href": "api_reference.html#data.merger-joining-already-loaded-tables",
     "title": "API Reference",
-    "section": "Data.Merger — joining already-loaded tables",
-    "text": "Data.Merger — joining already-loaded tables\n\n\n\n\n\n\n\n\nMethod\nSignature\nPurpose\n\n\n\n\naddSource(table, option)\n(Data.Table, {lookup, columns, label})\nRegister a loaded table as a merge source\n\n\nsetOutputColumns(columns)\n(array)\nRestrict/order the final table’s columns\n\n\nrealize(callback)\n(function(Data.Table))\nPerform the join; returns the merged table\n\n\nerror(callback)\n(function(exception))\nError handler\n\n\n\nFactory: Data.merger(). See Combining Sources for a worked example.",
+    "section": "Data.merger() — joining already-loaded tables",
+    "text": "Data.merger() — joining already-loaded tables\n\n\n\n\n\n\n\n\nMethod\nSignature\nPurpose\n\n\n\n\naddSource(table, option)\n(Data.Table, {lookup, columns, label})\nRegister a loaded table as a merge source\n\n\nsetOutputColumns(columns)\n(array)\nRestrict/order the final table’s columns\n\n\nmerge(callback)\n(function(Data.Table))\nPerform the join; returns the merged table\n\n\nrealize(callback)\n(function(Data.Table))\nOlder name for merge(callback) — identical behavior\n\n\nerror(callback)\n(function(exception))\nError handler\n\n\n\nFactory: Data.merger(). See Combining Sources for a worked example.",
     "crumbs": [
       "Home",
       "Reference",
@@ -733,8 +733,8 @@
     "objectID": "combining_sources.html#data.merger-join-already-loaded-tables",
     "href": "combining_sources.html#data.merger-join-already-loaded-tables",
     "title": "Combining Sources",
-    "section": "Data.Merger: join already-loaded tables",
-    "text": "Data.Merger: join already-loaded tables\nUse this once you have two or more Data.Tables (from separate Data.feed() calls, or from a Data.provider()) and want to combine them by a shared key:\nvar merger = new Data.Merger()\n    .addSource(prezzi,   { lookup: \"idImpianto\", columns: [\"descCarburante\", \"prezzo\", \"isSelf\", \"dtComu\"] })\n    .addSource(impianti, { lookup: \"idImpianto\", columns: [\"Bandiera\", \"Latitudine\", \"Longitudine\"] });\n\nmerger.realize(function (mergedTable) {\n    var selection = mergedTable.select('WHERE tipo_riga == \"LI\"');\n    // ... continue working with the merged table\n});\nThe first addSource call provides the row backbone; every subsequent source is looked up by matching lookup values and its columns are added alongside. label (optional, in the same addSource options object) lets you rename incoming columns; setOutputColumns([...]) afterwards restricts/orders the final table to specific columns.\n\n\n\n\n\n\n\n\n\nData.provider()\nData.Merger\n\n\n\n\nInput\nURLs (loads them itself)\nAlready-loaded Data.Tables (or plain 2D arrays)\n\n\nCombines by\nNothing — just returns all tables together\nA shared lookup key, join-style\n\n\nUse when\nYou need several independent datasets loaded before continuing\nYou need to enrich one table’s rows with columns from another\n\n\n\n\nNext: see the full API Reference for every method’s exact signature.",
+    "section": "Data.merger(): join already-loaded tables",
+    "text": "Data.merger(): join already-loaded tables\nUse this once you have two or more Data.Tables (from separate Data.feed() calls, or from a Data.provider()) and want to combine them by a shared key:\nData.merger()\n    .addSource(prezzi,   { lookup: \"idImpianto\", columns: [\"descCarburante\", \"prezzo\", \"isSelf\", \"dtComu\"] })\n    .addSource(impianti, { lookup: \"idImpianto\", columns: [\"Bandiera\", \"Latitudine\", \"Longitudine\"] })\n    .merge(function (mergedTable) {\n        var selection = mergedTable.select('WHERE tipo_riga == \"LI\"');\n        // ... continue working with the merged table\n    });\nThe first addSource call provides the row backbone; every subsequent source is looked up by matching lookup values and its columns are added alongside. label (optional, in the same addSource options object) lets you rename incoming columns; setOutputColumns([...]) afterwards restricts/orders the final table to specific columns.\n\n\n\n\n\n\nNote.merge() is an alias for .realize()\n\n\n\nSame idea as Data.provider()’s .load() alias — .merge() reads more clearly than .realize() for what this actually does. .realize() still works exactly the same.\n\n\n\n\n\n\n\n\n\n\n\nData.provider()\nData.merger()\n\n\n\n\nInput\nURLs (loads them itself)\nAlready-loaded Data.Tables (or plain 2D arrays)\n\n\nCombines by\nNothing — just returns all tables together\nA shared lookup key, join-style\n\n\nUse when\nYou need several independent datasets loaded before continuing\nYou need to enrich one table’s rows with columns from another\n\n\n\n\nNext: see the full API Reference for every method’s exact signature.",
     "crumbs": [
       "Home",
       "Guides",

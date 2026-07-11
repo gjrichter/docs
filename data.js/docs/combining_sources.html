@@ -6,7 +6,7 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="description" content="Data.provider loads several sources in parallel; Data.Merger joins tables you’ve already loaded by a shared key — when to use which.">
+<meta name="description" content="Data.provider loads several sources in parallel; Data.merger joins tables you’ve already loaded by a shared key — when to use which.">
 
 <title>Combining Sources – data.js Documentation</title>
 <style>
@@ -300,7 +300,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
    
   <ul>
   <li><a href="#data.provider-load-several-sources-in-parallel" id="toc-data.provider-load-several-sources-in-parallel" class="nav-link active" data-scroll-target="#data.provider-load-several-sources-in-parallel"><code>Data.provider()</code>: load several sources in parallel</a></li>
-  <li><a href="#data.merger-join-already-loaded-tables" id="toc-data.merger-join-already-loaded-tables" class="nav-link" data-scroll-target="#data.merger-join-already-loaded-tables"><code>Data.Merger</code>: join already-loaded tables</a></li>
+  <li><a href="#data.merger-join-already-loaded-tables" id="toc-data.merger-join-already-loaded-tables" class="nav-link" data-scroll-target="#data.merger-join-already-loaded-tables"><code>Data.merger()</code>: join already-loaded tables</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/gjrichter/data.js/issues/new" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div></nav>
     </div>
@@ -314,7 +314,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <div>
   <div class="description">
-    Data.provider loads several sources in parallel; Data.Merger joins tables you’ve already loaded by a shared key — when to use which.
+    Data.provider loads several sources in parallel; Data.merger joins tables you’ve already loaded by a shared key — when to use which.
   </div>
 </div>
 
@@ -334,7 +334,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>data.js has two different tools for working with more than one source, solving two different problems:</p>
 <ul>
 <li><strong><code>Data.provider()</code></strong> — you have several URLs to <em>load</em>, and want one callback once they’ve all resolved.</li>
-<li><strong><code>Data.Merger</code></strong> — you already have two or more loaded tables, and want to <em>join</em> them by a shared key column.</li>
+<li><strong><code>Data.merger()</code></strong> — you already have two or more loaded tables, and want to <em>join</em> them by a shared key column.</li>
 </ul>
 <section id="data.provider-load-several-sources-in-parallel" class="level2">
 <h2 class="anchored" data-anchor-id="data.provider-load-several-sources-in-parallel"><code>Data.provider()</code>: load several sources in parallel</h2>
@@ -392,17 +392,29 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </section>
 <section id="data.merger-join-already-loaded-tables" class="level2">
-<h2 class="anchored" data-anchor-id="data.merger-join-already-loaded-tables"><code>Data.Merger</code>: join already-loaded tables</h2>
+<h2 class="anchored" data-anchor-id="data.merger-join-already-loaded-tables"><code>Data.merger()</code>: join already-loaded tables</h2>
 <p>Use this once you have two or more <code>Data.Table</code>s (from separate <code>Data.feed()</code> calls, or from a <code>Data.provider()</code>) and want to combine them by a shared key:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> merger <span class="op">=</span> <span class="kw">new</span> Data<span class="op">.</span><span class="fu">Merger</span>()</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>Data<span class="op">.</span><span class="fu">merger</span>()</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">addSource</span>(prezzi<span class="op">,</span>   { <span class="dt">lookup</span><span class="op">:</span> <span class="st">"idImpianto"</span><span class="op">,</span> <span class="dt">columns</span><span class="op">:</span> [<span class="st">"descCarburante"</span><span class="op">,</span> <span class="st">"prezzo"</span><span class="op">,</span> <span class="st">"isSelf"</span><span class="op">,</span> <span class="st">"dtComu"</span>] })</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">addSource</span>(impianti<span class="op">,</span> { <span class="dt">lookup</span><span class="op">:</span> <span class="st">"idImpianto"</span><span class="op">,</span> <span class="dt">columns</span><span class="op">:</span> [<span class="st">"Bandiera"</span><span class="op">,</span> <span class="st">"Latitudine"</span><span class="op">,</span> <span class="st">"Longitudine"</span>] })<span class="op">;</span></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>merger<span class="op">.</span><span class="fu">realize</span>(<span class="kw">function</span> (mergedTable) {</span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    <span class="kw">var</span> selection <span class="op">=</span> mergedTable<span class="op">.</span><span class="fu">select</span>(<span class="st">'WHERE tipo_riga == "LI"'</span>)<span class="op">;</span></span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    <span class="co">// ... continue working with the merged table</span></span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>})<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">addSource</span>(impianti<span class="op">,</span> { <span class="dt">lookup</span><span class="op">:</span> <span class="st">"idImpianto"</span><span class="op">,</span> <span class="dt">columns</span><span class="op">:</span> [<span class="st">"Bandiera"</span><span class="op">,</span> <span class="st">"Latitudine"</span><span class="op">,</span> <span class="st">"Longitudine"</span>] })</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">merge</span>(<span class="kw">function</span> (mergedTable) {</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>        <span class="kw">var</span> selection <span class="op">=</span> mergedTable<span class="op">.</span><span class="fu">select</span>(<span class="st">'WHERE tipo_riga == "LI"'</span>)<span class="op">;</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>        <span class="co">// ... continue working with the merged table</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    })<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>The <strong>first</strong> <code>addSource</code> call provides the row backbone; every subsequent source is looked up by matching <code>lookup</code> values and its <code>columns</code> are added alongside. <code>label</code> (optional, in the same <code>addSource</code> options object) lets you rename incoming columns; <code>setOutputColumns([...])</code> afterwards restricts/orders the final table to specific columns.</p>
+<div class="callout callout-style-simple callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span><code>.merge()</code> is an alias for <code>.realize()</code>
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Same idea as <code>Data.provider()</code>’s <code>.load()</code> alias — <code>.merge()</code> reads more clearly than <code>.realize()</code> for what this actually does. <code>.realize()</code> still works exactly the same.</p>
+</div>
+</div>
 <table class="caption-top table">
 <colgroup>
 <col style="width: 33%">
@@ -413,7 +425,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <tr class="header">
 <th></th>
 <th><code>Data.provider()</code></th>
-<th><code>Data.Merger</code></th>
+<th><code>Data.merger()</code></th>
 </tr>
 </thead>
 <tbody>

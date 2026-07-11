@@ -309,7 +309,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#data.table-returned-by-a-successful-load" id="toc-data.table-returned-by-a-successful-load" class="nav-link" data-scroll-target="#data.table-returned-by-a-successful-load"><code>Data.Table</code> (returned by a successful load)</a></li>
   <li><a href="#data.column-returned-by-table.columnname" id="toc-data.column-returned-by-table.columnname" class="nav-link" data-scroll-target="#data.column-returned-by-table.columnname"><code>Data.Column</code> (returned by <code>table.column(name)</code>)</a></li>
   <li><a href="#data.provider-parallel-multi-source-loading" id="toc-data.provider-parallel-multi-source-loading" class="nav-link" data-scroll-target="#data.provider-parallel-multi-source-loading"><code>Data.provider()</code> — parallel multi-source loading</a></li>
-  <li><a href="#data.merger-joining-already-loaded-tables" id="toc-data.merger-joining-already-loaded-tables" class="nav-link" data-scroll-target="#data.merger-joining-already-loaded-tables"><code>Data.Merger</code> — joining already-loaded tables</a></li>
+  <li><a href="#data.merger-joining-already-loaded-tables" id="toc-data.merger-joining-already-loaded-tables" class="nav-link" data-scroll-target="#data.merger-joining-already-loaded-tables"><code>Data.merger()</code> — joining already-loaded tables</a></li>
   <li><a href="#utility-members" id="toc-utility-members" class="nav-link" data-scroll-target="#utility-members">Utility members</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/gjrichter/data.js/issues/new" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div></nav>
@@ -665,7 +665,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Factory: <code>Data.provider()</code> — preferred. <code>Data.broker()</code> is an older name for the same factory; both return a <code>Data.Broker</code> instance. See <a href="./combining_sources.html#data.provider-load-several-sources-in-parallel">Combining Sources</a> for a worked example.</p>
 </section>
 <section id="data.merger-joining-already-loaded-tables" class="level2">
-<h2 class="anchored" data-anchor-id="data.merger-joining-already-loaded-tables"><code>Data.Merger</code> — joining already-loaded tables</h2>
+<h2 class="anchored" data-anchor-id="data.merger-joining-already-loaded-tables"><code>Data.merger()</code> — joining already-loaded tables</h2>
 <table class="caption-top table">
 <colgroup>
 <col style="width: 33%">
@@ -691,11 +691,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <td>Restrict/order the final table’s columns</td>
 </tr>
 <tr class="odd">
-<td><code>realize(callback)</code></td>
+<td><code>merge(callback)</code></td>
 <td><code>(function(Data.Table))</code></td>
 <td>Perform the join; returns the merged table</td>
 </tr>
 <tr class="even">
+<td><code>realize(callback)</code></td>
+<td><code>(function(Data.Table))</code></td>
+<td>Older name for <code>merge(callback)</code> — identical behavior</td>
+</tr>
+<tr class="odd">
 <td><code>error(callback)</code></td>
 <td><code>(function(exception))</code></td>
 <td>Error handler</td>

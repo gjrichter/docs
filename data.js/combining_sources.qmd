@@ -1,12 +1,12 @@
 ---
 title: "Combining Sources"
-description: "Data.provider loads several sources in parallel; Data.Merger joins tables you've already loaded by a shared key — when to use which."
+description: "Data.provider loads several sources in parallel; Data.merger joins tables you've already loaded by a shared key — when to use which."
 ---
 
 data.js has two different tools for working with more than one source, solving two different problems:
 
 - **`Data.provider()`** — you have several URLs to *load*, and want one callback once they've all resolved.
-- **`Data.Merger`** — you already have two or more loaded tables, and want to *join* them by a shared key column.
+- **`Data.merger()`** — you already have two or more loaded tables, and want to *join* them by a shared key column.
 
 ## `Data.provider()`: load several sources in parallel
 
@@ -42,24 +42,28 @@ Both names fire the same way — `.load()` matches `Data.feed(...).load(callback
 Despite an internal comment suggesting otherwise, a `Data.provider()` instance doesn't expose `.select()`/`.column()` directly — work with the individual tables in the `.load()` callback's array instead.
 :::
 
-## `Data.Merger`: join already-loaded tables
+## `Data.merger()`: join already-loaded tables
 
 Use this once you have two or more `Data.Table`s (from separate `Data.feed()` calls, or from a `Data.provider()`) and want to combine them by a shared key:
 
 ```javascript
-var merger = new Data.Merger()
+Data.merger()
     .addSource(prezzi,   { lookup: "idImpianto", columns: ["descCarburante", "prezzo", "isSelf", "dtComu"] })
-    .addSource(impianti, { lookup: "idImpianto", columns: ["Bandiera", "Latitudine", "Longitudine"] });
-
-merger.realize(function (mergedTable) {
-    var selection = mergedTable.select('WHERE tipo_riga == "LI"');
-    // ... continue working with the merged table
-});
+    .addSource(impianti, { lookup: "idImpianto", columns: ["Bandiera", "Latitudine", "Longitudine"] })
+    .merge(function (mergedTable) {
+        var selection = mergedTable.select('WHERE tipo_riga == "LI"');
+        // ... continue working with the merged table
+    });
 ```
 
 The **first** `addSource` call provides the row backbone; every subsequent source is looked up by matching `lookup` values and its `columns` are added alongside. `label` (optional, in the same `addSource` options object) lets you rename incoming columns; `setOutputColumns([...])` afterwards restricts/orders the final table to specific columns.
 
-| | `Data.provider()` | `Data.Merger` |
+:::{.callout-note}
+## `.merge()` is an alias for `.realize()`
+Same idea as `Data.provider()`'s `.load()` alias — `.merge()` reads more clearly than `.realize()` for what this actually does. `.realize()` still works exactly the same.
+:::
+
+| | `Data.provider()` | `Data.merger()` |
 |---|---|---|
 | Input | URLs (loads them itself) | Already-loaded `Data.Table`s (or plain 2D arrays) |
 | Combines by | Nothing — just returns all tables together | A shared `lookup` key, join-style |

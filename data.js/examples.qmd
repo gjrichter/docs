@@ -68,10 +68,10 @@ Data.provider()
 ## Join two already-loaded tables
 
 ```javascript
-new Data.Merger()
+Data.merger()
     .addSource(prezzi,   { lookup: "idImpianto", columns: ["descCarburante", "prezzo", "isSelf", "dtComu"] })
     .addSource(impianti, { lookup: "idImpianto", columns: ["Bandiera", "Latitudine", "Longitudine"] })
-    .realize(function (mergedTable) {
+    .merge(function (mergedTable) {
         console.log(mergedTable.columnNames());
     });
 ```

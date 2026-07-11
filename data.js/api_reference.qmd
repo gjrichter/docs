@@ -118,13 +118,14 @@ Once `.load()` has resolved, these table-passthrough convenience methods are als
 
 Factory: `Data.provider()` — preferred. `Data.broker()` is an older name for the same factory; both return a `Data.Broker` instance. See [Combining Sources](combining_sources.qmd#data.provider-load-several-sources-in-parallel) for a worked example.
 
-## `Data.Merger` — joining already-loaded tables
+## `Data.merger()` — joining already-loaded tables
 
 | Method | Signature | Purpose |
 |---|---|---|
 | `addSource(table, option)` | `(Data.Table, {lookup, columns, label})` | Register a loaded table as a merge source |
 | `setOutputColumns(columns)` | `(array)` | Restrict/order the final table's columns |
-| `realize(callback)` | `(function(Data.Table))` | Perform the join; returns the merged table |
+| `merge(callback)` | `(function(Data.Table))` | Perform the join; returns the merged table |
+| `realize(callback)` | `(function(Data.Table))` | Older name for `merge(callback)` — identical behavior |
 | `error(callback)` | `(function(exception))` | Error handler |
 
 Factory: `Data.merger()`. See [Combining Sources](combining_sources.qmd#data.merger-join-already-loaded-tables) for a worked example.
