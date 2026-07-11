@@ -6,7 +6,7 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="description" content="Complete data.js API reference — Data.feed, Data.Table, Data.Column, Data.Broker and Data.Merger method signatures and options.">
+<meta name="description" content="Complete data.js API reference — Data.feed, Data.Table, Data.Column, Data.provider and Data.Merger method signatures and options.">
 
 <title>API Reference – data.js Documentation</title>
 <style>
@@ -308,7 +308,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#data.feed-the-object-returned-by-data.feed" id="toc-data.feed-the-object-returned-by-data.feed" class="nav-link" data-scroll-target="#data.feed-the-object-returned-by-data.feed"><code>Data.Feed</code> (the object returned by <code>Data.feed()</code>)</a></li>
   <li><a href="#data.table-returned-by-a-successful-load" id="toc-data.table-returned-by-a-successful-load" class="nav-link" data-scroll-target="#data.table-returned-by-a-successful-load"><code>Data.Table</code> (returned by a successful load)</a></li>
   <li><a href="#data.column-returned-by-table.columnname" id="toc-data.column-returned-by-table.columnname" class="nav-link" data-scroll-target="#data.column-returned-by-table.columnname"><code>Data.Column</code> (returned by <code>table.column(name)</code>)</a></li>
-  <li><a href="#data.broker-parallel-multi-source-loading" id="toc-data.broker-parallel-multi-source-loading" class="nav-link" data-scroll-target="#data.broker-parallel-multi-source-loading"><code>Data.Broker</code> — parallel multi-source loading</a></li>
+  <li><a href="#data.provider-parallel-multi-source-loading" id="toc-data.provider-parallel-multi-source-loading" class="nav-link" data-scroll-target="#data.provider-parallel-multi-source-loading"><code>Data.provider()</code> — parallel multi-source loading</a></li>
   <li><a href="#data.merger-joining-already-loaded-tables" id="toc-data.merger-joining-already-loaded-tables" class="nav-link" data-scroll-target="#data.merger-joining-already-loaded-tables"><code>Data.Merger</code> — joining already-loaded tables</a></li>
   <li><a href="#utility-members" id="toc-utility-members" class="nav-link" data-scroll-target="#utility-members">Utility members</a></li>
   </ul>
@@ -324,7 +324,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <div>
   <div class="description">
-    Complete data.js API reference — Data.feed, Data.Table, Data.Column, Data.Broker and Data.Merger method signatures and options.
+    Complete data.js API reference — Data.feed, Data.Table, Data.Column, Data.provider and Data.Merger method signatures and options.
   </div>
 </div>
 
@@ -399,7 +399,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h3 class="anchored" data-anchor-id="data.importoptions"><code>Data.import(options)</code></h3>
 <p>Synchronous shortcut, equivalent to <code>new Data.Object(options).import().feed.dbtable</code>. Returns a <code>Data.Table</code> immediately — no callback.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> table <span class="op">=</span> Data<span class="op">.</span><span class="fu">import</span>({ <span class="dt">source</span><span class="op">:</span> response<span class="op">,</span> <span class="dt">type</span><span class="op">:</span> <span class="st">"json"</span> })<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Only reliable for synchronous parsers (json, csv, geojson, and similar) — see the callout in <a href="./loading_data.html#dataimportoptions---synchronous-shortcut">Loading Data</a>.</p>
+<p>Only reliable for synchronous parsers (json, csv, geojson, and similar) — see the callout in <a href="./loading_data.html#data.importoptions-synchronous-shortcut">Loading Data</a>.</p>
 <hr>
 </section>
 </section>
@@ -437,7 +437,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <tr class="even">
 <td><code>broker(options)</code></td>
 <td><code>(object)</code></td>
-<td>Returns a <code>Data.Broker</code> bound to this feed as parent</td>
+<td>Returns a provider (<code>Data.Broker</code> instance) bound to this feed as parent</td>
 </tr>
 </tbody>
 </table>
@@ -619,8 +619,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </table>
 <hr>
 </section>
-<section id="data.broker-parallel-multi-source-loading" class="level2">
-<h2 class="anchored" data-anchor-id="data.broker-parallel-multi-source-loading"><code>Data.Broker</code> — parallel multi-source loading</h2>
+<section id="data.provider-parallel-multi-source-loading" class="level2">
+<h2 class="anchored" data-anchor-id="data.provider-parallel-multi-source-loading"><code>Data.provider()</code> — parallel multi-source loading</h2>
 <table class="caption-top table">
 <colgroup>
 <col style="width: 33%">
@@ -657,7 +657,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </tr>
 </tbody>
 </table>
-<p>Factories: <code>Data.broker()</code>, <code>Data.provider()</code> (alias). See <a href="./combining_sources.html#databroker-load-several-sources-in-parallel">Combining Sources</a> for a worked example.</p>
+<p>Factory: <code>Data.provider()</code> — preferred. <code>Data.broker()</code> is an older name for the same factory; both return a <code>Data.Broker</code> instance. See <a href="./combining_sources.html#data.provider-load-several-sources-in-parallel">Combining Sources</a> for a worked example.</p>
 </section>
 <section id="data.merger-joining-already-loaded-tables" class="level2">
 <h2 class="anchored" data-anchor-id="data.merger-joining-already-loaded-tables"><code>Data.Merger</code> — joining already-loaded tables</h2>
@@ -697,7 +697,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </tr>
 </tbody>
 </table>
-<p>Factory: <code>Data.merger()</code>. See <a href="./combining_sources.html#datamerger-join-already-loaded-tables">Combining Sources</a> for a worked example.</p>
+<p>Factory: <code>Data.merger()</code>. See <a href="./combining_sources.html#data.merger-join-already-loaded-tables">Combining Sources</a> for a worked example.</p>
 <hr>
 </section>
 <section id="utility-members" class="level2">

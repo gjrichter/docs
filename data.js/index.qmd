@@ -20,12 +20,14 @@ At the end of this documentation, you will be able to:
 
 data.js consists of three main parts:
 
-### 1. **Loaders** — `Data.feed`, `Data.object`, `Data.import`
+### 1. **Loaders** — `Data.feed`, `Data.object`, `Data.import`, `Data.provider`
 Get data into the library, from a URL (`Data.feed`) or from an already-in-memory object (`Data.object`), across a wide range of formats:
 
 - Tabular: CSV, JSON, JSON-stat, JSONL/NDJSON
 - Geospatial: GeoJSON, TopoJSON, KML, GML, Parquet/GeoParquet, GeoPackage, FlatGeobuf, Geobuf
 - Feeds: RSS
+
+Need several sources loaded in parallel before you continue? `Data.provider()` loads several URLs at once and calls you back only once they've all resolved. See [Combining Sources](combining_sources.qmd).
 
 :::{.callout-note}
 data.js does its own coordinate work only for the remote-parquet bbox feature (bounding boxes and geometry are reprojected automatically when the source uses a projected CRS, e.g. EPSG:3035). For every other format, input geometry is used as-is — reproject to EPSG:4326 yourself first if needed. See [Remote Parquet by Bounding Box](remote_parquet_bbox.qmd).
@@ -34,10 +36,10 @@ data.js does its own coordinate work only for the remote-parquet bbox feature (b
 ### 2. **`Data.Table`** — the result
 Every successful load resolves to a `Data.Table`: a simple `{fields, records}` structure with chainable methods for reshaping it — `select()` (SQL-like `WHERE` filtering), `pivot()`, `aggregate()`, `condense()`, `sort()`, `addColumn()`, and more. See [Transforming Tables](transforming_tables.qmd) and the [API Reference](api_reference.qmd).
 
-### 3. **Combinators** — `Data.Broker`, `Data.Merger`
+### 3. **Combinators** — `Data.provider`, `Data.Merger`
 Two different ways to work with more than one source:
 
-- **`Data.Broker`** loads several URLs in parallel and calls you back once all of them resolve.
+- **`Data.provider()`** loads several URLs in parallel and calls you back once all of them resolve.
 - **`Data.Merger`** joins tables you've *already* loaded, by a shared lookup key.
 
 See [Combining Sources](combining_sources.qmd).

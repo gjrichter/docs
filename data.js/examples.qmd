@@ -55,7 +55,7 @@ See [Remote Parquet by Bounding Box](remote_parquet_bbox.qmd) for how CRS reproj
 ## Load three CSVs in parallel
 
 ```javascript
-new Data.Broker()
+Data.provider()
     .addSource("https://raw.githubusercontent.com/ondata/elezionipolitiche2018/master/dati/scrutiniCI_cm.csv", "csv")
     .addSource("https://raw.githubusercontent.com/ondata/elezionipolitiche2018/master/risorse/comuniViminaleISTAT.csv", "csv")
     .addSource("https://raw.githubusercontent.com/ondata/elezionipolitiche2018/master/dati/camera_geopolitico_italia.csv", "csv")

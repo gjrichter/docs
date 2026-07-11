@@ -1,17 +1,17 @@
 ---
 title: "Combining Sources"
-description: "Data.Broker loads several sources in parallel; Data.Merger joins tables you've already loaded by a shared key — when to use which."
+description: "Data.provider loads several sources in parallel; Data.Merger joins tables you've already loaded by a shared key — when to use which."
 ---
 
 data.js has two different tools for working with more than one source, solving two different problems:
 
-- **`Data.Broker`** — you have several URLs to *load*, and want one callback once they've all resolved.
+- **`Data.provider()`** — you have several URLs to *load*, and want one callback once they've all resolved.
 - **`Data.Merger`** — you already have two or more loaded tables, and want to *join* them by a shared key column.
 
-## `Data.Broker`: load several sources in parallel
+## `Data.provider()`: load several sources in parallel
 
 ```javascript
-var broker = new Data.Broker()
+Data.provider()
     .addSource("https://raw.githubusercontent.com/ondata/elezionipolitiche2018/master/dati/scrutiniCI_cm.csv", "csv")
     .addSource("https://raw.githubusercontent.com/ondata/elezionipolitiche2018/master/risorse/comuniViminaleISTAT.csv", "csv")
     .addSource("https://raw.githubusercontent.com/ondata/elezionipolitiche2018/master/dati/camera_geopolitico_italia.csv", "csv")
@@ -27,14 +27,19 @@ var broker = new Data.Broker()
 
 `realize(callback)` fires once with an array of `Data.Table`, in the same order you called `addSource`. Use `.error(handler)` for a shared load-failure handler, and `.notify(handler)` if you want a progress callback as each source starts/finishes.
 
+:::{.callout-note}
+## `Data.provider()` is the preferred name — `Data.Broker` is the older one
+`Data.provider()` and `Data.broker()` are two names for the same thing — both return a `Data.Broker` instance. `Data.provider()` is the name to reach for in new code; `Data.Broker`/`Data.broker()` still work and show up in older examples and in some internal method names (`Data.Feed.prototype.broker()`), but are the legacy naming.
+:::
+
 :::{.callout-important}
-## `Data.Broker` doesn't inherit `Data.Table`/`Data.Feed` methods
-Despite an internal comment suggesting otherwise, a `Data.Broker` instance doesn't expose `.select()`/`.column()` directly — work with the individual tables in the `realize()` callback's array instead.
+## Doesn't inherit `Data.Table`/`Data.Feed` methods
+Despite an internal comment suggesting otherwise, a `Data.provider()` instance doesn't expose `.select()`/`.column()` directly — work with the individual tables in the `realize()` callback's array instead.
 :::
 
 ## `Data.Merger`: join already-loaded tables
 
-Use this once you have two or more `Data.Table`s (from separate `Data.feed()` calls, or from a `Data.Broker`) and want to combine them by a shared key:
+Use this once you have two or more `Data.Table`s (from separate `Data.feed()` calls, or from a `Data.provider()`) and want to combine them by a shared key:
 
 ```javascript
 var merger = new Data.Merger()
@@ -49,7 +54,7 @@ merger.realize(function (mergedTable) {
 
 The **first** `addSource` call provides the row backbone; every subsequent source is looked up by matching `lookup` values and its `columns` are added alongside. `label` (optional, in the same `addSource` options object) lets you rename incoming columns; `setOutputColumns([...])` afterwards restricts/orders the final table to specific columns.
 
-| | `Data.Broker` | `Data.Merger` |
+| | `Data.provider()` | `Data.Merger` |
 |---|---|---|
 | Input | URLs (loads them itself) | Already-loaded `Data.Table`s (or plain 2D arrays) |
 | Combines by | Nothing — just returns all tables together | A shared `lookup` key, join-style |

@@ -303,9 +303,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#what-youll-learn" id="toc-what-youll-learn" class="nav-link" data-scroll-target="#what-youll-learn">What you’ll learn</a></li>
   <li><a href="#framework-components" id="toc-framework-components" class="nav-link" data-scroll-target="#framework-components">Framework Components</a>
   <ul class="collapse">
-  <li><a href="#loaders-data.feed-data.object-data.import" id="toc-loaders-data.feed-data.object-data.import" class="nav-link" data-scroll-target="#loaders-data.feed-data.object-data.import">1. <strong>Loaders</strong> — <code>Data.feed</code>, <code>Data.object</code>, <code>Data.import</code></a></li>
+  <li><a href="#loaders-data.feed-data.object-data.import-data.provider" id="toc-loaders-data.feed-data.object-data.import-data.provider" class="nav-link" data-scroll-target="#loaders-data.feed-data.object-data.import-data.provider">1. <strong>Loaders</strong> — <code>Data.feed</code>, <code>Data.object</code>, <code>Data.import</code>, <code>Data.provider</code></a></li>
   <li><a href="#data.table-the-result" id="toc-data.table-the-result" class="nav-link" data-scroll-target="#data.table-the-result">2. <strong><code>Data.Table</code></strong> — the result</a></li>
-  <li><a href="#combinators-data.broker-data.merger" id="toc-combinators-data.broker-data.merger" class="nav-link" data-scroll-target="#combinators-data.broker-data.merger">3. <strong>Combinators</strong> — <code>Data.Broker</code>, <code>Data.Merger</code></a></li>
+  <li><a href="#combinators-data.provider-data.merger" id="toc-combinators-data.provider-data.merger" class="nav-link" data-scroll-target="#combinators-data.provider-data.merger">3. <strong>Combinators</strong> — <code>Data.provider</code>, <code>Data.Merger</code></a></li>
   </ul></li>
   <li><a href="#who-should-use-data.js" id="toc-who-should-use-data.js" class="nav-link" data-scroll-target="#who-should-use-data.js">Who Should Use data.js?</a></li>
   <li><a href="#what-is-it-not" id="toc-what-is-it-not" class="nav-link" data-scroll-target="#what-is-it-not">What is it NOT?</a></li>
@@ -341,14 +341,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="framework-components" class="level2">
 <h2 class="anchored" data-anchor-id="framework-components">Framework Components</h2>
 <p>data.js consists of three main parts:</p>
-<section id="loaders-data.feed-data.object-data.import" class="level3">
-<h3 class="anchored" data-anchor-id="loaders-data.feed-data.object-data.import">1. <strong>Loaders</strong> — <code>Data.feed</code>, <code>Data.object</code>, <code>Data.import</code></h3>
+<section id="loaders-data.feed-data.object-data.import-data.provider" class="level3">
+<h3 class="anchored" data-anchor-id="loaders-data.feed-data.object-data.import-data.provider">1. <strong>Loaders</strong> — <code>Data.feed</code>, <code>Data.object</code>, <code>Data.import</code>, <code>Data.provider</code></h3>
 <p>Get data into the library, from a URL (<code>Data.feed</code>) or from an already-in-memory object (<code>Data.object</code>), across a wide range of formats:</p>
 <ul>
 <li>Tabular: CSV, JSON, JSON-stat, JSONL/NDJSON</li>
 <li>Geospatial: GeoJSON, TopoJSON, KML, GML, Parquet/GeoParquet, GeoPackage, FlatGeobuf, Geobuf</li>
 <li>Feeds: RSS</li>
 </ul>
+<p>Need several sources loaded in parallel before you continue? <code>Data.provider()</code> loads several URLs at once and calls you back only once they’ve all resolved. See <a href="./combining_sources.html">Combining Sources</a>.</p>
 <div class="callout callout-style-simple callout-note">
 <div class="callout-body d-flex">
 <div class="callout-icon-container">
@@ -364,11 +365,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h3 class="anchored" data-anchor-id="data.table-the-result">2. <strong><code>Data.Table</code></strong> — the result</h3>
 <p>Every successful load resolves to a <code>Data.Table</code>: a simple <code>{fields, records}</code> structure with chainable methods for reshaping it — <code>select()</code> (SQL-like <code>WHERE</code> filtering), <code>pivot()</code>, <code>aggregate()</code>, <code>condense()</code>, <code>sort()</code>, <code>addColumn()</code>, and more. See <a href="./transforming_tables.html">Transforming Tables</a> and the <a href="./api_reference.html">API Reference</a>.</p>
 </section>
-<section id="combinators-data.broker-data.merger" class="level3">
-<h3 class="anchored" data-anchor-id="combinators-data.broker-data.merger">3. <strong>Combinators</strong> — <code>Data.Broker</code>, <code>Data.Merger</code></h3>
+<section id="combinators-data.provider-data.merger" class="level3">
+<h3 class="anchored" data-anchor-id="combinators-data.provider-data.merger">3. <strong>Combinators</strong> — <code>Data.provider</code>, <code>Data.Merger</code></h3>
 <p>Two different ways to work with more than one source:</p>
 <ul>
-<li><strong><code>Data.Broker</code></strong> loads several URLs in parallel and calls you back once all of them resolve.</li>
+<li><strong><code>Data.provider()</code></strong> loads several URLs in parallel and calls you back once all of them resolve.</li>
 <li><strong><code>Data.Merger</code></strong> joins tables you’ve <em>already</em> loaded, by a shared lookup key.</li>
 </ul>
 <p>See <a href="./combining_sources.html">Combining Sources</a>.</p>
