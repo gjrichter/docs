@@ -641,16 +641,21 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <td>Register one source to load; chainable</td>
 </tr>
 <tr class="even">
-<td><code>realize(callback)</code></td>
+<td><code>load(callback)</code></td>
 <td><code>(function(Data.Table[]))</code></td>
 <td>Load all sources, then call back with an array of tables in <code>addSource</code> order</td>
 </tr>
 <tr class="odd">
+<td><code>realize(callback)</code></td>
+<td><code>(function(Data.Table[]))</code></td>
+<td>Older name for <code>load(callback)</code> — identical behavior</td>
+</tr>
+<tr class="even">
 <td><code>error(callback)</code></td>
 <td><code>(function(url))</code></td>
 <td>Shared error handler for any source’s load failure</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><code>notify(callback)</code></td>
 <td><code>(function(query))</code></td>
 <td>Progress callback, invoked as each source starts/completes</td>

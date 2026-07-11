@@ -59,7 +59,7 @@ Data.provider()
     .addSource("https://raw.githubusercontent.com/ondata/elezionipolitiche2018/master/dati/scrutiniCI_cm.csv", "csv")
     .addSource("https://raw.githubusercontent.com/ondata/elezionipolitiche2018/master/risorse/comuniViminaleISTAT.csv", "csv")
     .addSource("https://raw.githubusercontent.com/ondata/elezionipolitiche2018/master/dati/camera_geopolitico_italia.csv", "csv")
-    .realize(function (dataA) {
+    .load(function (dataA) {
         var scrutini = dataA[0].select('WHERE tipo_riga == "LI"');
         console.log(scrutini.columnNames());
     });

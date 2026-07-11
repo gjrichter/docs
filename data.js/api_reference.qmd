@@ -111,7 +111,8 @@ Once `.load()` has resolved, these table-passthrough convenience methods are als
 | Method | Signature | Purpose |
 |---|---|---|
 | `addSource(url, type)` | `(string, string)` | Register one source to load; chainable |
-| `realize(callback)` | `(function(Data.Table[]))` | Load all sources, then call back with an array of tables in `addSource` order |
+| `load(callback)` | `(function(Data.Table[]))` | Load all sources, then call back with an array of tables in `addSource` order |
+| `realize(callback)` | `(function(Data.Table[]))` | Older name for `load(callback)` — identical behavior |
 | `error(callback)` | `(function(url))` | Shared error handler for any source's load failure |
 | `notify(callback)` | `(function(query))` | Progress callback, invoked as each source starts/completes |
 
