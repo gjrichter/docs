@@ -208,7 +208,7 @@ var loadData = function(themeObj, options) {
     Data.provider()
         .addSource("https://example.com/2022.csv.gz", "csv")
         .addSource("https://example.com/2023.csv.gz", "csv")
-        .realize(function(dataA) {
+        .load(function(dataA) {
             dataA[0].append(dataA[1]);
             options.type = "dbtable";
             ixmaps.setExternalData(dataA[0], options);

@@ -3,7 +3,7 @@ title: "Data Preprocessing"
 description: "Load, transform and reshape data with Data.js before feeding it to an iXMaps layer: Data.feed, Data.provider, Data.Table and the addColumn/aggregate/pivot pipeline."
 ---
 
-`.data({url, type})` covers the common case: point a layer at a file, iXMaps fetches and binds it. When you need to **transform data before it reaches the map** — derive a column, aggregate rows, reshape a table — use `Data.js`, iXMaps's own data-table library, which every layer's data pipeline is built on.
+`.data({url, type})` covers the common case: point a layer at a file, iXMaps fetches and binds it. When you need to **transform data before it reaches the map** — derive a column, aggregate rows, reshape a table — use [`Data.js`](https://gjrichter.github.io/docs/data.js/docs/index.html), iXMaps's own data-table library, which every layer's data pipeline is built on. This page covers the parts of the API used for map preprocessing; see the [full data.js documentation](https://gjrichter.github.io/docs/data.js/docs/index.html) for everything else (source-type reference, table transforms, joins).
 
 ---
 
@@ -132,7 +132,7 @@ Data.provider()
     .addSource(scrutiniUrl, "csv")
     .addSource(comuniUrl, "csv")
     .addSource(camercaUrl, "csv")
-    .realize(function (dataA) {
+    .load(function (dataA) {
         var scrutini          = dataA[0];
         var comuniViminaleISTAT = dataA[1];
         var camera             = dataA[2];
@@ -143,7 +143,7 @@ Data.provider()
 ```
 
 - `.addSource(url, type)` — queue one source; call it once per dataset, in the order you want them back
-- `.realize(callback)` — starts loading; `callback(dataA)` receives a `Data.Table` **array**, indexed in `addSource` call order
+- `.load(callback)` — starts loading; `callback(dataA)` receives a `Data.Table` **array**, indexed in `addSource` call order (`.realize(callback)` is an older name for the same method — still works)
 - `.error(fn)` / `.notify(fn)` — error handler / per-source progress hook, both chainable like `Data.feed`'s `.error()`
 
 This is what iXMaps itself uses internally to load a layer's data (`new Data.Broker(options).addSource(url, type).realize(...)`, inside `htmlgui.js`) — reach for it directly whenever a `process`/`query` function (see above) needs to combine more than one source before handing data back to the map.
@@ -151,6 +151,11 @@ This is what iXMaps itself uses internally to load a layer's data (`new Data.Bro
 :::{.callout-warning}
 ## Use `Data.provider()`, not `Data.broker()`
 Both return the same underlying object, but `Data.broker()` is the deprecated name — kept only for old code, not a second recommended entry point. It also collides conceptually with unrelated "broker" activities elsewhere; `Data.provider()` is the current, unambiguous name and the one to use in new code.
+:::
+
+:::{.callout-tip}
+## Need to actually join the sources, not just load them together?
+`Data.provider()` hands you back the loaded tables as a plain array — matching rows across them is still up to you. For a shared-key join (e.g. enriching one table's rows with columns from another), data.js also has `Data.merger()`. See [Combining Sources](https://gjrichter.github.io/docs/data.js/docs/combining_sources.html) in the data.js docs for both, with worked examples.
 :::
 
 ---
@@ -180,6 +185,8 @@ Both return the same underlying object, but `Data.broker()` is the deprecated na
 | `.subtable(options)` | Extract a row/column subset |
 | `.addTimeColumns(options)` | Derive date/time parts from a source column |
 | `.revert()` / `.reverse()` | Reverse row order |
+
+This is the subset used most often for map preprocessing — `Data.Table` has more (`condense`, `sort`, `filter`, `groupColumns`, `append`, lookups, and the full `select`/`pivot` syntax). See [Transforming Tables](https://gjrichter.github.io/docs/data.js/docs/transforming_tables.html) and the [API Reference](https://gjrichter.github.io/docs/data.js/docs/api_reference.html) in the data.js docs for the complete method list.
 
 `addColumn` is the core preprocessing primitive — derive a column from one source:
 

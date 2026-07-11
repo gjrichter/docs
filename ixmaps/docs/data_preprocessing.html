@@ -377,7 +377,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<p><code>.data({url, type})</code> covers the common case: point a layer at a file, iXMaps fetches and binds it. When you need to <strong>transform data before it reaches the map</strong> — derive a column, aggregate rows, reshape a table — use <code>Data.js</code>, iXMaps’s own data-table library, which every layer’s data pipeline is built on.</p>
+<p><code>.data({url, type})</code> covers the common case: point a layer at a file, iXMaps fetches and binds it. When you need to <strong>transform data before it reaches the map</strong> — derive a column, aggregate rows, reshape a table — use <a href="https://gjrichter.github.io/docs/data.js/docs/index.html"><code>Data.js</code></a>, iXMaps’s own data-table library, which every layer’s data pipeline is built on. This page covers the parts of the API used for map preprocessing; see the <a href="https://gjrichter.github.io/docs/data.js/docs/index.html">full data.js documentation</a> for everything else (source-type reference, table transforms, joins).</p>
 <hr>
 <section id="loading-the-library" class="level2">
 <h2 class="anchored" data-anchor-id="loading-the-library">Loading the library</h2>
@@ -529,7 +529,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">addSource</span>(scrutiniUrl<span class="op">,</span> <span class="st">"csv"</span>)</span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">addSource</span>(comuniUrl<span class="op">,</span> <span class="st">"csv"</span>)</span>
 <span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">addSource</span>(camercaUrl<span class="op">,</span> <span class="st">"csv"</span>)</span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">realize</span>(<span class="kw">function</span> (dataA) {</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">load</span>(<span class="kw">function</span> (dataA) {</span>
 <span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>        <span class="kw">var</span> scrutini          <span class="op">=</span> dataA[<span class="dv">0</span>]<span class="op">;</span></span>
 <span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>        <span class="kw">var</span> comuniViminaleISTAT <span class="op">=</span> dataA[<span class="dv">1</span>]<span class="op">;</span></span>
 <span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>        <span class="kw">var</span> camera             <span class="op">=</span> dataA[<span class="dv">2</span>]<span class="op">;</span></span>
@@ -539,7 +539,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>    })<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <ul>
 <li><code>.addSource(url, type)</code> — queue one source; call it once per dataset, in the order you want them back</li>
-<li><code>.realize(callback)</code> — starts loading; <code>callback(dataA)</code> receives a <code>Data.Table</code> <strong>array</strong>, indexed in <code>addSource</code> call order</li>
+<li><code>.load(callback)</code> — starts loading; <code>callback(dataA)</code> receives a <code>Data.Table</code> <strong>array</strong>, indexed in <code>addSource</code> call order (<code>.realize(callback)</code> is an older name for the same method — still works)</li>
 <li><code>.error(fn)</code> / <code>.notify(fn)</code> — error handler / per-source progress hook, both chainable like <code>Data.feed</code>’s <code>.error()</code></li>
 </ul>
 <p>This is what iXMaps itself uses internally to load a layer’s data (<code>new Data.Broker(options).addSource(url, type).realize(...)</code>, inside <code>htmlgui.js</code>) — reach for it directly whenever a <code>process</code>/<code>query</code> function (see above) needs to combine more than one source before handing data back to the map.</p>
@@ -554,6 +554,19 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <div class="callout-body-container callout-body">
 <p>Both return the same underlying object, but <code>Data.broker()</code> is the deprecated name — kept only for old code, not a second recommended entry point. It also collides conceptually with unrelated “broker” activities elsewhere; <code>Data.provider()</code> is the current, unambiguous name and the one to use in new code.</p>
+</div>
+</div>
+<div class="callout callout-style-simple callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Need to actually join the sources, not just load them together?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><code>Data.provider()</code> hands you back the loaded tables as a plain array — matching rows across them is still up to you. For a shared-key join (e.g.&nbsp;enriching one table’s rows with columns from another), data.js also has <code>Data.merger()</code>. See <a href="https://gjrichter.github.io/docs/data.js/docs/combining_sources.html">Combining Sources</a> in the data.js docs for both, with worked examples.</p>
 </div>
 </div>
 <hr>
@@ -616,6 +629,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </tr>
 </tbody>
 </table>
+<p>This is the subset used most often for map preprocessing — <code>Data.Table</code> has more (<code>condense</code>, <code>sort</code>, <code>filter</code>, <code>groupColumns</code>, <code>append</code>, lookups, and the full <code>select</code>/<code>pivot</code> syntax). See <a href="https://gjrichter.github.io/docs/data.js/docs/transforming_tables.html">Transforming Tables</a> and the <a href="https://gjrichter.github.io/docs/data.js/docs/api_reference.html">API Reference</a> in the data.js docs for the complete method list.</p>
 <p><code>addColumn</code> is the core preprocessing primitive — derive a column from one source:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>mydata <span class="op">=</span> mydata<span class="op">.</span><span class="fu">addColumn</span>(</span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>    { <span class="dt">source</span><span class="op">:</span> <span class="st">"created_at"</span><span class="op">,</span> <span class="dt">destination</span><span class="op">:</span> <span class="st">"date"</span> }<span class="op">,</span></span>
