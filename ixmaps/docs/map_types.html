@@ -430,10 +430,6 @@ base   shape  sizing  coloring  effect  labels  visibility</code></pre>
 <h3 class="anchored" data-anchor-id="classification-method-tokens">Classification method tokens</h3>
 <p><code>CHOROPLETH</code> and <code>CHART</code> need one classification token that says how values are grouped into colour classes:</p>
 <table class="caption-top table">
-<colgroup>
-<col style="width: 25%">
-<col style="width: 75%">
-</colgroup>
 <thead>
 <tr class="header">
 <th>Token</th>
@@ -455,13 +451,17 @@ base   shape  sizing  coloring  effect  labels  visibility</code></pre>
 </tr>
 <tr class="even">
 <td><code>NATURAL</code></td>
-<td>Jenks natural breaks</td>
+<td>Jenks natural breaks — see <a href="./colors_classification.html#continuous-vs.-discrete-classification">performance note</a> for large datasets</td>
 </tr>
 <tr class="odd">
 <td><code>LOG</code></td>
 <td>Logarithmic intervals</td>
 </tr>
 <tr class="even">
+<td><code>POW2</code> / <code>POW3</code></td>
+<td>Equal-width intervals in square-/cube-root space</td>
+</tr>
+<tr class="odd">
 <td><code>CATEGORICAL</code></td>
 <td>Discrete categories — requires the <code>values</code> style array (strings!)</td>
 </tr>

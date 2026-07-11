@@ -69,8 +69,9 @@ Every iXMaps layer starts with one of three base types. Everything else — clas
 | `EQUIDISTANT` | Equal-width intervals |
 | `QUANTILE` | Equal feature count per class |
 | `HEADTAIL` | Iterative mean split (heavy-tailed data) |
-| `NATURAL` | Jenks natural breaks |
+| `NATURAL` | Jenks natural breaks — see [performance note](colors_classification.qmd#continuous-vs.-discrete-classification) for large datasets |
 | `LOG` | Logarithmic intervals |
+| `POW2` / `POW3` | Equal-width intervals in square-/cube-root space |
 | `CATEGORICAL` | Discrete categories — requires the `values` style array (strings!) |
 
 How classes map to colours, explicit `ranges`, diverging scales and data-driven palettes: see [Colors & Classification](colors_classification.qmd).

@@ -20,12 +20,19 @@ How the value→color mapping is done depends on whether the data is **continuou
 | `HEADTAIL` | Iterative mean split — best for heavy-tailed distributions |
 | `NATURAL` | Jenks natural breaks — minimises within-class variance |
 | `LOG` | Logarithmic intervals — for data spanning orders of magnitude |
+| `POW2` | Equal-width intervals in square-root space — dampens high outliers less aggressively than `LOG` |
+| `POW3` | Equal-width intervals in cube-root space — between `POW2` and `LOG` |
 
 ```javascript
 // Continuous: 5 quantile classes, yellow → dark blue
 .type("CHOROPLETH|QUANTILE")
 .style({ colorscheme: ["#ffffcc","#41b6c4","#253494"], showdata: "true" })
 ```
+
+:::{.callout-note}
+## `NATURAL` cost scales with feature count
+Jenks natural breaks is O(n² × classes) — fine for hundreds or a few thousand features (well under a second), but a large layer (tens of thousands of points) can take noticeably longer to classify than `QUANTILE` or `HEADTAIL`. For big datasets, try `HEADTAIL` first — it's O(n) and often gives a comparably good break at the outliers.
+:::
 
 **Discrete categorical values** — a label or code that belongs to a fixed set (`"forest"`, `"urban"`, `"water"`; or species names, party names, land-use codes). Use `CATEGORICAL` and pair it with a `values` array that maps each category to a colour slot:
 

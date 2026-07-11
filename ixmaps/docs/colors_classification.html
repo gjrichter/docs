@@ -406,11 +406,32 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <td><code>LOG</code></td>
 <td>Logarithmic intervals — for data spanning orders of magnitude</td>
 </tr>
+<tr class="even">
+<td><code>POW2</code></td>
+<td>Equal-width intervals in square-root space — dampens high outliers less aggressively than <code>LOG</code></td>
+</tr>
+<tr class="odd">
+<td><code>POW3</code></td>
+<td>Equal-width intervals in cube-root space — between <code>POW2</code> and <code>LOG</code></td>
+</tr>
 </tbody>
 </table>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Continuous: 5 quantile classes, yellow → dark blue</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">type</span>(<span class="st">"CHOROPLETH|QUANTILE"</span>)</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">style</span>({ <span class="dt">colorscheme</span><span class="op">:</span> [<span class="st">"#ffffcc"</span><span class="op">,</span><span class="st">"#41b6c4"</span><span class="op">,</span><span class="st">"#253494"</span>]<span class="op">,</span> <span class="dt">showdata</span><span class="op">:</span> <span class="st">"true"</span> })</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="callout callout-style-simple callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span><code>NATURAL</code> cost scales with feature count
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Jenks natural breaks is O(n² × classes) — fine for hundreds or a few thousand features (well under a second), but a large layer (tens of thousands of points) can take noticeably longer to classify than <code>QUANTILE</code> or <code>HEADTAIL</code>. For big datasets, try <code>HEADTAIL</code> first — it’s O(n) and often gives a comparably good break at the outliers.</p>
+</div>
+</div>
 <p><strong>Discrete categorical values</strong> — a label or code that belongs to a fixed set (<code>"forest"</code>, <code>"urban"</code>, <code>"water"</code>; or species names, party names, land-use codes). Use <code>CATEGORICAL</code> and pair it with a <code>values</code> array that maps each category to a colour slot:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Discrete: three categories, each pinned to a colour</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">type</span>(<span class="st">"CHART|BUBBLE|CATEGORICAL"</span>)</span>
