@@ -1,0 +1,81 @@
+---
+title: "Examples"
+description: "Copy-paste working examples: CSV filtering, JSON pivoting, remote parquet by bounding box, multi-source loading, and joining tables."
+---
+
+Working code for the most common data.js use cases. Each example is self-contained — copy it into a `<script>` tag after including data.js from the CDN (see [Quick Start](getting_started.qmd)).
+
+## Filter a CSV
+
+```javascript
+Data.feed({
+    source: "https://raw.githubusercontent.com/emergenzeHack/terremotocentro/master/data/issues.csv",
+    type:   "csv"
+}).load(function (mydata) {
+    var facebookIssues = mydata.select('WHERE labels like "Facebook"');
+    console.log(facebookIssues.column("id").values());
+}).error(function (e) {
+    console.error(e);
+});
+```
+
+## Pivot election results
+
+```javascript
+Data.feed({ source: scrutiniUrl, type: "csv" }).load(function (scrutini) {
+    var pivot = scrutini.pivot({
+        lead:  "codice",
+        keep:  ["tipo"],
+        sum:   ["membri"],
+        cols:  "descr_lista",
+        value: "voti"
+    });
+    console.log(pivot.columnNames());
+});
+```
+
+## Load a remote GeoParquet file by bounding box
+
+```javascript
+Data.feed({
+    source:  "https://s3.eubucco.com/eubucco/v0.2/buildings/parquet/nuts_id=ITC4/ITC4.parquet",
+    type:    "parquet",
+    bbox:    [9.185, 45.460, 9.198, 45.468],
+    columns: ["id", "subtype", "height"],
+    maxRows: 50000
+}).load(function (mydata) {
+    console.log(mydata.records.length + " buildings in view");
+}).error(function (e) {
+    console.error(e);
+});
+```
+
+See [Remote Parquet by Bounding Box](remote_parquet_bbox.qmd) for how CRS reprojection and the options work.
+
+## Load three CSVs in parallel
+
+```javascript
+new Data.Broker()
+    .addSource("https://raw.githubusercontent.com/ondata/elezionipolitiche2018/master/dati/scrutiniCI_cm.csv", "csv")
+    .addSource("https://raw.githubusercontent.com/ondata/elezionipolitiche2018/master/risorse/comuniViminaleISTAT.csv", "csv")
+    .addSource("https://raw.githubusercontent.com/ondata/elezionipolitiche2018/master/dati/camera_geopolitico_italia.csv", "csv")
+    .realize(function (dataA) {
+        var scrutini = dataA[0].select('WHERE tipo_riga == "LI"');
+        console.log(scrutini.columnNames());
+    });
+```
+
+## Join two already-loaded tables
+
+```javascript
+new Data.Merger()
+    .addSource(prezzi,   { lookup: "idImpianto", columns: ["descCarburante", "prezzo", "isSelf", "dtComu"] })
+    .addSource(impianti, { lookup: "idImpianto", columns: ["Bandiera", "Latitudine", "Longitudine"] })
+    .realize(function (mergedTable) {
+        console.log(mergedTable.columnNames());
+    });
+```
+
+---
+
+Ran into something these don't cover? Check [Troubleshooting](troubleshooting.qmd).

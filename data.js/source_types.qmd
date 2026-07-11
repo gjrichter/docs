@@ -1,0 +1,55 @@
+---
+title: "Source Types"
+description: "Every source type data.js can load, with format-specific notes, parsing engine, and options."
+---
+
+Reference for the `type` option accepted by `Data.feed()`, `Data.object()` and `Data.import()`. See [Loading Data](loading_data.qmd) for how the three loaders differ.
+
+## Tabular
+
+| `type` | Parser | Notes |
+|---|---|---|
+| `"csv"` | Papa Parse | Delimiters `,` and `;` both supported. Pass `parser` (an object) to forward Papa Parse options |
+| `"json"` | native | Any JSON value/object |
+| `"jsonl"` / `"ndjson"` | native | Newline-delimited JSON |
+| `"jsonstat"` | [json-stat](https://json-stat.org/) | Lazy-loads the json-stat parser script on first use |
+| `"rss"` | native XML | RSS feed |
+
+## Geospatial — text-based
+
+| `type` | Parser | Notes |
+|---|---|---|
+| `"geojson"` | native | A GeoJSON object |
+| `"topojson"` | native | Converted internally to GeoJSON-equivalent structures |
+| `"kml"` | native XML | Keyhole Markup Language |
+| `"gml"` | native XML | Geography Markup Language |
+
+## Geospatial — binary, via DuckDB WASM
+
+| `type` | Notes |
+|---|---|
+| `"parquet"` | Parquet file. Without `bbox`, downloads and parses the whole file. **With `bbox` set**, queries a remote URL directly via HTTP range reads instead — see [Remote Parquet by Bounding Box](remote_parquet_bbox.qmd) for the full option set (`bbox`, `columns`, `crs`, `proj4`, `maxRows`) |
+| `"geoparquet"` | GeoParquet file, converted to GeoJSON. Always a full download (bbox mode is `parquet`-only) |
+| `"gpkg"` | GeoPackage file, read via DuckDB WASM's spatial extension |
+
+## Geospatial — binary, other parsers
+
+| `type` | Notes |
+|---|---|
+| `"flatgeobuf"` / `"fgb"` | FlatGeobuf binary format |
+| `"geobuf"` / `"pbf"` | Geobuf (Protocol Buffer) binary format |
+
+## Internal
+
+| `type` | Notes |
+|---|---|
+| `"jsonDB"` | data.js's own `{fields, records}` table structure — used when passing an already-built `Data.Table`-shaped object back into the library |
+
+:::{.callout-note}
+## Case-insensitive
+Type names accept case variants — `"CSV"`, `"GeoJSON"`, `"TOPOJSON"` all work the same as their lowercase forms.
+:::
+
+---
+
+See the [API Reference](api_reference.qmd) for the loader method signatures, or [Examples](examples.qmd) for copy-paste code using several of these types.

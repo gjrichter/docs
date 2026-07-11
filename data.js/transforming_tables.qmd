@@ -1,0 +1,117 @@
+---
+title: "Transforming Tables"
+description: "Reshape a Data.Table with select(), pivot(), aggregate(), condense(), sort() and more — the SQL-like WHERE syntax and real worked examples."
+---
+
+Every successful load resolves to a `Data.Table`. This guide covers the methods you'll reach for most to filter, reshape and summarize it. For the full method signature list see the [API Reference](api_reference.qmd).
+
+## Filtering rows: `select(query)`
+
+`select()` takes a small SQL-like `WHERE` string and returns a **new** `Data.Table` with the matching rows:
+
+```javascript
+var facebookIssues = mydata.select('WHERE labels like "Facebook"');
+
+var overThreshold = rawdata.select('WHERE "Age" = "Total" AND "SEX" = "MW" AND "Series" = "Labour force participation rate"');
+
+var workingAge = rawdata.select('WHERE "Age" BETWEEN "18" AND "65"');
+```
+
+Supported operators: `=`, `<>` (not equal), `>`, `<`, `>=`, `<=`, `BETWEEN ... AND ...`, `LIKE`, `NOT`, `IN "v1,v2,v3"`. Combine conditions with `AND` / `OR`.
+
+## Reading a column
+
+`.column(name)` returns a `Data.Column` handle — see its methods below, most commonly `.values()`:
+
+```javascript
+var ids = mydata.column("id").values();
+var uniqueLabels = mydata.column("labels").uniqueValues();
+```
+
+## Building a pivot table: `pivot(options)`
+
+```javascript
+var pivot = scrutini.pivot({
+    lead:  "codice",           // row-defining field(s)
+    keep:  ["tipo"],           // columns copied straight through
+    sum:   ["membri"],         // columns summed per lead group
+    cols:  "descr_lista",      // this field's unique values become new columns
+    value: "voti"              // values accumulated into those new columns
+});
+```
+
+`pivot()` always adds a `Total` column. If you need specific pivot columns to exist even when no rows match them (pre-seeded with `0`), pass `forced: [...]` with the column names.
+
+## Summarizing: `aggregate(valueColumn, groupColumns)`
+
+Sums (or averages, with `calc: "mean"`) a value column, grouped by one or more pipe-separated columns:
+
+```javascript
+var totalsByRegion = mydata.aggregate("population", "region");
+var totalsByRegionAndYear = mydata.aggregate("population", "region|year");
+```
+
+## Collapsing duplicates: `condense(leadColumn, options)`
+
+Collapses rows that share the same value in `leadColumn`, summing (or `calc: "max"`-ing) numeric columns not listed in `keep`:
+
+```javascript
+var perStation = readings.condense("stationId", { keep: ["name", "lat", "lng"] });
+```
+
+## Sorting: `sort(column, flag)`
+
+```javascript
+var newestFirst = mydata.sort("date", "DOWN");   // omit the flag for ascending
+```
+
+## Filtering with a callback: `filter(callback)`
+
+For conditions `select()`'s query string can't express, pass a plain function returning truthy/falsy per row:
+
+```javascript
+var recent = mydata.filter(function (row) {
+    return row[dateColIndex] > cutoffTimestamp;
+});
+```
+
+## Deriving a new column: `addColumn(options, callback)`
+
+```javascript
+mydata.addColumn({ source: "height", destination: "heightFt" }, function (heightM) {
+    return heightM * 3.28084;
+});
+
+// no source: callback receives the whole row
+mydata.addColumn({ destination: "summary" }, function (row) {
+    return row.join(" / ");
+});
+```
+
+## Picking columns: `subtable(options)`
+
+```javascript
+var slim = mydata.subtable({ fields: ["id", "subtype", "height"] });
+```
+
+## Other useful methods
+
+| Method | Purpose |
+|---|---|
+| `columnNames()` | Array of all column names |
+| `columnIndex(name)` | Numeric index of a column |
+| `lookup(value, {value, lookup})` | Single-value lookup against a value/lookup column pair |
+| `lookupArray(valueCol, lookupCol)` | Build an object mapping lookup values to value-column values |
+| `groupColumns({source, destination})` | Sum several existing numeric columns into a new one |
+| `append(otherTable)` | Append another table's rows (must have identical field names/order) |
+| `json()` | Return the table as an array of `{colName: value, ...}` row objects |
+| `getArray()` / `setArray(array)` | Read/write the table as a plain 2D array (row 0 = column names) |
+
+:::{.callout-note}
+## `revert()` and `reverse()` are the same thing
+Both reverse row order — they're currently identical implementations, not two different behaviors. Either name works.
+:::
+
+---
+
+Next: [Combining Sources](combining_sources.qmd) to load or join more than one table at once.

@@ -1,0 +1,37 @@
+---
+title: "Troubleshooting"
+description: "Common data.js gotchas — silent failures, unexpected method availability, and format-specific pitfalls — and how to work around them."
+---
+
+## `Data.import()` returns `undefined`
+
+`Data.import()` is synchronous and returns immediately — it never waits for anything async. It works for parsers that run synchronously (csv, json, geojson and similar), but for a genuinely asynchronous parser (e.g. `jsonstat`, which lazy-loads its own script) it returns before the data exists. Use `Data.object({...}).import(callback)` instead — see [Loading Data](loading_data.qmd#dataimportoptions---synchronous-shortcut).
+
+## `Data.Broker` doesn't have `.select()`/`.column()`
+
+A `Data.Broker` instance does not expose the `Data.Table`/`Data.Feed` convenience methods directly, despite what an internal comment in the source suggests. Work with the individual `Data.Table` objects handed to your `realize(callback)` — see [Combining Sources](combining_sources.qmd).
+
+## A remote parquet file loads slowly, or fails on a large file
+
+Two different things can be going on:
+
+- **No `bbox` was passed.** Without it, `type: "parquet"` always downloads the entire file first. If you only need part of a large file, add a `bbox` — see [Remote Parquet by Bounding Box](remote_parquet_bbox.qmd).
+- **The file is ≥ 2 GB and `httpfs` failed to load.** This is a fallback-only limit; it shouldn't come up in normal use, but if you see an error mentioning "2 GB", the `httpfs` extension failed to install (offline environment, blocked CDN) and data.js refused to attempt a full in-memory download of a file that size.
+
+## A bbox query returns no rows, or falls back to a full download
+
+If the source file has no GeoParquet bbox helper column (the `covering.bbox` convention), data.js can't prune anything and falls back to downloading the whole file — this is deliberate, not a bug. Check the file's GeoParquet metadata, or use a source known to include bbox columns (e.g. [EUBUCCO](https://eubucco.com/)).
+
+If rows come back empty even though you expect matches, double-check your `bbox` — it must always be `[minX, minY, maxX, maxY]` in **EPSG:4326**, never in the source file's native CRS.
+
+## "Unsupported source CRS" error
+
+The source file's CRS was detected (or you passed `crs` explicitly) but isn't one of the built-in proj4 definitions. Pass `proj4` with a full proj4 definition string instead of `crs` — see [Remote Parquet by Bounding Box](remote_parquet_bbox.qmd#crs-reprojection).
+
+## The three source-type JSDoc lists don't quite agree
+
+`Data.Object`, `Data.Import` and `Data.Feed`'s inline documentation blocks are three separate copies that have drifted slightly out of sync with each other over time. The [Source Types](source_types.qmd) page in this documentation reflects the actual dispatch logic in the source, which is authoritative — trust it over any single inline comment.
+
+## `revert()` vs `reverse()`
+
+Both exist, and both currently do the same thing (reverse row order). This isn't a bug you need to work around — either name is safe to use.

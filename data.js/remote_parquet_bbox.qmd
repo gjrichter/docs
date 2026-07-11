@@ -1,0 +1,96 @@
+---
+title: "Remote Parquet by Bounding Box"
+description: "Query remote GeoParquet files by bounding box — only the rows in view are read, via DuckDB WASM's httpfs extension, with automatic CRS reprojection."
+---
+
+Large GeoParquet datasets (a country's worth of buildings, for example) are often too big to download in full just to show whatever's in the current map viewport. data.js's `parquet` loader supports a **bounding-box mode**: pass a `bbox`, and instead of downloading the whole file, data.js queries it directly with DuckDB WASM, reading only the row groups and columns that actually intersect your box.
+
+## Basic usage
+
+```javascript
+Data.feed({
+    source:  "https://s3.eubucco.com/eubucco/v0.2/buildings/parquet/nuts_id=ITC4/ITC4.parquet",
+    type:    "parquet",
+    bbox:    [9.185, 45.460, 9.198, 45.468],   // [minX, minY, maxX, maxY], always EPSG:4326
+    columns: ["id", "subtype", "height"]
+}).load(function (mydata) {
+    console.log(mydata.records.length + " buildings in view");
+}).error(function (e) {
+    console.error(e);
+});
+```
+
+`bbox` is always `[minX, minY, maxX, maxY]` in EPSG:4326 (plain lon/lat), regardless of what coordinate system the source file itself uses — data.js handles the reprojection (see below).
+
+## How it works
+
+Without `bbox`, `type: "parquet"` downloads the entire file before running any query — fine for small files, wasteful for large ones. With `bbox` set, data.js:
+
+1. Ensures DuckDB WASM is loaded, with the **`httpfs` extension** installed. This is what makes genuine HTTP range reads possible — without it, DuckDB WASM's default file handler pulls the whole remote file into memory before it can run any query at all, footer included.
+2. Probes the file's schema (a cheap `LIMIT 0` query — footer only, no row data) to find a **bbox helper column** (a `STRUCT` field with `xmin`/`ymin`/`xmax`/`ymax` sub-fields — the [GeoParquet](https://geoparquet.org/) `covering.bbox` convention) and the geometry column.
+3. Reads the GeoParquet `geo` metadata to detect the source CRS, if any.
+4. Runs a `WHERE` query against the bbox helper column, so DuckDB can skip pages that can't possibly match, then returns only the requested `columns` plus geometry.
+
+:::{.callout-important}
+## Requires a GeoParquet bbox helper column
+If the file has no bbox helper column, data.js logs a warning and **falls back to a full download** rather than failing outright. Bbox-mode's network savings only apply to files that follow the GeoParquet `covering.bbox` convention.
+:::
+
+## Options
+
+| Option | Type | Required | Description |
+|---|---|---|---|
+| `bbox` | `[minX, minY, maxX, maxY]` | for bbox mode | Always EPSG:4326, regardless of the source file's CRS |
+| `columns` | array of strings | no | Restrict the result to these columns (the geometry column is always included automatically). Omit to get every non-list column |
+| `crs` | string, e.g. `"EPSG:3035"` | no | Override the auto-detected source CRS |
+| `proj4` | proj4 definition string | no | Override with a raw proj4 definition — takes precedence over `crs` |
+| `maxRows` | number | no | Abort with a clear error instead of running the query if the bbox would select more rows than this |
+
+## CRS reprojection
+
+Many large GeoParquet datasets use a projected CRS rather than plain lon/lat — [EUBUCCO](https://eubucco.com/) v0.2, for example, uses **EPSG:3035** (ETRS89-extended / LAEA Europe). data.js handles this automatically:
+
+- Your `bbox` (always EPSG:4326) is transformed into the source CRS before the query — using all four corners of the box, not just two, since projections curve straight edges.
+- Returned geometries are transformed back to EPSG:4326.
+- The source CRS is auto-detected from the file's GeoParquet metadata; built-in [proj4js](https://github.com/proj4js/proj4js) definitions are bundled for the CRSes most likely to show up in European open data: **EPSG:3035**, **3857** (Web Mercator), **2154** (Lambert-93, France), **25832**/**25833** (ETRS89 / UTM 32N, 33N), **32632**/**32633** (WGS84 / UTM 32N, 33N).
+- proj4js itself is only loaded (from a CDN) the first time a reprojection is actually needed — no extra cost for files already in EPSG:4326.
+
+If your file uses a CRS not in that built-in list, pass `crs` (an EPSG code) or `proj4` (a full proj4 definition string) explicitly:
+
+```javascript
+Data.feed({
+    source: someUrl,
+    type:   "parquet",
+    bbox:   [minX, minY, maxX, maxY],
+    crs:    "EPSG:25831"   // not in the built-in list — data.js will still need a definition
+}).load(...);
+```
+
+:::{.callout-note}
+Without a recognized `crs`/`proj4`, data.js reports a clear error rather than silently returning wrong results — it never guesses at a projection.
+:::
+
+## Guarding against huge result sets
+
+A bbox drawn too wide over a dense area can still select a very large number of rows. Use `maxRows` to fail fast instead of stalling on a huge transfer and an expensive client-side geometry decode:
+
+```javascript
+Data.feed({
+    source:  someUrl,
+    type:    "parquet",
+    bbox:    currentViewportBbox,
+    maxRows: 50000
+}).load(function (mydata) { ... })
+  .error(function (e) {
+    // e.g. "bbox selects 128340 rows (limit 50000) - zoom in or raise maxRows"
+    console.warn(e);
+});
+```
+
+## File size limit
+
+Remote files **≥ 2 GB** are only usable with `httpfs` successfully loaded — without it, DuckDB WASM's default file handler would need to buffer the whole file in memory, which fails outright above ~2 GB. In normal use `httpfs` loads automatically and this limit doesn't apply; it only kicks in as a fallback safeguard if the extension fails to load for some reason (offline environment, blocked CDN, etc.).
+
+---
+
+Next: [Transforming Tables](transforming_tables.qmd) to filter and reshape the result once it's loaded.

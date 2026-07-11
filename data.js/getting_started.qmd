@@ -1,0 +1,76 @@
+---
+title: "Quick Start"
+description: "Load your first dataset with data.js: one CDN script, Data.feed(), and the select()/column() methods to filter and read the result."
+---
+
+This guide walks you through loading and querying your first dataset with data.js — from a blank HTML file to a filtered result you can read values from.
+
+## Step 1: Include the library
+
+Create an HTML file and include data.js from the CDN — no build step, no other dependencies required for CSV/JSON:
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>My First data.js query</title>
+    <script src="https://cdn.jsdelivr.net/gh/gjrichter/data.js/data.js"></script>
+</head>
+<body>
+    <script>
+        // your code goes here
+    </script>
+</body>
+</html>
+```
+
+## Step 2: Load a dataset
+
+The entry point for loading from a URL is `Data.feed()`. It's asynchronous — pass a callback to `.load()`:
+
+```javascript
+Data.feed({
+    source: "https://raw.githubusercontent.com/emergenzeHack/terremotocentro/master/data/issues.csv",
+    type:   "csv"
+}).load(function (mydata) {
+    // mydata is a Data.Table — the whole dataset is available here
+    console.log(mydata.columnNames());
+}).error(function (e) {
+    console.error("load failed:", e);
+});
+```
+
+:::{.callout-note}
+## `source` has a few aliases
+`Data.feed()` also accepts `src`, `url`, or `ext` in place of `source` — whichever is present first wins. `source` is the clearest name to use in new code.
+:::
+
+## Step 3: Filter and read the result
+
+Once loaded, `mydata` is a `Data.Table`. Use `.select()` with a small SQL-like `WHERE` string to filter rows, and `.column(name).values()` to pull out a plain array:
+
+```javascript
+Data.feed({
+    source: "https://raw.githubusercontent.com/emergenzeHack/terremotocentro/master/data/issues.csv",
+    type:   "csv"
+}).load(function (mydata) {
+    // filter to rows where the "labels" column mentions Facebook
+    var facebookIssues = mydata.select('WHERE labels like "Facebook"');
+
+    // pull all values of one column into a plain array
+    var ids = facebookIssues.column("id").values();
+
+    console.log(ids.length + " matching issues:", ids);
+});
+```
+
+That's the whole loop: load → filter → read. From here:
+
+- [Loading Data](loading_data.qmd) covers every supported source type (JSON, GeoJSON, Parquet, GeoPackage, and more) and the three ways to load data (`Data.feed`, `Data.object`, `Data.import`).
+- [Transforming Tables](transforming_tables.qmd) covers the full `select()` syntax plus `pivot()`, `aggregate()`, `sort()` and friends.
+- [Remote Parquet by Bounding Box](remote_parquet_bbox.qmd) if you're working with large GeoParquet files and only want the rows in view.
+
+---
+
+Ready for more? Continue to [Loading Data](loading_data.qmd).

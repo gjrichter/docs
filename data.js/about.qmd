@@ -1,0 +1,71 @@
+---
+description: "About data.js: project vision, history, and the technology stack behind the browser-based data loading and transformation library."
+---
+
+# About data.js
+
+## The Project
+
+**data.js** is a small JavaScript library for loading, transforming and combining tabular and geospatial data directly in the browser — CSV, JSON, GeoJSON, Parquet, GeoPackage and more, with no build step and no backend required.
+
+## History
+
+data.js was created by **Guenter Richter** as the data-processing engine behind [iXMaps](https://www.ixmaps.com/docs/), the declarative thematic-mapping framework. It grew from handling plain CSV/JSON into a broader set of loaders as iXMaps itself took on more geospatial formats — GeoParquet, GeoPackage, FlatGeobuf — culminating most recently in DuckDB WASM-backed bounding-box queries against remote GeoParquet files, so large datasets can be explored without downloading them in full (see [Remote Parquet by Bounding Box](remote_parquet_bbox.qmd)).
+
+While it was built for iXMaps, data.js has no dependency on it and works entirely standalone.
+
+## Core Philosophy
+
+### Browser-First
+All loading and processing happens client-side:
+
+- No backend or server round-trip required
+- Easy to deploy — a single `<script>` tag
+- Data stays in the user's browser
+
+### Format-Agnostic
+One consistent API (`Data.feed` / `Data.Table`) regardless of whether the source is a CSV file, a GeoJSON object, or a multi-hundred-megabyte remote Parquet file.
+
+### Pragmatic Over Complete
+data.js covers the filtering, pivoting and joining operations that come up constantly in real data work — it doesn't try to be a general SQL engine or a full GIS toolkit.
+
+## Technology Stack
+
+- **JavaScript** — no required build step
+- **[Papa Parse](https://github.com/mholt/PapaParse)** — CSV parsing
+- **DuckDB WASM** — Parquet, GeoParquet and GeoPackage reading, including the `httpfs` extension for genuine HTTP range reads
+- **[flatgeobuf](https://github.com/flatgeobuf/flatgeobuf)** / **geobuf** — binary geospatial format reading
+- **[proj4js](https://github.com/proj4js/proj4js)** — on-demand CRS reprojection
+- **jQuery** — optional, used by some legacy loading paths
+
+## License
+
+data.js ships as part of the [iXMaps](https://github.com/gjrichter/ixmaps-flat) project and is released under the [BSD 3-Clause License](https://github.com/gjrichter/ixmaps-flat/blob/main/LICENSE.txt) — free for personal and commercial use, provided the original copyright notice is included; the original authors' names may not be used to promote derived products.
+
+## Credits
+
+### Created By
+**Guenter Richter** — library design and maintenance
+
+### Built With
+- Papa Parse by Matt Holt
+- DuckDB WASM by the DuckDB team
+- proj4js
+- jQuery
+
+## Contributing
+
+Bug reports, feature requests and documentation improvements are welcome — visit the [GitHub repository](https://github.com/gjrichter/data.js) to get involved.
+
+## Related
+
+- **[iXMaps Documentation](https://www.ixmaps.com/docs/)** — the mapping framework data.js was built for
+- **[JSDoc API reference](https://gjrichter.github.io/data.js/docs/index.html)** — generated from the source, method-by-method
+
+## Contact
+
+- **GitHub Issues**: [github.com/gjrichter/data.js/issues](https://github.com/gjrichter/data.js/issues)
+
+---
+
+*data.js — loading and transforming data, right in the browser.*

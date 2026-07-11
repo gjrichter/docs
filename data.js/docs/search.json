@@ -1,0 +1,904 @@
+[
+  {
+    "objectID": "about.html",
+    "href": "about.html",
+    "title": "About data.js",
+    "section": "",
+    "text": "data.js is a small JavaScript library for loading, transforming and combining tabular and geospatial data directly in the browser — CSV, JSON, GeoJSON, Parquet, GeoPackage and more, with no build step and no backend required.\n\n\n\ndata.js was created by Guenter Richter as the data-processing engine behind iXMaps, the declarative thematic-mapping framework. It grew from handling plain CSV/JSON into a broader set of loaders as iXMaps itself took on more geospatial formats — GeoParquet, GeoPackage, FlatGeobuf — culminating most recently in DuckDB WASM-backed bounding-box queries against remote GeoParquet files, so large datasets can be explored without downloading them in full (see Remote Parquet by Bounding Box).\nWhile it was built for iXMaps, data.js has no dependency on it and works entirely standalone.\n\n\n\n\n\nAll loading and processing happens client-side:\n\nNo backend or server round-trip required\nEasy to deploy — a single &lt;script&gt; tag\nData stays in the user’s browser\n\n\n\n\nOne consistent API (Data.feed / Data.Table) regardless of whether the source is a CSV file, a GeoJSON object, or a multi-hundred-megabyte remote Parquet file.\n\n\n\ndata.js covers the filtering, pivoting and joining operations that come up constantly in real data work — it doesn’t try to be a general SQL engine or a full GIS toolkit.\n\n\n\n\n\nJavaScript — no required build step\nPapa Parse — CSV parsing\nDuckDB WASM — Parquet, GeoParquet and GeoPackage reading, including the httpfs extension for genuine HTTP range reads\nflatgeobuf / geobuf — binary geospatial format reading\nproj4js — on-demand CRS reprojection\njQuery — optional, used by some legacy loading paths\n\n\n\n\ndata.js ships as part of the iXMaps project and is released under the BSD 3-Clause License — free for personal and commercial use, provided the original copyright notice is included; the original authors’ names may not be used to promote derived products.\n\n\n\n\n\nGuenter Richter — library design and maintenance\n\n\n\n\nPapa Parse by Matt Holt\nDuckDB WASM by the DuckDB team\nproj4js\njQuery\n\n\n\n\n\nBug reports, feature requests and documentation improvements are welcome — visit the GitHub repository to get involved.\n\n\n\n\niXMaps Documentation — the mapping framework data.js was built for\nJSDoc API reference — generated from the source, method-by-method\n\n\n\n\n\nGitHub Issues: github.com/gjrichter/data.js/issues\n\n\ndata.js — loading and transforming data, right in the browser.",
+    "crumbs": [
+      "Home",
+      "About"
+    ]
+  },
+  {
+    "objectID": "about.html#the-project",
+    "href": "about.html#the-project",
+    "title": "About data.js",
+    "section": "",
+    "text": "data.js is a small JavaScript library for loading, transforming and combining tabular and geospatial data directly in the browser — CSV, JSON, GeoJSON, Parquet, GeoPackage and more, with no build step and no backend required.",
+    "crumbs": [
+      "Home",
+      "About"
+    ]
+  },
+  {
+    "objectID": "about.html#history",
+    "href": "about.html#history",
+    "title": "About data.js",
+    "section": "",
+    "text": "data.js was created by Guenter Richter as the data-processing engine behind iXMaps, the declarative thematic-mapping framework. It grew from handling plain CSV/JSON into a broader set of loaders as iXMaps itself took on more geospatial formats — GeoParquet, GeoPackage, FlatGeobuf — culminating most recently in DuckDB WASM-backed bounding-box queries against remote GeoParquet files, so large datasets can be explored without downloading them in full (see Remote Parquet by Bounding Box).\nWhile it was built for iXMaps, data.js has no dependency on it and works entirely standalone.",
+    "crumbs": [
+      "Home",
+      "About"
+    ]
+  },
+  {
+    "objectID": "about.html#core-philosophy",
+    "href": "about.html#core-philosophy",
+    "title": "About data.js",
+    "section": "",
+    "text": "All loading and processing happens client-side:\n\nNo backend or server round-trip required\nEasy to deploy — a single &lt;script&gt; tag\nData stays in the user’s browser\n\n\n\n\nOne consistent API (Data.feed / Data.Table) regardless of whether the source is a CSV file, a GeoJSON object, or a multi-hundred-megabyte remote Parquet file.\n\n\n\ndata.js covers the filtering, pivoting and joining operations that come up constantly in real data work — it doesn’t try to be a general SQL engine or a full GIS toolkit.",
+    "crumbs": [
+      "Home",
+      "About"
+    ]
+  },
+  {
+    "objectID": "about.html#technology-stack",
+    "href": "about.html#technology-stack",
+    "title": "About data.js",
+    "section": "",
+    "text": "JavaScript — no required build step\nPapa Parse — CSV parsing\nDuckDB WASM — Parquet, GeoParquet and GeoPackage reading, including the httpfs extension for genuine HTTP range reads\nflatgeobuf / geobuf — binary geospatial format reading\nproj4js — on-demand CRS reprojection\njQuery — optional, used by some legacy loading paths",
+    "crumbs": [
+      "Home",
+      "About"
+    ]
+  },
+  {
+    "objectID": "about.html#license",
+    "href": "about.html#license",
+    "title": "About data.js",
+    "section": "",
+    "text": "data.js ships as part of the iXMaps project and is released under the BSD 3-Clause License — free for personal and commercial use, provided the original copyright notice is included; the original authors’ names may not be used to promote derived products.",
+    "crumbs": [
+      "Home",
+      "About"
+    ]
+  },
+  {
+    "objectID": "about.html#credits",
+    "href": "about.html#credits",
+    "title": "About data.js",
+    "section": "",
+    "text": "Guenter Richter — library design and maintenance\n\n\n\n\nPapa Parse by Matt Holt\nDuckDB WASM by the DuckDB team\nproj4js\njQuery",
+    "crumbs": [
+      "Home",
+      "About"
+    ]
+  },
+  {
+    "objectID": "about.html#contributing",
+    "href": "about.html#contributing",
+    "title": "About data.js",
+    "section": "",
+    "text": "Bug reports, feature requests and documentation improvements are welcome — visit the GitHub repository to get involved.",
+    "crumbs": [
+      "Home",
+      "About"
+    ]
+  },
+  {
+    "objectID": "about.html#related",
+    "href": "about.html#related",
+    "title": "About data.js",
+    "section": "",
+    "text": "iXMaps Documentation — the mapping framework data.js was built for\nJSDoc API reference — generated from the source, method-by-method",
+    "crumbs": [
+      "Home",
+      "About"
+    ]
+  },
+  {
+    "objectID": "about.html#contact",
+    "href": "about.html#contact",
+    "title": "About data.js",
+    "section": "",
+    "text": "GitHub Issues: github.com/gjrichter/data.js/issues\n\n\ndata.js — loading and transforming data, right in the browser.",
+    "crumbs": [
+      "Home",
+      "About"
+    ]
+  },
+  {
+    "objectID": "examples.html",
+    "href": "examples.html",
+    "title": "Examples",
+    "section": "",
+    "text": "Working code for the most common data.js use cases. Each example is self-contained — copy it into a &lt;script&gt; tag after including data.js from the CDN (see Quick Start).",
+    "crumbs": [
+      "Home",
+      "Examples"
+    ]
+  },
+  {
+    "objectID": "examples.html#filter-a-csv",
+    "href": "examples.html#filter-a-csv",
+    "title": "Examples",
+    "section": "Filter a CSV",
+    "text": "Filter a CSV\nData.feed({\n    source: \"https://raw.githubusercontent.com/emergenzeHack/terremotocentro/master/data/issues.csv\",\n    type:   \"csv\"\n}).load(function (mydata) {\n    var facebookIssues = mydata.select('WHERE labels like \"Facebook\"');\n    console.log(facebookIssues.column(\"id\").values());\n}).error(function (e) {\n    console.error(e);\n});",
+    "crumbs": [
+      "Home",
+      "Examples"
+    ]
+  },
+  {
+    "objectID": "examples.html#pivot-election-results",
+    "href": "examples.html#pivot-election-results",
+    "title": "Examples",
+    "section": "Pivot election results",
+    "text": "Pivot election results\nData.feed({ source: scrutiniUrl, type: \"csv\" }).load(function (scrutini) {\n    var pivot = scrutini.pivot({\n        lead:  \"codice\",\n        keep:  [\"tipo\"],\n        sum:   [\"membri\"],\n        cols:  \"descr_lista\",\n        value: \"voti\"\n    });\n    console.log(pivot.columnNames());\n});",
+    "crumbs": [
+      "Home",
+      "Examples"
+    ]
+  },
+  {
+    "objectID": "examples.html#load-a-remote-geoparquet-file-by-bounding-box",
+    "href": "examples.html#load-a-remote-geoparquet-file-by-bounding-box",
+    "title": "Examples",
+    "section": "Load a remote GeoParquet file by bounding box",
+    "text": "Load a remote GeoParquet file by bounding box\nData.feed({\n    source:  \"https://s3.eubucco.com/eubucco/v0.2/buildings/parquet/nuts_id=ITC4/ITC4.parquet\",\n    type:    \"parquet\",\n    bbox:    [9.185, 45.460, 9.198, 45.468],\n    columns: [\"id\", \"subtype\", \"height\"],\n    maxRows: 50000\n}).load(function (mydata) {\n    console.log(mydata.records.length + \" buildings in view\");\n}).error(function (e) {\n    console.error(e);\n});\nSee Remote Parquet by Bounding Box for how CRS reprojection and the options work.",
+    "crumbs": [
+      "Home",
+      "Examples"
+    ]
+  },
+  {
+    "objectID": "examples.html#load-three-csvs-in-parallel",
+    "href": "examples.html#load-three-csvs-in-parallel",
+    "title": "Examples",
+    "section": "Load three CSVs in parallel",
+    "text": "Load three CSVs in parallel\nnew Data.Broker()\n    .addSource(\"https://raw.githubusercontent.com/ondata/elezionipolitiche2018/master/dati/scrutiniCI_cm.csv\", \"csv\")\n    .addSource(\"https://raw.githubusercontent.com/ondata/elezionipolitiche2018/master/risorse/comuniViminaleISTAT.csv\", \"csv\")\n    .addSource(\"https://raw.githubusercontent.com/ondata/elezionipolitiche2018/master/dati/camera_geopolitico_italia.csv\", \"csv\")\n    .realize(function (dataA) {\n        var scrutini = dataA[0].select('WHERE tipo_riga == \"LI\"');\n        console.log(scrutini.columnNames());\n    });",
+    "crumbs": [
+      "Home",
+      "Examples"
+    ]
+  },
+  {
+    "objectID": "examples.html#join-two-already-loaded-tables",
+    "href": "examples.html#join-two-already-loaded-tables",
+    "title": "Examples",
+    "section": "Join two already-loaded tables",
+    "text": "Join two already-loaded tables\nnew Data.Merger()\n    .addSource(prezzi,   { lookup: \"idImpianto\", columns: [\"descCarburante\", \"prezzo\", \"isSelf\", \"dtComu\"] })\n    .addSource(impianti, { lookup: \"idImpianto\", columns: [\"Bandiera\", \"Latitudine\", \"Longitudine\"] })\n    .realize(function (mergedTable) {\n        console.log(mergedTable.columnNames());\n    });\n\nRan into something these don’t cover? Check Troubleshooting.",
+    "crumbs": [
+      "Home",
+      "Examples"
+    ]
+  },
+  {
+    "objectID": "api_reference.html",
+    "href": "api_reference.html",
+    "title": "API Reference",
+    "section": "",
+    "text": "Complete reference for the data.js JavaScript API. For narrative walkthroughs see Loading Data, Transforming Tables and Combining Sources.",
+    "crumbs": [
+      "Home",
+      "Reference",
+      "API Reference"
+    ]
+  },
+  {
+    "objectID": "api_reference.html#loaders",
+    "href": "api_reference.html#loaders",
+    "title": "API Reference",
+    "section": "Loaders",
+    "text": "Loaders\n\nData.feed(options)\nLoads data from a URL. Returns a Data.Feed instance — chain .load()/.error().\nData.feed({ source: url, type: \"csv\" })\n    .load(function (mydata) { /* Data.Table */ })\n    .error(function (e) { /* handle failure */ });\nOptions:\n\n\n\nOption\nType\nDescription\n\n\n\n\nsource (or src, url, ext)\nstring\nThe data URL\n\n\ntype\nstring\nSource format — see Source Types\n\n\ncache\nboolean\nDefault true\n\n\nparser\nobject\nCSV only: Papa Parse options, passed straight through\n\n\nbbox, columns, crs, proj4, maxRows\n—\nParquet bbox mode only — see Remote Parquet by Bounding Box\n\n\n\n\n\nData.object(options)\nSame shape as Data.feed, but source is a JavaScript value already in memory rather than a URL. Chain .import()/.error().\nData.object({ source: response, type: \"json\" }).import(function (mydata) { ... });\nFor binary types (parquet, geoparquet, gpkg, flatgeobuf, geobuf), source must already be an ArrayBuffer.\n\n\nData.import(options)\nSynchronous shortcut, equivalent to new Data.Object(options).import().feed.dbtable. Returns a Data.Table immediately — no callback.\nvar table = Data.import({ source: response, type: \"json\" });\nOnly reliable for synchronous parsers (json, csv, geojson, and similar) — see the callout in Loading Data.",
+    "crumbs": [
+      "Home",
+      "Reference",
+      "API Reference"
+    ]
+  },
+  {
+    "objectID": "api_reference.html#data.feed-the-object-returned-by-data.feed",
+    "href": "api_reference.html#data.feed-the-object-returned-by-data.feed",
+    "title": "API Reference",
+    "section": "Data.Feed (the object returned by Data.feed())",
+    "text": "Data.Feed (the object returned by Data.feed())\n\n\n\n\n\n\n\n\nMethod\nSignature\nPurpose\n\n\n\n\nload(callback)\n(function(Data.Table))\nStarts the load; resolves with a Data.Table\n\n\nerror(callback)\n(function(error))\nSets the failure handler\n\n\ngetFileSize(callback?)\n(function(bytes)?)\nHEAD/Range request for Content-Length without downloading the body. Returns a Promise if no callback is given\n\n\nbroker(options)\n(object)\nReturns a Data.Broker bound to this feed as parent\n\n\n\nOnce .load() has resolved, these table-passthrough convenience methods are also available directly on the feed object (they operate on the loaded Data.Table): .column(), .select(), .aggregate(), .pivot(), .subtable(), .revert(), .reverse(), .addTimeColumns().",
+    "crumbs": [
+      "Home",
+      "Reference",
+      "API Reference"
+    ]
+  },
+  {
+    "objectID": "api_reference.html#data.table-returned-by-a-successful-load",
+    "href": "api_reference.html#data.table-returned-by-a-successful-load",
+    "title": "API Reference",
+    "section": "Data.Table (returned by a successful load)",
+    "text": "Data.Table (returned by a successful load)\n\n\n\nMethod\nSignature\nPurpose\n\n\n\n\nselect(query)\n(string)\nSQL-like WHERE filter — returns a new table. See syntax\n\n\npivot(options)\n({lead, keep, sum, cols, value, calc, forced})\nBuild a pivot table\n\n\naggregate(valueCol, groupCols)\n(string, \"col1\\|col2\") or ({column/value, lead, calc})\nSum/mean a value column grouped by one or more columns\n\n\ncondense(leadCol, options)\n(string, {keep, calc})\nCollapse duplicate rows by a lead column\n\n\nsort(column, flag)\n(string, \"DOWN\"?)\nSort rows; omit flag for ascending\n\n\nfilter(callback)\n(function(row)-&gt;bool)\nRow-level filter via callback\n\n\naddColumn(options, callback)\n({source, destination}, function)\nDerive a new column\n\n\naddRow(options)\n({colName: value, ...})\nAppend a row\n\n\nsubtable(options)\n({fields:[...]}) or ({columns:[idx,...]})\nNew table with only the given columns\n\n\ngroupColumns(options)\n({source:[...], destination})\nSum several numeric columns into a new one\n\n\nappend(sourceTable)\n(Data.Table)\nAppend another table’s rows (identical field names/order required)\n\n\ncolumn(name)\n(string)\nReturns a Data.Column handle\n\n\ncolumnNames()\n()\nArray of column name strings\n\n\ncolumnIndex(name)\n(string)\nNumeric index of a column\n\n\nlookup(value, option)\n(value, {value, lookup})\nSingle-value lookup\n\n\nlookupArray(valueCol, lookupCol)\n(string, string) or ({key,value,calc})\nObject mapping lookup values → value-column values\n\n\nlookupStringArray(valueCol, lookupCol)\n(string, string) or ({key,value})\nLike lookupArray, concatenating duplicates into a comma-separated string\n\n\ntoKeyValue(option)\n({key, value})\nThin wrapper over lookupArray\n\n\ngetArray()\n()\nTable as a 2D array (row 0 = column names)\n\n\nsetArray(dataA)\n(2D array)\nPopulate the table from a 2D array; returns this\n\n\njson()\n()\nTable as an array of {colName: value, ...} row objects\n\n\nrevert() / reverse()\n()\nReverse row order (identical implementations)\n\n\naddTimeColumns(options)\n({source, create:[...]})\nDerive date/year/month/day/hour columns from a timestamp source column",
+    "crumbs": [
+      "Home",
+      "Reference",
+      "API Reference"
+    ]
+  },
+  {
+    "objectID": "api_reference.html#data.column-returned-by-table.columnname",
+    "href": "api_reference.html#data.column-returned-by-table.columnname",
+    "title": "API Reference",
+    "section": "Data.Column (returned by table.column(name))",
+    "text": "Data.Column (returned by table.column(name))\n\n\n\n\n\n\n\n\nMethod\nSignature\nPurpose\n\n\n\n\nvalues()\n()\nArray of every value in the column\n\n\nuniqueValues()\n()\nArray of unique values in the column\n\n\nmap(callback)\n(function(value, row, index))\nIn-place transform of every cell\n\n\nrename(name)\n(string)\nRename the column\n\n\nremove()\n()\nDelete the column from the table",
+    "crumbs": [
+      "Home",
+      "Reference",
+      "API Reference"
+    ]
+  },
+  {
+    "objectID": "api_reference.html#data.broker-parallel-multi-source-loading",
+    "href": "api_reference.html#data.broker-parallel-multi-source-loading",
+    "title": "API Reference",
+    "section": "Data.Broker — parallel multi-source loading",
+    "text": "Data.Broker — parallel multi-source loading\n\n\n\n\n\n\n\n\nMethod\nSignature\nPurpose\n\n\n\n\naddSource(url, type)\n(string, string)\nRegister one source to load; chainable\n\n\nrealize(callback)\n(function(Data.Table[]))\nLoad all sources, then call back with an array of tables in addSource order\n\n\nerror(callback)\n(function(url))\nShared error handler for any source’s load failure\n\n\nnotify(callback)\n(function(query))\nProgress callback, invoked as each source starts/completes\n\n\n\nFactories: Data.broker(), Data.provider() (alias). See Combining Sources for a worked example.",
+    "crumbs": [
+      "Home",
+      "Reference",
+      "API Reference"
+    ]
+  },
+  {
+    "objectID": "api_reference.html#data.merger-joining-already-loaded-tables",
+    "href": "api_reference.html#data.merger-joining-already-loaded-tables",
+    "title": "API Reference",
+    "section": "Data.Merger — joining already-loaded tables",
+    "text": "Data.Merger — joining already-loaded tables\n\n\n\n\n\n\n\n\nMethod\nSignature\nPurpose\n\n\n\n\naddSource(table, option)\n(Data.Table, {lookup, columns, label})\nRegister a loaded table as a merge source\n\n\nsetOutputColumns(columns)\n(array)\nRestrict/order the final table’s columns\n\n\nrealize(callback)\n(function(Data.Table))\nPerform the join; returns the merged table\n\n\nerror(callback)\n(function(exception))\nError handler\n\n\n\nFactory: Data.merger(). See Combining Sources for a worked example.",
+    "crumbs": [
+      "Home",
+      "Reference",
+      "API Reference"
+    ]
+  },
+  {
+    "objectID": "api_reference.html#utility-members",
+    "href": "api_reference.html#utility-members",
+    "title": "API Reference",
+    "section": "Utility members",
+    "text": "Utility members\n\n\n\n\n\n\n\nMember\nPurpose\n\n\n\n\nData.version\nLibrary version string\n\n\nData.log(message)\nInternal progress logging\n\n\nData.errors\nArray collecting errors from feeds without an explicit .error() handler\n\n\nData.cleanupDuckDB()\nManually tears down the shared DuckDB WASM instance (console utility)\n\n\nData.noConflict()\nRestores whatever window.Data held before this library loaded",
+    "crumbs": [
+      "Home",
+      "Reference",
+      "API Reference"
+    ]
+  },
+  {
+    "objectID": "transforming_tables.html",
+    "href": "transforming_tables.html",
+    "title": "Transforming Tables",
+    "section": "",
+    "text": "Every successful load resolves to a Data.Table. This guide covers the methods you’ll reach for most to filter, reshape and summarize it. For the full method signature list see the API Reference.",
+    "crumbs": [
+      "Home",
+      "Guides",
+      "Transforming Tables"
+    ]
+  },
+  {
+    "objectID": "transforming_tables.html#filtering-rows-selectquery",
+    "href": "transforming_tables.html#filtering-rows-selectquery",
+    "title": "Transforming Tables",
+    "section": "Filtering rows: select(query)",
+    "text": "Filtering rows: select(query)\nselect() takes a small SQL-like WHERE string and returns a new Data.Table with the matching rows:\nvar facebookIssues = mydata.select('WHERE labels like \"Facebook\"');\n\nvar overThreshold = rawdata.select('WHERE \"Age\" = \"Total\" AND \"SEX\" = \"MW\" AND \"Series\" = \"Labour force participation rate\"');\n\nvar workingAge = rawdata.select('WHERE \"Age\" BETWEEN \"18\" AND \"65\"');\nSupported operators: =, &lt;&gt; (not equal), &gt;, &lt;, &gt;=, &lt;=, BETWEEN ... AND ..., LIKE, NOT, IN \"v1,v2,v3\". Combine conditions with AND / OR.",
+    "crumbs": [
+      "Home",
+      "Guides",
+      "Transforming Tables"
+    ]
+  },
+  {
+    "objectID": "transforming_tables.html#reading-a-column",
+    "href": "transforming_tables.html#reading-a-column",
+    "title": "Transforming Tables",
+    "section": "Reading a column",
+    "text": "Reading a column\n.column(name) returns a Data.Column handle — see its methods below, most commonly .values():\nvar ids = mydata.column(\"id\").values();\nvar uniqueLabels = mydata.column(\"labels\").uniqueValues();",
+    "crumbs": [
+      "Home",
+      "Guides",
+      "Transforming Tables"
+    ]
+  },
+  {
+    "objectID": "transforming_tables.html#building-a-pivot-table-pivotoptions",
+    "href": "transforming_tables.html#building-a-pivot-table-pivotoptions",
+    "title": "Transforming Tables",
+    "section": "Building a pivot table: pivot(options)",
+    "text": "Building a pivot table: pivot(options)\nvar pivot = scrutini.pivot({\n    lead:  \"codice\",           // row-defining field(s)\n    keep:  [\"tipo\"],           // columns copied straight through\n    sum:   [\"membri\"],         // columns summed per lead group\n    cols:  \"descr_lista\",      // this field's unique values become new columns\n    value: \"voti\"              // values accumulated into those new columns\n});\npivot() always adds a Total column. If you need specific pivot columns to exist even when no rows match them (pre-seeded with 0), pass forced: [...] with the column names.",
+    "crumbs": [
+      "Home",
+      "Guides",
+      "Transforming Tables"
+    ]
+  },
+  {
+    "objectID": "transforming_tables.html#summarizing-aggregatevaluecolumn-groupcolumns",
+    "href": "transforming_tables.html#summarizing-aggregatevaluecolumn-groupcolumns",
+    "title": "Transforming Tables",
+    "section": "Summarizing: aggregate(valueColumn, groupColumns)",
+    "text": "Summarizing: aggregate(valueColumn, groupColumns)\nSums (or averages, with calc: \"mean\") a value column, grouped by one or more pipe-separated columns:\nvar totalsByRegion = mydata.aggregate(\"population\", \"region\");\nvar totalsByRegionAndYear = mydata.aggregate(\"population\", \"region|year\");",
+    "crumbs": [
+      "Home",
+      "Guides",
+      "Transforming Tables"
+    ]
+  },
+  {
+    "objectID": "transforming_tables.html#collapsing-duplicates-condenseleadcolumn-options",
+    "href": "transforming_tables.html#collapsing-duplicates-condenseleadcolumn-options",
+    "title": "Transforming Tables",
+    "section": "Collapsing duplicates: condense(leadColumn, options)",
+    "text": "Collapsing duplicates: condense(leadColumn, options)\nCollapses rows that share the same value in leadColumn, summing (or calc: \"max\"-ing) numeric columns not listed in keep:\nvar perStation = readings.condense(\"stationId\", { keep: [\"name\", \"lat\", \"lng\"] });",
+    "crumbs": [
+      "Home",
+      "Guides",
+      "Transforming Tables"
+    ]
+  },
+  {
+    "objectID": "transforming_tables.html#sorting-sortcolumn-flag",
+    "href": "transforming_tables.html#sorting-sortcolumn-flag",
+    "title": "Transforming Tables",
+    "section": "Sorting: sort(column, flag)",
+    "text": "Sorting: sort(column, flag)\nvar newestFirst = mydata.sort(\"date\", \"DOWN\");   // omit the flag for ascending",
+    "crumbs": [
+      "Home",
+      "Guides",
+      "Transforming Tables"
+    ]
+  },
+  {
+    "objectID": "transforming_tables.html#filtering-with-a-callback-filtercallback",
+    "href": "transforming_tables.html#filtering-with-a-callback-filtercallback",
+    "title": "Transforming Tables",
+    "section": "Filtering with a callback: filter(callback)",
+    "text": "Filtering with a callback: filter(callback)\nFor conditions select()’s query string can’t express, pass a plain function returning truthy/falsy per row:\nvar recent = mydata.filter(function (row) {\n    return row[dateColIndex] &gt; cutoffTimestamp;\n});",
+    "crumbs": [
+      "Home",
+      "Guides",
+      "Transforming Tables"
+    ]
+  },
+  {
+    "objectID": "transforming_tables.html#deriving-a-new-column-addcolumnoptions-callback",
+    "href": "transforming_tables.html#deriving-a-new-column-addcolumnoptions-callback",
+    "title": "Transforming Tables",
+    "section": "Deriving a new column: addColumn(options, callback)",
+    "text": "Deriving a new column: addColumn(options, callback)\nmydata.addColumn({ source: \"height\", destination: \"heightFt\" }, function (heightM) {\n    return heightM * 3.28084;\n});\n\n// no source: callback receives the whole row\nmydata.addColumn({ destination: \"summary\" }, function (row) {\n    return row.join(\" / \");\n});",
+    "crumbs": [
+      "Home",
+      "Guides",
+      "Transforming Tables"
+    ]
+  },
+  {
+    "objectID": "transforming_tables.html#picking-columns-subtableoptions",
+    "href": "transforming_tables.html#picking-columns-subtableoptions",
+    "title": "Transforming Tables",
+    "section": "Picking columns: subtable(options)",
+    "text": "Picking columns: subtable(options)\nvar slim = mydata.subtable({ fields: [\"id\", \"subtype\", \"height\"] });",
+    "crumbs": [
+      "Home",
+      "Guides",
+      "Transforming Tables"
+    ]
+  },
+  {
+    "objectID": "transforming_tables.html#other-useful-methods",
+    "href": "transforming_tables.html#other-useful-methods",
+    "title": "Transforming Tables",
+    "section": "Other useful methods",
+    "text": "Other useful methods\n\n\n\n\n\n\n\nMethod\nPurpose\n\n\n\n\ncolumnNames()\nArray of all column names\n\n\ncolumnIndex(name)\nNumeric index of a column\n\n\nlookup(value, {value, lookup})\nSingle-value lookup against a value/lookup column pair\n\n\nlookupArray(valueCol, lookupCol)\nBuild an object mapping lookup values to value-column values\n\n\ngroupColumns({source, destination})\nSum several existing numeric columns into a new one\n\n\nappend(otherTable)\nAppend another table’s rows (must have identical field names/order)\n\n\njson()\nReturn the table as an array of {colName: value, ...} row objects\n\n\ngetArray() / setArray(array)\nRead/write the table as a plain 2D array (row 0 = column names)\n\n\n\n\n\n\n\n\n\nNoterevert() and reverse() are the same thing\n\n\n\nBoth reverse row order — they’re currently identical implementations, not two different behaviors. Either name works.\n\n\n\nNext: Combining Sources to load or join more than one table at once.",
+    "crumbs": [
+      "Home",
+      "Guides",
+      "Transforming Tables"
+    ]
+  },
+  {
+    "objectID": "loading_data.html",
+    "href": "loading_data.html",
+    "title": "Loading Data",
+    "section": "",
+    "text": "data.js has three loading entry points. They all end up producing the same thing — a Data.Table — but differ in where the source data comes from and whether loading is asynchronous.",
+    "crumbs": [
+      "Home",
+      "Guides",
+      "Loading Data"
+    ]
+  },
+  {
+    "objectID": "loading_data.html#data.feedoptions-load-from-a-url",
+    "href": "loading_data.html#data.feedoptions-load-from-a-url",
+    "title": "Loading Data",
+    "section": "Data.feed(options) — load from a URL",
+    "text": "Data.feed(options) — load from a URL\nThe main entry point. Fetches from a URL and is always asynchronous:\nData.feed({ source: szUrl, type: \"csv\" }).load(function (mydata) {\n    // mydata is a Data.Table\n}).error(function (e) {\n    // handle the failure\n});\nUse this whenever your data lives at a URL — which is the common case.",
+    "crumbs": [
+      "Home",
+      "Guides",
+      "Loading Data"
+    ]
+  },
+  {
+    "objectID": "loading_data.html#data.objectoptions-load-from-data-you-already-have",
+    "href": "loading_data.html#data.objectoptions-load-from-data-you-already-have",
+    "title": "Loading Data",
+    "section": "Data.object(options) — load from data you already have",
+    "text": "Data.object(options) — load from data you already have\nSame idea, but source is a JavaScript value you already hold in memory (e.g. the body of a response you fetched yourself), not a URL. Still asynchronous — call .import() with a callback:\nData.object({ source: response, type: \"json\" }).import(function (mydata) {\n    // mydata is a Data.Table\n});\nFor binary formats (parquet, geoparquet, gpkg, flatgeobuf, geobuf) source must already be an ArrayBuffer — Data.object does no fetching for these, it only parses what you hand it.",
+    "crumbs": [
+      "Home",
+      "Guides",
+      "Loading Data"
+    ]
+  },
+  {
+    "objectID": "loading_data.html#data.importoptions-synchronous-shortcut",
+    "href": "loading_data.html#data.importoptions-synchronous-shortcut",
+    "title": "Loading Data",
+    "section": "Data.import(options) — synchronous shortcut",
+    "text": "Data.import(options) — synchronous shortcut\nA synchronous convenience wrapper around Data.object:\nvar table = Data.import({ source: response, type: \"json\" });\nvar ids = table.column(\"id\").values();\n\n\n\n\n\n\nImportantOnly safe for synchronous parsers\n\n\n\nData.import() returns immediately — there’s no callback, no .load()/.import() to wait on. It works for parsers that run synchronously (json, csv, geojson, and similar), but returns undefined for anything genuinely asynchronous (e.g. jsonstat, which lazy-loads its own parser script). If you’re not sure, use Data.object(...).import(callback) instead.",
+    "crumbs": [
+      "Home",
+      "Guides",
+      "Loading Data"
+    ]
+  },
+  {
+    "objectID": "loading_data.html#supported-source-types",
+    "href": "loading_data.html#supported-source-types",
+    "title": "Loading Data",
+    "section": "Supported source types",
+    "text": "Supported source types\nPass one of these as type to any of the three loaders above. See Source Types for the full options reference (the parquet row in particular has several bbox-mode-only options covered in Remote Parquet by Bounding Box).\n\n\n\ntype\nWhat it loads\n\n\n\n\n\"csv\"\nPlain-text CSV (delimiters , and ;), parsed with Papa Parse\n\n\n\"json\"\nA JSON object\n\n\n\"geojson\"\nA GeoJSON object\n\n\n\"topojson\"\nTopoJSON\n\n\n\"kml\"\nKeyhole Markup Language\n\n\n\"gml\"\nGeography Markup Language\n\n\n\"jsonl\" / \"ndjson\"\nNewline-delimited JSON\n\n\n\"jsonstat\"\nJSON-stat formatted object\n\n\n\"rss\"\nXML RSS feed\n\n\n\"parquet\"\nParquet file, via DuckDB WASM. With bbox set, queries a remote URL directly instead of downloading it — see Remote Parquet by Bounding Box\n\n\n\"geoparquet\"\nGeoParquet file, via DuckDB WASM, converted to GeoJSON\n\n\n\"gpkg\"\nGeoPackage file, via DuckDB WASM’s spatial extension\n\n\n\"flatgeobuf\" / \"fgb\"\nFlatGeobuf binary geospatial format\n\n\n\"geobuf\" / \"pbf\"\nGeobuf (Protocol Buffer) geospatial format\n\n\n\"jsonDB\"\ndata.js’s own internal table format (used internally, e.g. when passing an already-built Data.Table)\n\n\n\nType names are case-insensitive variants of the above (CSV, GeoJSON, TOPOJSON, etc. all work).\n\n\n\n\n\n\nNoteOmitting type\n\n\n\nFor a plain URL, data.js can auto-detect the type from the file extension for a few formats (.jsonl/.ndjson). For everything else, always pass type explicitly.\n\n\n\nNext: Transforming Tables to filter, pivot and reshape whatever you just loaded.",
+    "crumbs": [
+      "Home",
+      "Guides",
+      "Loading Data"
+    ]
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Welcome to data.js Documentation",
+    "section": "",
+    "text": "data.js is a little JavaScript library to load and transform data. It reads open formats — CSV, JSON, GeoJSON, Parquet, GeoPackage and more — from a URL or an in-memory object, and provides a small set of table operations (select, pivot, aggregate, sort, joins) for exploring and reshaping the result, all in the browser with no build step.\n\n\nAt the end of this documentation, you will be able to:\n\nLoad tabular and geospatial data from a URL or from data you already have in memory\nQuery remote GeoParquet files by bounding box, without downloading the whole file\nFilter, pivot, aggregate and sort tables with a small SQL-like syntax\nCombine multiple sources — either loading several in parallel, or joining tables you already have\nRecognize the handful of gotchas that trip people up (documented in Troubleshooting)\n\n\n\n\ndata.js consists of three main parts:\n\n\nGet data into the library, from a URL (Data.feed) or from an already-in-memory object (Data.object), across a wide range of formats:\n\nTabular: CSV, JSON, JSON-stat, JSONL/NDJSON\nGeospatial: GeoJSON, TopoJSON, KML, GML, Parquet/GeoParquet, GeoPackage, FlatGeobuf, Geobuf\nFeeds: RSS\n\n\n\n\n\n\n\ndata.js does its own coordinate work only for the remote-parquet bbox feature (bounding boxes and geometry are reprojected automatically when the source uses a projected CRS, e.g. EPSG:3035). For every other format, input geometry is used as-is — reproject to EPSG:4326 yourself first if needed. See Remote Parquet by Bounding Box.\n\n\n\n\n\n\nEvery successful load resolves to a Data.Table: a simple {fields, records} structure with chainable methods for reshaping it — select() (SQL-like WHERE filtering), pivot(), aggregate(), condense(), sort(), addColumn(), and more. See Transforming Tables and the API Reference.\n\n\n\nTwo different ways to work with more than one source:\n\nData.Broker loads several URLs in parallel and calls you back once all of them resolve.\nData.Merger joins tables you’ve already loaded, by a shared lookup key.\n\nSee Combining Sources.\n\n\n\n\ndata.js is a good fit for:\n\nData journalists and researchers who need to filter, pivot and join open data without spinning up a backend\nMap/visualization developers — data.js is the data-processing engine behind iXMaps, but works standalone too\nAnyone loading Parquet/GeoParquet in the browser who wants only the rows in view, not the whole file\n\n\n\n\ndata.js is not:\n\nA mapping or charting library — it has no rendering of its own (pair it with iXMaps, Leaflet, D3, or anything else)\nA general-purpose SQL engine — select()/pivot() cover common filtering/reshaping needs, not arbitrary joins or subqueries\nA build-time tool — everything runs client-side, at request time\n\n\n\n\ndata.js is built on:\n\nJavaScript — no required build step; a single &lt;script&gt; tag is enough\nPapa Parse — CSV parsing\nDuckDB WASM — Parquet, GeoParquet and GeoPackage reading, including the httpfs extension for ranged remote reads\nflatgeobuf / geobuf — binary geospatial format reading\nproj4js — on-demand coordinate reprojection for remote-parquet bbox queries\njQuery — optional, used for some legacy loading paths\n\n\n\n\ndata.js has no separate license file of its own in the repository; it ships as part of the iXMaps project, released under the BSD 3-Clause License.\n\n\n\n\n\n\n\n\n\nTipNew to data.js?\n\n\n\nStart with the Quick Start Guide to load and query your first dataset in a few lines.\n\n\n\n\n\n\n\n\nNoteLooking for API Reference?\n\n\n\nCheck the API Reference for the complete method reference, or Source Types for every supported type and its options.\n\n\n\n\n\n\n\n\nImportantNeed examples?\n\n\n\nBrowse Examples for copy-paste working code for the most common use cases.\n\n\n\n\n\nInclude data.js in any HTML page with a single &lt;script&gt; tag — no installation, no build step:\n&lt;script src=\"https://cdn.jsdelivr.net/gh/gjrichter/data.js/data.js\"&gt;&lt;/script&gt;\n\n\n\n\nGitHub Repository: github.com/gjrichter/data.js\nIssues and Questions: GitHub Issues\nJSDoc reference: gjrichter.github.io/data.js/docs\n\n\nReady to start? Head over to the Quick Start Guide to load your first dataset!",
+    "crumbs": [
+      "Home",
+      "Overview"
+    ]
+  },
+  {
+    "objectID": "index.html#what-youll-learn",
+    "href": "index.html#what-youll-learn",
+    "title": "Welcome to data.js Documentation",
+    "section": "",
+    "text": "At the end of this documentation, you will be able to:\n\nLoad tabular and geospatial data from a URL or from data you already have in memory\nQuery remote GeoParquet files by bounding box, without downloading the whole file\nFilter, pivot, aggregate and sort tables with a small SQL-like syntax\nCombine multiple sources — either loading several in parallel, or joining tables you already have\nRecognize the handful of gotchas that trip people up (documented in Troubleshooting)",
+    "crumbs": [
+      "Home",
+      "Overview"
+    ]
+  },
+  {
+    "objectID": "index.html#framework-components",
+    "href": "index.html#framework-components",
+    "title": "Welcome to data.js Documentation",
+    "section": "",
+    "text": "data.js consists of three main parts:\n\n\nGet data into the library, from a URL (Data.feed) or from an already-in-memory object (Data.object), across a wide range of formats:\n\nTabular: CSV, JSON, JSON-stat, JSONL/NDJSON\nGeospatial: GeoJSON, TopoJSON, KML, GML, Parquet/GeoParquet, GeoPackage, FlatGeobuf, Geobuf\nFeeds: RSS\n\n\n\n\n\n\n\ndata.js does its own coordinate work only for the remote-parquet bbox feature (bounding boxes and geometry are reprojected automatically when the source uses a projected CRS, e.g. EPSG:3035). For every other format, input geometry is used as-is — reproject to EPSG:4326 yourself first if needed. See Remote Parquet by Bounding Box.\n\n\n\n\n\n\nEvery successful load resolves to a Data.Table: a simple {fields, records} structure with chainable methods for reshaping it — select() (SQL-like WHERE filtering), pivot(), aggregate(), condense(), sort(), addColumn(), and more. See Transforming Tables and the API Reference.\n\n\n\nTwo different ways to work with more than one source:\n\nData.Broker loads several URLs in parallel and calls you back once all of them resolve.\nData.Merger joins tables you’ve already loaded, by a shared lookup key.\n\nSee Combining Sources.",
+    "crumbs": [
+      "Home",
+      "Overview"
+    ]
+  },
+  {
+    "objectID": "index.html#who-should-use-data.js",
+    "href": "index.html#who-should-use-data.js",
+    "title": "Welcome to data.js Documentation",
+    "section": "",
+    "text": "data.js is a good fit for:\n\nData journalists and researchers who need to filter, pivot and join open data without spinning up a backend\nMap/visualization developers — data.js is the data-processing engine behind iXMaps, but works standalone too\nAnyone loading Parquet/GeoParquet in the browser who wants only the rows in view, not the whole file",
+    "crumbs": [
+      "Home",
+      "Overview"
+    ]
+  },
+  {
+    "objectID": "index.html#what-is-it-not",
+    "href": "index.html#what-is-it-not",
+    "title": "Welcome to data.js Documentation",
+    "section": "",
+    "text": "data.js is not:\n\nA mapping or charting library — it has no rendering of its own (pair it with iXMaps, Leaflet, D3, or anything else)\nA general-purpose SQL engine — select()/pivot() cover common filtering/reshaping needs, not arbitrary joins or subqueries\nA build-time tool — everything runs client-side, at request time",
+    "crumbs": [
+      "Home",
+      "Overview"
+    ]
+  },
+  {
+    "objectID": "index.html#technology-stack",
+    "href": "index.html#technology-stack",
+    "title": "Welcome to data.js Documentation",
+    "section": "",
+    "text": "data.js is built on:\n\nJavaScript — no required build step; a single &lt;script&gt; tag is enough\nPapa Parse — CSV parsing\nDuckDB WASM — Parquet, GeoParquet and GeoPackage reading, including the httpfs extension for ranged remote reads\nflatgeobuf / geobuf — binary geospatial format reading\nproj4js — on-demand coordinate reprojection for remote-parquet bbox queries\njQuery — optional, used for some legacy loading paths",
+    "crumbs": [
+      "Home",
+      "Overview"
+    ]
+  },
+  {
+    "objectID": "index.html#license",
+    "href": "index.html#license",
+    "title": "Welcome to data.js Documentation",
+    "section": "",
+    "text": "data.js has no separate license file of its own in the repository; it ships as part of the iXMaps project, released under the BSD 3-Clause License.",
+    "crumbs": [
+      "Home",
+      "Overview"
+    ]
+  },
+  {
+    "objectID": "index.html#quick-links",
+    "href": "index.html#quick-links",
+    "title": "Welcome to data.js Documentation",
+    "section": "",
+    "text": "TipNew to data.js?\n\n\n\nStart with the Quick Start Guide to load and query your first dataset in a few lines.\n\n\n\n\n\n\n\n\nNoteLooking for API Reference?\n\n\n\nCheck the API Reference for the complete method reference, or Source Types for every supported type and its options.\n\n\n\n\n\n\n\n\nImportantNeed examples?\n\n\n\nBrowse Examples for copy-paste working code for the most common use cases.",
+    "crumbs": [
+      "Home",
+      "Overview"
+    ]
+  },
+  {
+    "objectID": "index.html#cdn",
+    "href": "index.html#cdn",
+    "title": "Welcome to data.js Documentation",
+    "section": "",
+    "text": "Include data.js in any HTML page with a single &lt;script&gt; tag — no installation, no build step:\n&lt;script src=\"https://cdn.jsdelivr.net/gh/gjrichter/data.js/data.js\"&gt;&lt;/script&gt;",
+    "crumbs": [
+      "Home",
+      "Overview"
+    ]
+  },
+  {
+    "objectID": "index.html#community-and-support",
+    "href": "index.html#community-and-support",
+    "title": "Welcome to data.js Documentation",
+    "section": "",
+    "text": "GitHub Repository: github.com/gjrichter/data.js\nIssues and Questions: GitHub Issues\nJSDoc reference: gjrichter.github.io/data.js/docs\n\n\nReady to start? Head over to the Quick Start Guide to load your first dataset!",
+    "crumbs": [
+      "Home",
+      "Overview"
+    ]
+  },
+  {
+    "objectID": "getting_started.html",
+    "href": "getting_started.html",
+    "title": "Quick Start",
+    "section": "",
+    "text": "This guide walks you through loading and querying your first dataset with data.js — from a blank HTML file to a filtered result you can read values from.",
+    "crumbs": [
+      "Home",
+      "Getting Started",
+      "Quick Start"
+    ]
+  },
+  {
+    "objectID": "getting_started.html#step-1-include-the-library",
+    "href": "getting_started.html#step-1-include-the-library",
+    "title": "Quick Start",
+    "section": "Step 1: Include the library",
+    "text": "Step 1: Include the library\nCreate an HTML file and include data.js from the CDN — no build step, no other dependencies required for CSV/JSON:\n&lt;!DOCTYPE html&gt;\n&lt;html lang=\"en\"&gt;\n&lt;head&gt;\n    &lt;meta charset=\"UTF-8\"&gt;\n    &lt;title&gt;My First data.js query&lt;/title&gt;\n    &lt;script src=\"https://cdn.jsdelivr.net/gh/gjrichter/data.js/data.js\"&gt;&lt;/script&gt;\n&lt;/head&gt;\n&lt;body&gt;\n    &lt;script&gt;\n        // your code goes here\n    &lt;/script&gt;\n&lt;/body&gt;\n&lt;/html&gt;",
+    "crumbs": [
+      "Home",
+      "Getting Started",
+      "Quick Start"
+    ]
+  },
+  {
+    "objectID": "getting_started.html#step-2-load-a-dataset",
+    "href": "getting_started.html#step-2-load-a-dataset",
+    "title": "Quick Start",
+    "section": "Step 2: Load a dataset",
+    "text": "Step 2: Load a dataset\nThe entry point for loading from a URL is Data.feed(). It’s asynchronous — pass a callback to .load():\nData.feed({\n    source: \"https://raw.githubusercontent.com/emergenzeHack/terremotocentro/master/data/issues.csv\",\n    type:   \"csv\"\n}).load(function (mydata) {\n    // mydata is a Data.Table — the whole dataset is available here\n    console.log(mydata.columnNames());\n}).error(function (e) {\n    console.error(\"load failed:\", e);\n});\n\n\n\n\n\n\nNotesource has a few aliases\n\n\n\nData.feed() also accepts src, url, or ext in place of source — whichever is present first wins. source is the clearest name to use in new code.",
+    "crumbs": [
+      "Home",
+      "Getting Started",
+      "Quick Start"
+    ]
+  },
+  {
+    "objectID": "getting_started.html#step-3-filter-and-read-the-result",
+    "href": "getting_started.html#step-3-filter-and-read-the-result",
+    "title": "Quick Start",
+    "section": "Step 3: Filter and read the result",
+    "text": "Step 3: Filter and read the result\nOnce loaded, mydata is a Data.Table. Use .select() with a small SQL-like WHERE string to filter rows, and .column(name).values() to pull out a plain array:\nData.feed({\n    source: \"https://raw.githubusercontent.com/emergenzeHack/terremotocentro/master/data/issues.csv\",\n    type:   \"csv\"\n}).load(function (mydata) {\n    // filter to rows where the \"labels\" column mentions Facebook\n    var facebookIssues = mydata.select('WHERE labels like \"Facebook\"');\n\n    // pull all values of one column into a plain array\n    var ids = facebookIssues.column(\"id\").values();\n\n    console.log(ids.length + \" matching issues:\", ids);\n});\nThat’s the whole loop: load → filter → read. From here:\n\nLoading Data covers every supported source type (JSON, GeoJSON, Parquet, GeoPackage, and more) and the three ways to load data (Data.feed, Data.object, Data.import).\nTransforming Tables covers the full select() syntax plus pivot(), aggregate(), sort() and friends.\nRemote Parquet by Bounding Box if you’re working with large GeoParquet files and only want the rows in view.\n\n\nReady for more? Continue to Loading Data.",
+    "crumbs": [
+      "Home",
+      "Getting Started",
+      "Quick Start"
+    ]
+  },
+  {
+    "objectID": "remote_parquet_bbox.html",
+    "href": "remote_parquet_bbox.html",
+    "title": "Remote Parquet by Bounding Box",
+    "section": "",
+    "text": "Large GeoParquet datasets (a country’s worth of buildings, for example) are often too big to download in full just to show whatever’s in the current map viewport. data.js’s parquet loader supports a bounding-box mode: pass a bbox, and instead of downloading the whole file, data.js queries it directly with DuckDB WASM, reading only the row groups and columns that actually intersect your box.",
+    "crumbs": [
+      "Home",
+      "Guides",
+      "Remote Parquet by Bounding Box"
+    ]
+  },
+  {
+    "objectID": "remote_parquet_bbox.html#basic-usage",
+    "href": "remote_parquet_bbox.html#basic-usage",
+    "title": "Remote Parquet by Bounding Box",
+    "section": "Basic usage",
+    "text": "Basic usage\nData.feed({\n    source:  \"https://s3.eubucco.com/eubucco/v0.2/buildings/parquet/nuts_id=ITC4/ITC4.parquet\",\n    type:    \"parquet\",\n    bbox:    [9.185, 45.460, 9.198, 45.468],   // [minX, minY, maxX, maxY], always EPSG:4326\n    columns: [\"id\", \"subtype\", \"height\"]\n}).load(function (mydata) {\n    console.log(mydata.records.length + \" buildings in view\");\n}).error(function (e) {\n    console.error(e);\n});\nbbox is always [minX, minY, maxX, maxY] in EPSG:4326 (plain lon/lat), regardless of what coordinate system the source file itself uses — data.js handles the reprojection (see below).",
+    "crumbs": [
+      "Home",
+      "Guides",
+      "Remote Parquet by Bounding Box"
+    ]
+  },
+  {
+    "objectID": "remote_parquet_bbox.html#how-it-works",
+    "href": "remote_parquet_bbox.html#how-it-works",
+    "title": "Remote Parquet by Bounding Box",
+    "section": "How it works",
+    "text": "How it works\nWithout bbox, type: \"parquet\" downloads the entire file before running any query — fine for small files, wasteful for large ones. With bbox set, data.js:\n\nEnsures DuckDB WASM is loaded, with the httpfs extension installed. This is what makes genuine HTTP range reads possible — without it, DuckDB WASM’s default file handler pulls the whole remote file into memory before it can run any query at all, footer included.\nProbes the file’s schema (a cheap LIMIT 0 query — footer only, no row data) to find a bbox helper column (a STRUCT field with xmin/ymin/xmax/ymax sub-fields — the GeoParquet covering.bbox convention) and the geometry column.\nReads the GeoParquet geo metadata to detect the source CRS, if any.\nRuns a WHERE query against the bbox helper column, so DuckDB can skip pages that can’t possibly match, then returns only the requested columns plus geometry.\n\n\n\n\n\n\n\nImportantRequires a GeoParquet bbox helper column\n\n\n\nIf the file has no bbox helper column, data.js logs a warning and falls back to a full download rather than failing outright. Bbox-mode’s network savings only apply to files that follow the GeoParquet covering.bbox convention.",
+    "crumbs": [
+      "Home",
+      "Guides",
+      "Remote Parquet by Bounding Box"
+    ]
+  },
+  {
+    "objectID": "remote_parquet_bbox.html#options",
+    "href": "remote_parquet_bbox.html#options",
+    "title": "Remote Parquet by Bounding Box",
+    "section": "Options",
+    "text": "Options\n\n\n\n\n\n\n\n\n\nOption\nType\nRequired\nDescription\n\n\n\n\nbbox\n[minX, minY, maxX, maxY]\nfor bbox mode\nAlways EPSG:4326, regardless of the source file’s CRS\n\n\ncolumns\narray of strings\nno\nRestrict the result to these columns (the geometry column is always included automatically). Omit to get every non-list column\n\n\ncrs\nstring, e.g. \"EPSG:3035\"\nno\nOverride the auto-detected source CRS\n\n\nproj4\nproj4 definition string\nno\nOverride with a raw proj4 definition — takes precedence over crs\n\n\nmaxRows\nnumber\nno\nAbort with a clear error instead of running the query if the bbox would select more rows than this",
+    "crumbs": [
+      "Home",
+      "Guides",
+      "Remote Parquet by Bounding Box"
+    ]
+  },
+  {
+    "objectID": "remote_parquet_bbox.html#crs-reprojection",
+    "href": "remote_parquet_bbox.html#crs-reprojection",
+    "title": "Remote Parquet by Bounding Box",
+    "section": "CRS reprojection",
+    "text": "CRS reprojection\nMany large GeoParquet datasets use a projected CRS rather than plain lon/lat — EUBUCCO v0.2, for example, uses EPSG:3035 (ETRS89-extended / LAEA Europe). data.js handles this automatically:\n\nYour bbox (always EPSG:4326) is transformed into the source CRS before the query — using all four corners of the box, not just two, since projections curve straight edges.\nReturned geometries are transformed back to EPSG:4326.\nThe source CRS is auto-detected from the file’s GeoParquet metadata; built-in proj4js definitions are bundled for the CRSes most likely to show up in European open data: EPSG:3035, 3857 (Web Mercator), 2154 (Lambert-93, France), 25832/25833 (ETRS89 / UTM 32N, 33N), 32632/32633 (WGS84 / UTM 32N, 33N).\nproj4js itself is only loaded (from a CDN) the first time a reprojection is actually needed — no extra cost for files already in EPSG:4326.\n\nIf your file uses a CRS not in that built-in list, pass crs (an EPSG code) or proj4 (a full proj4 definition string) explicitly:\nData.feed({\n    source: someUrl,\n    type:   \"parquet\",\n    bbox:   [minX, minY, maxX, maxY],\n    crs:    \"EPSG:25831\"   // not in the built-in list — data.js will still need a definition\n}).load(...);\n\n\n\n\n\n\nWithout a recognized crs/proj4, data.js reports a clear error rather than silently returning wrong results — it never guesses at a projection.",
+    "crumbs": [
+      "Home",
+      "Guides",
+      "Remote Parquet by Bounding Box"
+    ]
+  },
+  {
+    "objectID": "remote_parquet_bbox.html#guarding-against-huge-result-sets",
+    "href": "remote_parquet_bbox.html#guarding-against-huge-result-sets",
+    "title": "Remote Parquet by Bounding Box",
+    "section": "Guarding against huge result sets",
+    "text": "Guarding against huge result sets\nA bbox drawn too wide over a dense area can still select a very large number of rows. Use maxRows to fail fast instead of stalling on a huge transfer and an expensive client-side geometry decode:\nData.feed({\n    source:  someUrl,\n    type:    \"parquet\",\n    bbox:    currentViewportBbox,\n    maxRows: 50000\n}).load(function (mydata) { ... })\n  .error(function (e) {\n    // e.g. \"bbox selects 128340 rows (limit 50000) - zoom in or raise maxRows\"\n    console.warn(e);\n});",
+    "crumbs": [
+      "Home",
+      "Guides",
+      "Remote Parquet by Bounding Box"
+    ]
+  },
+  {
+    "objectID": "remote_parquet_bbox.html#file-size-limit",
+    "href": "remote_parquet_bbox.html#file-size-limit",
+    "title": "Remote Parquet by Bounding Box",
+    "section": "File size limit",
+    "text": "File size limit\nRemote files ≥ 2 GB are only usable with httpfs successfully loaded — without it, DuckDB WASM’s default file handler would need to buffer the whole file in memory, which fails outright above ~2 GB. In normal use httpfs loads automatically and this limit doesn’t apply; it only kicks in as a fallback safeguard if the extension fails to load for some reason (offline environment, blocked CDN, etc.).\n\nNext: Transforming Tables to filter and reshape the result once it’s loaded.",
+    "crumbs": [
+      "Home",
+      "Guides",
+      "Remote Parquet by Bounding Box"
+    ]
+  },
+  {
+    "objectID": "combining_sources.html",
+    "href": "combining_sources.html",
+    "title": "Combining Sources",
+    "section": "",
+    "text": "data.js has two different tools for working with more than one source, solving two different problems:",
+    "crumbs": [
+      "Home",
+      "Guides",
+      "Combining Sources"
+    ]
+  },
+  {
+    "objectID": "combining_sources.html#data.broker-load-several-sources-in-parallel",
+    "href": "combining_sources.html#data.broker-load-several-sources-in-parallel",
+    "title": "Combining Sources",
+    "section": "Data.Broker: load several sources in parallel",
+    "text": "Data.Broker: load several sources in parallel\nvar broker = new Data.Broker()\n    .addSource(\"https://raw.githubusercontent.com/ondata/elezionipolitiche2018/master/dati/scrutiniCI_cm.csv\", \"csv\")\n    .addSource(\"https://raw.githubusercontent.com/ondata/elezionipolitiche2018/master/risorse/comuniViminaleISTAT.csv\", \"csv\")\n    .addSource(\"https://raw.githubusercontent.com/ondata/elezionipolitiche2018/master/dati/camera_geopolitico_italia.csv\", \"csv\")\n    .realize(function (dataA) {\n        var scrutini = dataA[0];\n        var comuniViminaleISTAT = dataA[1];\n        var cameraGeopoliticoItalia = dataA[2];\n\n        scrutini = scrutini.select('WHERE tipo_riga == \"LI\"');\n        // ... continue working with all three tables\n    });\nrealize(callback) fires once with an array of Data.Table, in the same order you called addSource. Use .error(handler) for a shared load-failure handler, and .notify(handler) if you want a progress callback as each source starts/finishes.\n\n\n\n\n\n\nImportantData.Broker doesn’t inherit Data.Table/Data.Feed methods\n\n\n\nDespite an internal comment suggesting otherwise, a Data.Broker instance doesn’t expose .select()/.column() directly — work with the individual tables in the realize() callback’s array instead.",
+    "crumbs": [
+      "Home",
+      "Guides",
+      "Combining Sources"
+    ]
+  },
+  {
+    "objectID": "combining_sources.html#data.merger-join-already-loaded-tables",
+    "href": "combining_sources.html#data.merger-join-already-loaded-tables",
+    "title": "Combining Sources",
+    "section": "Data.Merger: join already-loaded tables",
+    "text": "Data.Merger: join already-loaded tables\nUse this once you have two or more Data.Tables (from separate Data.feed() calls, or from a Data.Broker) and want to combine them by a shared key:\nvar merger = new Data.Merger()\n    .addSource(prezzi,   { lookup: \"idImpianto\", columns: [\"descCarburante\", \"prezzo\", \"isSelf\", \"dtComu\"] })\n    .addSource(impianti, { lookup: \"idImpianto\", columns: [\"Bandiera\", \"Latitudine\", \"Longitudine\"] });\n\nmerger.realize(function (mergedTable) {\n    var selection = mergedTable.select('WHERE tipo_riga == \"LI\"');\n    // ... continue working with the merged table\n});\nThe first addSource call provides the row backbone; every subsequent source is looked up by matching lookup values and its columns are added alongside. label (optional, in the same addSource options object) lets you rename incoming columns; setOutputColumns([...]) afterwards restricts/orders the final table to specific columns.\n\n\n\n\n\n\n\n\n\nData.Broker\nData.Merger\n\n\n\n\nInput\nURLs (loads them itself)\nAlready-loaded Data.Tables (or plain 2D arrays)\n\n\nCombines by\nNothing — just returns all tables together\nA shared lookup key, join-style\n\n\nUse when\nYou need several independent datasets loaded before continuing\nYou need to enrich one table’s rows with columns from another\n\n\n\n\nNext: see the full API Reference for every method’s exact signature.",
+    "crumbs": [
+      "Home",
+      "Guides",
+      "Combining Sources"
+    ]
+  },
+  {
+    "objectID": "source_types.html",
+    "href": "source_types.html",
+    "title": "Source Types",
+    "section": "",
+    "text": "Reference for the type option accepted by Data.feed(), Data.object() and Data.import(). See Loading Data for how the three loaders differ.",
+    "crumbs": [
+      "Home",
+      "Reference",
+      "Source Types"
+    ]
+  },
+  {
+    "objectID": "source_types.html#tabular",
+    "href": "source_types.html#tabular",
+    "title": "Source Types",
+    "section": "Tabular",
+    "text": "Tabular\n\n\n\ntype\nParser\nNotes\n\n\n\n\n\"csv\"\nPapa Parse\nDelimiters , and ; both supported. Pass parser (an object) to forward Papa Parse options\n\n\n\"json\"\nnative\nAny JSON value/object\n\n\n\"jsonl\" / \"ndjson\"\nnative\nNewline-delimited JSON\n\n\n\"jsonstat\"\njson-stat\nLazy-loads the json-stat parser script on first use\n\n\n\"rss\"\nnative XML\nRSS feed",
+    "crumbs": [
+      "Home",
+      "Reference",
+      "Source Types"
+    ]
+  },
+  {
+    "objectID": "source_types.html#geospatial-text-based",
+    "href": "source_types.html#geospatial-text-based",
+    "title": "Source Types",
+    "section": "Geospatial — text-based",
+    "text": "Geospatial — text-based\n\n\n\n\n\n\n\n\ntype\nParser\nNotes\n\n\n\n\n\"geojson\"\nnative\nA GeoJSON object\n\n\n\"topojson\"\nnative\nConverted internally to GeoJSON-equivalent structures\n\n\n\"kml\"\nnative XML\nKeyhole Markup Language\n\n\n\"gml\"\nnative XML\nGeography Markup Language",
+    "crumbs": [
+      "Home",
+      "Reference",
+      "Source Types"
+    ]
+  },
+  {
+    "objectID": "source_types.html#geospatial-binary-via-duckdb-wasm",
+    "href": "source_types.html#geospatial-binary-via-duckdb-wasm",
+    "title": "Source Types",
+    "section": "Geospatial — binary, via DuckDB WASM",
+    "text": "Geospatial — binary, via DuckDB WASM\n\n\n\ntype\nNotes\n\n\n\n\n\"parquet\"\nParquet file. Without bbox, downloads and parses the whole file. With bbox set, queries a remote URL directly via HTTP range reads instead — see Remote Parquet by Bounding Box for the full option set (bbox, columns, crs, proj4, maxRows)\n\n\n\"geoparquet\"\nGeoParquet file, converted to GeoJSON. Always a full download (bbox mode is parquet-only)\n\n\n\"gpkg\"\nGeoPackage file, read via DuckDB WASM’s spatial extension",
+    "crumbs": [
+      "Home",
+      "Reference",
+      "Source Types"
+    ]
+  },
+  {
+    "objectID": "source_types.html#geospatial-binary-other-parsers",
+    "href": "source_types.html#geospatial-binary-other-parsers",
+    "title": "Source Types",
+    "section": "Geospatial — binary, other parsers",
+    "text": "Geospatial — binary, other parsers\n\n\n\ntype\nNotes\n\n\n\n\n\"flatgeobuf\" / \"fgb\"\nFlatGeobuf binary format\n\n\n\"geobuf\" / \"pbf\"\nGeobuf (Protocol Buffer) binary format",
+    "crumbs": [
+      "Home",
+      "Reference",
+      "Source Types"
+    ]
+  },
+  {
+    "objectID": "source_types.html#internal",
+    "href": "source_types.html#internal",
+    "title": "Source Types",
+    "section": "Internal",
+    "text": "Internal\n\n\n\n\n\n\n\ntype\nNotes\n\n\n\n\n\"jsonDB\"\ndata.js’s own {fields, records} table structure — used when passing an already-built Data.Table-shaped object back into the library\n\n\n\n\n\n\n\n\n\nNoteCase-insensitive\n\n\n\nType names accept case variants — \"CSV\", \"GeoJSON\", \"TOPOJSON\" all work the same as their lowercase forms.\n\n\n\nSee the API Reference for the loader method signatures, or Examples for copy-paste code using several of these types.",
+    "crumbs": [
+      "Home",
+      "Reference",
+      "Source Types"
+    ]
+  },
+  {
+    "objectID": "troubleshooting.html",
+    "href": "troubleshooting.html",
+    "title": "Troubleshooting",
+    "section": "",
+    "text": "Data.import() is synchronous and returns immediately — it never waits for anything async. It works for parsers that run synchronously (csv, json, geojson and similar), but for a genuinely asynchronous parser (e.g. jsonstat, which lazy-loads its own script) it returns before the data exists. Use Data.object({...}).import(callback) instead — see Loading Data.",
+    "crumbs": [
+      "Home",
+      "Troubleshooting"
+    ]
+  },
+  {
+    "objectID": "troubleshooting.html#data.import-returns-undefined",
+    "href": "troubleshooting.html#data.import-returns-undefined",
+    "title": "Troubleshooting",
+    "section": "",
+    "text": "Data.import() is synchronous and returns immediately — it never waits for anything async. It works for parsers that run synchronously (csv, json, geojson and similar), but for a genuinely asynchronous parser (e.g. jsonstat, which lazy-loads its own script) it returns before the data exists. Use Data.object({...}).import(callback) instead — see Loading Data.",
+    "crumbs": [
+      "Home",
+      "Troubleshooting"
+    ]
+  },
+  {
+    "objectID": "troubleshooting.html#data.broker-doesnt-have-.select.column",
+    "href": "troubleshooting.html#data.broker-doesnt-have-.select.column",
+    "title": "Troubleshooting",
+    "section": "Data.Broker doesn’t have .select()/.column()",
+    "text": "Data.Broker doesn’t have .select()/.column()\nA Data.Broker instance does not expose the Data.Table/Data.Feed convenience methods directly, despite what an internal comment in the source suggests. Work with the individual Data.Table objects handed to your realize(callback) — see Combining Sources.",
+    "crumbs": [
+      "Home",
+      "Troubleshooting"
+    ]
+  },
+  {
+    "objectID": "troubleshooting.html#a-remote-parquet-file-loads-slowly-or-fails-on-a-large-file",
+    "href": "troubleshooting.html#a-remote-parquet-file-loads-slowly-or-fails-on-a-large-file",
+    "title": "Troubleshooting",
+    "section": "A remote parquet file loads slowly, or fails on a large file",
+    "text": "A remote parquet file loads slowly, or fails on a large file\nTwo different things can be going on:\n\nNo bbox was passed. Without it, type: \"parquet\" always downloads the entire file first. If you only need part of a large file, add a bbox — see Remote Parquet by Bounding Box.\nThe file is ≥ 2 GB and httpfs failed to load. This is a fallback-only limit; it shouldn’t come up in normal use, but if you see an error mentioning “2 GB”, the httpfs extension failed to install (offline environment, blocked CDN) and data.js refused to attempt a full in-memory download of a file that size.",
+    "crumbs": [
+      "Home",
+      "Troubleshooting"
+    ]
+  },
+  {
+    "objectID": "troubleshooting.html#a-bbox-query-returns-no-rows-or-falls-back-to-a-full-download",
+    "href": "troubleshooting.html#a-bbox-query-returns-no-rows-or-falls-back-to-a-full-download",
+    "title": "Troubleshooting",
+    "section": "A bbox query returns no rows, or falls back to a full download",
+    "text": "A bbox query returns no rows, or falls back to a full download\nIf the source file has no GeoParquet bbox helper column (the covering.bbox convention), data.js can’t prune anything and falls back to downloading the whole file — this is deliberate, not a bug. Check the file’s GeoParquet metadata, or use a source known to include bbox columns (e.g. EUBUCCO).\nIf rows come back empty even though you expect matches, double-check your bbox — it must always be [minX, minY, maxX, maxY] in EPSG:4326, never in the source file’s native CRS.",
+    "crumbs": [
+      "Home",
+      "Troubleshooting"
+    ]
+  },
+  {
+    "objectID": "troubleshooting.html#unsupported-source-crs-error",
+    "href": "troubleshooting.html#unsupported-source-crs-error",
+    "title": "Troubleshooting",
+    "section": "“Unsupported source CRS” error",
+    "text": "“Unsupported source CRS” error\nThe source file’s CRS was detected (or you passed crs explicitly) but isn’t one of the built-in proj4 definitions. Pass proj4 with a full proj4 definition string instead of crs — see Remote Parquet by Bounding Box.",
+    "crumbs": [
+      "Home",
+      "Troubleshooting"
+    ]
+  },
+  {
+    "objectID": "troubleshooting.html#the-three-source-type-jsdoc-lists-dont-quite-agree",
+    "href": "troubleshooting.html#the-three-source-type-jsdoc-lists-dont-quite-agree",
+    "title": "Troubleshooting",
+    "section": "The three source-type JSDoc lists don’t quite agree",
+    "text": "The three source-type JSDoc lists don’t quite agree\nData.Object, Data.Import and Data.Feed’s inline documentation blocks are three separate copies that have drifted slightly out of sync with each other over time. The Source Types page in this documentation reflects the actual dispatch logic in the source, which is authoritative — trust it over any single inline comment.",
+    "crumbs": [
+      "Home",
+      "Troubleshooting"
+    ]
+  },
+  {
+    "objectID": "troubleshooting.html#revert-vs-reverse",
+    "href": "troubleshooting.html#revert-vs-reverse",
+    "title": "Troubleshooting",
+    "section": "revert() vs reverse()",
+    "text": "revert() vs reverse()\nBoth exist, and both currently do the same thing (reverse row order). This isn’t a bug you need to work around — either name is safe to use.",
+    "crumbs": [
+      "Home",
+      "Troubleshooting"
+    ]
+  }
+]

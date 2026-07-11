@@ -1,0 +1,141 @@
+---
+title: "API Reference"
+description: "Complete data.js API reference — Data.feed, Data.Table, Data.Column, Data.Broker and Data.Merger method signatures and options."
+---
+
+Complete reference for the data.js JavaScript API. For narrative walkthroughs see [Loading Data](loading_data.qmd), [Transforming Tables](transforming_tables.qmd) and [Combining Sources](combining_sources.qmd).
+
+---
+
+## Loaders
+
+### `Data.feed(options)`
+
+Loads data from a URL. Returns a `Data.Feed` instance — chain `.load()`/`.error()`.
+
+```javascript
+Data.feed({ source: url, type: "csv" })
+    .load(function (mydata) { /* Data.Table */ })
+    .error(function (e) { /* handle failure */ });
+```
+
+**Options:**
+
+| Option | Type | Description |
+|---|---|---|
+| `source` (or `src`, `url`, `ext`) | string | The data URL |
+| `type` | string | Source format — see [Source Types](source_types.qmd) |
+| `cache` | boolean | Default `true` |
+| `parser` | object | CSV only: Papa Parse options, passed straight through |
+| `bbox`, `columns`, `crs`, `proj4`, `maxRows` | — | Parquet bbox mode only — see [Remote Parquet by Bounding Box](remote_parquet_bbox.qmd) |
+
+### `Data.object(options)`
+
+Same shape as `Data.feed`, but `source` is a JavaScript value already in memory rather than a URL. Chain `.import()`/`.error()`.
+
+```javascript
+Data.object({ source: response, type: "json" }).import(function (mydata) { ... });
+```
+
+For binary types (`parquet`, `geoparquet`, `gpkg`, `flatgeobuf`, `geobuf`), `source` must already be an `ArrayBuffer`.
+
+### `Data.import(options)`
+
+Synchronous shortcut, equivalent to `new Data.Object(options).import().feed.dbtable`. Returns a `Data.Table` immediately — no callback.
+
+```javascript
+var table = Data.import({ source: response, type: "json" });
+```
+
+Only reliable for synchronous parsers (json, csv, geojson, and similar) — see the callout in [Loading Data](loading_data.qmd#dataimportoptions---synchronous-shortcut).
+
+---
+
+## `Data.Feed` (the object returned by `Data.feed()`)
+
+| Method | Signature | Purpose |
+|---|---|---|
+| `load(callback)` | `(function(Data.Table))` | Starts the load; resolves with a `Data.Table` |
+| `error(callback)` | `(function(error))` | Sets the failure handler |
+| `getFileSize(callback?)` | `(function(bytes)?)` | HEAD/Range request for `Content-Length` without downloading the body. Returns a Promise if no callback is given |
+| `broker(options)` | `(object)` | Returns a `Data.Broker` bound to this feed as parent |
+
+Once `.load()` has resolved, these table-passthrough convenience methods are also available directly on the feed object (they operate on the loaded `Data.Table`): `.column()`, `.select()`, `.aggregate()`, `.pivot()`, `.subtable()`, `.revert()`, `.reverse()`, `.addTimeColumns()`.
+
+---
+
+## `Data.Table` (returned by a successful load)
+
+| Method | Signature | Purpose |
+|---|---|---|
+| `select(query)` | `(string)` | SQL-like `WHERE` filter — returns a new table. See [syntax](transforming_tables.qmd#filtering-rows-selectquery) |
+| `pivot(options)` | `({lead, keep, sum, cols, value, calc, forced})` | Build a pivot table |
+| `aggregate(valueCol, groupCols)` | `(string, "col1\|col2")` or `({column/value, lead, calc})` | Sum/mean a value column grouped by one or more columns |
+| `condense(leadCol, options)` | `(string, {keep, calc})` | Collapse duplicate rows by a lead column |
+| `sort(column, flag)` | `(string, "DOWN"?)` | Sort rows; omit flag for ascending |
+| `filter(callback)` | `(function(row)->bool)` | Row-level filter via callback |
+| `addColumn(options, callback)` | `({source, destination}, function)` | Derive a new column |
+| `addRow(options)` | `({colName: value, ...})` | Append a row |
+| `subtable(options)` | `({fields:[...]})` or `({columns:[idx,...]})` | New table with only the given columns |
+| `groupColumns(options)` | `({source:[...], destination})` | Sum several numeric columns into a new one |
+| `append(sourceTable)` | `(Data.Table)` | Append another table's rows (identical field names/order required) |
+| `column(name)` | `(string)` | Returns a `Data.Column` handle |
+| `columnNames()` | `()` | Array of column name strings |
+| `columnIndex(name)` | `(string)` | Numeric index of a column |
+| `lookup(value, option)` | `(value, {value, lookup})` | Single-value lookup |
+| `lookupArray(valueCol, lookupCol)` | `(string, string)` or `({key,value,calc})` | Object mapping lookup values → value-column values |
+| `lookupStringArray(valueCol, lookupCol)` | `(string, string)` or `({key,value})` | Like `lookupArray`, concatenating duplicates into a comma-separated string |
+| `toKeyValue(option)` | `({key, value})` | Thin wrapper over `lookupArray` |
+| `getArray()` | `()` | Table as a 2D array (row 0 = column names) |
+| `setArray(dataA)` | `(2D array)` | Populate the table from a 2D array; returns `this` |
+| `json()` | `()` | Table as an array of `{colName: value, ...}` row objects |
+| `revert()` / `reverse()` | `()` | Reverse row order (identical implementations) |
+| `addTimeColumns(options)` | `({source, create:[...]})` | Derive `date`/`year`/`month`/`day`/`hour` columns from a timestamp source column |
+
+---
+
+## `Data.Column` (returned by `table.column(name)`)
+
+| Method | Signature | Purpose |
+|---|---|---|
+| `values()` | `()` | Array of every value in the column |
+| `uniqueValues()` | `()` | Array of unique values in the column |
+| `map(callback)` | `(function(value, row, index))` | In-place transform of every cell |
+| `rename(name)` | `(string)` | Rename the column |
+| `remove()` | `()` | Delete the column from the table |
+
+---
+
+## `Data.Broker` — parallel multi-source loading
+
+| Method | Signature | Purpose |
+|---|---|---|
+| `addSource(url, type)` | `(string, string)` | Register one source to load; chainable |
+| `realize(callback)` | `(function(Data.Table[]))` | Load all sources, then call back with an array of tables in `addSource` order |
+| `error(callback)` | `(function(url))` | Shared error handler for any source's load failure |
+| `notify(callback)` | `(function(query))` | Progress callback, invoked as each source starts/completes |
+
+Factories: `Data.broker()`, `Data.provider()` (alias). See [Combining Sources](combining_sources.qmd#databroker-load-several-sources-in-parallel) for a worked example.
+
+## `Data.Merger` — joining already-loaded tables
+
+| Method | Signature | Purpose |
+|---|---|---|
+| `addSource(table, option)` | `(Data.Table, {lookup, columns, label})` | Register a loaded table as a merge source |
+| `setOutputColumns(columns)` | `(array)` | Restrict/order the final table's columns |
+| `realize(callback)` | `(function(Data.Table))` | Perform the join; returns the merged table |
+| `error(callback)` | `(function(exception))` | Error handler |
+
+Factory: `Data.merger()`. See [Combining Sources](combining_sources.qmd#datamerger-join-already-loaded-tables) for a worked example.
+
+---
+
+## Utility members
+
+| Member | Purpose |
+|---|---|
+| `Data.version` | Library version string |
+| `Data.log(message)` | Internal progress logging |
+| `Data.errors` | Array collecting errors from feeds without an explicit `.error()` handler |
+| `Data.cleanupDuckDB()` | Manually tears down the shared DuckDB WASM instance (console utility) |
+| `Data.noConflict()` | Restores whatever `window.Data` held before this library loaded |

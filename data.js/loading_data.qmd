@@ -1,0 +1,79 @@
+---
+title: "Loading Data"
+description: "The three ways to get data into data.js — Data.feed, Data.object and Data.import — and every supported source type."
+---
+
+data.js has three loading entry points. They all end up producing the same thing — a `Data.Table` — but differ in where the source data comes from and whether loading is asynchronous.
+
+## `Data.feed(options)` — load from a URL
+
+The main entry point. Fetches from a URL and is always asynchronous:
+
+```javascript
+Data.feed({ source: szUrl, type: "csv" }).load(function (mydata) {
+    // mydata is a Data.Table
+}).error(function (e) {
+    // handle the failure
+});
+```
+
+Use this whenever your data lives at a URL — which is the common case.
+
+## `Data.object(options)` — load from data you already have
+
+Same idea, but `source` is a JavaScript value you already hold in memory (e.g. the body of a response you fetched yourself), not a URL. Still asynchronous — call `.import()` with a callback:
+
+```javascript
+Data.object({ source: response, type: "json" }).import(function (mydata) {
+    // mydata is a Data.Table
+});
+```
+
+For binary formats (`parquet`, `geoparquet`, `gpkg`, `flatgeobuf`, `geobuf`) `source` must already be an `ArrayBuffer` — `Data.object` does no fetching for these, it only parses what you hand it.
+
+## `Data.import(options)` — synchronous shortcut
+
+A synchronous convenience wrapper around `Data.object`:
+
+```javascript
+var table = Data.import({ source: response, type: "json" });
+var ids = table.column("id").values();
+```
+
+:::{.callout-important}
+## Only safe for synchronous parsers
+`Data.import()` returns immediately — there's no callback, no `.load()`/`.import()` to wait on. It works for parsers that run synchronously (json, csv, geojson, and similar), but returns `undefined` for anything genuinely asynchronous (e.g. `jsonstat`, which lazy-loads its own parser script). If you're not sure, use `Data.object(...).import(callback)` instead.
+:::
+
+## Supported source types
+
+Pass one of these as `type` to any of the three loaders above. See [Source Types](source_types.qmd) for the full options reference (the `parquet` row in particular has several bbox-mode-only options covered in [Remote Parquet by Bounding Box](remote_parquet_bbox.qmd)).
+
+| `type` | What it loads |
+|---|---|
+| `"csv"` | Plain-text CSV (delimiters `,` and `;`), parsed with Papa Parse |
+| `"json"` | A JSON object |
+| `"geojson"` | A GeoJSON object |
+| `"topojson"` | TopoJSON |
+| `"kml"` | Keyhole Markup Language |
+| `"gml"` | Geography Markup Language |
+| `"jsonl"` / `"ndjson"` | Newline-delimited JSON |
+| `"jsonstat"` | JSON-stat formatted object |
+| `"rss"` | XML RSS feed |
+| `"parquet"` | Parquet file, via DuckDB WASM. With `bbox` set, queries a remote URL directly instead of downloading it — see [Remote Parquet by Bounding Box](remote_parquet_bbox.qmd) |
+| `"geoparquet"` | GeoParquet file, via DuckDB WASM, converted to GeoJSON |
+| `"gpkg"` | GeoPackage file, via DuckDB WASM's spatial extension |
+| `"flatgeobuf"` / `"fgb"` | FlatGeobuf binary geospatial format |
+| `"geobuf"` / `"pbf"` | Geobuf (Protocol Buffer) geospatial format |
+| `"jsonDB"` | data.js's own internal table format (used internally, e.g. when passing an already-built `Data.Table`) |
+
+Type names are case-insensitive variants of the above (`CSV`, `GeoJSON`, `TOPOJSON`, etc. all work).
+
+:::{.callout-note}
+## Omitting `type`
+For a plain URL, data.js can auto-detect the type from the file extension for a few formats (`.jsonl`/`.ndjson`). For everything else, always pass `type` explicitly.
+:::
+
+---
+
+Next: [Transforming Tables](transforming_tables.qmd) to filter, pivot and reshape whatever you just loaded.

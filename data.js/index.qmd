@@ -1,0 +1,109 @@
+---
+description: "Documentation for data.js, a lightweight JavaScript library for loading, transforming and combining tabular and geospatial data directly in the browser."
+---
+
+# Welcome to data.js Documentation
+
+**data.js is a little JavaScript library to load and transform data.** It reads open formats — CSV, JSON, GeoJSON, Parquet, GeoPackage and more — from a URL or an in-memory object, and provides a small set of table operations (`select`, `pivot`, `aggregate`, `sort`, joins) for exploring and reshaping the result, all in the browser with no build step.
+
+## What you'll learn
+
+At the end of this documentation, you will be able to:
+
+- Load tabular and geospatial data from a URL or from data you already have in memory
+- Query remote GeoParquet files by bounding box, without downloading the whole file
+- Filter, pivot, aggregate and sort tables with a small SQL-like syntax
+- Combine multiple sources — either loading several in parallel, or joining tables you already have
+- Recognize the handful of gotchas that trip people up (documented in [Troubleshooting](troubleshooting.qmd))
+
+## Framework Components
+
+data.js consists of three main parts:
+
+### 1. **Loaders** — `Data.feed`, `Data.object`, `Data.import`
+Get data into the library, from a URL (`Data.feed`) or from an already-in-memory object (`Data.object`), across a wide range of formats:
+
+- Tabular: CSV, JSON, JSON-stat, JSONL/NDJSON
+- Geospatial: GeoJSON, TopoJSON, KML, GML, Parquet/GeoParquet, GeoPackage, FlatGeobuf, Geobuf
+- Feeds: RSS
+
+:::{.callout-note}
+data.js does its own coordinate work only for the remote-parquet bbox feature (bounding boxes and geometry are reprojected automatically when the source uses a projected CRS, e.g. EPSG:3035). For every other format, input geometry is used as-is — reproject to EPSG:4326 yourself first if needed. See [Remote Parquet by Bounding Box](remote_parquet_bbox.qmd).
+:::
+
+### 2. **`Data.Table`** — the result
+Every successful load resolves to a `Data.Table`: a simple `{fields, records}` structure with chainable methods for reshaping it — `select()` (SQL-like `WHERE` filtering), `pivot()`, `aggregate()`, `condense()`, `sort()`, `addColumn()`, and more. See [Transforming Tables](transforming_tables.qmd) and the [API Reference](api_reference.qmd).
+
+### 3. **Combinators** — `Data.Broker`, `Data.Merger`
+Two different ways to work with more than one source:
+
+- **`Data.Broker`** loads several URLs in parallel and calls you back once all of them resolve.
+- **`Data.Merger`** joins tables you've *already* loaded, by a shared lookup key.
+
+See [Combining Sources](combining_sources.qmd).
+
+## Who Should Use data.js?
+
+data.js is a good fit for:
+
+- **Data journalists and researchers** who need to filter, pivot and join open data without spinning up a backend
+- **Map/visualization developers** — data.js is the data-processing engine behind [iXMaps](https://www.ixmaps.com/docs/), but works standalone too
+- **Anyone loading Parquet/GeoParquet in the browser** who wants only the rows in view, not the whole file
+
+## What is it NOT?
+
+data.js is **not**:
+
+- A mapping or charting library — it has no rendering of its own (pair it with [iXMaps](https://www.ixmaps.com/docs/), Leaflet, D3, or anything else)
+- A general-purpose SQL engine — `select()`/`pivot()` cover common filtering/reshaping needs, not arbitrary joins or subqueries
+- A build-time tool — everything runs client-side, at request time
+
+## Technology Stack
+
+data.js is built on:
+
+- **JavaScript** — no required build step; a single `<script>` tag is enough
+- **[Papa Parse](https://github.com/mholt/PapaParse)** — CSV parsing
+- **DuckDB WASM** — Parquet, GeoParquet and GeoPackage reading, including the `httpfs` extension for ranged remote reads
+- **[flatgeobuf](https://github.com/flatgeobuf/flatgeobuf)** / **geobuf** — binary geospatial format reading
+- **[proj4js](https://github.com/proj4js/proj4js)** — on-demand coordinate reprojection for remote-parquet bbox queries
+- **jQuery** — optional, used for some legacy loading paths
+
+## License
+
+data.js has no separate license file of its own in the repository; it ships as part of the [iXMaps](https://github.com/gjrichter/ixmaps-flat) project, released under the [BSD 3-Clause License](https://github.com/gjrichter/ixmaps-flat/blob/main/LICENSE.txt).
+
+## Quick Links
+
+:::{.callout-tip}
+## New to data.js?
+Start with the [Quick Start Guide](getting_started.qmd) to load and query your first dataset in a few lines.
+:::
+
+:::{.callout-note}
+## Looking for API Reference?
+Check the [API Reference](api_reference.qmd) for the complete method reference, or [Source Types](source_types.qmd) for every supported `type` and its options.
+:::
+
+:::{.callout-important}
+## Need examples?
+Browse [Examples](examples.qmd) for copy-paste working code for the most common use cases.
+:::
+
+## CDN
+
+Include data.js in any HTML page with a single `<script>` tag — no installation, no build step:
+
+```html
+<script src="https://cdn.jsdelivr.net/gh/gjrichter/data.js/data.js"></script>
+```
+
+## Community and Support
+
+- **GitHub Repository**: [github.com/gjrichter/data.js](https://github.com/gjrichter/data.js)
+- **Issues and Questions**: [GitHub Issues](https://github.com/gjrichter/data.js/issues)
+- **JSDoc reference**: [gjrichter.github.io/data.js/docs](https://gjrichter.github.io/data.js/docs/index.html)
+
+---
+
+Ready to start? Head over to the [Quick Start Guide](getting_started.qmd) to load your first dataset!
