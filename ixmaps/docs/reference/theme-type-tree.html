@@ -1,0 +1,371 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Theme Type Tree — all in one</title>
+<style>
+  :root{
+    --paper: #f4f5f6;
+    --paper-raised: #fbfcfc;
+    --ink: #1c2521;
+    --muted: #5b6862;
+    --line: #c9d3cb;
+    --line-soft: #dde3de;
+    --choropleth: #2f6f74;
+    --chart: #b5622b;
+    --feature: #3f5d78;
+    --dominant: #6a4c93;
+    --compose: #a13d63;
+    --wms: #5f6f7a;
+    --waffle: #c9b25a;
+    --buffer: #a98a6b;
+    --dot: #8f8f7a;
+    --blank: #6b6b6b;
+    --code-bg: #e4e9e3;
+    --shadow: 0 1px 2px rgba(28,37,33,.06), 0 6px 20px -8px rgba(28,37,33,.12);
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --paper: #000000;
+      --paper-raised: #111111;
+      --ink: #e5ece7;
+      --muted: #92a099;
+      --line: #2a3436;
+      --line-soft: #202a2c;
+      --choropleth: #6bbabf;
+      --chart: #e2905a;
+      --feature: #7fa3c4;
+      --dominant: #ab8ad4;
+      --compose: #dd85a8;
+      --wms: #9db0bd;
+      --waffle: #c9b25a;
+      --buffer: #a98a6b;
+      --dot: #8f8f7a;
+      --blank: #999999;
+      --code-bg: #1c2426;
+      --shadow: 0 1px 2px rgba(0,0,0,.3), 0 10px 30px -10px rgba(0,0,0,.5);
+    }
+  }
+  :root[data-theme="dark"]{
+    --paper: #000000; --paper-raised: #111111; --ink: #e5ece7; --muted: #92a099;
+    --line: #2a3436; --line-soft: #202a2c; --choropleth: #6bbabf; --chart: #e2905a;
+    --feature: #7fa3c4; --dominant: #ab8ad4; --compose: #dd85a8; --wms: #9db0bd;
+    --waffle: #c9b25a; --buffer: #a98a6b; --dot: #8f8f7a; --blank: #999999;
+    --code-bg: #1c2426; --shadow: 0 1px 2px rgba(0,0,0,.3), 0 10px 30px -10px rgba(0,0,0,.5);
+  }
+  :root[data-theme="light"]{
+    --paper: #f4f5f6; --paper-raised: #fbfcfc; --ink: #1c2521; --muted: #5b6862;
+    --line: #c9d3cb; --line-soft: #dde3de; --choropleth: #2f6f74; --chart: #b5622b;
+    --feature: #3f5d78; --dominant: #6a4c93; --compose: #a13d63; --wms: #5f6f7a;
+    --waffle: #c9b25a; --buffer: #a98a6b; --dot: #8f8f7a; --blank: #6b6b6b;
+    --code-bg: #e4e9e3; --shadow: 0 1px 2px rgba(28,37,33,.06), 0 6px 20px -8px rgba(28,37,33,.12);
+  }
+
+  *{ box-sizing:border-box; }
+  html,body{ margin:0; padding:0; }
+  body{
+    background: var(--paper);
+    color: var(--ink);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    font-size: 16px; line-height: 1.55; -webkit-font-smoothing: antialiased;
+  }
+  h1,h2,h3{ font-family: Georgia, "Iowan Old Style", "Palatino Linotype", "Book Antiqua", serif; text-wrap: balance; margin:0; }
+  code, .mono{ font-family: ui-monospace, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace; }
+  a{ color:inherit; }
+
+  .wrap{ max-width: 860px; margin:0 auto; padding: 0 clamp(16px,4vw,48px) 96px; }
+
+  header.masthead{ padding: clamp(28px,6vw,52px) 0 20px; border-bottom:1px solid var(--line); }
+  .eyebrow{
+    display:flex; align-items:center; gap:.6em;
+    font-size:.78rem; letter-spacing:.09em; text-transform:uppercase; color:var(--muted);
+    margin-bottom:14px;
+  }
+  .eyebrow .dot{ width:6px; height:6px; border-radius:50%; background:var(--chart); flex:none; }
+  h1.title{ font-size: clamp(1.7rem, 3vw, 2.3rem); font-weight:600; letter-spacing:-.01em; }
+  p.thesis{ max-width:66ch; color:var(--muted); font-size:1.02rem; margin-top:12px; }
+
+  .legend{
+    margin-top:22px; display:flex; flex-direction:column; gap:8px;
+    padding:14px 18px; background:var(--paper-raised); border:1px solid var(--line); border-radius:10px;
+    box-shadow:var(--shadow); font-size:.84rem; color:var(--muted);
+  }
+  .legend .item{ display:flex; align-items:center; gap:9px; }
+  .legend .swatch-line{ width:26px; height:0; border-top:2px solid var(--ink); flex:none; }
+  .legend .swatch-line.dashed{ border-top-style:dashed; border-top-color:var(--muted); }
+
+  section{ padding-top: clamp(32px,5vw,48px); }
+
+  /* ---------- keyword pill (same identity language as the main page) ---------- */
+  .kw{
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+    font-weight:600; padding:2px 9px; border-radius:6px;
+    background: color-mix(in srgb, var(--key) 16%, var(--paper-raised));
+    color: var(--key); display:inline-block; white-space:nowrap; font-size:.86rem;
+  }
+  .kw.alt{ font-size:.82em; color:var(--ink); background: color-mix(in srgb, var(--key) 7%, var(--paper-raised)); }
+  .kw-sep{ font-family: ui-monospace, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace; font-size:.82em; color:var(--muted); }
+
+  /* ---------- vertical tree (file-tree connectors), one single nested structure ---------- */
+  .vtree, .vtree ul{ list-style:none; margin:0; padding:0; }
+  .vtree ul{ padding-left:30px; }
+  .vtree li{ position:relative; padding:4px 0; }
+  .vtree ul li{ padding-left:24px; }
+  .vtree ul li::before{
+    content:""; position:absolute; left:-13px; top:22px; width:33px; height:0;
+    border-top:1px solid var(--line);
+  }
+  .vtree ul li::after{
+    content:""; position:absolute; left:-13px; top:0; bottom:0; width:0;
+    border-left:1px solid var(--line);
+  }
+  .vtree ul li:last-child::after{ height:22px; bottom:auto; }
+  .vtree ul li.dashed::before{ border-top-style:dashed; border-top-color:var(--muted); }
+  .vtree ul li.dashed::after{ border-left-style:dashed; border-left-color:var(--muted); }
+
+  /* ---------- node rows: uniform, single line, wraps if needed ---------- */
+  .node{
+    display:flex; align-items:center; gap:10px; flex-wrap:wrap;
+    background:var(--paper-raised); border:1px solid var(--line); border-radius:8px;
+    padding:6px 12px; box-shadow:var(--shadow);
+    border-left:4px solid var(--key, var(--line));
+  }
+  .node .gloss{ font-size:.76rem; color:var(--muted); }
+  .node.root{ border-left-color:var(--muted); padding:8px 14px; }
+  .node.root code{ font-size:.95rem; }
+  .node.fn{
+    background:none; box-shadow:none; border-left-color:var(--muted);
+    padding:4px 12px;
+  }
+  .node.fn code{ font-size:.8rem; color:var(--ink); }
+  .node.fn .gloss{ font-style:italic; }
+  .node.label{
+    background:none; box-shadow:none; border:none; border-left:none;
+    padding:4px 0 2px; font-size:.7rem; letter-spacing:.05em; text-transform:uppercase; color:var(--muted);
+  }
+  .node.ortho{
+    background: color-mix(in srgb, var(--key) 6%, var(--paper-raised));
+    border-style:dashed; border-color: color-mix(in srgb, var(--key) 45%, var(--line));
+    border-left:4px dashed var(--key); box-shadow:none;
+  }
+  .modline{ display:flex; flex-wrap:wrap; gap:6px; align-items:center; }
+  .modtag{
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+    font-size:.7rem; color:var(--muted); background:var(--paper-raised);
+    border:1px solid var(--line); border-radius:5px; padding:2px 8px; white-space:nowrap;
+  }
+
+  footer{ margin-top:56px; padding-top:20px; border-top:1px solid var(--line); color:var(--muted); font-size:.82rem; }
+  footer code{ font-size:.9em; }
+</style>
+
+<div class="wrap">
+
+  <header class="masthead">
+    <div class="eyebrow"><span class="dot"></span> ixmaps-flat &nbsp;·&nbsp; companion to <strong>Chart Type Grammar</strong></div>
+    <h1 class="title">Theme type tree — all in one</h1>
+    <p class="thesis">The whole <code>szFlag</code> hierarchy as a single nested tree — type dispatch, CHART's sub-shape dispatch, and SYMBOL's multi-value alignments down to PLOT, indented top to bottom. Vertical scroll only.</p>
+
+    <div class="legend">
+      <div class="item"><span class="swatch-line"></span> solid — a real branch: the engine tests the string and picks exactly one path</div>
+      <div class="item"><span class="swatch-line dashed"></span> dashed — orthogonal: reads from the same string, but never chooses geometry</div>
+    </div>
+  </header>
+
+  <section>
+    <ul class="vtree">
+      <li>
+        <div class="node root"><code>type:</code><span class="gloss">the szFlag string</span></div>
+        <ul>
+
+          <li><div class="node" style="--key:var(--feature); max-width:none"><span class="kw">FEATURE</span><span class="gloss">raw geographic items, no classing computed — draws</span> <span class="modtag">Point</span><span class="modtag">LineString</span><span class="modtag">MultiLineString</span><span class="modtag">Polygon</span><span class="modtag">MultiPolygon</span><span class="modtag">Sphere</span><span class="gloss">(not MultiPoint / GeometryCollection)</span></div></li>
+
+          <li><div class="node" style="--key:var(--choropleth)"><span class="kw">CHOROPLETH</span><span class="gloss">polygons filled by class — needs a <span class="kw alt" style="--key:var(--feature); border:1px solid var(--feature)">FEATURE</span> layer for the geometry to color; combines directly as <code class="mono" style="font-size:.85em">type:FEATURE|CHOROPLETH</code> — see <a href="#color-modes" style="color:var(--dominant); text-decoration:underline; text-underline-offset:2px">color selection modes</a> ↓</span></div></li>
+
+          <!-- CHART -->
+          <li>
+            <div class="node" style="--key:var(--chart)"><span class="kw">CHART</span><span class="gloss">a drawn shape per feature — positioned via <code class="mono" style="font-size:.85em">lookupfield:</code>, either by coordinates straight from the data (<code class="mono" style="font-size:.85em">lat|lon</code> fields or a GeoJSON point) or joined to a <span class="kw alt" style="--key:var(--feature); border:1px solid var(--feature)">FEATURE</span> layer's own shape by id</span></div>
+            <ul>
+
+              <li><div class="node" style="--key:var(--chart)"><span class="kw">BAR</span> <span class="kw-sep">/</span> <span class="kw alt">BARS</span><span class="gloss">one card per value on a shared axis</span></div></li>
+              <li><div class="node" style="--key:var(--chart)"><span class="kw">PIE</span><span class="gloss">+ DONUT / STARBURST — radial, segment per value</span></div></li>
+              <li><div class="node" style="--key:var(--chart)"><span class="kw">BUBBLE</span><span class="gloss">+ SQUARE / LABEL — one value, one sized symbol</span></div></li>
+
+              <!-- SYMBOL -->
+                  <li>
+                    <div class="node" style="--key:var(--chart)"><span class="kw">SYMBOL</span><span class="gloss">single value = one named shape; 2,060 lines, the big one</span></div>
+                    <ul>
+                      <li class="label">multi-value → | SEQUENCE, one symbol per value</li>
+                      <li><div class="node" style="--key:var(--chart)"><span class="kw alt">CENTER</span><span class="gloss">superposed — shared center, each sized by its value (default)</span></div></li>
+                      <li><div class="node" style="--key:var(--chart)"><span class="kw alt">BASE</span><span class="gloss">vertical pile, each symbol stacked on the previous</span></div></li>
+                      <li><div class="node" style="--key:var(--chart)"><span class="kw alt">HORZ</span><span class="gloss">side-by-side row</span></div></li>
+                      <li><div class="node" style="--key:var(--chart)"><span class="kw alt">TOP</span> <span class="kw-sep">/</span> <span class="kw alt">BOTTOM</span><span class="gloss">aligned to the top / bottom edge</span></div></li>
+                      <li><div class="node" style="--key:var(--chart)"><span class="kw alt">CONE</span><span class="gloss">diagonal pile, climbing upward</span></div></li>
+                      <li><div class="node" style="--key:var(--chart)"><span class="kw alt">STAR</span><span class="gloss">first value at the center, the rest orbit it as satellites</span></div></li>
+                      <li><div class="node" style="--key:var(--chart)"><span class="kw alt">RANDOM</span><span class="gloss">scattered around the point at even angles</span></div></li>
+                      <li><div class="node" style="--key:var(--chart)"><span class="kw alt">RINGS</span><span class="gloss">values accumulate into concentric rings, biggest first</span></div></li>
+
+                      <!-- PLOT -->
+                      <li>
+                        <div class="node" style="--key:var(--chart)"><span class="kw">PLOT</span><span class="gloss">values become positions — the sequence turns into a chart</span></div>
+                        <ul>
+                          <li><div class="node" style="--key:var(--chart)"><span class="kw alt">PLOTX</span> <span class="kw-sep">/</span> <span class="kw alt">PLOTY</span><span class="gloss">values run along the x / the y axis</span></div></li>
+                          <li><div class="node" style="--key:var(--chart)"><span class="kw alt">PLOTXY</span> <span class="kw-sep">/</span> <span class="kw alt">PLOTYX</span><span class="gloss">scatter from explicit xfield / yfield columns</span></div></li>
+                          <li><div class="node" style="--key:var(--chart)"><span class="kw alt">PLOTVAR</span><span class="gloss">deviation from the mean, like DEVIATION</span></div></li>
+
+                          <li>
+                            <div class="node" style="--key:var(--chart)"><span class="kw">LINES</span><span class="gloss">connects the points with line segments instead of discrete symbols</span></div>
+                            <ul>
+                              <li>
+                                <div class="node" style="--key:var(--chart)"><span class="kw alt">AREA</span><span class="gloss">fills a closed area between the line and the baseline</span></div>
+                                <ul>
+                                  <li><div class="node" style="--key:var(--chart)"><span class="kw alt">FADE</span><span class="gloss">fades that fill toward the baseline instead of a solid color</span></div></li>
+                                </ul>
+                              </li>
+                              <li>
+                                <div class="node" style="--key:var(--chart); max-width:none">
+                                  <div class="modline">
+                                    <span class="gloss">line style:</span>
+                                    <span class="modtag">STACKED</span><span class="modtag">ZEROISVALUE</span><span class="modtag">ZEROISNOTVALUE</span><span class="modtag">NOCLIP</span><span class="modtag">INLINETEXT</span>
+                                  </div>
+                                </div>
+                              </li>
+                            </ul>
+                          </li>
+
+                          <li><div class="node" style="--key:var(--chart)"><span class="kw alt">LOLLIPOP</span><span class="gloss">adds a stem from the baseline up to each point — works with or without LINES</span></div></li>
+
+                          <li>
+                            <div class="node" style="--key:var(--chart); max-width:none">
+                              <div class="modline">
+                                <span class="gloss">last-point markers:</span>
+                                <span class="modtag">LASTPOP</span><span class="modtag">LASTARROW</span><span class="modtag">LASTVALUE</span>
+                              </div>
+                            </div>
+                          </li>
+
+                          <li>
+                            <div class="node" style="--key:var(--chart); max-width:none">
+                              <div class="modline">
+                                <span class="gloss">curve &amp; scale shaping:</span>
+                                <span class="modtag">LOG</span><span class="modtag">INVERT</span><span class="modtag">SMOOTH</span><span class="modtag">GRADIENT</span><span class="modtag">LINREG</span>
+                              </div>
+                            </div>
+                          </li>
+                          <li><div class="node" style="--key:var(--chart)"><span class="kw alt">GRID</span> <span class="kw-sep">+</span> <span class="kw alt">BOX</span><span class="gloss">both together → a titled, framed sparkline</span></div></li>
+                        </ul>
+                      </li>
+                    </ul>
+                  </li>
+
+              <li><div class="node" style="--key:var(--chart)"><span class="kw">VECTOR</span> <span class="kw-sep">/</span> <span class="kw alt">BEZIER</span><span class="gloss">a connector between two node positions — needs a second position, often looked up on a FEATURE layer</span></div></li>
+
+              <li>
+                <div class="node fn">Waffle, Buffer &amp; the minimal primitives<span class="gloss">smaller, more specialized branches of the same per-item drawing loop</span></div>
+                <ul>
+                  <li><div class="node" style="--key:var(--waffle)"><span class="kw">WAFFLE</span><span class="gloss">one unit square per count — a countable alternative to BAR</span></div></li>
+                  <li><div class="node" style="--key:var(--buffer)"><span class="kw">BUFFER</span><span class="gloss">not a value chart — a fixed real-world dimension; doubles as a selection tool</span></div></li>
+                  <li><div class="node" style="--key:var(--dot)"><span class="kw">DOT</span> <span class="kw-sep">/</span> <span class="kw alt">QUAD</span><span class="gloss">the "most simple representation" — no modifiers apply</span></div></li>
+                  <li><div class="node" style="--key:var(--blank)"><span class="kw">BLANK</span><span class="gloss">draws nothing — a test hook</span></div></li>
+                  <li>
+                    <div class="node" style="--key:var(--blank)"><span class="kw">USER</span><span class="gloss">you draw the SVG, the engine supplies the data</span></div>
+                    <ul>
+                      <li><div class="node fn"><code>userdraw:myChart</code><span class="gloss">names your function — resolves to <code>ixmaps.myChart</code></span></div></li>
+                      <li><div class="node" style="--key:var(--blank); max-width:none"><span class="gloss">called as <code>fn(SVGDocument, opt)</code> once per feature → returns <code>{x, y}</code> to offset the result</span></div></li>
+                      <li>
+                        <div class="node" style="--key:var(--blank); max-width:none">
+                          <div class="modline">
+                            <span class="gloss">opt gives you:</span>
+                            <span class="modtag">target</span><span class="modtag">theme</span><span class="modtag">item</span><span class="modtag">dbRecord</span><span class="modtag">value</span><span class="modtag">values</span><span class="modtag">size</span><span class="modtag">maxSize</span><span class="modtag">color</span><span class="modtag">textcolor</span><span class="modtag">ccolor</span><span class="modtag">class</span><span class="modtag">flag</span><span class="modtag">mark</span>
+                          </div>
+                        </div>
+                      </li>
+                      <li><div class="node" style="--key:var(--blank)"><span class="kw alt">myChart_init</span> <span class="kw-sep">/</span> <span class="kw alt">myChart_finish</span><span class="gloss">optional once-before / once-after hooks — slimmer opt: {target, theme}</span></div></li>
+                    </ul>
+                  </li>
+                </ul>
+              </li>
+
+              <li class="dashed">
+                <div class="node ortho" style="--key:var(--chart)"><span class="kw">BOX</span><span class="gloss">the one orthogonal that's visible: background, border, title</span></div>
+                <ul>
+                  <li class="dashed">
+                    <div class="node ortho" style="--key:var(--chart); max-width:none">
+                      <div class="modline">
+                        <span class="gloss">cross-shape modifiers — layered on whichever shape was drawn:</span>
+                        <span class="modtag">Aggregation mode</span><span class="modtag">Value pipeline</span><span class="modtag">Size exponent</span><span class="modtag">Rendering context</span><span class="modtag">Animation</span><span class="modtag">Stroke</span><span class="modtag">Multi-chart layout</span><span class="modtag">Draw order</span>
+                      </div>
+                    </div>
+                  </li>
+                </ul>
+              </li>
+
+            </ul>
+          </li>
+
+          <li><div class="node" style="--key:var(--wms); max-width:none"><span class="kw">WMS</span><span class="gloss">an external map image overlay — fetches from an ArcGIS-style export endpoint (<code class="mono" style="font-size:.85em">server:</code>), sized and positioned live from the current map view, not from a style option</span></div></li>
+
+          <li class="dashed">
+            <div id="color-modes" class="node ortho" style="--key:var(--dominant); margin-bottom:12px; scroll-margin-top:20px"><span class="gloss" style="font-style:italic">color selection modes</span><span class="gloss">— colors CHOROPLETH / CHART's fill, chooses no geometry</span></div>
+            <ul>
+              <li class="dashed">
+                <div class="node ortho" style="--key:var(--choropleth)"><span class="kw">CLASSES</span><span class="gloss">quantity → N ordered classes</span></div>
+                <ul>
+                  <li class="dashed"><div class="node ortho" style="--key:var(--choropleth)"><span class="kw alt">EQUIDISTANT</span><span class="gloss">equal-width classes (the default)</span></div></li>
+                  <li class="dashed"><div class="node ortho" style="--key:var(--choropleth)"><span class="kw alt">QUANTILE</span><span class="gloss">equal-count classes</span></div></li>
+                  <li class="dashed"><div class="node ortho" style="--key:var(--choropleth)"><span class="kw alt">NATURAL</span><span class="gloss">breaks that follow the data's own gaps</span></div></li>
+                  <li class="dashed"><div class="node ortho" style="--key:var(--choropleth)"><span class="kw alt">HEADTAIL</span><span class="gloss">recursive mean-split — the odd one out, ignores classes:N entirely</span></div></li>
+                  <li class="dashed"><div class="node ortho" style="--key:var(--choropleth)"><span class="kw alt">LOG</span><span class="gloss">equal-width on a log-transformed scale</span></div></li>
+                  <li class="dashed"><div class="node ortho" style="--key:var(--choropleth)"><span class="kw alt">POW2</span><span class="gloss">equal-width on a squared scale</span></div></li>
+                  <li class="dashed"><div class="node ortho" style="--key:var(--choropleth)"><span class="kw alt">POW3</span><span class="gloss">equal-width on a cubed scale</span></div></li>
+                </ul>
+              </li>
+              <li class="dashed"><div class="node ortho" style="--key:var(--choropleth)"><span class="kw">CATEGORICAL</span><span class="gloss">one hue per distinct value</span></div></li>
+              <li class="dashed"><div class="node ortho" style="--key:var(--dominant)"><span class="kw">DOMINANT</span><span class="gloss">one field wins, lends its color</span></div></li>
+              <li class="dashed"><div class="node ortho" style="--key:var(--compose)"><span class="kw">COMPOSECOLOR</span><span class="gloss">several fields blended at once</span></div></li>
+            </ul>
+          </li>
+
+          <li class="dashed">
+            <div class="node ortho" style="--key:var(--muted); margin-bottom:12px"><span class="gloss" style="font-style:italic">value combination</span><span class="gloss">— how records landing on the same position get combined</span></div>
+            <ul>
+              <li class="dashed">
+                <div class="node ortho" style="--key:var(--muted)"><span class="kw">AGGREGATE</span><span class="gloss">gates the whole combine-multiple-records routine — without it, none of the below runs</span></div>
+                <ul>
+                  <li class="dashed">
+                    <div class="node ortho" style="--key:var(--muted); max-width:none">
+                      <div class="modline">
+                        <span class="gloss">spatial binning (optional) — snaps positions to a grid before matching, cell width in real-world meters or constant screen pixels (recalculated every zoom):</span>
+                        <span class="modtag">gridwidth</span><span class="modtag">gridwidthpx</span>
+                      </div>
+                    </div>
+                  </li>
+                  <li class="dashed"><div class="node ortho" style="--key:var(--muted)"><span class="kw alt">SUM</span><span class="gloss">adds the values (the default)</span></div></li>
+                  <li class="dashed"><div class="node ortho" style="--key:var(--muted)"><span class="kw alt">MEAN</span><span class="gloss">also divides by the item count</span></div></li>
+                  <li class="dashed"><div class="node ortho" style="--key:var(--muted)"><span class="kw alt">MAX</span><span class="gloss">keeps a running maximum instead of summing</span></div></li>
+                  <li class="dashed"><div class="node ortho" style="--key:var(--muted)"><span class="kw alt">MIN</span><span class="gloss">keeps a running minimum instead of summing — symmetric with MAX</span></div></li>
+                </ul>
+              </li>
+              <li class="dashed"><div class="node ortho" style="--key:var(--muted)"><span class="kw">GROUP</span><span class="gloss">the same spatial binning as AGGREGATE, but without combining values — items stay separate, just shared and ordered within their bin</span></div></li>
+              <li class="dashed"><div class="node ortho" style="--key:var(--muted)"><span class="kw">RELOCATE</span><span class="gloss">recomputes the merged position as the average of the original points — values untouched</span></div></li>
+            </ul>
+          </li>
+
+          <li class="dashed">
+            <div class="node ortho" style="--key:var(--muted); margin-bottom:12px"><span class="gloss" style="font-style:italic">legend display</span><span class="gloss">— the separate legend-panel renderer (ui/js/tools/legend.js), not the per-item drawing engine above</span></div>
+            <ul>
+              <li class="dashed"><div class="node ortho" style="--key:var(--muted)"><span class="kw">NOLEGEND</span><span class="gloss">drops the theme from the legend panel entirely</span></div></li>
+              <li class="dashed"><div class="node ortho" style="--key:var(--muted)"><span class="kw">SIMPLELEGEND</span><span class="gloss">one compact inline line (swatch + label) instead of the default two-line layout</span></div></li>
+              <li class="dashed"><div class="node ortho" style="--key:var(--muted)"><span class="kw alt">COMPACTLEGEND</span><span class="gloss">currently identical to SIMPLELEGEND — no distinguishing behavior in the code</span></div></li>
+              <li class="dashed"><div class="node ortho" style="--key:var(--muted)"><span class="kw">TEXTLEGEND</span><span class="gloss">keeps the label, drops the color swatch</span></div></li>
+            </ul>
+          </li>
+
+        </ul>
+      </li>
+    </ul>
+  </section>
+
+  <footer>
+    Companion diagram to <code>Chart Type Grammar</code> — the full modifier tables for every shape live there; this page is just the whole dispatch skeleton, indented into one tree.
+  </footer>
+
+</div>

@@ -6,9 +6,9 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="description" content="About iXMaps: project vision, history, core philosophy and the technology stack behind the open-source thematic mapping framework.">
+<meta name="description" content="Schematic overview of the maptheme.js szFlag grammar: theme types, chart sub-shapes, color modes, and cross-shape modifiers.">
 
-<title>about – iXMaps Documentation</title>
+<title>Chart Type Grammar – iXMaps Documentation</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -31,6 +31,8 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
+<link href="./theme_type_tree.html" rel="next">
+<link href="./map_types.html" rel="prev">
 <link href="./pics/favicon.png" rel="icon" type="image/png">
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
@@ -73,7 +75,7 @@ ul.task-list li input[type="checkbox"] {
 
 
 <link rel="stylesheet" href="styles.css">
-<link rel="canonical" href="https://www.ixmaps.com/docs/about.html">
+<link rel="canonical" href="https://www.ixmaps.com/docs/chart_type_grammar.html">
 </head>
 
 <body class="nav-sidebar docked nav-fixed quarto-light">
@@ -125,7 +127,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./about.html">About</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./api_documentation.html">Reference</a></li><li class="breadcrumb-item"><a href="./chart_type_grammar.html">Chart Type Grammar (schematic overview)</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -251,7 +253,7 @@ ul.task-list li input[type="checkbox"] {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./chart_type_grammar.html" class="sidebar-item-text sidebar-link">
+  <a href="./chart_type_grammar.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text">Chart Type Grammar (schematic overview)</span></a>
   </div>
 </li>
@@ -286,7 +288,7 @@ ul.task-list li input[type="checkbox"] {
         <li class="px-0"><hr class="sidebar-divider hi "></li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./about.html" class="sidebar-item-text sidebar-link active">
+  <a href="./about.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">About</span></a>
   </div>
 </li>
@@ -295,168 +297,46 @@ ul.task-list li input[type="checkbox"] {
 </nav>
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active">
-    <h2 id="toc-title">On this page</h2>
-   
-  <ul>
-  <li><a href="#about-ixmaps" id="toc-about-ixmaps" class="nav-link active" data-scroll-target="#about-ixmaps">About iXMaps</a>
-  <ul class="collapse">
-  <li><a href="#the-project" id="toc-the-project" class="nav-link" data-scroll-target="#the-project">The Project</a></li>
-  <li><a href="#vision" id="toc-vision" class="nav-link" data-scroll-target="#vision">Vision</a></li>
-  <li><a href="#history" id="toc-history" class="nav-link" data-scroll-target="#history">History</a></li>
-  <li><a href="#core-philosophy" id="toc-core-philosophy" class="nav-link" data-scroll-target="#core-philosophy">Core Philosophy</a>
-  <ul class="collapse">
-  <li><a href="#browser-first" id="toc-browser-first" class="nav-link" data-scroll-target="#browser-first">1. <strong>Browser-First</strong></a></li>
-  <li><a href="#data-driven" id="toc-data-driven" class="nav-link" data-scroll-target="#data-driven">2. <strong>Data-Driven</strong></a></li>
-  <li><a href="#open-and-accessible" id="toc-open-and-accessible" class="nav-link" data-scroll-target="#open-and-accessible">3. <strong>Open and Accessible</strong></a></li>
-  </ul></li>
-  <li><a href="#technology-stack" id="toc-technology-stack" class="nav-link" data-scroll-target="#technology-stack">Technology Stack</a></li>
-  <li><a href="#use-cases" id="toc-use-cases" class="nav-link" data-scroll-target="#use-cases">Use Cases</a></li>
-  <li><a href="#license" id="toc-license" class="nav-link" data-scroll-target="#license">License</a></li>
-  <li><a href="#credits-and-acknowledgments" id="toc-credits-and-acknowledgments" class="nav-link" data-scroll-target="#credits-and-acknowledgments">Credits and Acknowledgments</a>
-  <ul class="collapse">
-  <li><a href="#created-by" id="toc-created-by" class="nav-link" data-scroll-target="#created-by">Created By</a></li>
-  <li><a href="#special-thanks-to" id="toc-special-thanks-to" class="nav-link" data-scroll-target="#special-thanks-to">Special Thanks To</a></li>
-  <li><a href="#built-with" id="toc-built-with" class="nav-link" data-scroll-target="#built-with">Built With</a></li>
-  </ul></li>
-  <li><a href="#contributing" id="toc-contributing" class="nav-link" data-scroll-target="#contributing">Contributing</a></li>
-  <li><a href="#contact" id="toc-contact" class="nav-link" data-scroll-target="#contact">Contact</a></li>
-  </ul></li>
-  </ul>
-<div class="toc-actions"><ul><li><a href="https://github.com/gjrichter/ixmaps-flat/issues/new" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div></nav>
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
+        
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block"></header>
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./api_documentation.html">Reference</a></li><li class="breadcrumb-item"><a href="./chart_type_grammar.html">Chart Type Grammar (schematic overview)</a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title">Chart Type Grammar</h1>
+</div>
+
+<div>
+  <div class="description">
+    Schematic overview of the maptheme.js szFlag grammar: theme types, chart sub-shapes, color modes, and cross-shape modifiers.
+  </div>
+</div>
 
 
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
 
 
-<section id="about-ixmaps" class="level1">
-<h1>About iXMaps</h1>
-<section id="the-project" class="level2">
-<h2 class="anchored" data-anchor-id="the-project">The Project</h2>
-<p><strong>iXMaps</strong> is an open-source JavaScript framework for creating interactive, data-driven web maps. It was designed to make geographic data visualization accessible and powerful, combining the flexibility of SVG graphics with modern web technologies.</p>
-</section>
-<section id="vision" class="level2">
-<h2 class="anchored" data-anchor-id="vision">Vision</h2>
-<p>The vision behind iXMaps is to provide a <strong>comprehensive solution</strong> for interactive cartography that:</p>
-<ul>
-<li>Works entirely in the browser without server dependencies</li>
-<li>Supports complex data transformations and visualizations</li>
-<li>Remains accessible to developers of all skill levels</li>
-<li>Enables beautiful, publication-ready maps</li>
-<li>Encourages open data and open source principles</li>
-</ul>
-</section>
-<section id="history" class="level2">
-<h2 class="anchored" data-anchor-id="history">History</h2>
-<p>iXMaps was created by <strong>Guenter Richter</strong> to address the need for a flexible, powerful mapping framework that could handle multiple data sources and formats, complex data transformations, advanced visualization techniques, interactive features, and real-time data updates.</p>
-<p>The framework has been used in numerous projects, from data journalism and research to government transparency and civic engagement applications. The current engine — <code>ixmaps-flat</code>, with its declarative layer grammar and fluent API — supersedes the historical iframe-based framework (<a href="https://github.com/gjrichter/ixmaps">gjrichter/ixmaps</a>, now archived).</p>
-</section>
-<section id="core-philosophy" class="level2">
-<h2 class="anchored" data-anchor-id="core-philosophy">Core Philosophy</h2>
-<section id="browser-first" class="level3">
-<h3 class="anchored" data-anchor-id="browser-first">1. <strong>Browser-First</strong></h3>
-<p>All processing happens in the browser, making iXMaps:</p>
-<ul>
-<li>Easy to deploy (just HTML and JavaScript)</li>
-<li>Private and secure (data never leaves the user’s browser)</li>
-<li>Fast and responsive (no server round-trips)</li>
-</ul>
-</section>
-<section id="data-driven" class="level3">
-<h3 class="anchored" data-anchor-id="data-driven">2. <strong>Data-Driven</strong></h3>
-<p>Everything is driven by data:</p>
-<ul>
-<li>Visualizations automatically adapt to data</li>
-<li>Legends and tooltips generated from data</li>
-<li>Dynamic updates when data changes</li>
-</ul>
-</section>
-<section id="open-and-accessible" class="level3">
-<h3 class="anchored" data-anchor-id="open-and-accessible">3. <strong>Open and Accessible</strong></h3>
-<p>Free and open for everyone:</p>
-<ul>
-<li>BSD 3-Clause license — free for personal and commercial use</li>
-<li>Comprehensive documentation</li>
-<li>Real-world examples</li>
-</ul>
-</section>
-</section>
-<section id="technology-stack" class="level2">
-<h2 class="anchored" data-anchor-id="technology-stack">Technology Stack</h2>
-<p>iXMaps is built on proven web technologies:</p>
-<ul>
-<li><strong>JavaScript (ES6+)</strong> — core programming language</li>
-<li><strong>SVG</strong> — scalable vector graphics for crisp maps at any zoom level</li>
-<li><strong>Leaflet</strong> — optional tile-based basemap support</li>
-<li><strong>Mustache</strong> — template engine for tooltips and labels</li>
-<li><strong>Papaparse</strong> — CSV parsing</li>
-<li><strong>DuckDB WASM</strong> — Parquet, GeoParquet and GeoPackage reading</li>
-<li><strong>flatgeobuf / geobuf</strong> — binary geo-format reading</li>
-<li><strong>D3.js</strong> — optional, for custom user charts</li>
-<li><strong>jQuery</strong> — optional DOM utilities</li>
-<li><strong>Data.js</strong> — iXMaps’s own data processing library (filter, pivot, aggregate, join)</li>
-</ul>
-</section>
-<section id="use-cases" class="level2">
-<h2 class="anchored" data-anchor-id="use-cases">Use Cases</h2>
-<p>iXMaps has been successfully used for:</p>
-<ul>
-<li><strong>Journalism and media</strong> — election results, demographic analysis, environmental reporting</li>
-<li><strong>Research and academia</strong> — scientific data visualization, geographic patterns, publication-ready figures</li>
-<li><strong>Government and NGOs</strong> — open data portals, transparency initiatives, public dashboards</li>
-<li><strong>Business</strong> — market analysis, customer distribution, location intelligence</li>
-</ul>
-</section>
-<section id="license" class="level2">
-<h2 class="anchored" data-anchor-id="license">License</h2>
-<p>iXMaps is released under the <a href="https://github.com/gjrichter/ixmaps-flat/blob/main/LICENSE.txt"><strong>BSD 3-Clause License</strong></a> — free for both personal and commercial use, provided the original copyright notice is included; the original authors’ names may not be used to promote derived products.</p>
-</section>
-<section id="credits-and-acknowledgments" class="level2">
-<h2 class="anchored" data-anchor-id="credits-and-acknowledgments">Credits and Acknowledgments</h2>
-<section id="created-by" class="level3">
-<h3 class="anchored" data-anchor-id="created-by">Created By</h3>
-<p><strong>Guenter Richter</strong> — framework architecture, core development, and maintenance</p>
-</section>
-<section id="special-thanks-to" class="level3">
-<h3 class="anchored" data-anchor-id="special-thanks-to">Special Thanks To</h3>
-<ul>
-<li><strong>Andrea Borruso</strong> — urban fabric centroids data, the <a href="https://deepwiki.com/gjrichter/ixmaps-flat">DeepWiki</a> contribution, and valuable feedback</li>
-<li><strong>D3.js Community</strong> — inspiration for data-driven visualizations</li>
-<li><strong>OpenStreetMap Contributors</strong> — geographic data</li>
-<li><strong>ISTAT</strong> — Italian statistical data</li>
-</ul>
-</section>
-<section id="built-with" class="level3">
-<h3 class="anchored" data-anchor-id="built-with">Built With</h3>
-<ul>
-<li>D3.js by Mike Bostock</li>
-<li>jQuery by John Resig</li>
-<li>Mustache.js templating</li>
-<li>And many other open-source projects</li>
-</ul>
-</section>
-</section>
-<section id="contributing" class="level2">
-<h2 class="anchored" data-anchor-id="contributing">Contributing</h2>
-<p>Contributions are welcome — bug reports, feature requests, documentation improvements, code:</p>
-<p>Visit the <a href="https://github.com/gjrichter/ixmaps-flat">GitHub repository</a> to get involved.</p>
-</section>
-<section id="contact" class="level2">
-<h2 class="anchored" data-anchor-id="contact">Contact</h2>
-<p>For questions, suggestions, or collaboration:</p>
-<ul>
-<li><strong>GitHub Issues</strong>: <a href="https://github.com/gjrichter/ixmaps-flat/issues">github.com/gjrichter/ixmaps-flat/issues</a></li>
-<li><strong>Email</strong>: richter@ixmaps.com</li>
-</ul>
-<hr>
-<p><em>iXMaps — Making geographic data visualization accessible and powerful for everyone.</em></p>
+</header>
 
 
-</section>
-</section>
+<style>
+.schematic-frame{width:min(720px, 96vw); height:85vh; border:0; display:block; margin:0 auto;}
+@media (min-width: 992px){
+  #quarto-document-content{max-width:min(1000px, calc(100vw - 350px)) !important; margin-left:30px !important;}
+  .schematic-frame{width:min(1000px, calc(100vw - 350px)); margin:0;}
+}
+</style>
+<iframe id="schematic-frame-ctg" class="schematic-frame" title="Chart Type Grammar — schematic overview" src="reference/chart-type-grammar.html"></iframe>
+
+
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
@@ -859,9 +739,21 @@ ul.task-list li input[type="checkbox"] {
     }
   });
   </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./map_types.html" class="pagination-link" aria-label="Visualization Types &amp; Modifiers">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Visualization Types &amp; Modifiers</span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./theme_type_tree.html" class="pagination-link" aria-label="Theme Type Tree (schematic overview)">
+        <span class="nav-page-text">Theme Type Tree (schematic overview)</span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
 </div> <!-- /content -->
 
 
 
 
-<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/gjrichter/ixmaps-flat/issues/new" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div></div></div></footer></body></html>
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions"><ul><li><a href="https://github.com/gjrichter/ixmaps-flat/issues/new" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div></div></div></footer></body></html>

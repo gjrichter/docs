@@ -58,18 +58,33 @@ You write a JavaScript function, attach it to the `ixmaps` namespace, then refer
 ```javascript
 ixmaps.myChart = function(SVGDocument, args) {
     // args properties:
-    //   args.target   — the SVG group element to draw into
-    //   args.value    — the primary data value for this feature
-    //   args.values   — array of all values (for multi-value bindings)
-    //   args.theme    — theme object (contains style, color scheme, etc.)
-    //   args.item     — the raw data item/row
-    //   args.class    — color class index (maps to colorscheme)
+    //   args.target     — the SVG group element to draw into
+    //   args.value      — the primary data value for this feature
+    //   args.values     — array of all values (for multi-value bindings)
+    //   args.theme      — theme object (contains style, color scheme, etc.)
+    //   args.item       — the raw data item/row
+    //   args.dbRecord   — the full underlying database record
+    //   args.size       — this item's computed radius/size
+    //   args.maxSize    — the theme's maximum radius/size
+    //   args.color      — the resolved fill color
+    //   args.textcolor  — the resolved text color
+    //   args.ccolor     — chart-derived colors (from the theme's color scheme)
+    //   args.class      — color class index (maps to colorscheme)
+    //   args.flag       — the raw type-string ("flag") of the theme
+    //   args.mark       — an internal per-item marker value
 
     var svg = d3.select(args.target);
     // ... draw with D3 or SVG DOM methods ...
 
-    return { x: 0, y: 0 };  // optional offset for chaining
+    return { x: 0, y: 0 };  // offset used to reposition the chart group — a falsy return counts as a draw error
 };
+```
+
+Two optional companion functions, named by suffixing your `userdraw` name, run once before/after the whole per-feature loop rather than once per feature — useful for setup/teardown (e.g. building a shared `<defs>` block):
+
+```javascript
+ixmaps.myChart_init   = function(SVGDocument, args) { /* args = { target, theme } — runs once before */ };
+ixmaps.myChart_finish = function(SVGDocument, args) { /* args = { target, theme } — runs once after */ };
 ```
 
 :::{.callout-warning}
@@ -103,7 +118,7 @@ Script load order relative to `ixmaps.js` does not matter.
 |----------|------|
 | `DIFFERENCE` | Computes `value[1] − value[0]` from a `"a\|b"` binding |
 | `NONEGATIVE` | Suppresses rendering where computed value ≤ 0 (data still processed) |
-| `RELOCATE` | Snaps chart to geometry centroid |
+| `RELOCATE` | With `AGGREGATE`: recomputes the merged position as the average of the original points that were combined |
 | `BOX` | Adds a background box behind the label |
 | `BOTTOMTITLE` | Places title below the chart symbol |
 | `NOLEGEND` | Excludes this layer from the map legend |

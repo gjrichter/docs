@@ -288,6 +288,18 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="./chart_type_grammar.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Chart Type Grammar (schematic overview)</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./theme_type_tree.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Theme Type Tree (schematic overview)</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="./theme_styles.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Style Properties</span></a>
   </div>
@@ -334,6 +346,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </ul></li>
   <li><a href="#styling-the-tooltip" id="toc-styling-the-tooltip" class="nav-link" data-scroll-target="#styling-the-tooltip">Styling the tooltip</a></li>
   <li><a href="#reacting-to-map-events" id="toc-reacting-to-map-events" class="nav-link" data-scroll-target="#reacting-to-map-events">Reacting to map events</a></li>
+  <li><a href="#hooking-into-framework-functions" id="toc-hooking-into-framework-functions" class="nav-link" data-scroll-target="#hooking-into-framework-functions">Hooking into framework functions</a></li>
   <li><a href="#runtime-theme-changes" id="toc-runtime-theme-changes" class="nav-link" data-scroll-target="#runtime-theme-changes">Runtime theme changes</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/gjrichter/ixmaps-flat/issues/new" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div></nav>
@@ -369,12 +382,17 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <hr>
 <section id="enabling-tooltips" class="level2">
 <h2 class="anchored" data-anchor-id="enabling-tooltips">Enabling tooltips</h2>
-<p>Tooltips require <code>mode: "info"</code> in the map constructor. This is a <strong>constructor-time decision</strong> — it cannot be switched on after initialization:</p>
+<p>The map’s <code>mode</code> option controls whether the feature layer responds to the mouse. It is not fixed at construction time — it can be changed at any point:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> myMap <span class="op">=</span> ixmaps<span class="op">.</span><span class="fu">Map</span>(<span class="st">"map"</span><span class="op">,</span> {</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    <span class="dt">mapType</span><span class="op">:</span> <span class="st">"VT_TONER_LITE"</span><span class="op">,</span></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">mode</span><span class="op">:</span>    <span class="st">"info"</span>          <span class="co">// ← required for hover tooltips</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">mode</span><span class="op">:</span>    <span class="st">"info"</span>          <span class="co">// hover shows tooltips immediately</span></span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>})<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>With <code>mode: "pan"</code> (the default) the map only pans and zooms; features do not respond to hover.</p>
+<ul>
+<li><strong><code>mode: "info"</code></strong> — the feature layer stays interactive. Hovering over an SVG object bound to a theme shows its tooltip right away.</li>
+<li><strong><code>mode: "pan"</code> (the default)</strong> — the base map handles panning and zooming; the feature layer normally ignores the mouse. A single click briefly runs the same processing as <code>"info"</code> mode for that instant — if a themed feature is under the pointer, its tooltip appears — then the map switches back to <code>"pan"</code> automatically once the pointer moves on.</li>
+</ul>
+<p>Change the mode at runtime with <code>ixmaps.setMode("info" | "pan")</code> (or <code>ixmaps.toggleInputMode()</code> to flip between the two), or let users switch it themselves via the built-in mode button — pass <code>tools: true</code> (or <code>toolbutton: true</code>) to the constructor to show it.</p>
+<p>A plain <code>FEATURE</code> layer with no theme bound to it falls back to an auto-generated field list instead of a custom tooltip — a holdover from ixMaps’ original QGIS-tiled-SVG generator, which baked tooltips directly into the SVG.</p>
 <hr>
 </section>
 <section id="the-tooltip-template" class="level2">
@@ -478,32 +496,320 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="reacting-to-map-events" class="level2">
 <h2 class="anchored" data-anchor-id="reacting-to-map-events">Reacting to map events</h2>
-<p>Subscribe with <code>.on()</code> — on the map builder or on the live API. Item events identify the feature under the pointer:</p>
+<p>Subscribe with <code>.on()</code> — on the map builder or on the live API. Multiple space-separated event names are accepted; names are case-insensitive:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>myMap</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">on</span>(<span class="st">"mouseover"</span><span class="op">,</span> e <span class="kw">=&gt;</span> <span class="fu">highlight</span>(e<span class="op">.</span><span class="at">id</span>))     <span class="co">// e.theme = layer, e.id = item key</span></span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">on</span>(<span class="st">"mouseout"</span><span class="op">,</span>  () <span class="kw">=&gt;</span> <span class="fu">clearHighlight</span>())</span>
 <span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">on</span>(<span class="st">"click"</span><span class="op">,</span>     e <span class="kw">=&gt;</span> <span class="fu">showDetail</span>(e<span class="op">.</span><span class="at">id</span>))</span>
 <span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">on</span>(<span class="st">"zoomend moveend"</span><span class="op">,</span> () <span class="kw">=&gt;</span> <span class="fu">updateStats</span>())<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>The item-event payload is <code>{ type, szId, id, theme, szMap }</code> — <code>theme</code> and <code>id</code> are the two halves of the compound SVG id <code>"themeId::itemKey"</code>, and <code>id</code> is what you use to look up the data record. Clicks on the map background are filtered out.</p>
-<p>For the complete event list (view, item, lifecycle and layer events, payloads, aliases, and <code>.off()</code>), see the <a href="./api_documentation.html#onevents-handler">API Reference</a>.</p>
+<p><strong>View events</strong> — handler receives <code>{ nZoom, zoomChanged, panChanged, frozenDynamic, szMap }</code>:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 38%">
+<col style="width: 61%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Event</th>
+<th>Fires when</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>zoomend</code></td>
+<td>Zoom changed</td>
+</tr>
+<tr class="even">
+<td><code>moveend</code></td>
+<td>Map panned <strong>without</strong> a zoom change</td>
+</tr>
+<tr class="odd">
+<td><code>viewchange</code> / <code>zoompan</code></td>
+<td>Any zoom or pan (fires on every engine notification)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Item (feature) events</strong> — handler receives <code>{ type, szId, id, theme, szMap }</code>:</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Event</th>
+<th>Fires when</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>mouseover</code> / <code>itemover</code></td>
+<td>Pointer enters a feature</td>
+</tr>
+<tr class="even">
+<td><code>mouseout</code> / <code>itemout</code></td>
+<td>Pointer leaves a feature</td>
+</tr>
+<tr class="odd">
+<td><code>click</code> / <code>itemclick</code></td>
+<td>Feature clicked</td>
+</tr>
+</tbody>
+</table>
+<p><code>theme</code> and <code>id</code> are the two halves of the compound SVG id <code>"themeId::itemKey"</code>, and <code>id</code> is what you use to look up the data record. Clicks on the map background are filtered out.</p>
+<p><strong>Lifecycle events</strong> — handler receives <code>{ type, szMap }</code>:</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Event</th>
+<th>Fires when</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>ready</code> / <code>mapready</code></td>
+<td>SVG engine fully loaded</td>
+</tr>
+<tr class="even">
+<td><code>resize</code></td>
+<td>Map container was resized</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Layer events</strong> — handler receives <code>{ type, id, szMap }</code> (<code>id</code> = theme/layer id):</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Event</th>
+<th>Fires when</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>layerdraw</code> / <code>drawtheme</code></td>
+<td>A layer finishes drawing</td>
+</tr>
+<tr class="even">
+<td><code>layeradd</code> / <code>newtheme</code></td>
+<td>A layer is created</td>
+</tr>
+<tr class="odd">
+<td><code>layerremove</code> / <code>removetheme</code></td>
+<td>A layer is removed</td>
+</tr>
+</tbody>
+</table>
+<p>See the <a href="./api_documentation.html#onevents-handler">API Reference</a> for <code>.off()</code> and notes on multiple maps on one page.</p>
+<hr>
+</section>
+<section id="hooking-into-framework-functions" class="level2">
+<h2 class="anchored" data-anchor-id="hooking-into-framework-functions">Hooking into framework functions</h2>
+<p>Besides <code>.on()</code>, the framework calls a set of plain functions named <code>htmlgui_on...</code> at various points, and picks them up if you define them on <code>ixmaps</code> yourself — there’s no registration call, you just assign the function:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>ixmaps<span class="op">.</span><span class="at">htmlgui_onItemClick</span> <span class="op">=</span> <span class="kw">function</span> (evt<span class="op">,</span> szId) {</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    <span class="bu">console</span><span class="op">.</span><span class="fu">log</span>(<span class="st">"clicked:"</span><span class="op">,</span> szId)<span class="op">;</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="kw">true</span><span class="op">;</span>   <span class="co">// suppress the built-in info popup</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>}<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>Safe hooks</strong> — these have no built-in behavior of their own; the engine calls them defensively (wrapped in <code>try</code>/<code>catch</code>) purely as an opt-in extension point:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Function</th>
+<th>Called when</th>
+<th>Arguments</th>
+<th>Return value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>htmlgui_onItemClick(evt, szId)</code></td>
+<td>a feature is clicked, before the built-in info popup</td>
+<td>event, compound id</td>
+<td>truthy → suppresses the built-in click/info-popup handling</td>
+</tr>
+<tr class="even">
+<td><code>htmlgui_onItemOver(evt, szId, shape)</code></td>
+<td>a feature is hovered, before the built-in tooltip/info</td>
+<td>event, compound id, SVG node</td>
+<td>truthy → suppresses the built-in hover handling</td>
+</tr>
+<tr class="odd">
+<td><code>htmlgui_onTooltipDisplay(evt, szText)</code></td>
+<td>right before a tooltip is shown</td>
+<td>event, resolved tooltip text</td>
+<td>return value <strong>replaces</strong> the tooltip text</td>
+</tr>
+<tr class="even">
+<td><code>htmlgui_onTooltipDelete()</code></td>
+<td>a tooltip is being removed</td>
+<td>—</td>
+<td>truthy → also clears the current highlight/selection list</td>
+</tr>
+<tr class="odd">
+<td><code>htmlgui_onInfoTitle(szTitle, dataRow)</code></td>
+<td>building an info-popup title</td>
+<td>current title, theme data row</td>
+<td>return value <strong>replaces</strong> the title</td>
+</tr>
+<tr class="even">
+<td><code>htmlgui_onInfoDisplayExtend(svgDoc, szObjId)</code></td>
+<td>building an info popup</td>
+<td>SVG document, object id</td>
+<td>return an SVG group node to append it into the popup</td>
+</tr>
+<tr class="odd">
+<td><code>htmlgui_onSelection(szId)</code></td>
+<td>a selection finishes</td>
+<td>selection theme id</td>
+<td>truthy → suppresses the default “show info” behavior</td>
+</tr>
+<tr class="even">
+<td><code>htmlgui_onInitThemes()</code></td>
+<td>the theme engine (re)initializes</td>
+<td>—</td>
+<td>—</td>
+</tr>
+<tr class="odd">
+<td><code>htmlgui_onNewTheme(szId)</code></td>
+<td>a layer/theme is created</td>
+<td>theme id</td>
+<td>— (see also <code>.on("layeradd")</code>)</td>
+</tr>
+<tr class="even">
+<td><code>htmlgui_onDrawTheme(szId)</code></td>
+<td>a layer/theme finishes drawing</td>
+<td>theme id</td>
+<td>— (see also <code>.on("layerdraw")</code>)</td>
+</tr>
+<tr class="odd">
+<td><code>htmlgui_onRemoveTheme(szId)</code></td>
+<td>a layer/theme is removed</td>
+<td>theme id</td>
+<td>— (see also <code>.on("layerremove")</code>)</td>
+</tr>
+<tr class="even">
+<td><code>htmlgui_onErrorTheme(szTheme)</code></td>
+<td>a theme’s data couldn’t be loaded</td>
+<td>theme/table name</td>
+<td>—</td>
+</tr>
+<tr class="odd">
+<td><code>htmlgui_onWindowResize()</code></td>
+<td>after the browser window resize handler runs</td>
+<td>—</td>
+<td>—</td>
+</tr>
+<tr class="even">
+<td><code>htmlgui_onStoryLoaded(szUrl, target)</code></td>
+<td>a story-mode page finishes loading</td>
+<td>url, target element</td>
+<td>—</td>
+</tr>
+<tr class="odd">
+<td><code>htmlgui_onHideStoryTool()</code></td>
+<td>the story tool panel is hidden</td>
+<td>—</td>
+<td>—</td>
+</tr>
+<tr class="even">
+<td><code>ixmaps.parentApi.htmlgui_onProjectLoaded(project)</code></td>
+<td>a project JSON finishes loading, in the <strong>parent</strong> page of an embedded map</td>
+<td>parsed project object</td>
+<td>—</td>
+</tr>
+</tbody>
+</table>
+<div class="callout callout-style-simple callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Good practice: chain, don’t clobber
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Another script — a plugin, a previous <code>&lt;script&gt;</code> block, the framework itself — may already have assigned one of these hooks. Save the previous function and call it from your own, so you extend it instead of silently replacing it:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> __oldOnItemClick <span class="op">=</span> ixmaps<span class="op">.</span><span class="at">htmlgui_onItemClick</span><span class="op">;</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>ixmaps<span class="op">.</span><span class="at">htmlgui_onItemClick</span> <span class="op">=</span> <span class="kw">function</span> (evt<span class="op">,</span> szId) {</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    <span class="kw">var</span> fSuppress <span class="op">=</span> __oldOnItemClick <span class="op">?</span> __oldOnItemClick<span class="op">.</span><span class="fu">apply</span>(<span class="kw">this</span><span class="op">,</span> <span class="kw">arguments</span>) <span class="op">:</span> <span class="kw">false</span><span class="op">;</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    <span class="co">// ... your own code ...</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> fSuppress<span class="op">;</span>   <span class="co">// preserve whatever the previous hook decided</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>}<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>This is exactly how the framework itself wraps <code>htmlgui_onMapResize</code> internally (<code>htmlgui_flat.js</code>) to also dispatch the <code>.on("resize")</code> event without breaking whatever the map init already assigned.</p>
+</div>
+</div>
+<p><strong>Internal engine functions</strong> — these already carry real default behavior (map init, resize, tool switching), so overriding them means replacing that behavior, not just adding to it. Several are now better reached through <code>.on()</code> instead:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Function</th>
+<th>Default behavior</th>
+<th>Prefer instead</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>htmlgui_onMapInit(mapwindow)</code></td>
+<td>sets up the embedded-SVG handle, sizes the map</td>
+<td>—</td>
+</tr>
+<tr class="even">
+<td><code>htmlgui_onMapReady(mapwindow)</code></td>
+<td>clears the loading state, shows the map</td>
+<td><code>.on("ready")</code></td>
+</tr>
+<tr class="odd">
+<td><code>htmlgui_onMapError()</code></td>
+<td>hides the loading indicator, falls back to ready-handling</td>
+<td>—</td>
+</tr>
+<tr class="even">
+<td><code>htmlgui_onMapResize()</code></td>
+<td>re-syncs the HTML/SVG map box after a resize</td>
+<td><code>.on("resize")</code></td>
+</tr>
+<tr class="odd">
+<td><code>htmlgui_onMapTool(szMode)</code></td>
+<td>reconfigures mouse-event sharing for the new pan/info/zoom tool</td>
+<td>—</td>
+</tr>
+<tr class="even">
+<td><code>htmlgui_onSVGPointerIdle()</code></td>
+<td>releases SVG event handling back to the base map — internal plumbing, not really an authoring hook</td>
+<td>—</td>
+</tr>
+<tr class="odd">
+<td><code>htmlgui_onZoomAndPan(nZoomScale)</code></td>
+<td>low-level zoom/pan signal</td>
+<td><code>.on("viewchange")</code></td>
+</tr>
+</tbody>
+</table>
 <hr>
 </section>
 <section id="runtime-theme-changes" class="level2">
 <h2 class="anchored" data-anchor-id="runtime-theme-changes">Runtime theme changes</h2>
 <p>React to user input by changing live themes through <code>myMap.then()</code>. All of these require a <code>name</code> in the layer’s <code>.meta()</code>:</p>
 <p><strong>Filter a theme:</strong></p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>myMap<span class="op">.</span><span class="fu">then</span>(api <span class="kw">=&gt;</span> {</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    api<span class="op">.</span><span class="fu">changeThemeStyle</span>(<span class="st">"cities"</span><span class="op">,</span> <span class="st">'filter:WHERE pop &gt; 500000'</span><span class="op">,</span> <span class="st">"set"</span>)<span class="op">;</span></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    <span class="co">// and back:</span></span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    api<span class="op">.</span><span class="fu">changeThemeStyle</span>(<span class="st">"cities"</span><span class="op">,</span> <span class="st">"filter"</span><span class="op">,</span> <span class="st">"remove"</span>)<span class="op">;</span></span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>})<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>myMap<span class="op">.</span><span class="fu">then</span>(api <span class="kw">=&gt;</span> {</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>    api<span class="op">.</span><span class="fu">changeThemeStyle</span>(<span class="st">"cities"</span><span class="op">,</span> <span class="st">'filter:WHERE pop &gt; 500000'</span><span class="op">,</span> <span class="st">"set"</span>)<span class="op">;</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>    <span class="co">// and back:</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>    api<span class="op">.</span><span class="fu">changeThemeStyle</span>(<span class="st">"cities"</span><span class="op">,</span> <span class="st">"filter"</span><span class="op">,</span> <span class="st">"remove"</span>)<span class="op">;</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>})<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Toggle a layer with a checkbox:</strong></p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>myMap<span class="op">.</span><span class="fu">layer</span>(<span class="st">"overlay"</span>)</span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">style</span>({ <span class="co">/* ... */</span><span class="op">,</span> <span class="dt">visible</span><span class="op">:</span> <span class="kw">false</span> })   <span class="co">// starts hidden</span></span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">meta</span>({ <span class="dt">name</span><span class="op">:</span> <span class="st">"overlay"</span> })</span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">define</span>()<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode html code-with-copy"><code class="sourceCode html"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">input</span><span class="ot"> type</span><span class="op">=</span><span class="st">"checkbox"</span></span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="ot">       onchange</span><span class="op">=</span><span class="st">"this.checked ? ixmaps.showTheme('overlay') : ixmaps.hideTheme('overlay')"</span><span class="dt">&gt;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>myMap<span class="op">.</span><span class="fu">layer</span>(<span class="st">"overlay"</span>)</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">style</span>({ <span class="co">/* ... */</span><span class="op">,</span> <span class="dt">visible</span><span class="op">:</span> <span class="kw">false</span> })   <span class="co">// starts hidden</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">meta</span>({ <span class="dt">name</span><span class="op">:</span> <span class="st">"overlay"</span> })</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">define</span>()<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode html code-with-copy"><code class="sourceCode html"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">input</span><span class="ot"> type</span><span class="op">=</span><span class="st">"checkbox"</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="ot">       onchange</span><span class="op">=</span><span class="st">"this.checked ? ixmaps.showTheme('overlay') : ixmaps.hideTheme('overlay')"</span><span class="dt">&gt;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Swap the visualization</strong> (remove-then-define) — see <a href="./examples.html#swappable-themes-remove-then-define">Examples § Swappable themes</a> for the full pattern.</p>
 <p>For <code>changeThemeStyle</code> modes (<code>set</code>, <code>remove</code>, <code>factor</code>, <code>set|silent</code>) and the rest of the runtime API, see the <a href="./api_documentation.html#runtime-api">API Reference</a>.</p>
 

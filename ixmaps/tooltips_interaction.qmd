@@ -9,16 +9,21 @@ Interactivity in iXMaps has three layers: **tooltips** shown on hover, **events*
 
 ## Enabling tooltips
 
-Tooltips require `mode: "info"` in the map constructor. This is a **constructor-time decision** — it cannot be switched on after initialization:
+The map's `mode` option controls whether the feature layer responds to the mouse. It is not fixed at construction time — it can be changed at any point:
 
 ```javascript
 const myMap = ixmaps.Map("map", {
     mapType: "VT_TONER_LITE",
-    mode:    "info"          // ← required for hover tooltips
+    mode:    "info"          // hover shows tooltips immediately
 });
 ```
 
-With `mode: "pan"` (the default) the map only pans and zooms; features do not respond to hover.
+- **`mode: "info"`** — the feature layer stays interactive. Hovering over an SVG object bound to a theme shows its tooltip right away.
+- **`mode: "pan"` (the default)** — the base map handles panning and zooming; the feature layer normally ignores the mouse. A single click briefly runs the same processing as `"info"` mode for that instant — if a themed feature is under the pointer, its tooltip appears — then the map switches back to `"pan"` automatically once the pointer moves on.
+
+Change the mode at runtime with `ixmaps.setMode("info" | "pan")` (or `ixmaps.toggleInputMode()` to flip between the two), or let users switch it themselves via the built-in mode button — pass `tools: true` (or `toolbutton: true`) to the constructor to show it.
+
+A plain `FEATURE` layer with no theme bound to it falls back to an auto-generated field list instead of a custom tooltip — a holdover from ixMaps' original QGIS-tiled-SVG generator, which baked tooltips directly into the SVG.
 
 ---
 
@@ -88,7 +93,7 @@ iXMaps owns the element ids `tooltip`, `loading-div` and `contextmenu`. Never us
 
 ## Reacting to map events
 
-Subscribe with `.on()` — on the map builder or on the live API. Item events identify the feature under the pointer:
+Subscribe with `.on()` — on the map builder or on the live API. Multiple space-separated event names are accepted; names are case-insensitive:
 
 ```javascript
 myMap
@@ -98,9 +103,102 @@ myMap
     .on("zoomend moveend", () => updateStats());
 ```
 
-The item-event payload is `{ type, szId, id, theme, szMap }` — `theme` and `id` are the two halves of the compound SVG id `"themeId::itemKey"`, and `id` is what you use to look up the data record. Clicks on the map background are filtered out.
+**View events** — handler receives `{ nZoom, zoomChanged, panChanged, frozenDynamic, szMap }`:
 
-For the complete event list (view, item, lifecycle and layer events, payloads, aliases, and `.off()`), see the [API Reference](api_documentation.qmd#onevents-handler).
+| Event | Fires when |
+|-------|-----------|
+| `zoomend` | Zoom changed |
+| `moveend` | Map panned **without** a zoom change |
+| `viewchange` / `zoompan` | Any zoom or pan (fires on every engine notification) |
+
+**Item (feature) events** — handler receives `{ type, szId, id, theme, szMap }`:
+
+| Event | Fires when |
+|-------|-----------|
+| `mouseover` / `itemover` | Pointer enters a feature |
+| `mouseout` / `itemout` | Pointer leaves a feature |
+| `click` / `itemclick` | Feature clicked |
+
+`theme` and `id` are the two halves of the compound SVG id `"themeId::itemKey"`, and `id` is what you use to look up the data record. Clicks on the map background are filtered out.
+
+**Lifecycle events** — handler receives `{ type, szMap }`:
+
+| Event | Fires when |
+|-------|-----------|
+| `ready` / `mapready` | SVG engine fully loaded |
+| `resize` | Map container was resized |
+
+**Layer events** — handler receives `{ type, id, szMap }` (`id` = theme/layer id):
+
+| Event | Fires when |
+|-------|-----------|
+| `layerdraw` / `drawtheme` | A layer finishes drawing |
+| `layeradd` / `newtheme` | A layer is created |
+| `layerremove` / `removetheme` | A layer is removed |
+
+See the [API Reference](api_documentation.qmd#onevents-handler) for `.off()` and notes on multiple maps on one page.
+
+---
+
+## Hooking into framework functions
+
+Besides `.on()`, the framework calls a set of plain functions named `htmlgui_on...` at various points, and picks them up if you define them on `ixmaps` yourself — there's no registration call, you just assign the function:
+
+```javascript
+ixmaps.htmlgui_onItemClick = function (evt, szId) {
+    console.log("clicked:", szId);
+    return true;   // suppress the built-in info popup
+};
+```
+
+**Safe hooks** — these have no built-in behavior of their own; the engine calls them defensively (wrapped in `try`/`catch`) purely as an opt-in extension point:
+
+| Function | Called when | Arguments | Return value |
+|---|---|---|---|
+| `htmlgui_onItemClick(evt, szId)` | a feature is clicked, before the built-in info popup | event, compound id | truthy → suppresses the built-in click/info-popup handling |
+| `htmlgui_onItemOver(evt, szId, shape)` | a feature is hovered, before the built-in tooltip/info | event, compound id, SVG node | truthy → suppresses the built-in hover handling |
+| `htmlgui_onTooltipDisplay(evt, szText)` | right before a tooltip is shown | event, resolved tooltip text | return value **replaces** the tooltip text |
+| `htmlgui_onTooltipDelete()` | a tooltip is being removed | — | truthy → also clears the current highlight/selection list |
+| `htmlgui_onInfoTitle(szTitle, dataRow)` | building an info-popup title | current title, theme data row | return value **replaces** the title |
+| `htmlgui_onInfoDisplayExtend(svgDoc, szObjId)` | building an info popup | SVG document, object id | return an SVG group node to append it into the popup |
+| `htmlgui_onSelection(szId)` | a selection finishes | selection theme id | truthy → suppresses the default "show info" behavior |
+| `htmlgui_onInitThemes()` | the theme engine (re)initializes | — | — |
+| `htmlgui_onNewTheme(szId)` | a layer/theme is created | theme id | — (see also `.on("layeradd")`) |
+| `htmlgui_onDrawTheme(szId)` | a layer/theme finishes drawing | theme id | — (see also `.on("layerdraw")`) |
+| `htmlgui_onRemoveTheme(szId)` | a layer/theme is removed | theme id | — (see also `.on("layerremove")`) |
+| `htmlgui_onErrorTheme(szTheme)` | a theme's data couldn't be loaded | theme/table name | — |
+| `htmlgui_onWindowResize()` | after the browser window resize handler runs | — | — |
+| `htmlgui_onStoryLoaded(szUrl, target)` | a story-mode page finishes loading | url, target element | — |
+| `htmlgui_onHideStoryTool()` | the story tool panel is hidden | — | — |
+| `ixmaps.parentApi.htmlgui_onProjectLoaded(project)` | a project JSON finishes loading, in the **parent** page of an embedded map | parsed project object | — |
+
+:::{.callout-tip}
+## Good practice: chain, don't clobber
+Another script — a plugin, a previous `<script>` block, the framework itself — may already have assigned one of these hooks. Save the previous function and call it from your own, so you extend it instead of silently replacing it:
+
+```javascript
+var __oldOnItemClick = ixmaps.htmlgui_onItemClick;
+ixmaps.htmlgui_onItemClick = function (evt, szId) {
+    var fSuppress = __oldOnItemClick ? __oldOnItemClick.apply(this, arguments) : false;
+    // ... your own code ...
+    return fSuppress;   // preserve whatever the previous hook decided
+};
+```
+
+This is exactly how the framework itself wraps `htmlgui_onMapResize` internally (`htmlgui_flat.js`) to also dispatch the `.on("resize")` event without breaking whatever the map init already assigned.
+:::
+
+**Internal engine functions** — these already carry real default behavior (map init, resize, tool switching), so overriding them means replacing that behavior, not just adding to it. Several are now better reached through `.on()` instead:
+
+| Function | Default behavior | Prefer instead |
+|---|---|---|
+| `htmlgui_onMapInit(mapwindow)` | sets up the embedded-SVG handle, sizes the map | — |
+| `htmlgui_onMapReady(mapwindow)` | clears the loading state, shows the map | `.on("ready")` |
+| `htmlgui_onMapError()` | hides the loading indicator, falls back to ready-handling | — |
+| `htmlgui_onMapResize()` | re-syncs the HTML/SVG map box after a resize | `.on("resize")` |
+| `htmlgui_onMapTool(szMode)` | reconfigures mouse-event sharing for the new pan/info/zoom tool | — |
+| `htmlgui_onSVGPointerIdle()` | releases SVG event handling back to the base map — internal plumbing, not really an authoring hook | — |
+| `htmlgui_onZoomAndPan(nZoomScale)` | low-level zoom/pan signal | `.on("viewchange")` |
 
 ---
 

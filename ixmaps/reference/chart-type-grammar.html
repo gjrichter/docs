@@ -1,0 +1,944 @@
+<meta charset="utf-8">
+<title>Chart Type Grammar — maptheme.js</title>
+<style>
+  :root{
+    --paper: #f4f5f6;
+    --paper-raised: #fbfcfc;
+    --ink: #1c2521;
+    --muted: #5b6862;
+    --line: #c9d3cb;
+    --line-soft: #dde3de;
+    --choropleth: #2f6f74;
+    --chart: #b5622b;
+    --feature: #3f5d78;
+    --dominant: #6a4c93;
+    --compose: #a13d63;
+    --waffle: #c9b25a;
+    --buffer: #a98a6b;
+    --dot: #8f8f7a;
+    --blank: #6b6b6b;
+    --code-bg: #e4e9e3;
+    --shadow: 0 1px 2px rgba(28,37,33,.06), 0 6px 20px -8px rgba(28,37,33,.12);
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --paper: #000000;
+      --paper-raised: #111111;
+      --ink: #e5ece7;
+      --muted: #92a099;
+      --line: #2a3436;
+      --line-soft: #202a2c;
+      --choropleth: #6bbabf;
+      --chart: #e2905a;
+      --feature: #7fa3c4;
+      --dominant: #ab8ad4;
+      --compose: #dd85a8;
+      --waffle: #c9b25a;
+      --buffer: #a98a6b;
+      --dot: #8f8f7a;
+      --blank: #6b6b6b;
+      --code-bg: #1c2426;
+      --shadow: 0 1px 2px rgba(0,0,0,.3), 0 10px 30px -10px rgba(0,0,0,.5);
+    }
+  }
+  :root[data-theme="dark"]{
+    --paper: #000000; --paper-raised: #111111; --ink: #e5ece7; --muted: #92a099;
+    --line: #2a3436; --line-soft: #202a2c; --choropleth: #6bbabf; --chart: #e2905a;
+    --feature: #7fa3c4; --dominant: #ab8ad4; --compose: #dd85a8;
+    --waffle: #c9b25a; --buffer: #a98a6b; --dot: #8f8f7a; --blank: #6b6b6b;
+    --code-bg: #1c2426;
+    --shadow: 0 1px 2px rgba(0,0,0,.3), 0 10px 30px -10px rgba(0,0,0,.5);
+  }
+  :root[data-theme="light"]{
+    --paper: #f4f5f6; --paper-raised: #fbfcfc; --ink: #1c2521; --muted: #5b6862;
+    --line: #c9d3cb; --line-soft: #dde3de; --choropleth: #2f6f74; --chart: #b5622b;
+    --feature: #3f5d78; --dominant: #6a4c93; --compose: #a13d63;
+    --waffle: #c9b25a; --buffer: #a98a6b; --dot: #8f8f7a; --blank: #6b6b6b;
+    --code-bg: #e4e9e3;
+    --shadow: 0 1px 2px rgba(28,37,33,.06), 0 6px 20px -8px rgba(28,37,33,.12);
+  }
+
+  *{ box-sizing:border-box; }
+  html,body{ margin:0; padding:0; }
+  body{
+    background: var(--paper);
+    color: var(--ink);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    font-size: 16px;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+    position: relative;
+  }
+  body::before{
+    content:""; position:fixed; inset:0; z-index:0; pointer-events:none;
+    background-image:
+      linear-gradient(var(--line-soft) 1px, transparent 1px),
+      linear-gradient(90deg, var(--line-soft) 1px, transparent 1px);
+    background-size: 28px 28px;
+    mask-image: radial-gradient(ellipse 100% 80% at 50% 0%, #000 30%, transparent 90%);
+    -webkit-mask-image: radial-gradient(ellipse 100% 80% at 50% 0%, #000 30%, transparent 90%);
+  }
+  body::after{
+    content:""; position:fixed; z-index:0; pointer-events:none; display:none;
+    top:-20%; left:50%; width:80vw; height:60vh; transform:translateX(-50%);
+    background:
+      radial-gradient(circle at 30% 30%, color-mix(in srgb, var(--feature) 14%, transparent), transparent 60%),
+      radial-gradient(circle at 70% 60%, color-mix(in srgb, var(--choropleth) 16%, transparent), transparent 65%);
+    filter: blur(24px);
+  }
+  @media (prefers-color-scheme: dark){ body::after{ display:block; } }
+  :root[data-theme="dark"] body::after{ display:block; }
+  ::selection{ background: color-mix(in srgb, var(--chart) 30%, transparent); }
+
+  h1,h2,h3{ font-family: Georgia, "Iowan Old Style", "Palatino Linotype", "Book Antiqua", serif; text-wrap: balance; margin: 0; }
+  code, .mono{ font-family: ui-monospace, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace; }
+
+  a{ color: inherit; }
+
+  .wrap{ max-width: 1180px; margin: 0 auto; padding: 0 clamp(16px, 4vw, 48px) 96px; position:relative; z-index:1; }
+
+  /* ---------- masthead ---------- */
+  header.masthead{ padding: clamp(28px,6vw,56px) 0 20px; border-bottom: 1px solid var(--line); }
+  .eyebrow{
+    display:flex; align-items:center; gap:.6em;
+    font-size: .78rem; letter-spacing:.09em; text-transform:uppercase; color: var(--muted);
+    margin-bottom: 14px;
+  }
+  .eyebrow .dot{ width:6px; height:6px; border-radius:50%; background: var(--chart); flex:none; }
+  h1.title{ font-size: clamp(1.9rem, 3.4vw, 2.7rem); font-weight: 600; letter-spacing:-.01em; }
+  h1.title em{
+    font-style:normal;
+    background: linear-gradient(110deg, var(--feature), var(--choropleth));
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+  p.thesis{ max-width: 62ch; color: var(--muted); font-size: 1.05rem; margin-top: 14px; }
+
+  /* grammar strip */
+  .grammar{
+    margin-top: 30px; padding: 20px 22px 16px;
+    background: var(--paper-raised); border:1px solid var(--line); border-radius: 10px;
+    box-shadow: var(--shadow);
+    overflow-x: auto;
+  }
+  .grammar-label{ font-size:.72rem; letter-spacing:.08em; text-transform:uppercase; color: var(--muted); margin-bottom:12px; }
+  .tokens{ display:flex; gap:0; min-width: max-content; }
+  .token{ display:flex; flex-direction:column; align-items:center; padding: 0 16px; position:relative; }
+  .token:not(:last-child)::after{
+    content:"|"; position:absolute; right:0; top:2px; color: var(--line); font-weight:700; font-size:1.1rem;
+  }
+  .token .gloss{ margin-top:7px; font-size:.68rem; letter-spacing:.04em; text-transform:uppercase; color: var(--muted); white-space:nowrap; }
+
+  /* ---------- keyword pill (shared identity style: card titles + anatomy strip) ---------- */
+  .kw{
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+    font-weight:600; padding: 3px 10px; border-radius: 6px;
+    background: color-mix(in srgb, var(--key) 16%, var(--paper-raised));
+    color: var(--key); display:inline-block; white-space:nowrap;
+  }
+  .kw.alt{ font-size:.82em; color: var(--ink); background: color-mix(in srgb, var(--key) 7%, var(--paper-raised)); }
+
+  /* ---------- color scheme example tiles ---------- */
+  .cs-tiles{ display:grid; grid-template-columns: repeat(4, 1fr); gap: 24px; min-width:0; }
+  @media (max-width: 760px){ .cs-tiles{ grid-template-columns: repeat(2, 1fr); } }
+  .cs-tile{ display:flex; flex-direction:column; align-items:center; gap:10px; }
+  .cs-tile svg{ width:100%; height:auto; max-height:56px; }
+  .cs-tile .cs-name{ display:flex; flex-direction:column; align-items:center; gap:6px; text-align:center; }
+  .cs-tile .cs-name .kw{ font-size:.85rem; }
+  .cs-tile .cs-gloss{ font-size:.78rem; color: var(--muted); }
+  .kw-sep{ font-family: ui-monospace, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace; font-size:.82em; color: var(--muted); }
+
+  /* ---------- chart sub-shape overview tiles ---------- */
+  .shape-tiles{ display:grid; grid-template-columns: repeat(9, 1fr); gap: 14px; }
+  @media (max-width: 900px){ .shape-tiles{ grid-template-columns: repeat(5, 1fr); } }
+  @media (max-width: 560px){ .shape-tiles{ grid-template-columns: repeat(3, 1fr); } }
+  .shape-tile{ display:flex; flex-direction:column; align-items:center; gap:8px; }
+  .shape-tile svg{ width:34px; height:34px; flex:none; }
+  .shape-tile .kw{ font-size:.7rem; padding:2px 7px; }
+
+  /* ---------- nav ---------- */
+  nav.jump{
+    position: sticky; top:0; z-index: 5;
+    display:flex; flex-wrap:wrap; gap:8px;
+    padding: 12px 0; margin-bottom: 8px;
+    background: color-mix(in srgb, var(--paper) 88%, transparent);
+    backdrop-filter: blur(6px);
+    border-bottom: 1px solid var(--line);
+  }
+  nav.jump a{
+    font-size:.82rem; text-decoration:none; padding: 5px 12px; border-radius: 100px;
+    border:1px solid var(--line); color: var(--muted); white-space:nowrap;
+  }
+  nav.jump a:hover{ color: var(--ink); border-color: var(--muted); }
+  nav.jump a:focus-visible{ outline: 2px solid var(--chart); outline-offset:2px; }
+
+  section{ padding-top: clamp(40px,6vw,64px); }
+  .section-head{ margin-bottom: 22px; }
+  .section-kicker{ font-size:.76rem; letter-spacing:.09em; text-transform:uppercase; color: var(--muted); margin-bottom:6px; }
+  h2{ font-size: clamp(1.3rem, 2vw, 1.7rem); font-weight:600; }
+  p.section-dek{ color: var(--muted); max-width: 68ch; margin-top:8px; font-size:.98rem; }
+  .subhead{ margin: 28px 0 12px; }
+  .subhead:first-child{ margin-top: 0; }
+  .subhead h4{ font-size:.98rem; font-weight:600; color:var(--ink); font-family: Georgia, serif; }
+  .subhead p{ font-size:.86rem; color:var(--muted); margin:4px 0 0; max-width:64ch; }
+
+  /* ---------- top-level type cards ---------- */
+  .toplevel-grid{ display:grid; grid-template-columns: repeat(auto-fit, minmax(250px,1fr)); gap:16px; }
+  .colorgrid{ display:grid; grid-template-columns: repeat(3, 1fr); gap:16px; }
+  @media (max-width: 860px){ .colorgrid{ grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 560px){ .colorgrid{ grid-template-columns: 1fr; } }
+  .type-card{
+    background: var(--paper-raised); border:1px solid var(--line); border-radius:12px;
+    padding: 20px; box-shadow: var(--shadow);
+    border-top: 3px solid var(--key);
+    display:flex; flex-direction:column; height:100%;
+  }
+  .type-card h3{ font-size:1.05rem; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; display:flex; align-items:center; flex-wrap:wrap; gap:.5em; }
+  .type-card h3 svg{ width:22px; height:22px; stroke:var(--key); flex:none; }
+  .type-card h3 .kw{ font-size:1rem; }
+  .type-card p{ font-size:.88rem; color: var(--muted); margin:10px 0 0; }
+  .type-card .sample{ margin-top:12px; }
+  .type-card .card-fill{ flex:1; }
+
+  /* ---------- featured treatment for the three basic types ---------- */
+  .toplevel-grid .type-card{ padding: 22px; border-top-width: 4px; }
+  .toplevel-grid .type-card h3{ font-size:1.25rem; }
+  .toplevel-grid .type-card h3 .kw{ font-size:1.05rem; }
+  .card-art{
+    margin: -22px -22px 18px; padding: 16px 18px 6px;
+    border-radius: 8px 8px 0 0;
+    background: color-mix(in srgb, var(--key) 9%, var(--paper-raised));
+  }
+  .card-art svg{ display:block; width:100%; height:auto; max-height:118px; }
+
+  code.chip{
+    display:inline-block; font-size:.76rem; padding:2px 8px; border-radius:5px;
+    background: color-mix(in srgb, var(--key, var(--chart)) 14%, var(--paper-raised));
+    color: var(--ink); border:1px solid color-mix(in srgb, var(--key, var(--chart)) 35%, var(--line));
+    white-space:nowrap;
+  }
+  code.chip.menu-only{ border-style:dashed; opacity:.8; }
+  code.flag-string{
+    display:block; font-size:.82rem; padding:8px 12px; border-radius:7px;
+    background: var(--code-bg); border:1px solid var(--line); overflow-x:auto;
+  }
+
+  /* ---------- specimen cards (chart sub-shapes) ---------- */
+  .specimens{ display:flex; flex-direction:column; gap:18px; }
+  .specimen{
+    background: var(--paper-raised); border:1px solid var(--line); border-radius:14px;
+    padding: 22px clamp(18px,3vw,28px); box-shadow: var(--shadow);
+    display:grid; grid-template-columns: 140px 1fr; gap: 22px;
+  }
+  .specimen.compact{ grid-template-columns: 90px 1fr; }
+  @media (max-width: 720px){ .specimen{ grid-template-columns: 1fr; } .specimen .glyph-col{ flex-direction:row; align-items:center; gap:14px; } }
+  .glyph-col{ display:flex; flex-direction:column; align-items:flex-start; gap:10px; }
+  .glyph-col svg{ width:56px; height:56px; }
+  .glyph-col .swatch{ width:34px; height:8px; border-radius:4px; background: var(--key); }
+  .specimen h3{ font-size:1.15rem; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; display:flex; align-items:baseline; flex-wrap:wrap; gap:.4em; }
+  .specimen h3 .kw{ font-size:.92em; }
+  .specimen .note{ font-size:.86rem; color:var(--muted); margin: 6px 0 14px; max-width:64ch; }
+  .specimen .quote{
+    font-size:.85rem; color: var(--ink); font-style:italic; margin: 0 0 14px;
+    padding: 8px 12px; border-left: 3px solid var(--key);
+    background: color-mix(in srgb, var(--key) 6%, var(--paper-raised));
+    max-width: 64ch;
+  }
+  .modgroups{ display:grid; grid-template-columns: repeat(auto-fill, minmax(220px,1fr)); gap: 14px 20px; }
+  .modgroup h4{
+    font-size:.7rem; letter-spacing:.08em; text-transform:uppercase; color: var(--muted);
+    font-weight:600; margin:0 0 8px; font-family: -apple-system,sans-serif;
+  }
+  .chiprow{ display:flex; flex-wrap:wrap; gap:6px; align-items:center; }
+  .chiprow .aside{ font-size:.76rem; color:var(--muted); }
+
+  .grid-3{ display:grid; grid-template-columns: repeat(auto-fit, minmax(280px,1fr)); gap:16px; margin-top:16px; }
+
+  /* ---------- global modifier table ---------- */
+  .matrix{ width:100%; border-collapse:collapse; font-size:.9rem; }
+  .matrix th{ text-align:left; font-size:.72rem; letter-spacing:.07em; text-transform:uppercase; color:var(--muted); font-weight:600; padding: 8px 14px 10px 0; border-bottom:1px solid var(--line); }
+  .matrix td{ padding: 14px 14px 14px 0; border-bottom:1px solid var(--line-soft); vertical-align:top; }
+  .matrix tr:last-child td{ border-bottom:none; }
+  .matrix td.stage{ font-weight:600; white-space:nowrap; width:1%; padding-right:24px; }
+  .matrix td.effect{ color:var(--muted); }
+  .table-wrap{ overflow-x:auto; }
+
+  footer{ margin-top: 56px; padding-top: 22px; border-top:1px solid var(--line); color:var(--muted); font-size:.82rem; }
+  footer code{ font-size:.9em; }
+
+  @media (prefers-reduced-motion: no-preference){
+    .specimen, .type-card{ transition: transform .15s ease, box-shadow .15s ease; }
+    .specimen:hover, .type-card:hover{ transform: translateY(-1px); }
+  }
+</style>
+
+<div class="wrap">
+
+  <header class="masthead">
+    <div class="eyebrow"><span class="dot"></span> ixmaps-flat &nbsp;·&nbsp; maps/svg/js-source/<strong>maptheme.js</strong> &nbsp;·&nbsp; ~26,300 lines</div>
+    <h1 class="title">One flag string, three basic <em>types</em>,<br>a hundred-odd modifiers.</h1>
+    <p class="thesis">Every ixMaps theme is described by a single pipe-delimited <code>szFlag</code> string — <code>"type:CHART|PIE|DONUT|3D|VOLUME"</code> — that the rendering engine reads with plain regex tests. This page maps every keyword the engine actually understands, and which shapes each one is allowed to modify.</p>
+
+    <div class="grammar">
+      <div class="grammar-label">anatomy of a flag string</div>
+      <div class="tokens">
+        <div class="token" style="--key:var(--chart)"><span class="kw">CHART</span><span class="gloss">top-level type</span></div>
+        <div class="token" style="--key:var(--chart)"><span class="kw">PIE</span><span class="gloss">sub-shape</span></div>
+        <div class="token" style="--key:var(--chart)"><span class="kw alt" style="font-size:1rem">DONUT</span><span class="gloss">ring style</span></div>
+        <div class="token" style="--key:var(--chart)"><span class="kw alt" style="font-size:1rem">3D</span><span class="gloss">dimension</span></div>
+        <div class="token" style="--key:var(--chart)"><span class="kw alt" style="font-size:1rem">VOLUME</span><span class="gloss">size mode</span></div>
+      </div>
+    </div>
+  </header>
+
+  <nav class="jump">
+    <a href="#toplevel">Top-level types</a>
+    <a href="#colormode">Color selection</a>
+    <a href="#bar">Bar</a>
+    <a href="#pie">Pie / Donut / Starburst</a>
+    <a href="#points">Bubble / Square / Label</a>
+    <a href="#symbol">Symbol</a>
+    <a href="#vector">Vector / Bezier</a>
+    <a href="#other-shapes">Waffle · Buffer · minimal</a>
+    <a href="#box">Box</a>
+    <a href="#global">Cross-shape modifiers</a>
+  </nav>
+
+  <!-- ============================================================= TOP LEVEL -->
+  <section id="toplevel">
+    <div class="section-head">
+      <div class="section-kicker">Dispatch, level 1</div>
+      <h2>Three basic theme types</h2>
+      <p class="section-dek">The very first thing the engine checks in a flag string — this decides what geometry gets drawn. Per the source's own doc comment: "CHOROPLETH type can be changed only to BUBBLE type."</p>
+    </div>
+
+    <div class="toplevel-grid">
+      <div class="type-card" style="--key:var(--feature)">
+        <div class="card-art">
+          <svg viewBox="0 0 300 130" fill="none" stroke="var(--key)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M38 92 L70 38 L124 54 L112 102 L58 110 Z" stroke-dasharray="4 3" opacity=".85"/>
+            <path d="M150 104 C180 58 208 112 244 48" opacity=".85"/>
+            <circle cx="22" cy="28" r="4.5" fill="var(--key)" stroke="none"/>
+            <circle cx="262" cy="86" r="4.5" fill="var(--key)" stroke="none"/>
+            <circle cx="182" cy="22" r="4.5" fill="var(--key)" stroke="none"/>
+          </svg>
+        </div>
+        <h3><span class="kw">FEATURE</span></h3>
+        <p>The basic layer type: adds a map's own geographic items to the theme as-is, no classing computed. Commonly paired with a <code>CHOROPLETH</code> fill; its node positions are also what other themes' <code>VECTOR</code>/<code>BEZIER</code> charts connect between.</p>
+        <div class="chiprow" style="margin-top:8px">
+          <code class="chip" style="--key:var(--feature)">Point</code>
+          <code class="chip" style="--key:var(--feature)">LineString</code>
+          <code class="chip" style="--key:var(--feature)">MultiLineString</code>
+          <code class="chip" style="--key:var(--feature)">Polygon</code>
+          <code class="chip" style="--key:var(--feature)">MultiPolygon</code>
+          <code class="chip" style="--key:var(--feature)">Sphere</code>
+          <span class="aside">the geometry types it actually draws — plus Sphere, an ixMaps-only extension for orthographic-projection globes. MultiPoint/GeometryCollection are parsed elsewhere but never drawn here.</span>
+        </div>
+        <div class="chiprow" style="margin-top:8px">
+          <code class="chip" style="--key:var(--feature)">colorscheme:none</code>
+          <code class="chip" style="--key:var(--feature)">CLIPTOVIEW</code>
+        </div>
+        <code class="flag-string sample">type:FEATURE|CHOROPLETH</code>
+      </div>
+
+      <div class="type-card" style="--key:var(--choropleth)">
+        <div class="card-art">
+          <svg viewBox="0 0 300 130">
+            <path d="M8 8 L142 8 L100 62 L8 72 Z" style="fill: color-mix(in srgb, var(--key) 28%, var(--paper-raised)); stroke: var(--paper-raised); stroke-width:2"/>
+            <path d="M142 8 L292 8 L292 52 L182 56 L100 62 Z" style="fill: color-mix(in srgb, var(--key) 48%, var(--paper-raised)); stroke: var(--paper-raised); stroke-width:2"/>
+            <path d="M8 72 L100 62 L120 122 L8 122 Z" style="fill: color-mix(in srgb, var(--key) 66%, var(--paper-raised)); stroke: var(--paper-raised); stroke-width:2"/>
+            <path d="M100 62 L182 56 L202 122 L120 122 Z" style="fill: color-mix(in srgb, var(--key) 84%, var(--paper-raised)); stroke: var(--paper-raised); stroke-width:2"/>
+            <path d="M182 56 L292 52 L292 122 L202 122 Z" style="fill: var(--key); stroke: var(--paper-raised); stroke-width:2"/>
+          </svg>
+        </div>
+        <h3><span class="kw">CHOROPLETH</span></h3>
+        <p>Polygons filled by class — draws no geometry of its own, so it needs a <span class="kw alt" style="--key:var(--feature); border:1px solid var(--feature)">FEATURE</span> layer to supply the polygons/lines, joined by a shared layer name. Combines directly: <code class="mono" style="font-size:.85em">type:FEATURE|CHOROPLETH</code>. Classification method is a second-level flag:</p>
+        <div class="chiprow" style="margin-top:8px">
+          <code class="chip" style="--key:var(--choropleth)">EQUIDISTANT</code>
+          <code class="chip" style="--key:var(--choropleth)">QUANTILE</code>
+          <code class="chip" style="--key:var(--choropleth)">NATURAL</code>
+          <code class="chip" style="--key:var(--choropleth)">HEADTAIL</code>
+          <code class="chip" style="--key:var(--choropleth)">LOG</code>
+          <code class="chip" style="--key:var(--choropleth)">POW2</code>
+          <code class="chip" style="--key:var(--choropleth)">POW3</code>
+        </div>
+        <code class="flag-string sample">type:CHOROPLETH|EQUIDISTANT;classes:10;overviewchart:PIE|3D</code>
+      </div>
+
+      <div class="type-card" style="--key:var(--chart)">
+        <div class="card-art">
+          <svg viewBox="0 0 300 130">
+            <path d="M14 100 L60 40 L120 60 L100 112 Z" fill="none" stroke="var(--line)" stroke-width="2" opacity=".8"/>
+            <path d="M150 110 L200 46 L260 70 L230 118 Z" fill="none" stroke="var(--line)" stroke-width="2" opacity=".8"/>
+            <g transform="translate(38,60)">
+              <rect x="0" y="18" width="8" height="20" fill="var(--key)"/>
+              <rect x="11" y="6" width="8" height="32" fill="var(--key)"/>
+              <rect x="22" y="24" width="8" height="14" fill="var(--key)"/>
+            </g>
+            <g transform="translate(160,34)">
+              <circle r="16" fill="none" stroke="var(--key)" stroke-width="2"/>
+              <path d="M0 0 L0 -16 A16 16 0 0 1 13.8 8 Z" fill="var(--key)"/>
+            </g>
+            <circle cx="238" cy="88" r="13" fill="var(--key)" opacity=".85"/>
+            <circle cx="262" cy="70" r="7" fill="var(--key)" opacity=".65"/>
+          </svg>
+        </div>
+        <h3><span class="kw">CHART</span></h3>
+        <p>A drawn chart shape per feature, positioned by coordinates straight from the data or by joining to a <span class="kw alt" style="--key:var(--feature); border:1px solid var(--feature)">FEATURE</span> layer's own position (both via <code class="mono" style="font-size:.85em">lookupfield:</code>). Branches into nine sub-shapes — mapped in full below.</p>
+        <div class="chiprow" style="margin-top:8px">
+          <code class="chip" style="--key:var(--chart)">BAR</code>
+          <code class="chip" style="--key:var(--chart)">PIE</code>
+          <code class="chip" style="--key:var(--chart)">BUBBLE</code>
+          <code class="chip" style="--key:var(--chart)">SYMBOL</code>
+          <code class="chip" style="--key:var(--chart)">VECTOR</code>
+          <code class="chip" style="--key:var(--chart)">+4 more ↓</code>
+        </div>
+        <code class="flag-string sample">type:CHART|BUBBLE|VALUES</code>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================= COLOR MODE -->
+  <section id="colormode">
+    <div class="section-head">
+      <div class="section-kicker">Not a type — a coloring algorithm</div>
+      <h2>Color selection modes</h2>
+      <p class="section-dek">Color answers a different question depending on what the field actually measures. A <strong>quantity</strong> — a temperature, a percentage, a count — asks "which class does this value fall into" (a classification method). A single <strong>quality</strong> — one field of categories — just needs one color per distinct value. A quality spread <strong>across several fields</strong> — an energy source, a political party, any set of categories compared side by side — has no single number to classify at all, so the flag string instead names a method for picking or building the color itself. These read from the same <code>type:</code> string as CHOROPLETH/CHART/FEATURE, which makes them look like siblings — they aren't; they never choose geometry.</p>
+
+      <div class="grammar">
+        <div class="grammar-label">color scheme examples</div>
+        <div class="cs-tiles">
+          <div class="cs-tile" style="--key:var(--choropleth)">
+            <svg viewBox="0 0 200 50">
+              <rect x="0" y="5" width="30" height="40" rx="3" style="fill:color-mix(in srgb, var(--choropleth) 15%, var(--paper-raised))"/>
+              <rect x="34" y="5" width="30" height="40" rx="3" style="fill:color-mix(in srgb, var(--choropleth) 32%, var(--paper-raised))"/>
+              <rect x="68" y="5" width="30" height="40" rx="3" style="fill:color-mix(in srgb, var(--choropleth) 49%, var(--paper-raised))"/>
+              <rect x="102" y="5" width="30" height="40" rx="3" style="fill:color-mix(in srgb, var(--choropleth) 66%, var(--paper-raised))"/>
+              <rect x="136" y="5" width="30" height="40" rx="3" style="fill:color-mix(in srgb, var(--choropleth) 83%, var(--paper-raised))"/>
+              <rect x="170" y="5" width="30" height="40" rx="3" style="fill:var(--choropleth)"/>
+            </svg>
+            <div class="cs-name"><span class="kw">CLASSES</span><span class="cs-gloss">sequential ramp</span></div>
+          </div>
+          <div class="cs-tile" style="--key:var(--choropleth)">
+            <svg viewBox="0 0 200 50">
+              <circle cx="17" cy="25" r="15" fill="var(--feature)"/>
+              <circle cx="51" cy="25" r="15" fill="var(--chart)"/>
+              <circle cx="85" cy="25" r="15" fill="var(--choropleth)"/>
+              <circle cx="119" cy="25" r="15" fill="var(--dominant)"/>
+              <circle cx="153" cy="25" r="15" fill="var(--compose)"/>
+              <circle cx="187" cy="25" r="15" fill="var(--waffle)"/>
+            </svg>
+            <div class="cs-name"><span class="kw">CATEGORICAL</span><span class="cs-gloss">one hue per value</span></div>
+          </div>
+          <div class="cs-tile" style="--key:var(--dominant)">
+            <svg viewBox="0 0 200 50">
+              <circle cx="30" cy="34" r="9" fill="var(--line)"/>
+              <circle cx="66" cy="14" r="9" fill="var(--line)"/>
+              <circle cx="150" cy="12" r="9" fill="var(--line)"/>
+              <circle cx="178" cy="36" r="9" fill="var(--line)"/>
+              <circle cx="108" cy="25" r="17" fill="none" stroke="var(--dominant)" stroke-width="2" opacity=".5"/>
+              <circle cx="108" cy="25" r="13" fill="var(--dominant)"/>
+            </svg>
+            <div class="cs-name"><span class="kw">DOMINANT</span><span class="cs-gloss">one winner highlighted</span></div>
+          </div>
+          <div class="cs-tile" style="--key:var(--compose)">
+            <svg viewBox="0 0 200 50">
+              <rect x="76" y="1" width="15" height="15" style="fill:var(--choropleth)" opacity=".4"/>
+              <rect x="93" y="1" width="15" height="15" style="fill:color-mix(in srgb, var(--choropleth) 50%, var(--compose))" opacity=".4"/>
+              <rect x="110" y="1" width="15" height="15" style="fill:var(--compose)" opacity=".4"/>
+              <rect x="76" y="18" width="15" height="15" style="fill:var(--choropleth)" opacity=".7"/>
+              <rect x="93" y="18" width="15" height="15" style="fill:color-mix(in srgb, var(--choropleth) 50%, var(--compose))" opacity=".7"/>
+              <rect x="110" y="18" width="15" height="15" style="fill:var(--compose)" opacity=".7"/>
+              <rect x="76" y="35" width="15" height="15" style="fill:var(--choropleth)"/>
+              <rect x="93" y="35" width="15" height="15" style="fill:color-mix(in srgb, var(--choropleth) 50%, var(--compose))"/>
+              <rect x="110" y="35" width="15" height="15" style="fill:var(--compose)"/>
+            </svg>
+            <div class="cs-name"><span class="kw">COMPOSECOLOR</span><span class="cs-gloss">blended bivariate</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="subhead">
+      <h4>1. Classification method — divide a quantity into classes</h4>
+      <p>One numeric field, cut into N ordered classes — CHOROPLETH's own second-level flag (chips already shown above). Seven interchangeable algorithms, from plain equal-width slicing to breaks that follow the data's own shape.</p>
+    </div>
+    <div class="colorgrid">
+      <div class="type-card" style="--key:var(--choropleth)">
+        <h3><svg viewBox="0 0 24 24" fill="none" stroke-width="1.6"><path d="M3 20h18M5 20v-4M11 20v-9M17 20v-14"/></svg><span class="kw">CLASSES</span></h3>
+        <p class="card-fill">Seven interchangeable algorithms: equal-width (default), equal-count, natural gaps, heavy-tailed recursion, or equal-width on a transformed scale. <code class="mono" style="font-size:.85em">HEADTAIL</code> is the odd one out — it ignores <code class="mono" style="font-size:.85em">classes:N</code> entirely.</p>
+        <div class="chiprow" style="margin-top:8px">
+          <code class="chip" style="--key:var(--choropleth)">EQUIDISTANT</code><code class="chip" style="--key:var(--choropleth)">QUANTILE</code><code class="chip" style="--key:var(--choropleth)">NATURAL</code><code class="chip" style="--key:var(--choropleth)">HEADTAIL</code><code class="chip" style="--key:var(--choropleth)">LOG</code><code class="chip" style="--key:var(--choropleth)">POW2</code><code class="chip" style="--key:var(--choropleth)">POW3</code>
+        </div>
+      </div>
+    </div>
+
+    <div class="subhead">
+      <h4>2. Categorical — one color per category</h4>
+      <p>One qualitative field, no classing computed at all — every distinct value simply gets its own color.</p>
+    </div>
+    <div class="colorgrid">
+      <div class="type-card" style="--key:var(--choropleth)">
+        <h3><svg viewBox="0 0 24 24" fill="none" stroke-width="1.6"><rect x="3" y="4" width="6" height="6" rx="1"/><rect x="15" y="4" width="6" height="6" rx="1"/><rect x="3" y="14" width="6" height="6" rx="1"/><rect x="15" y="14" width="6" height="6" rx="1"/></svg><span class="kw">CATEGORICAL</span></h3>
+        <p class="card-fill">Not a number to classify — a name. Each distinct string value gets its own color, assigned in first-appearance order (or pinned explicitly with a <code class="mono" style="font-size:.85em">values:</code> list). <code class="mono" style="font-size:.85em">IGNORECASE</code> folds differently-cased spellings into one category.</p>
+        <div class="chiprow" style="margin-top:8px">
+          <code class="chip" style="--key:var(--choropleth)">values:</code>
+          <code class="chip" style="--key:var(--choropleth)">IGNORECASE</code>
+        </div>
+      </div>
+    </div>
+
+    <div class="subhead">
+      <h4>3. Selection method — pick a winner</h4>
+      <p>One category "wins" and lends the item its color — the theme shows which of several fields is locally dominant.</p>
+    </div>
+    <div class="colorgrid">
+      <div class="type-card" style="--key:var(--dominant)">
+        <h3><svg viewBox="0 0 24 24" fill="none" stroke-width="1.6"><circle cx="7" cy="7" r="2.4"/><circle cx="17" cy="8" r="2.4"/><circle cx="8" cy="17" r="4.2"/><circle cx="17" cy="17" r="2"/></svg><span class="kw">DOMINANT</span></h3>
+        <p class="card-fill">Color driven by whichever field value clears a <code>filter</code> threshold (min / max / mean / median, ± <code>dfilter</code>%). When paired with CHOROPLETH but no CHART, a deviation bar or donut appears only in the tooltip preview.</p>
+        <div class="chiprow" style="margin-top:8px">
+          <code class="chip" style="--key:var(--dominant)">filter:mean</code>
+          <code class="chip" style="--key:var(--dominant)">dfilter:30</code>
+        </div>
+      </div>
+
+      <div class="type-card" style="--key:var(--dominant)">
+        <h3><svg viewBox="0 0 24 24" fill="none" stroke-width="1.6"><path d="M4 18l5-8 4 4 7-10"/><path d="M4 21h16" stroke-dasharray="1.5 2.2"/></svg><span class="kw">PERCENTOFMEAN</span> <span class="kw-sep">/</span> <span class="kw alt">MEDIAN</span></h3>
+        <p class="card-fill">Recomputes the DOMINANT relevance metric as a percentage of the field's mean or median, rather than the raw value — makes the threshold comparable across fields with very different scales.</p>
+      </div>
+
+      <div class="type-card" style="--key:var(--dominant)">
+        <h3><svg viewBox="0 0 24 24" fill="none" stroke-width="1.6"><path d="M3 16c4-10 7-10 9 0s5 10 9 0" /></svg><span class="kw">DEVIATION</span></h3>
+        <p class="card-fill">Same idea again, but the relevance metric is a z-score: <code class="mono" style="font-size:.85em">(value − mean) / stddev</code>.</p>
+      </div>
+    </div>
+
+    <div class="subhead">
+      <h4>4. Creation method — synthesize a color</h4>
+      <p>No single winner — every field contributes to one new blended color at once. This is how bivariate (and tri-/multivariate) choropleth maps get built here.</p>
+    </div>
+    <div class="colorgrid">
+      <div class="type-card" style="--key:var(--compose)">
+        <h3><svg viewBox="0 0 24 24" fill="none" stroke-width="1.6"><circle cx="9" cy="9" r="6" opacity=".75"/><circle cx="15" cy="9" r="6" opacity=".75"/><circle cx="12" cy="15" r="6" opacity=".75"/></svg><span class="kw">COMPOSECOLOR</span></h3>
+        <p class="card-fill">One color per item, mixed additively (default) or subtractively from several field values at once — like overlaying colored filters. Two fields makes a bivariate choropleth; three or more, a trivariate/multivariate one.</p>
+        <div class="chiprow" style="margin-top:8px">
+          <code class="chip" style="--key:var(--compose)">SUBTRACTIVE</code>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================= CHART SUB-SHAPES -->
+  <section id="chart-shapes">
+    <div class="section-head">
+      <div class="section-kicker">Dispatch, level 2 — inside <code>type:CHART|…</code></div>
+      <h2>Nine chart sub-shapes</h2>
+      <p class="section-dek">Per-item drawing runs in <code>chartMap()</code>, which fast-paths four shapes directly — <code>DOT</code>, <code>QUAD</code> (single-point primitives) and <code>VECTOR</code>, <code>BEZIER</code> (two-point connectors, needing a second position) — and delegates everything else to <code>drawChart()</code>: <code>BLANK</code> / <code>USER</code>, then <code>PIE</code> → <code>WAFFLE</code> → <code>BUBBLE·SQUARE·LABEL</code> → <code>SYMBOL</code> → <code>BUFFER</code> → <code>BAR·BARS</code>. Dashed-border chips exist only in the UI menu list, with no dedicated code branch.</p>
+
+      <div class="grammar">
+        <div class="grammar-label">chart type overview</div>
+        <div class="shape-tiles">
+          <div class="shape-tile" style="--key:var(--chart)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="var(--key)" stroke-width="1.7" stroke-linecap="round"><path d="M4 20V11M9.5 20V6M15 20v9M20 20V4"/></svg>
+            <span class="kw">BAR</span>
+          </div>
+          <div class="shape-tile" style="--key:var(--chart)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="var(--key)" stroke-width="1.7"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="3.6"/><path d="M12 3.5v5.4M20.5 12h-5.4M12 20.5v-5.4M3.5 12h5.4" stroke-width="1.3" opacity=".6"/></svg>
+            <span class="kw">PIE</span>
+          </div>
+          <div class="shape-tile" style="--key:var(--chart)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="var(--key)" stroke-width="1.7"><circle cx="7" cy="8" r="4.3"/><rect x="13" y="4" width="7" height="7" rx="1"/><text x="7" y="20" font-size="8" fill="var(--key)" stroke="none" text-anchor="middle" font-family="Georgia,serif">Aa</text></svg>
+            <span class="kw">BUBBLE</span>
+          </div>
+          <div class="shape-tile" style="--key:var(--chart)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="var(--key)" stroke-width="1.7"><path d="M12 3l2.4 6.8L21 11l-5.2 4.4L17.2 21 12 17.4 6.8 21l1.4-5.6L3 11l6.6-1.2z"/></svg>
+            <span class="kw">SYMBOL</span>
+          </div>
+          <div class="shape-tile" style="--key:var(--chart)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="var(--key)" stroke-width="1.7"><path d="M4 18 C 9 6, 15 6, 20 12" marker-end="url(#vecarrow-tile)"/><defs><marker id="vecarrow-tile" markerWidth="6" markerHeight="6" refX="4" refY="3" orient="auto"><path d="M0,0 L5,3 L0,6 Z" fill="var(--key)"/></marker></defs></svg>
+            <span class="kw">VECTOR</span>
+          </div>
+          <div class="shape-tile" style="--key:var(--waffle)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="var(--key)" stroke-width="1.7"><path d="M4 4h4v4H4zM10 4h4v4h-4zM16 4h4v4h-4zM4 10h4v4H4zM10 10h4v4h-4zM4 16h4v4H4z"/></svg>
+            <span class="kw">WAFFLE</span>
+          </div>
+          <div class="shape-tile" style="--key:var(--buffer)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="var(--key)" stroke-width="1.7"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5.5" stroke-dasharray="2.5 2.5"/></svg>
+            <span class="kw">BUFFER</span>
+          </div>
+          <div class="shape-tile" style="--key:var(--dot)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="var(--key)" stroke-width="1.7"><circle cx="8" cy="12" r="2.6" fill="var(--key)" stroke="none"/><rect x="15" y="9.5" width="5" height="5"/></svg>
+            <span class="kw">DOT</span>
+          </div>
+          <div class="shape-tile" style="--key:var(--blank)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="var(--key)" stroke-width="1.7" stroke-dasharray="3 2.5"><rect x="4" y="4" width="16" height="16" rx="2"/></svg>
+            <span class="kw">BLANK</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="specimens">
+
+      <!-- BAR -->
+      <div class="specimen" id="bar" style="--key:var(--chart)">
+        <div class="glyph-col">
+          <svg viewBox="0 0 24 24" fill="none" stroke="var(--key)" stroke-width="1.7" stroke-linecap="round"><path d="M4 20V11M9.5 20V6M15 20v9M20 20V4"/></svg>
+          <span class="swatch"></span>
+        </div>
+        <div>
+          <h3><span class="kw">BAR</span> <span class="kw-sep">/</span> <span class="kw alt">BARS</span></h3>
+          <p class="note">One card per value, laid out on a shared axis; almost every other modifier in the file exists to bend this axis somehow.</p>
+          <div class="modgroups">
+            <div class="modgroup"><h4>Orientation</h4><div class="chiprow">
+              <code class="chip">HORZ</code><code class="chip">LEFT</code><code class="chip">RIGHT</code><code class="chip">UP</code><code class="chip">CENTER</code><code class="chip">DIAGLEFT</code><code class="chip">DIAGRIGHT</code>
+            </div></div>
+            <div class="modgroup"><h4>Shape variant</h4><div class="chiprow">
+              <code class="chip">COLUMN</code><code class="chip">POINTER</code><code class="chip">WIDTH</code><code class="chip">ARROW</code><code class="chip">SMALLARROW</code><code class="chip">DOTTED</code><code class="chip">DTEXT</code>
+            </div></div>
+            <div class="modgroup"><h4>Dimension &amp; size</h4><div class="chiprow">
+              <code class="chip">3D</code><code class="chip">VOLUME</code><code class="chip">SIZE</code><code class="chip">SIZELOG</code><code class="chip">THIN</code><code class="chip">THICK</code><code class="chip">NORMSIZE</code><code class="chip">MENUSIZE</code>
+            </div></div>
+            <div class="modgroup"><h4>Layout &amp; order</h4><div class="chiprow">
+              <code class="chip">STACKED</code><code class="chip">SPACED</code><code class="chip">SORT</code><code class="chip">SEQUENCE</code><code class="chip">MULTI</code><code class="chip">COMPRESS</code><code class="chip">EXPAND</code><code class="chip menu-only">COLUMNS</code>
+            </div></div>
+            <div class="modgroup"><h4>Value pipeline</h4><div class="chiprow">
+              <code class="chip">INVERT</code><code class="chip">NOZERO</code><code class="chip">NONEGATIVE</code><code class="chip">ONLYNEGATIVE</code><code class="chip">OFFSETMEAN</code><code class="chip">OFFSETMEDIAN</code><code class="chip">DEVIATION</code>
+            </div></div>
+            <div class="modgroup"><h4>Labels &amp; behavior</h4><div class="chiprow">
+              <code class="chip">VALUES</code><code class="chip">AXIS</code><code class="chip">ZOOM</code>
+            </div></div>
+          </div>
+          <code class="flag-string sample" style="margin-top:14px">CHART|BAR|HORZ|LEFT|UP|COMPRESS|3D  ·  CHART|BAR|3D|VOLUME  ·  CHART|BAR|SORT|3D|COLUMNS|STACKED</code>
+        </div>
+      </div>
+
+      <!-- PIE / DONUT / STARBURST -->
+      <div class="specimen" id="pie" style="--key:var(--chart)">
+        <div class="glyph-col">
+          <svg viewBox="0 0 24 24" fill="none" stroke="var(--key)" stroke-width="1.7"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="3.6"/><path d="M12 3.5v5.4M20.5 12h-5.4M12 20.5v-5.4M3.5 12h5.4" stroke-width="1.3" opacity=".6"/></svg>
+          <span class="swatch"></span>
+        </div>
+        <div>
+          <h3><span class="kw">PIE</span> <span class="kw-sep">/</span> <span class="kw alt">DONUT</span> <span class="kw-sep">/</span> <span class="kw alt">STARBURST</span></h3>
+          <p class="note">Radial, segment-per-value. <code>DONUT</code> punches an inner hole; <code>STARBURST</code> turns segments into petals whose length also encodes value.</p>
+          <div class="modgroups">
+            <div class="modgroup"><h4>Ring style</h4><div class="chiprow">
+              <code class="chip">DONUT</code><code class="chip">THIN</code><code class="chip">XTHIN</code><code class="chip">THICK</code><code class="chip">HALF</code><code class="chip">HALFPLUS10</code><code class="chip">HALFMINUS20</code>
+            </div></div>
+            <div class="modgroup"><h4>Dimension &amp; size</h4><div class="chiprow">
+              <code class="chip">3D</code><code class="chip">VOLUME</code><code class="chip">HEIGHT</code><code class="chip">SIZE</code><code class="chip">SIZELOG</code><code class="chip">NORMSIZE</code><code class="chip">GRIDSIZE</code>
+            </div></div>
+            <div class="modgroup"><h4>Starburst petals</h4><div class="chiprow">
+              <code class="chip">STARBURST</code><code class="chip">XLFLOWER</code><code class="chip">LFLOWER</code><code class="chip">FLOWER</code><code class="chip">SFLOWER</code><code class="chip">XSFLOWER</code><code class="chip">…RAYS</code>
+            </div></div>
+            <div class="modgroup"><h4>Curvature</h4><div class="chiprow">
+              <code class="chip">BOW</code><code class="chip">SBOW</code><code class="chip">XSBOW</code><code class="chip">LBOW</code><code class="chip">XLBOW</code>
+            </div></div>
+            <div class="modgroup"><h4>Layout &amp; order</h4><div class="chiprow">
+              <code class="chip">SORT</code><code class="chip">REVERSE</code><code class="chip">STACKED</code><code class="chip">BIGTOTOP</code><code class="chip">NOROTATE</code><code class="chip">SYMMETRIC</code><code class="chip">POLAR</code><code class="chip">DIRECTION</code>
+            </div></div>
+            <div class="modgroup"><h4>Center</h4><div class="chiprow">
+              <code class="chip">CENTER</code><code class="chip">CENTERVALUE</code><code class="chip">GLOW</code>
+            </div></div>
+            <div class="modgroup"><h4>Data &amp; color</h4><div class="chiprow">
+              <code class="chip">CLASSES</code><code class="chip">COUNT</code><code class="chip">AUTOCOMPLETE</code>
+            </div></div>
+            <div class="modgroup"><h4>Style &amp; behavior</h4><div class="chiprow">
+              <code class="chip">SILENT</code><code class="chip">NOLINES</code><code class="chip">WHITELINES</code><code class="chip">ZOOM</code><code class="chip">VALUES</code>
+            </div></div>
+          </div>
+          <code class="flag-string sample" style="margin-top:14px">CHART|PIE|DONUT|3D|VOLUME  ·  CHART|PIE|STARBURST|3D|HEIGHT  ·  CHART|PIE|DONUT|STARBURST|3D|SIZE</code>
+        </div>
+      </div>
+
+      <!-- BUBBLE / SQUARE / LABEL -->
+      <div class="specimen" id="points" style="--key:var(--chart)">
+        <div class="glyph-col">
+          <svg viewBox="0 0 24 24" fill="none" stroke="var(--key)" stroke-width="1.7"><circle cx="7" cy="8" r="4.3"/><rect x="13" y="4" width="7" height="7" rx="1"/><text x="7" y="20" font-size="8" fill="var(--key)" stroke="none" text-anchor="middle" font-family="Georgia,serif">Aa</text></svg>
+          <span class="swatch"></span>
+        </div>
+        <div>
+          <h3><span class="kw">BUBBLE</span> <span class="kw-sep">/</span> <span class="kw alt">SQUARE</span> <span class="kw-sep">/</span> <span class="kw alt">LABEL</span></h3>
+          <p class="note">One value, one symbol — same sizing engine, three final shapes: a circle, a rect, or a formatted text label. The single-value counterpart to BAR/PIE's multi-value layouts, and a fixed-shape special case of SYMBOL below.</p>
+          <div class="modgroups">
+            <div class="modgroup"><h4>Shape choice</h4><div class="chiprow">
+              <code class="chip">BUBBLE</code><code class="chip">SQUARE</code><code class="chip">LABEL</code><code class="chip">TEXTONLY</code>
+            </div></div>
+            <div class="modgroup"><h4>Decoration (bubble only)</h4><div class="chiprow">
+              <code class="chip">GLOW</code><code class="chip">AURA</code>
+            </div></div>
+            <div class="modgroup"><h4>Sizing mode</h4><div class="chiprow">
+              <code class="chip">AUTOSIZE</code><code class="chip">NORMSIZE</code><code class="chip">FIXSIZE</code><code class="chip">MENUSIZE</code><code class="chip">NOSIZE</code><code class="chip">INVERTSIZE</code><code class="chip">RANGE</code><code class="chip menu-only">SURFACE</code><code class="chip">VOLUME</code>
+            </div></div>
+            <div class="modgroup"><h4>Color mode</h4><div class="chiprow">
+              <code class="chip">CATEGORICAL</code><code class="chip">COMPOSECOLOR</code><code class="chip">DOMINANT</code><code class="chip">PERCENTOFMEAN</code><code class="chip">DEVIATION</code>
+            </div></div>
+            <div class="modgroup"><h4>Style &amp; animation</h4><div class="chiprow">
+              <code class="chip">NOLINES</code><code class="chip">OUTLINE</code><code class="chip">MORPH</code><code class="chip">CLIP</code><code class="chip">ZEROISVALUE</code>
+            </div></div>
+          </div>
+          <code class="flag-string sample" style="margin-top:14px">CHART|BUBBLE|VALUES  ·  CHART|SQUARE|VALUES  ·  CHART|BUBBLE|CATEGORICAL</code>
+        </div>
+      </div>
+
+      <!-- SYMBOL -->
+      <div class="specimen" id="symbol" style="--key:var(--chart)">
+        <div class="glyph-col">
+          <svg viewBox="0 0 24 24" fill="none" stroke="var(--key)" stroke-width="1.7"><path d="M12 3l2.4 6.8L21 11l-5.2 4.4L17.2 21 12 17.4 6.8 21l1.4-5.6L3 11l6.6-1.2z"/></svg>
+          <span class="swatch"></span>
+        </div>
+        <div>
+          <h3><span class="kw">SYMBOL</span></h3>
+          <p class="note">The most general shape in the file — 2,060 lines, the single largest chart block. One value picks a single named shape (a superset of BUBBLE/SQUARE/LABEL above); more than one value field, or a <code>CATEGORICAL</code> aggregation, promotes the same code path into pie-like or bar-like multi-symbol layouts.</p>
+          <p class="quote">"in fact, bubble, line and area charts are derivants from SYMBOL charts!" — the source code's own comment, above the <code>PLOT</code> branch.</p>
+          <div class="modgroups">
+            <div class="modgroup"><h4>Shape vocabulary</h4><div class="chiprow">
+              <code class="chip">CIRCLE</code><code class="chip">SQUARE</code><code class="chip">ROUNDRECT</code><code class="chip">CROSS</code><code class="chip">DIAMOND</code><code class="chip">TRIANGLE</code><code class="chip">HEXAGON</code><code class="chip">LABEL</code><code class="chip">EMPTY</code>
+              <span class="aside">+ any named SVG &lt;symbol&gt; id, or a full image URL (.svg/.png/.jpeg — SVG counts as an image here too, drawn via &lt;image&gt; not &lt;use&gt;)</span>
+            </div></div>
+            <div class="modgroup"><h4>One symbol, or one per value</h4><div class="chiprow">
+              <code class="mono" style="font-size:.82rem">symbols:circle</code>
+              <span class="aside">one entry → same shape for every value</span>
+            </div><div class="chiprow" style="margin-top:6px">
+              <code class="mono" style="font-size:.82rem">symbols:circle|square|triangle</code>
+              <span class="aside">one entry per value — short lists repeat their last entry to fill the rest</span>
+            </div></div>
+            <div class="modgroup"><h4>Box &amp; frame</h4><div class="chiprow">
+              <code class="chip">FRAME</code><code class="chip">FIELD</code>
+            </div></div>
+            <div class="modgroup"><h4>Multi-symbol layout</h4><div class="chiprow">
+              <code class="chip">SEQUENCE</code><code class="chip">BASE</code><code class="chip">CONE</code><code class="chip">STAR</code><code class="chip">EXPAND</code><code class="chip">COMPRESS</code><code class="chip">RANDOM</code><code class="chip">HORZ</code><code class="chip">LEFT</code><code class="chip">TOP</code><code class="chip">BOTTOM</code><code class="chip">RINGS</code>
+              <span class="aside">stacks values inside one chart — for stacking whole charts on one position, see MULTIPLE/MULTIGRID/MULTIQUAD ↓</span>
+            </div></div>
+            <div class="modgroup"><h4>Plot family</h4><div class="chiprow">
+              <code class="chip">PLOT</code><code class="chip">PLOTX</code><code class="chip">PLOTY</code><code class="chip">PLOTXY</code><code class="chip">PLOTYX</code><code class="chip">PLOTVAR</code><code class="chip">LOG</code><code class="chip">INVERT</code><code class="chip">GRADIENT</code><code class="chip">SMOOTH</code><code class="chip">LINREG</code>
+            </div></div>
+            <div class="modgroup"><h4>Lines &amp; area (need LINES)</h4><div class="chiprow">
+              <code class="chip">LINES</code><code class="chip">AREA</code><code class="chip">FADE</code><code class="chip">LOLLIPOP</code>
+              <span class="aside">LINES connects points with segments instead of discrete symbols; AREA fills to the baseline; FADE turns that fill into a gradient; LOLLIPOP adds a stem under each point, with or without LINES</span>
+            </div></div>
+            <div class="modgroup"><h4>Line style</h4><div class="chiprow">
+              <code class="chip">STACKED</code><code class="chip">ZEROISVALUE</code><code class="chip">ZEROISNOTVALUE</code><code class="chip">NOCLIP</code>
+              <span class="aside">INLINETEXT is listed under Labels below</span>
+            </div></div>
+            <div class="modgroup"><h4>Last-point markers</h4><div class="chiprow">
+              <code class="chip">LASTPOP</code><code class="chip">LASTARROW</code><code class="chip">LASTVALUE</code>
+            </div></div>
+            <div class="modgroup"><h4>Sparkline (need both)</h4><div class="chiprow">
+              <code class="chip">GRID</code><code class="chip">BOX</code>
+              <span class="aside">nGridX/nGridY: small-multiples rows/columns</span>
+            </div></div>
+            <div class="modgroup"><h4>Color mode</h4><div class="chiprow">
+              <code class="chip">CATEGORICAL</code><code class="chip">DOMINANT</code><code class="chip">PERCENTOFMEAN</code><code class="chip">DEVIATION</code><code class="chip">COMPOSECOLOR</code><code class="chip">SUBTRACTIVE</code>
+            </div></div>
+            <div class="modgroup"><h4>Order, size &amp; animation</h4><div class="chiprow">
+              <code class="chip">SORT</code><code class="chip">BYMEAN</code><code class="chip">BYMEDIAN</code><code class="chip">CLIP</code><code class="chip">MORPH</code><code class="chip">COUNT</code><code class="chip">AUTOSIZE</code><code class="chip">INVERTSIZE</code><code class="chip">DOPACITY</code><code class="chip">GLOW</code><code class="chip">AURA</code>
+            </div></div>
+            <div class="modgroup"><h4>Labels</h4><div class="chiprow">
+              <code class="chip">VALUES</code><code class="chip">AXIS</code><code class="chip">CENTERVALUES</code><code class="chip">INLINETEXT</code><code class="chip">MULTILINE</code><code class="chip">TEXTONLY</code>
+            </div></div>
+          </div>
+          <code class="flag-string sample" style="margin-top:14px">CHART|SYMBOL|CATEGORICAL  ·  CHART|SYMBOL|SEQUENCE|STAR|EXPAND  ·  CHART|SYMBOL|SEQUENCE|PLOT|GRID|BOX</code>
+        </div>
+      </div>
+
+      <!-- VECTOR / BEZIER -->
+      <div class="specimen" id="vector" style="--key:var(--chart)">
+        <div class="glyph-col">
+          <svg viewBox="0 0 24 24" fill="none" stroke="var(--key)" stroke-width="1.7"><path d="M4 18 C 9 6, 15 6, 20 12" marker-end="url(#vecarrow-big)"/><defs><marker id="vecarrow-big" markerWidth="6" markerHeight="6" refX="4" refY="3" orient="auto"><path d="M0,0 L5,3 L0,6 Z" fill="var(--key)"/></marker></defs></svg>
+          <span class="swatch"></span>
+        </div>
+        <div>
+          <h3><span class="kw">VECTOR</span> <span class="kw-sep">/</span> <span class="kw alt">BEZIER</span></h3>
+          <p class="note">A connector between two node positions, drawn in <code>chartMap()</code> — not <code>drawChart()</code> — since it needs a second position, often looked up on a <code>FEATURE</code> layer. <code>VECTOR</code> is the plain straight-line form; <code>BEZIER</code> bows into a curve and carries almost all of the richness below — width, opacity and color can all scale with the value, and the curve's bow can be shaped or randomized.</p>
+          <div class="modgroups">
+            <div class="modgroup"><h4>Shape</h4><div class="chiprow">
+              <code class="chip">VECTOR</code><code class="chip">BEZIER</code>
+            </div></div>
+            <div class="modgroup"><h4>Decoration (both)</h4><div class="chiprow">
+              <code class="chip">POINTER</code><code class="chip">ARROW</code><code class="chip">DASH</code>
+              <span class="aside">DASH animates a flowing stroke-dashoffset</span>
+            </div></div>
+            <div class="modgroup"><h4>Bow shaping (BEZIER only)</h4><div class="chiprow">
+              <code class="chip">SHORT</code><code class="chip">LONG</code><code class="chip">RANDOM</code><code class="chip">REVERSE</code>
+              <span class="aside">REVERSE also triggers automatically on a negative value</span>
+            </div></div>
+            <div class="modgroup"><h4>Width, gap &amp; opacity (BEZIER only)</h4><div class="chiprow">
+              <code class="chip">GAP</code><code class="chip">DYNAMICWIDTH</code><code class="chip">DOPACITY</code><code class="chip">DOPACITYMIN</code>
+            </div></div>
+            <div class="modgroup"><h4>Color (BEZIER only)</h4><div class="chiprow">
+              <code class="chip">GRADIENT</code><code class="chip">FADEIN</code>
+              <span class="aside">two-stop linear gradient along the line</span>
+            </div></div>
+            <div class="modgroup"><h4>Labels (BEZIER only)</h4><div class="chiprow">
+              <code class="chip">VALUES</code>
+              <span class="aside">value text set on the curve's own path</span>
+            </div></div>
+          </div>
+          <code class="flag-string sample" style="margin-top:14px">CHART|VECTOR|POINTER|DASH  ·  CHART|BEZIER|SHORT|POINTER|VALUES  ·  CHART|BEZIER|GRADIENT|DYNAMICWIDTH</code>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ============================================================= OTHER SHAPES -->
+  <section id="other-shapes">
+    <div class="section-head">
+      <div class="section-kicker">The remaining four</div>
+      <h2>Waffle, Buffer &amp; the minimal primitives</h2>
+      <p class="section-dek">Smaller, more specialized branches of the same per-item drawing loop.</p>
+    </div>
+
+    <div class="grid-3">
+
+      <div class="specimen compact" style="--key:var(--waffle)">
+        <div class="glyph-col"><svg viewBox="0 0 24 24" fill="none" stroke="var(--key)" stroke-width="1.7"><path d="M4 4h4v4H4zM10 4h4v4h-4zM16 4h4v4h-4zM4 10h4v4H4zM10 10h4v4h-4zM4 16h4v4H4z"/></svg></div>
+        <div>
+          <h3 style="font-size:1.05rem"><span class="kw">WAFFLE</span></h3>
+          <p class="note" style="margin-bottom:10px">One unit square per count, gridded rather than stacked — a countable alternative to BAR.</p>
+          <div class="chiprow"><code class="chip">GRIDSIZE</code><code class="chip">AUTOSIZE</code><code class="chip">WAFFLE100</code><code class="chip">WAFFLE1000</code><code class="chip">AUTO100</code><code class="chip">SORT</code></div>
+        </div>
+      </div>
+
+      <div class="specimen compact" style="--key:var(--buffer)">
+        <div class="glyph-col"><svg viewBox="0 0 24 24" fill="none" stroke="var(--key)" stroke-width="1.7"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5.5" stroke-dasharray="2.5 2.5"/></svg></div>
+        <div>
+          <h3 style="font-size:1.05rem"><span class="kw">BUFFER</span></h3>
+          <p class="note" style="margin-bottom:10px">Not a value chart — a shape of a fixed real-world dimension around a point or along a line (<code class="mono" style="font-size:.85em">buffersize</code>). The same buffer geometry also doubles as a selection tool: <code class="mono" style="font-size:.85em">newSelection(..., "type:BUFFER;buffersize:200")</code> selects whatever falls inside it.</p>
+          <div class="chiprow"><code class="chip">OVERLAY</code><code class="chip">VALUE</code></div>
+        </div>
+      </div>
+
+      <div class="specimen compact" style="--key:var(--dot)">
+        <div class="glyph-col"><svg viewBox="0 0 24 24" fill="none" stroke="var(--key)" stroke-width="1.7"><circle cx="8" cy="12" r="2.6" fill="var(--key)" stroke="none"/><rect x="15" y="9.5" width="5" height="5"/></svg></div>
+        <div>
+          <h3 style="font-size:1.05rem"><span class="kw">DOT</span> <span class="kw-sep">/</span> <span class="kw alt">QUAD</span></h3>
+          <p class="note" style="margin-bottom:10px">Fast-path primitives, checked before the main dispatch chain — the code's own comment calls them the "most simple representation." No modifiers apply.</p>
+        </div>
+      </div>
+
+      <div class="specimen compact" style="--key:var(--blank)">
+        <div class="glyph-col"><svg viewBox="0 0 24 24" fill="none" stroke="var(--key)" stroke-width="1.7" stroke-dasharray="3 2.5"><rect x="4" y="4" width="16" height="16" rx="2"/></svg></div>
+        <div>
+          <h3 style="font-size:1.05rem"><span class="kw">BLANK</span> <span class="kw-sep">/</span> <span class="kw alt">USER</span></h3>
+          <p class="note" style="margin-bottom:10px"><code>BLANK</code> draws nothing — a test hook. <code>USER</code> hands drawing to your own function, named by <code class="mono" style="font-size:.85em">userdraw:</code> (e.g. <code class="mono" style="font-size:.85em">userdraw:myChart</code> → resolves <code class="mono" style="font-size:.85em">ixmaps.myChart</code>). The engine calls it as <code class="mono" style="font-size:.85em">fn(SVGDocument, opt)</code> once per feature, and repositions the result by whatever <code class="mono" style="font-size:.85em">{x, y}</code> it returns.</p>
+          <div class="chiprow" style="margin-bottom:8px"><code class="chip">target</code><code class="chip">theme</code><code class="chip">item</code><code class="chip">dbRecord</code><code class="chip">value</code><code class="chip">values</code><code class="chip">size</code><code class="chip">maxSize</code><code class="chip">color</code><code class="chip">textcolor</code><code class="chip">ccolor</code><code class="chip">class</code><code class="chip">flag</code><code class="chip">mark</code></div>
+          <p class="note" style="margin-bottom:10px">Optional <code class="mono" style="font-size:.85em">myChart_init</code> / <code class="mono" style="font-size:.85em">myChart_finish</code> run once before/after the per-feature loop, with a slimmer <code class="mono" style="font-size:.85em">{target, theme}</code>.</p>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ============================================================= BOX -->
+  <section id="box">
+    <div class="section-head">
+      <div class="section-kicker">Cross-shape, but visible</div>
+      <h2>BOX — a shared frame, not just a rule</h2>
+      <p class="section-dek">Everything under "Cross-shape modifiers" below is pure behavior — sort order, value math, animation timing. <code>BOX</code> is the odd one out: it actually draws something. A background, a border, and a title, attached to the shared per-position group — so it wraps <em>every</em> chart sharing that map point at once, not each one individually.</p>
+    </div>
+
+    <div class="specimens">
+      <div class="specimen" id="box-card" style="--key:var(--chart)">
+        <div class="glyph-col">
+          <svg viewBox="0 0 24 24" fill="none" stroke="var(--key)" stroke-width="1.7"><rect x="3" y="6.5" width="18" height="14" rx="1"/><path d="M6 3.2h9" stroke-width="2.2" stroke-linecap="round"/></svg>
+          <span class="swatch"></span>
+        </div>
+        <div>
+          <h3><span class="kw">BOX</span></h3>
+          <p class="note">Drawn once per map position, sized to fit <em>after</em> every chart there is done — which is exactly why it doubles as the shared frame around a whole <code>MULTIPLE</code>/<code>MULTIGRID</code>/<code>MULTIQUAD</code> group (see Cross-shape modifiers) rather than one box per chart. Paired with <code>GRID</code>, it's also what turns a SYMBOL <code>PLOT</code> into a titled, framed sparkline.</p>
+          <div class="modgroups">
+            <div class="modgroup"><h4>Enable &amp; shape</h4><div class="chiprow">
+              <code class="chip">BOX</code><code class="chip">CIRCULAR</code>
+            </div></div>
+            <div class="modgroup"><h4>Background &amp; border</h4><div class="chiprow">
+              <code class="chip">boxcolor</code><code class="chip">boxopacity</code><code class="chip">bordercolor</code><code class="chip">borderstyle</code><code class="chip">borderwidth</code><code class="chip">boxmargin</code>
+              <span class="aside">borderstyle: dotted/dashed/solid/none · borderwidth: thin/thick</span>
+            </div></div>
+            <div class="modgroup"><h4>Title</h4><div class="chiprow">
+              <code class="chip">TITLE</code><code class="chip">titlefield</code><code class="chip">BOTTOMTITLE</code><code class="chip">CLIPPEDTITLE</code>
+            </div></div>
+            <div class="modgroup"><h4>Visibility by zoom</h4><div class="chiprow">
+              <code class="chip">boxupper</code><code class="chip">boxlower</code><code class="chip">titleupper</code><code class="chip">titlelower</code>
+            </div></div>
+          </div>
+          <code class="flag-string sample" style="margin-top:14px">CHART|BUBBLE|BOX|TITLE;titlefield:name;boxcolor:white;bordercolor:#999  ·  CHART|BAR|MULTIGRID|BOX|TITLE  ·  CHART|SYMBOL|SEQUENCE|PLOT|GRID|BOX</code>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================= GLOBAL -->
+  <section id="global">
+    <div class="section-head">
+      <div class="section-kicker">Orthogonal to shape</div>
+      <h2>Cross-shape modifiers</h2>
+      <p class="section-dek">These aren't tied to one sub-shape — they act earlier in the pipeline (how values are aggregated or transformed) or later (how the result is drawn regardless of shape).</p>
+    </div>
+
+    <div class="table-wrap">
+      <table class="matrix">
+        <thead><tr><th>Stage</th><th>Flags</th><th>Effect</th></tr></thead>
+        <tbody>
+          <tr>
+            <td class="stage">Aggregation mode</td>
+            <td><code class="chip">AGGREGATE</code> <code class="chip">GROUP</code> <code class="chip">CATEGORICAL</code> <code class="chip">SEQUENCE</code></td>
+            <td class="effect">Raw records collapse into per-location items; CATEGORICAL/SEQUENCE mark "one category value" data rather than N stacked fields.</td>
+          </tr>
+          <tr>
+            <td class="stage">Value combination</td>
+            <td><code class="chip">AGGREGATE</code> <code class="chip">SUM</code> <code class="chip">MEAN</code> <code class="chip">MAX</code> <code class="chip">MIN</code> <code class="chip">GROUP</code> <code class="mono" style="font-size:.85em">gridwidth</code>/<code class="mono" style="font-size:.85em">gridwidthpx</code> <code class="chip">RELOCATE</code></td>
+            <td class="effect">Once <code>AGGREGATE</code> collapses several records onto one position, this decides how their numbers merge: <code>SUM</code> adds them (the default — or <code>MEAN</code> if a <code class="mono" style="font-size:.85em">field100</code> percentage base is set), <code>MEAN</code> additionally divides by the item count, <code>MAX</code>/<code>MIN</code> keep a running maximum/minimum instead of summing. Matching is normally by exact position, but <code class="mono" style="font-size:.85em">gridwidth</code> (real-world meters) or <code class="mono" style="font-size:.85em">gridwidthpx</code> (constant screen pixels, recalculated every zoom) optionally snap positions to a spatial grid first. <code>GROUP</code> uses that same spatial binning but skips the combining step — items stay separate, just clustered and ordered within their bin. <code>RELOCATE</code> is a different concern again — it recomputes the merged position itself as the average of the original point positions, leaving the values untouched.</td>
+          </tr>
+          <tr>
+            <td class="stage">Value pipeline</td>
+            <td><code class="chip">FRACTION</code> <code class="chip">PERMILLE</code> <code class="chip">RELATIVE</code> <code class="chip">INVERT</code> <code class="chip">DIFFERENCE</code> <code class="chip">CALCVAL</code> <code class="chip">CALC100</code> <code class="chip">PRODUCT</code></td>
+            <td class="effect">Pre-processes the numeric value before any shape is drawn — independent of whether the result becomes a bar, a bubble, or a pie slice.</td>
+          </tr>
+          <tr>
+            <td class="stage">Size exponent</td>
+            <td><code class="mono" style="font-size:.85rem">nSizePow</code>: <code class="chip">SIZEP1</code>(1) · <code class="chip">SIZEP1H</code>(1.5) · default/<code class="chip menu-only">SURFACE</code>(2) · <code class="chip">3D</code>/<code class="chip">SIZEVOLUME</code>(3) · <code class="chip">SIZEP4</code>(4) · <code class="chip">SIZELOG</code>(10)</td>
+            <td class="effect">One shared exponent table drives BAR's dynamic width, and BUBBLE/SQUARE/SYMBOL's radius — "3D" and "VOLUME" are really just exponent = 3.</td>
+          </tr>
+          <tr>
+            <td class="stage">Rendering context</td>
+            <td><code class="chip">NORMSIZE</code> <code class="chip">MENUSIZE</code> <code class="chip">SILENT</code> <code class="chip">ZOOM</code> <code class="chip">XAXIS</code> <code class="chip">AXIS</code> <code class="chip">VALUES</code></td>
+            <td class="effect">Legend-preview sizing vs. live-map sizing, tooltip suppression, zoom-dependent label fading, value-label toggles.</td>
+          </tr>
+          <tr>
+            <td class="stage">Animation</td>
+            <td><code class="chip">MORPH</code> <code class="chip">CLIP</code></td>
+            <td class="effect">Animated presentation of a value sequence — interpolates between frames for time-series data, shared by BAR, BUBBLE/SQUARE and SYMBOL. (<code>BUFFER</code> was listed here before, but it's a geometry concept, not an animation one — see the BUFFER card above.)</td>
+          </tr>
+          <tr>
+            <td class="stage">Stroke</td>
+            <td><code class="chip">NOLINES</code></td>
+            <td class="effect">Suppresses borders — honored identically in PIE, BUBBLE/SQUARE, and the choropleth legend.</td>
+          </tr>
+          <tr>
+            <td class="stage">Multi-chart layout</td>
+            <td><code class="chip">MULTIPLE</code>/<code class="chip">ALIGN</code> · <code class="chip">MULTIFIX</code>/<code class="chip">MULTIGRID</code> · <code class="chip">MULTISQUARE</code>/<code class="chip">MULTIQUAD</code></td>
+            <td class="effect">When more than one whole chart instance lands on the same map position (two themes, or multiple aggregated parts), the default is to superpose them centered. These arrange them instead — flow by real measured bounding box (<code class="chip">MULTIPLE</code>, calls the costlier <code>getBox()</code>), snap to a fixed-size grid (<code class="chip">MULTIGRID</code>, row width from <code class="mono" style="font-size:.85em">nGridX</code>), or pack outward in an expanding square spiral (<code class="chip">MULTIQUAD</code>). Applies across BAR/BUBBLE/SQUARE/SYMBOL/PIE alike — distinct from SYMBOL's own <code>SEQUENCE</code> layouts above, which stack <em>values inside one chart</em>, not separate charts sharing a position.</td>
+          </tr>
+          <tr>
+            <td class="stage">Draw order</td>
+            <td><code class="chip">SORT</code>/<code class="chip">UP</code> · <code class="chip">3D</code></td>
+            <td class="effect">Two different jobs depending on the shape. On multi-value charts (PIE segments, BAR bars, SYMBOL|SEQUENCE parts) <code>SORT</code> reorders the <em>values inside one chart</em>. On single-value charts repeated across the map (BUBBLE, SQUARE, SYMBOL, BUFFER) there's nothing to reorder inside one chart, so <code>SORT</code> instead controls which chart instances draw on top: by default the larger value wins the top spot, <code>SORT|UP</code> flips it so the smaller one does. <code>3D</code> plays a related but separate role — it forces charts to be drawn strictly in map-position order, top to bottom, so overlapping instances stack correctly regardless of <code>SORT</code>.</td>
+          </tr>
+          <tr>
+            <td class="stage">Legend display</td>
+            <td><code class="chip">NOLEGEND</code> <code class="chip">SIMPLELEGEND</code> <code class="chip">COMPACTLEGEND</code> <code class="chip">TEXTLEGEND</code></td>
+            <td class="effect">Lives in the separate legend-panel renderer (<code class="mono" style="font-size:.85em">ui/js/tools/legend.js</code>), not the per-item drawing code above. <code>NOLEGEND</code> drops the theme from the legend panel entirely. <code>SIMPLELEGEND</code> collapses each entry to one compact inline line (swatch + label) instead of the default two-line layout (label, then a color bar with values); <code>COMPACTLEGEND</code> currently triggers that identical branch — no behavior distinguishes it from <code>SIMPLELEGEND</code> yet. <code>TEXTLEGEND</code> keeps the label but drops the color swatch. <code>SILENT</code> (Rendering context, above) suppresses the on-map tooltip either way, but whether it also hides the legend entry itself differs between two legend-rendering code paths in the repo.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <footer>
+    Compiled by reading <code>chartMap()</code>, <code>drawChart()</code>, the <code>SYMBOL</code> dispatch block, <code>getChartTypeMenu()</code> and the <code>doChangeThemeStyle()</code> doc comment in <code>maptheme.js</code> — line ranges available on request. Modifier lists are as-implemented, not as-documented; several exist only inside the UI's chart-type picker menu (marked with a dashed border above).
+  </footer>
+
+</div>

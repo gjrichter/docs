@@ -15,6 +15,8 @@ project:
       - user_charts.qmd
       - api_documentation.qmd
       - map_types.qmd
+      - chart_type_grammar.qmd
+      - theme_type_tree.qmd
       - theme_styles.qmd
       - examples.qmd
       - troubleshooting.qmd
@@ -74,6 +76,10 @@ website:
             text: "API Reference"
           - href: map_types.qmd
             text: "Visualization Types & Modifiers"
+          - href: chart_type_grammar.qmd
+            text: "Chart Type Grammar (schematic overview)"
+          - href: theme_type_tree.qmd
+            text: "Theme Type Tree (schematic overview)"
           - href: theme_styles.qmd
             text: "Style Properties"
       - text: "---"

@@ -6,7 +6,7 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="description" content="Reference for the iXMaps .type() string: the three base types, the decision tree by data shape, and the complete modifier vocabulary.">
+<meta name="description" content="Reference for the iXMaps .type() string: the four base types, the decision tree by data shape, and the complete modifier vocabulary.">
 
 <title>Visualization Types &amp; Modifiers – iXMaps Documentation</title>
 <style>
@@ -66,7 +66,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./theme_styles.html" rel="next">
+<link href="./chart_type_grammar.html" rel="next">
 <link href="./api_documentation.html" rel="prev">
 <link href="./pics/favicon.png" rel="icon" type="image/png">
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
@@ -288,6 +288,18 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="./chart_type_grammar.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Chart Type Grammar (schematic overview)</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./theme_type_tree.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Theme Type Tree (schematic overview)</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="./theme_styles.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Style Properties</span></a>
   </div>
@@ -328,7 +340,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#visualization-types" id="toc-visualization-types" class="nav-link active" data-scroll-target="#visualization-types">Visualization types</a>
   <ul class="collapse">
   <li><a href="#type-and-style-two-orthogonal-dimensions" id="toc-type-and-style-two-orthogonal-dimensions" class="nav-link" data-scroll-target="#type-and-style-two-orthogonal-dimensions">Type and style — two orthogonal dimensions</a></li>
-  <li><a href="#the-three-base-types" id="toc-the-three-base-types" class="nav-link" data-scroll-target="#the-three-base-types">The three base types</a></li>
+  <li><a href="#the-four-base-types" id="toc-the-four-base-types" class="nav-link" data-scroll-target="#the-four-base-types">The four base types</a></li>
   <li><a href="#classification-method-tokens" id="toc-classification-method-tokens" class="nav-link" data-scroll-target="#classification-method-tokens">Classification method tokens</a></li>
   <li><a href="#choosing-by-data-shape" id="toc-choosing-by-data-shape" class="nav-link" data-scroll-target="#choosing-by-data-shape">Choosing by data shape</a></li>
   <li><a href="#type-modifiers" id="toc-type-modifiers" class="nav-link" data-scroll-target="#type-modifiers">Type modifiers</a></li>
@@ -346,7 +358,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <div>
   <div class="description">
-    Reference for the iXMaps .type() string: the three base types, the decision tree by data shape, and the complete modifier vocabulary.
+    Reference for the iXMaps .type() string: the four base types, the decision tree by data shape, and the complete modifier vocabulary.
   </div>
 </div>
 
@@ -394,14 +406,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 base   shape  sizing  coloring  effect  labels  visibility</code></pre>
 <hr>
 </section>
-<section id="the-three-base-types" class="level3">
-<h3 class="anchored" data-anchor-id="the-three-base-types">The three base types</h3>
-<p>Every iXMaps layer starts with one of three base types. Everything else — classification method, chart shape, visual modifiers — is appended to one of these roots.</p>
+<section id="the-four-base-types" class="level3">
+<h3 class="anchored" data-anchor-id="the-four-base-types">The four base types</h3>
+<p>Every iXMaps layer starts with one of four base types. Everything else — classification method, chart shape, visual modifiers — is appended to one of these roots.</p>
 <table class="caption-top table">
-<colgroup>
-<col style="width: 45%">
-<col style="width: 54%">
-</colgroup>
 <thead>
 <tr class="header">
 <th>Base type</th>
@@ -415,15 +423,29 @@ base   shape  sizing  coloring  effect  labels  visibility</code></pre>
 </tr>
 <tr class="even">
 <td><code>CHOROPLETH</code></td>
-<td>Colours polygon fills by data value. Requires geometry already loaded (same layer name as a <code>FEATURE</code> base). A <strong>value field</strong> is mapped through a colour scheme via a classification method.</td>
+<td>Colours polygon fills by data value. Draws no geometry of its own — requires a <code>FEATURE</code> layer under the <em>same layer name</em> to supply the polygons/lines (see <a href="./layers_themes.html#the-layer-name-is-a-join-key-not-just-a-label">The layer name is a join key</a>). A <strong>value field</strong> is mapped through a colour scheme via a classification method.</td>
 </tr>
 <tr class="odd">
 <td><code>CHART</code></td>
-<td>Creates new SVG objects (bubbles, bars, pies, flow lines, …) positioned by lat/lon coordinates or geometry centroids. A <strong>value field</strong> drives size, colour, or both.</td>
+<td>Creates new SVG objects (bubbles, bars, pies, flow lines, …). A <strong>value field</strong> drives size, colour, or both.</td>
+</tr>
+<tr class="even">
+<td><code>WMS</code></td>
+<td>Renders an external map image as a raster overlay — fetched live from an ArcGIS-style export/image endpoint (<code>.data({ server: url })</code>). Sized and positioned from the current map view, not from a style option; no data value or classification involved.</td>
 </tr>
 </tbody>
 </table>
-<p><code>FEATURE</code> is a structural layer — it gives the map geography. <code>CHOROPLETH</code> and <code>CHART</code> are data layers — they need a value field and a classification or sizing method to translate numbers into visual marks.</p>
+<p><code>FEATURE</code> is a structural layer — it gives the map geography. <code>CHOROPLETH</code> and <code>CHART</code> are data layers — they need a value field and a classification or sizing method to translate numbers into visual marks. <code>WMS</code> is neither: it’s an imagery layer, closer in spirit to a basemap than to a data visualization.</p>
+<p><code>FEATURE</code> actually draws a specific set of geometry types: <code>Point</code>, <code>LineString</code>, <code>MultiLineString</code>, <code>Polygon</code>, <code>MultiPolygon</code>, and an iXMaps-only <code>Sphere</code> (used for full-globe rendering under an orthographic projection). <code>MultiPoint</code> and <code>GeometryCollection</code> geometries are parsed but not drawn.</p>
+<p><strong>Positioning a <code>CHART</code> layer.</strong> A chart needs a map position for every record, and there are two ways to give it one, both through <code>.binding({ lookup: ... })</code>:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co">// (a) coordinates straight from the data — two pipe-separated fields, or one field holding a GeoJSON Point</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">binding</span>({ <span class="dt">lookup</span><span class="op">:</span> <span class="st">"lat_field|lon_field"</span><span class="op">,</span> <span class="dt">value</span><span class="op">:</span> <span class="st">"population"</span> })</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">type</span>(<span class="st">"CHART|BUBBLE|SIZE"</span>)</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="co">// (b) joined to a FEATURE layer's own shape, by id — same pattern as a CHOROPLETH join</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">binding</span>({ <span class="dt">lookup</span><span class="op">:</span> <span class="st">"iso2"</span><span class="op">,</span> <span class="dt">value</span><span class="op">:</span> <span class="st">"population"</span> })   <span class="co">// same layer name as the FEATURE providing "iso2" ids</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">type</span>(<span class="st">"CHART|BUBBLE|SIZE"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>With a single lookup field, the chart’s position is the centroid of the matching <code>FEATURE</code> shape — draws no geometry of its own, same join mechanics as <code>CHOROPLETH</code>. With two pipe-separated fields (or a GeoJSON <code>Point</code>/<code>MultiPoint</code> value in one field), the position comes directly from the data, no <code>FEATURE</code> layer needed.</p>
 <hr>
 </section>
 <section id="classification-method-tokens" class="level3">
@@ -447,7 +469,7 @@ base   shape  sizing  coloring  effect  labels  visibility</code></pre>
 </tr>
 <tr class="odd">
 <td><code>HEADTAIL</code></td>
-<td>Iterative mean split (heavy-tailed data)</td>
+<td>Iterative mean split (heavy-tailed data) — the odd one out: ignores a <code>classes</code> count entirely, the data decides how many classes there are</td>
 </tr>
 <tr class="even">
 <td><code>NATURAL</code></td>
@@ -484,10 +506,13 @@ base   shape  sizing  coloring  effect  labels  visibility</code></pre>
 │  ├─ Flows origin→destination?           → CHART|VECTOR|BEZIER|POINTER
 │  └─ Stacked / grouped bars?             → CHART|BAR|STACKED
 │
-└─ Polygons (GeoJSON / TopoJSON)?
-   ├─ Boundaries only?                    → FEATURE
-   ├─ Colour by data (inline)?            → FEATURE|CHOROPLETH|QUANTILE
-   └─ Join external data to geometry?     → CHOROPLETH|QUANTILE  (NEVER add FEATURE)</code></pre>
+├─ Polygons (GeoJSON / TopoJSON)?
+│  ├─ Boundaries only?                    → FEATURE
+│  ├─ Colour by data (inline)?            → FEATURE|CHOROPLETH|QUANTILE
+│  └─ Join external data to geometry?     → CHOROPLETH|QUANTILE  (NEVER add FEATURE)
+│
+└─ An external map image (basemap, imagery, another WMS-like service)?
+   └─ Just an overlay, no data value?     → WMS</code></pre>
 </section>
 <section id="type-modifiers" class="level3">
 <h3 class="anchored" data-anchor-id="type-modifiers">Type modifiers</h3>
@@ -522,7 +547,7 @@ base   shape  sizing  coloring  effect  labels  visibility</code></pre>
 </tr>
 <tr class="odd">
 <td><code>TEXTLEGEND</code></td>
-<td>Category labels on symbols instead of legend box</td>
+<td>Legend entry keeps its text label but drops the color swatch</td>
 </tr>
 <tr class="even">
 <td><code>GRADIENT</code></td>
@@ -587,6 +612,14 @@ base   shape  sizing  coloring  effect  labels  visibility</code></pre>
 <tr class="even">
 <td><code>NOLEGEND</code></td>
 <td>Excludes from legend only (tooltips still work)</td>
+</tr>
+<tr class="odd">
+<td><code>SIMPLELEGEND</code></td>
+<td>Collapses each legend entry to one compact inline line (swatch + label) instead of the default two-line layout</td>
+</tr>
+<tr class="even">
+<td><code>COMPACTLEGEND</code></td>
+<td>Currently renders identically to <code>SIMPLELEGEND</code> — no distinguishing behavior yet</td>
 </tr>
 <tr class="odd">
 <td><code>ZEROISNOTVALUE</code></td>
@@ -658,7 +691,7 @@ base   shape  sizing  coloring  effect  labels  visibility</code></pre>
 </tbody>
 </table>
 <p>Bind two fields with <code>|</code>: <code>.binding({ value: "field_a|field_b" })</code>. The modifier determines how the pair is collapsed to one value for colour/size mapping.</p>
-<p><strong>Multi-field coloring modifiers</strong> (for multiple piped fields):</p>
+<p><strong>Multi-field coloring modifiers</strong> (for multiple piped fields — one <em>winner</em> lends its color, versus blending all of them at once):</p>
 <table class="caption-top table">
 <colgroup>
 <col style="width: 55%">
@@ -673,19 +706,27 @@ base   shape  sizing  coloring  effect  labels  visibility</code></pre>
 <tbody>
 <tr class="odd">
 <td><code>DOMINANT</code></td>
-<td>Colour by the field with the highest value</td>
+<td>Colour by whichever field clears a <code>filter</code> threshold (<code>min</code>/<code>max</code>/<code>mean</code>/<code>median</code>, ± <code>dfilter</code>%)</td>
 </tr>
 <tr class="even">
 <td><code>PERCENTOFMEAN</code></td>
-<td>Colour by the field whose value deviates most from the mean</td>
+<td>Same as <code>DOMINANT</code>, but the threshold is a percentage of the field’s mean rather than its raw value — comparable across fields with very different scales</td>
 </tr>
 <tr class="odd">
 <td><code>DEVIATION</code></td>
-<td>Colour by the field with the highest standard-deviation deviation</td>
+<td>Same again, but the relevance metric is a z-score: <code>(value − mean) / stddev</code></td>
 </tr>
 <tr class="even">
 <td><code>OFFSETMEAN</code></td>
 <td>Show deviation of all fields as +/− pointers (use with <code>CHART|BAR|POINTER</code>)</td>
+</tr>
+<tr class="odd">
+<td><code>COMPOSECOLOR</code></td>
+<td>No single winner — blends every field’s value into one new color at once, additively by default (two fields → a bivariate choropleth; three or more → tri-/multivariate)</td>
+</tr>
+<tr class="even">
+<td><code>SUBTRACTIVE</code></td>
+<td><code>COMPOSECOLOR</code> modifier — blends subtractively instead of additively</td>
 </tr>
 </tbody>
 </table>
@@ -788,7 +829,7 @@ base   shape  sizing  coloring  effect  labels  visibility</code></pre>
 </tbody>
 </table>
 <p>Sizing tokens (<code>LINEAR</code>, <code>SIZEP1</code>…<code>SIZEP10</code>, <code>SIZELOG</code>) set the <code>sizepow</code> dimension — see <a href="./chart_scaling.html#sizepow-which-symbol-dimension-carries-the-value">Sizing &amp; Scaling</a>.</p>
-<p><strong>Plot / sparkline modifiers</strong> (for <code>CHART|SYMBOL|PLOT|LINES</code>):</p>
+<p><strong>Plot / sparkline modifiers</strong> (for <code>CHART|SYMBOL|PLOT</code>):</p>
 <table class="caption-top table">
 <colgroup>
 <col style="width: 55%">
@@ -802,26 +843,46 @@ base   shape  sizing  coloring  effect  labels  visibility</code></pre>
 </thead>
 <tbody>
 <tr class="odd">
+<td><code>LINES</code></td>
+<td>Connects the points with line segments instead of discrete symbols — the gate most of the rest of this table depends on</td>
+</tr>
+<tr class="even">
 <td><code>AREA</code></td>
-<td>Fill the area under the plot curve</td>
+<td>Fill the area under the plot curve (needs <code>LINES</code>)</td>
+</tr>
+<tr class="odd">
+<td><code>FADE</code></td>
+<td>Fades that area fill toward the baseline instead of a solid color (needs <code>LINES|AREA</code>)</td>
+</tr>
+<tr class="even">
+<td><code>LOLLIPOP</code></td>
+<td>Adds a stem from the baseline up to each point — works with or without <code>LINES</code></td>
+</tr>
+<tr class="odd">
+<td><code>LASTPOP</code></td>
+<td>Circle marker highlighting the last point of the series</td>
 </tr>
 <tr class="even">
 <td><code>LASTARROW</code></td>
 <td>Arrowhead on the last plot segment — size via <code>markersize</code></td>
 </tr>
 <tr class="odd">
+<td><code>LASTVALUE</code></td>
+<td>Text label showing the value at the end of the line</td>
+</tr>
+<tr class="even">
 <td><code>NOCLIP</code></td>
 <td>Don’t clip the plot to its grid cell</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><code>GRIDSIZE</code></td>
 <td>Derive chart size from the grid cell size (<code>gridwidth</code>)</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><code>FIXSIZE</code></td>
 <td>Uniform chart size, independent of the data value</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><code>FADEIN</code></td>
 <td>Fade the plot line in from transparent to opaque</td>
 </tr>
@@ -858,7 +919,7 @@ base   shape  sizing  coloring  effect  labels  visibility</code></pre>
 </tr>
 <tr class="odd">
 <td><code>RELOCATE</code></td>
-<td>Snap chart to geometry centroid</td>
+<td>With <code>AGGREGATE</code>: recomputes the merged position as the average of the original points that were combined, instead of leaving it at the first/last one</td>
 </tr>
 <tr class="even">
 <td><code>SORT</code></td>
@@ -878,37 +939,50 @@ base   shape  sizing  coloring  effect  labels  visibility</code></pre>
 </tr>
 </tbody>
 </table>
-<p><strong>Aggregation modifiers</strong> (replace cell value with aggregate):</p>
+<p><strong>Aggregation modifiers</strong> — records landing on the same position (or the same grid cell, see below) collapse into one item:</p>
 <table class="caption-top table">
+<colgroup>
+<col style="width: 52%">
+<col style="width: 47%">
+</colgroup>
 <thead>
 <tr class="header">
 <th>Modifier</th>
-<th>Computes</th>
+<th>Effect</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td><code>SUM</code></td>
-<td>Sum of all values in cell</td>
+<td><code>AGGREGATE</code></td>
+<td>Gates the whole mechanism — without it, none of the rest of this table does anything</td>
 </tr>
 <tr class="even">
-<td><code>COUNT</code></td>
-<td>Count of rows in cell</td>
+<td><code>SUM</code></td>
+<td>Sum of all values in the cell (the default)</td>
 </tr>
 <tr class="odd">
+<td><code>COUNT</code></td>
+<td>Count of rows in the cell</td>
+</tr>
+<tr class="even">
 <td><code>MEAN</code></td>
 <td>Arithmetic mean</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><code>MIN</code></td>
 <td>Minimum</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><code>MAX</code></td>
 <td>Maximum</td>
 </tr>
+<tr class="odd">
+<td><code>GROUP</code></td>
+<td>Same spatial binning as <code>AGGREGATE</code>, but without combining values — items stay separate, just clustered and ordered within their bin</td>
+</tr>
 </tbody>
 </table>
+<p>By default <code>AGGREGATE</code> only merges records at the <em>exact same</em> position. Add a spatial grid to merge nearby-but-not-identical positions too — <code>gridwidth: "Npx"</code> in <code>.style()</code> sizes the grid cell in constant screen pixels (recalculated every zoom); the plain numeric form (<code>gridwidth: 500</code>) sizes it in real-world meters instead.</p>
 <p><strong>Special geometry modifiers:</strong></p>
 <table class="caption-top table">
 <colgroup>
@@ -1341,8 +1415,8 @@ base   shape  sizing  coloring  effect  labels  visibility</code></pre>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./theme_styles.html" class="pagination-link" aria-label="Style Properties">
-        <span class="nav-page-text">Style Properties</span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./chart_type_grammar.html" class="pagination-link" aria-label="Chart Type Grammar (schematic overview)">
+        <span class="nav-page-text">Chart Type Grammar (schematic overview)</span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

@@ -1,6 +1,6 @@
 ---
 title: "Visualization Types & Modifiers"
-description: "Reference for the iXMaps .type() string: the three base types, the decision tree by data shape, and the complete modifier vocabulary."
+description: "Reference for the iXMaps .type() string: the four base types, the decision tree by data shape, and the complete modifier vocabulary."
 ---
 
 Reference for the `.type()` string of an iXMaps layer: the base types, how to choose one by data shape, and the complete modifier vocabulary. `.type()` is step ③ of the four defining steps of a layer — see [Layers & Themes](layers_themes.qmd) for how it relates to `.data()`, `.binding()` and `.style()`.
@@ -46,17 +46,33 @@ base   shape  sizing  coloring  effect  labels  visibility
 
 ---
 
-### The three base types
+### The four base types
 
-Every iXMaps layer starts with one of three base types. Everything else — classification method, chart shape, visual modifiers — is appended to one of these roots.
+Every iXMaps layer starts with one of four base types. Everything else — classification method, chart shape, visual modifiers — is appended to one of these roots.
 
 | Base type | What it does |
 |-----------|-------------|
 | `FEATURE` | Renders geometry as-is: polygon fills, boundary lines, point markers. No data value required — used for base layers that provide geographic context. |
-| `CHOROPLETH` | Colours polygon fills by data value. Requires geometry already loaded (same layer name as a `FEATURE` base). A **value field** is mapped through a colour scheme via a classification method. |
-| `CHART` | Creates new SVG objects (bubbles, bars, pies, flow lines, …) positioned by lat/lon coordinates or geometry centroids. A **value field** drives size, colour, or both. |
+| `CHOROPLETH` | Colours polygon fills by data value. Draws no geometry of its own — requires a `FEATURE` layer under the *same layer name* to supply the polygons/lines (see [The layer name is a join key](layers_themes.qmd#the-layer-name-is-a-join-key-not-just-a-label)). A **value field** is mapped through a colour scheme via a classification method. |
+| `CHART` | Creates new SVG objects (bubbles, bars, pies, flow lines, …). A **value field** drives size, colour, or both. |
+| `WMS` | Renders an external map image as a raster overlay — fetched live from an ArcGIS-style export/image endpoint (`.data({ server: url })`). Sized and positioned from the current map view, not from a style option; no data value or classification involved. |
 
-`FEATURE` is a structural layer — it gives the map geography. `CHOROPLETH` and `CHART` are data layers — they need a value field and a classification or sizing method to translate numbers into visual marks.
+`FEATURE` is a structural layer — it gives the map geography. `CHOROPLETH` and `CHART` are data layers — they need a value field and a classification or sizing method to translate numbers into visual marks. `WMS` is neither: it's an imagery layer, closer in spirit to a basemap than to a data visualization.
+
+`FEATURE` actually draws a specific set of geometry types: `Point`, `LineString`, `MultiLineString`, `Polygon`, `MultiPolygon`, and an iXMaps-only `Sphere` (used for full-globe rendering under an orthographic projection). `MultiPoint` and `GeometryCollection` geometries are parsed but not drawn.
+
+**Positioning a `CHART` layer.** A chart needs a map position for every record, and there are two ways to give it one, both through `.binding({ lookup: ... })`:
+
+```javascript
+// (a) coordinates straight from the data — two pipe-separated fields, or one field holding a GeoJSON Point
+.binding({ lookup: "lat_field|lon_field", value: "population" })
+.type("CHART|BUBBLE|SIZE")
+
+// (b) joined to a FEATURE layer's own shape, by id — same pattern as a CHOROPLETH join
+.binding({ lookup: "iso2", value: "population" })   // same layer name as the FEATURE providing "iso2" ids
+.type("CHART|BUBBLE|SIZE")
+```
+With a single lookup field, the chart's position is the centroid of the matching `FEATURE` shape — draws no geometry of its own, same join mechanics as `CHOROPLETH`. With two pipe-separated fields (or a GeoJSON `Point`/`MultiPoint` value in one field), the position comes directly from the data, no `FEATURE` layer needed.
 
 ---
 
@@ -68,7 +84,7 @@ Every iXMaps layer starts with one of three base types. Everything else — clas
 |-------|---------------------|
 | `EQUIDISTANT` | Equal-width intervals |
 | `QUANTILE` | Equal feature count per class |
-| `HEADTAIL` | Iterative mean split (heavy-tailed data) |
+| `HEADTAIL` | Iterative mean split (heavy-tailed data) — the odd one out: ignores a `classes` count entirely, the data decides how many classes there are |
 | `NATURAL` | Jenks natural breaks — see [performance note](colors_classification.qmd#continuous-vs.-discrete-classification) for large datasets |
 | `LOG` | Logarithmic intervals |
 | `POW2` / `POW3` | Equal-width intervals in square-/cube-root space |
@@ -93,10 +109,13 @@ Is your data...
 │  ├─ Flows origin→destination?           → CHART|VECTOR|BEZIER|POINTER
 │  └─ Stacked / grouped bars?             → CHART|BAR|STACKED
 │
-└─ Polygons (GeoJSON / TopoJSON)?
-   ├─ Boundaries only?                    → FEATURE
-   ├─ Colour by data (inline)?            → FEATURE|CHOROPLETH|QUANTILE
-   └─ Join external data to geometry?     → CHOROPLETH|QUANTILE  (NEVER add FEATURE)
+├─ Polygons (GeoJSON / TopoJSON)?
+│  ├─ Boundaries only?                    → FEATURE
+│  ├─ Colour by data (inline)?            → FEATURE|CHOROPLETH|QUANTILE
+│  └─ Join external data to geometry?     → CHOROPLETH|QUANTILE  (NEVER add FEATURE)
+│
+└─ An external map image (basemap, imagery, another WMS-like service)?
+   └─ Just an overlay, no data value?     → WMS
 ```
 
 ### Type modifiers
@@ -109,7 +128,7 @@ Is your data...
 | `VALUES` | Render value labels inside / near symbols |
 | `VALUESBACKGROUND` | Coloured background box behind value text |
 | `TEXTONLY` | Labels only, no symbol |
-| `TEXTLEGEND` | Category labels on symbols instead of legend box |
+| `TEXTLEGEND` | Legend entry keeps its text label but drops the color swatch |
 | `GRADIENT` | Gradient colour along flow lines (use `linecolor: ["#from","#to"]`) |
 | `DASH` | Animated flowing dashes on flow lines |
 | `NOSCALE` | Disable dynamic zoom scaling |
@@ -129,6 +148,8 @@ When a layer uses `CLIPTOGEOBOUNDS`, the optional `clipupper` / `cliplower` styl
 |----------|--------|
 | `SILENT` | Excludes from legend AND suppresses tooltips |
 | `NOLEGEND` | Excludes from legend only (tooltips still work) |
+| `SIMPLELEGEND` | Collapses each legend entry to one compact inline line (swatch + label) instead of the default two-line layout |
+| `COMPACTLEGEND` | Currently renders identically to `SIMPLELEGEND` — no distinguishing behavior yet |
 | `ZEROISNOTVALUE` | Suppress rendering where value ≤ 0 |
 | `NEGATIVEISVALUE` | Allow and render negative values |
 | `ZEROISVALUE` | Treat zero as a valid value (opposite of `ZEROISNOTVALUE`) |
@@ -149,14 +170,16 @@ When a layer uses `CLIPTOGEOBOUNDS`, the optional `clipupper` / `cliplower` styl
 
 Bind two fields with `|`: `.binding({ value: "field_a|field_b" })`. The modifier determines how the pair is collapsed to one value for colour/size mapping.
 
-**Multi-field coloring modifiers** (for multiple piped fields):
+**Multi-field coloring modifiers** (for multiple piped fields — one *winner* lends its color, versus blending all of them at once):
 
 | Modifier | Effect |
 |----------|--------|
-| `DOMINANT` | Colour by the field with the highest value |
-| `PERCENTOFMEAN` | Colour by the field whose value deviates most from the mean |
-| `DEVIATION` | Colour by the field with the highest standard-deviation deviation |
+| `DOMINANT` | Colour by whichever field clears a `filter` threshold (`min`/`max`/`mean`/`median`, ± `dfilter`%) |
+| `PERCENTOFMEAN` | Same as `DOMINANT`, but the threshold is a percentage of the field's mean rather than its raw value — comparable across fields with very different scales |
+| `DEVIATION` | Same again, but the relevance metric is a z-score: `(value − mean) / stddev` |
 | `OFFSETMEAN` | Show deviation of all fields as +/− pointers (use with `CHART|BAR|POINTER`) |
+| `COMPOSECOLOR` | No single winner — blends every field's value into one new color at once, additively by default (two fields → a bivariate choropleth; three or more → tri-/multivariate) |
+| `SUBTRACTIVE` | `COMPOSECOLOR` modifier — blends subtractively instead of additively |
 
 **Dynamic opacity modifiers:**
 
@@ -187,12 +210,17 @@ Bind two fields with `|`: `.binding({ value: "field_a|field_b" })`. The modifier
 
 Sizing tokens (`LINEAR`, `SIZEP1`…`SIZEP10`, `SIZELOG`) set the `sizepow` dimension — see [Sizing & Scaling](chart_scaling.qmd#sizepow-which-symbol-dimension-carries-the-value).
 
-**Plot / sparkline modifiers** (for `CHART|SYMBOL|PLOT|LINES`):
+**Plot / sparkline modifiers** (for `CHART|SYMBOL|PLOT`):
 
 | Modifier | Effect |
 |----------|--------|
-| `AREA` | Fill the area under the plot curve |
+| `LINES` | Connects the points with line segments instead of discrete symbols — the gate most of the rest of this table depends on |
+| `AREA` | Fill the area under the plot curve (needs `LINES`) |
+| `FADE` | Fades that area fill toward the baseline instead of a solid color (needs `LINES|AREA`) |
+| `LOLLIPOP` | Adds a stem from the baseline up to each point — works with or without `LINES` |
+| `LASTPOP` | Circle marker highlighting the last point of the series |
 | `LASTARROW` | Arrowhead on the last plot segment — size via `markersize` |
+| `LASTVALUE` | Text label showing the value at the end of the line |
 | `NOCLIP` | Don't clip the plot to its grid cell |
 | `GRIDSIZE` | Derive chart size from the grid cell size (`gridwidth`) |
 | `FIXSIZE` | Uniform chart size, independent of the data value |
@@ -206,21 +234,25 @@ Sizing tokens (`LINEAR`, `SIZEP1`…`SIZEP10`, `SIZELOG`) set the `sizepow` dime
 | `LEFT` / `RIGHT` | Align chart to the left or right of the anchor |
 | `TOP` / `BOTTOM` | Align chart above or below the anchor |
 | `ABOVE` / `BELOW` | Aliases for `TOP` / `BOTTOM` |
-| `RELOCATE` | Snap chart to geometry centroid |
+| `RELOCATE` | With `AGGREGATE`: recomputes the merged position as the average of the original points that were combined, instead of leaving it at the first/last one |
 | `SORT` | Sort chart parts by value descending |
 | `UP` | Sort ascending (smallest on top) |
 | `DOWN` | Sort descending (largest on top) |
 | `RANDOM` | Random sort — useful with `STAR` to avoid pattern formation |
 
-**Aggregation modifiers** (replace cell value with aggregate):
+**Aggregation modifiers** — records landing on the same position (or the same grid cell, see below) collapse into one item:
 
-| Modifier | Computes |
+| Modifier | Effect |
 |----------|---------|
-| `SUM` | Sum of all values in cell |
-| `COUNT` | Count of rows in cell |
+| `AGGREGATE` | Gates the whole mechanism — without it, none of the rest of this table does anything |
+| `SUM` | Sum of all values in the cell (the default) |
+| `COUNT` | Count of rows in the cell |
 | `MEAN` | Arithmetic mean |
 | `MIN` | Minimum |
 | `MAX` | Maximum |
+| `GROUP` | Same spatial binning as `AGGREGATE`, but without combining values — items stay separate, just clustered and ordered within their bin |
+
+By default `AGGREGATE` only merges records at the *exact same* position. Add a spatial grid to merge nearby-but-not-identical positions too — `gridwidth: "Npx"` in `.style()` sizes the grid cell in constant screen pixels (recalculated every zoom); the plain numeric form (`gridwidth: 500`) sizes it in real-world meters instead.
 
 **Special geometry modifiers:**
 

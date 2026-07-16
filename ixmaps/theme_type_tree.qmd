@@ -1,0 +1,16 @@
+---
+title: "Theme Type Tree"
+description: "The whole szFlag dispatch hierarchy as one indented tree — type dispatch, CHART's sub-shapes, and SYMBOL's alignment methods down to PLOT."
+---
+
+```{=html}
+<style>
+.schematic-frame{width:min(720px, 96vw); height:85vh; border:0; display:block; margin:0 auto;}
+@media (min-width: 992px){
+  #quarto-document-content{max-width:min(1000px, calc(100vw - 350px)) !important; margin-left:30px !important;}
+  .schematic-frame{width:min(1000px, calc(100vw - 350px)); margin:0;}
+}
+</style>
+<iframe id="schematic-frame-ttt" class="schematic-frame" title="Theme Type Tree — schematic overview"
+        src="reference/theme-type-tree.html"></iframe>
+```
