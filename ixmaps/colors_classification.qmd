@@ -471,25 +471,27 @@ the layer — completely decoupled from whatever field is driving the color clas
 
 ### Special case — density-normalized opacity
 
-::: {.callout-important}
-## Both mechanisms below require a bound area field — polygon area is never computed automatically
-"Density" here always means *value ÷ a number iXMaps read from your data*, not a geometric area
-computed from the shape's coordinates. The `FEATURE` layer providing the geometry must have a
-**shape-area data field** (e.g. km², in whatever unit you want density expressed in) bound via
-`.binding({ size: "area_field_name" })`:
+::: {.callout-note}
+## Polygon area: bound field, or automatic geodesic fallback
+Both mechanisms below divide by a polygon's area, read from the `FEATURE` layer providing the
+geometry. If that layer has an explicit area field bound via `.binding({ size: "area_field_name" })`,
+that value is used as-is — it must be in **square meters** to match the internal km² conversion:
 
 ```javascript
 myMap.layer("regions")
     .data({ url: GEO_URL, type: "topojson" })
-    .binding({ geo: "geometry", id: "region_id", size: "area_km2" })
+    .binding({ geo: "geometry", id: "region_id", size: "area_m2" })
     .type("FEATURE")
     .style({ colorscheme: ["none"] })
     .define();
 ```
 
-Without this, every polygon's area silently defaults to `1`, so both `DENSITY` and
-`alphafield100:"$density$"` divide by 1 for every shape — the map still renders, but "density" is
-meaningless (identical to the raw value) instead of an error you'd notice.
+If no `size` binding is present, iXMaps automatically computes each polygon's real geodesic
+surface area from its own coordinates (correct for any size or location, holes correctly
+subtracted, antimeridian-safe) — so `DENSITY` and `alphafield100:"$density$"` work out of the box
+without any extra data field, at the cost of a small margin of error versus a precisely-surveyed
+area value (typically well under 2%, depending on how simplified the source geometry is). Bind an
+explicit `size` field only when you have an authoritative area figure you want to use instead.
 :::
 
 Two distinct "density" mechanisms exist, easy to confuse:
