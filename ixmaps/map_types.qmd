@@ -191,7 +191,13 @@ Bind two fields with `|`: `.binding({ value: "field_a|field_b" })`. The modifier
 | `DOPACITYMINMAX` | Opacity emphasises both extremes — average values become transparent |
 | `BIPOLAR` | Alias for `DOPACITYMINMAX` |
 | `DOPACITYLOG` | Like `DOPACITYMAX` but uses the logarithm of the value |
-| `DOPACITYMEAN` | Dynamic opacity for use with `DOMINANT` / `PERCENTOFMEAN` |
+| `DOPACITYMEAN` | Opacity from percent deviation from the field's mean — for use with `DOMINANT` / `PERCENTOFMEAN` |
+| `DOPACITYLOGMEAN` | Like `DOPACITYMEAN` but log-scaled |
+| `DOPACITYPOWMEAN` | Like `DOPACITYMEAN`, power-curved via `dopacitypow` (same formula as `DOPACITYMEAN` in the current implementation) |
+| `DOPACITYLOGMAX` | Value-over-max ratio, log-scaled — for `DOMINANT`-style multi-field themes |
+| `DOPACITYPOWMAX` | Value-over-max ratio, power-curved (tunable with `dopacitypow`) |
+
+See [Colors & Classification](colors_classification.qmd#dynamic-opacity) for how these combine with `alphafield` and the density-normalized special case.
 
 **Chart composition modifiers:**
 

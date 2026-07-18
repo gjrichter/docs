@@ -46,7 +46,7 @@ Complete reference for `.style({...})` properties in iXMaps layer definitions.
 | Property | Type | Description |
 |----------|------|-------------|
 | `ranges` | string / array | Explicit class breaks: `n+1` values for `n` classes |
-| `rangecentervalue` | number | Diverging scale center. Requires an **even** number of colors |
+| `rangecentervalue` | number | Diverging scale center — symmetrizes the range around this value regardless of class-count parity; an **even** color count is a visual-design choice for a clean split either side of center, not a requirement |
 | `values` | array | Category list for `CATEGORICAL`. **Must be strings** (numeric values are silently ignored) |
 | `valuedecimals` | number | Decimal places for rendered value labels |
 | `units` | string | String appended to value labels, e.g. `"%"`, `"€"` |
@@ -92,7 +92,8 @@ Complete reference for `.style({...})` properties in iXMaps layer definitions.
 |----------|------|-------------|
 | `dopacitypow` | number | Power curve exponent for `DOPACITY` opacity mapping (default ≈ 1) |
 | `dopacityscale` | number | Multiplier stretching the opacity range |
-| `dopacityramp` | string | Ramp type for dynamic opacity: `"linear"` (default) or `"exponential"` |
+| `~~dopacityramp~~` | string | **Reserved, currently has no effect** — parsed but never read by the rendering code |
+| `alphafield100` | string | Normalizes `alphafield` before computing opacity; the special value `"$density$"` divides it by polygon area — see [Colors & Classification](colors_classification.qmd#dynamic-opacity) |
 
 For dynamic opacity, add `\|DOPACITYMAX` or `\|DOPACITYMINMAX` to the type string and an `alpha` field to `.binding()`:
 
@@ -305,6 +306,7 @@ All `.style()` properties drawn from the iXMaps source (`themeStyleTranslateA`).
 | `aggregationupper` | string | Scale above which aggregation is hidden |
 | `align` | string | Chart anchor: `"left"` · `"right"` · `"top"` · `"bottom"` · `"above"` · `"below"` |
 | `alphafield` | string | Data field driving DOPACITY alpha channel |
+| `alphafield100` | string | Normalizes `alphafield` before opacity is computed; `"$density$"` divides by polygon area — see [Colors & Classification](colors_classification.qmd#dynamic-opacity) |
 | `alphavalueunits` | string | Units label for the alpha value field |
 | `autoopacity` | boolean | Automatic opacity scaling |
 | `autoscale` | boolean | Automatic scale adjustment |
@@ -323,13 +325,18 @@ All `.style()` properties drawn from the iXMaps source (`themeStyleTranslateA`).
 | `centerpart` | string | Center part flag |
 | `chartupper` | string | Hide chart when scale denominator > this value |
 | `chartlower` | string | Hide chart when scale denominator < this value |
-| `colorscheme` | array / string | Color palette — single hex, gradient array, or named scheme |
+| `colordef` | array / string | **Runtime only** (`changeThemeStyle`) — sets the fully-resolved color array directly, bypassing gradient/palette generation |
+| `colorfield` | string | Binds color to a raw data field's value, independent of the display/label field — see [Colors & Classification](colors_classification.qmd#categorical-color-binding) |
+| `colorscheme` | array / string | Color palette — single hex, gradient array, or named scheme — see [Colors & Classification](colors_classification.qmd) |
+| `colorschemegeneration` | string | **Runtime only** (`changeThemeStyle`) — live-updates the gradient's mid-color (`"warm"` / `"cold"` / an explicit hex) |
+| `colorstyle` | string | Style preset for a `spectrum` colorscheme, e.g. `"pastel"` — see [Colors & Classification](colors_classification.qmd#predefined-colorschemes) |
+| `colorvalues` | array | Fixes the value → color order for `colorfield`, the same way `values` does for `CATEGORICAL` |
 | `dasharray` | string | SVG stroke-dasharray pattern, e.g. `"5,5"` or `"10,3,3,3"` |
 | `dashoffset` | number | SVG stroke-dashoffset |
 | `datafields` | array | Fields shown in `{{{theme.item.data}}}` tooltip table |
 | `declutterupper` | string | Scale above which label decluttering activates |
 | `dopacitypow` | number | Power curve exponent for DOPACITY mapping |
-| `dopacityramp` | string | DOPACITY ramp: `"linear"` (default) or `"exponential"` |
+| `~~dopacityramp~~` | string | **Reserved, currently has no effect** — parsed but never read by the rendering code |
 | `dopacityscale` | number | Multiplier stretching the DOPACITY range |
 | `dominantfilter` | string | Filter expression for dominant-value logic |
 | `dominantdfilter` | number | Delta filter for dominant-value mode |
@@ -387,7 +394,7 @@ All `.style()` properties drawn from the iXMaps source (`themeStyleTranslateA`).
 | `opacity` | number | Overall opacity — prefer `fillopacity` for fill transparency |
 | `outlierscale` | number | Scale factor applied to outlier values |
 | `overviewchart` | string | Overview chart mode flag |
-| `rangecentervalue` | number | Diverging scale center value — requires even color count |
+| `rangecentervalue` | number | Diverging scale center — symmetrizes regardless of class-count parity; even color count is a design choice, not a requirement |
 | `rangescale` | number | Scale factor applied after range computation |
 | `ranges` | string / array | Explicit class breaks: `n+1` values for `n` classes |
 | `rotation` | number | Symbol rotation in degrees |

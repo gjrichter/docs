@@ -6,7 +6,7 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="description" content="How iXMaps maps data values to colors: continuous classification methods, categorical color binding, colorscheme formats, diverging scales and data-driven palettes.">
+<meta name="description" content="How iXMaps maps data values to colors: classification methods, the colorscheme grammar, qualitative and sequential (viridis/plasma/magma) palettes, categorical binding, COMPOSECOLOR multi-field blending, and data-driven dynamic opacity.">
 
 <title>Colors &amp; Classification – iXMaps Documentation</title>
 <style>
@@ -342,12 +342,27 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <ul class="collapse">
   <li><a href="#single-color" id="toc-single-color" class="nav-link" data-scroll-target="#single-color">Single color</a></li>
   <li><a href="#gradient-two-colors-auto-interpolated" id="toc-gradient-two-colors-auto-interpolated" class="nav-link" data-scroll-target="#gradient-two-colors-auto-interpolated">Gradient (two colors, auto-interpolated)</a></li>
+  <li><a href="#gradient-with-an-explicit-middle-color-3-color-sweep" id="toc-gradient-with-an-explicit-middle-color-3-color-sweep" class="nav-link" data-scroll-target="#gradient-with-an-explicit-middle-color-3-color-sweep">Gradient with an explicit middle color (3-color sweep)</a></li>
   <li><a href="#multi-stop-palette" id="toc-multi-stop-palette" class="nav-link" data-scroll-target="#multi-stop-palette">Multi-stop palette</a></li>
-  <li><a href="#named-palettes" id="toc-named-palettes" class="nav-link" data-scroll-target="#named-palettes">Named palettes</a></li>
+  </ul></li>
+  <li><a href="#predefined-colorschemes" id="toc-predefined-colorschemes" class="nav-link" data-scroll-target="#predefined-colorschemes">Predefined colorschemes</a>
+  <ul class="collapse">
+  <li><a href="#qualitative-palettes" id="toc-qualitative-palettes" class="nav-link" data-scroll-target="#qualitative-palettes">Qualitative palettes</a></li>
+  <li><a href="#sequential-perceptually-uniform-colormaps" id="toc-sequential-perceptually-uniform-colormaps" class="nav-link" data-scroll-target="#sequential-perceptually-uniform-colormaps">Sequential (perceptually uniform) colormaps</a></li>
+  <li><a href="#spectrum-hue-wheel-generator" id="toc-spectrum-hue-wheel-generator" class="nav-link" data-scroll-target="#spectrum-hue-wheel-generator">Spectrum (hue-wheel) generator</a></li>
+  <li><a href="#ready-made-gradient-recipes" id="toc-ready-made-gradient-recipes" class="nav-link" data-scroll-target="#ready-made-gradient-recipes">Ready-made gradient recipes</a></li>
   <li><a href="#categorical-color-binding" id="toc-categorical-color-binding" class="nav-link" data-scroll-target="#categorical-color-binding">CATEGORICAL color binding</a></li>
   <li><a href="#diverging-scales" id="toc-diverging-scales" class="nav-link" data-scroll-target="#diverging-scales">Diverging scales</a></li>
   <li><a href="#flow-line-gradients" id="toc-flow-line-gradients" class="nav-link" data-scroll-target="#flow-line-gradients">Flow line gradients</a></li>
+  <li><a href="#composecolor-multi-field-color-blending" id="toc-composecolor-multi-field-color-blending" class="nav-link" data-scroll-target="#composecolor-multi-field-color-blending">COMPOSECOLOR (multi-field color blending)</a></li>
   <li><a href="#data-driven-colorschemes" id="toc-data-driven-colorschemes" class="nav-link" data-scroll-target="#data-driven-colorschemes">Data-driven colorschemes</a></li>
+  <li><a href="#fallback-color-for-unmatched-items" id="toc-fallback-color-for-unmatched-items" class="nav-link" data-scroll-target="#fallback-color-for-unmatched-items">Fallback color for unmatched items</a></li>
+  <li><a href="#changing-colors-at-runtime" id="toc-changing-colors-at-runtime" class="nav-link" data-scroll-target="#changing-colors-at-runtime">Changing colors at runtime</a></li>
+  </ul></li>
+  <li><a href="#dynamic-opacity" id="toc-dynamic-opacity" class="nav-link" data-scroll-target="#dynamic-opacity">Dynamic opacity</a>
+  <ul class="collapse">
+  <li><a href="#value-binding-alphafield" id="toc-value-binding-alphafield" class="nav-link" data-scroll-target="#value-binding-alphafield">Value binding — <code>alphafield</code></a></li>
+  <li><a href="#special-case-density-normalized-opacity" id="toc-special-case-density-normalized-opacity" class="nav-link" data-scroll-target="#special-case-density-normalized-opacity">Special case — density-normalized opacity</a></li>
   </ul></li>
   <li><a href="#next-steps" id="toc-next-steps" class="nav-link" data-scroll-target="#next-steps">Next steps</a></li>
   </ul>
@@ -363,7 +378,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <div>
   <div class="description">
-    How iXMaps maps data values to colors: continuous classification methods, categorical color binding, colorscheme formats, diverging scales and data-driven palettes.
+    How iXMaps maps data values to colors: classification methods, the colorscheme grammar, qualitative and sequential (viridis/plasma/magma) palettes, categorical binding, COMPOSECOLOR multi-field blending, and data-driven dynamic opacity.
   </div>
 </div>
 
@@ -430,7 +445,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </table>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Continuous: 5 quantile classes, yellow → dark blue</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">type</span>(<span class="st">"CHOROPLETH|QUANTILE"</span>)</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">style</span>({ <span class="dt">colorscheme</span><span class="op">:</span> [<span class="st">"#ffffcc"</span><span class="op">,</span><span class="st">"#41b6c4"</span><span class="op">,</span><span class="st">"#253494"</span>]<span class="op">,</span> <span class="dt">showdata</span><span class="op">:</span> <span class="st">"true"</span> })</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">style</span>({ <span class="dt">colorscheme</span><span class="op">:</span> [<span class="st">"#ffffcc"</span><span class="op">,</span><span class="st">"#41b6c4"</span><span class="op">,</span><span class="st">"#253494"</span>] })</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="callout callout-style-simple callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -449,9 +464,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">type</span>(<span class="st">"CHART|BUBBLE|CATEGORICAL"</span>)</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">style</span>({</span>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">colorscheme</span><span class="op">:</span> [<span class="st">"#4fc3f7"</span><span class="op">,</span> <span class="st">"#ffb300"</span><span class="op">,</span> <span class="st">"#ef5350"</span>]<span class="op">,</span></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">values</span><span class="op">:</span>      [<span class="st">"low"</span><span class="op">,</span>     <span class="st">"medium"</span><span class="op">,</span>  <span class="st">"high"</span>]<span class="op">,</span>   <span class="co">// strings — not numbers!</span></span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    <span class="dt">showdata</span><span class="op">:</span>    <span class="st">"true"</span></span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>})</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">values</span><span class="op">:</span>      [<span class="st">"low"</span><span class="op">,</span>     <span class="st">"medium"</span><span class="op">,</span>  <span class="st">"high"</span>]   <span class="co">// strings — not numbers!</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>})</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="callout callout-style-simple callout-warning callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -472,38 +486,230 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="color-schemes" class="level2">
 <h2 class="anchored" data-anchor-id="color-schemes">Color schemes</h2>
-<p>The <code>colorscheme</code> property accepts several formats.</p>
+<p>The <code>colorscheme</code> property accepts several formats. Underneath, it’s a small positional grammar:</p>
+<pre><code>colorscheme: [ classCount, colorA, colorB, param1, param2 ]</code></pre>
+<p>You can pass this as a real JS array, or as a string — <code>"5,#ffffcc,#253494"</code> (comma-delimited) or <code>"5|#ffffcc|#253494"</code> (pipe-delimited). A string containing <code>RGB(...)</code> must use <code>|</code> as the outer delimiter, since the color’s own internal commas would otherwise be mistaken for the grammar’s delimiters:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>colorscheme<span class="op">:</span> <span class="st">"7|RGB(74,74,255)|RGB(245,41,38)|dynamic"</span>   <span class="co">// correct — pipe-delimited</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>colorscheme<span class="op">:</span> <span class="st">"7,RGB(74,74,255),RGB(245,41,38),dynamic"</span>   <span class="co">// wrong — commas inside RGB() corrupt the split</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Any color slot also accepts a CSS color name (<code>"cornflowerblue"</code>) or <code>rgb(...)</code>/<code>rgba(...)</code> functional notation, in addition to hex. An unrecognized color name silently falls back to white — double-check spelling if a class renders unexpectedly white.</p>
 <section id="single-color" class="level3">
 <h3 class="anchored" data-anchor-id="single-color">Single color</h3>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>colorscheme<span class="op">:</span> [<span class="st">"#0066cc"</span>]          <span class="co">// single hex color</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>colorscheme<span class="op">:</span> [<span class="st">"blue"</span>]             <span class="co">// named color</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>colorscheme<span class="op">:</span> [<span class="st">"#0066cc"</span>]          <span class="co">// single hex color</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>colorscheme<span class="op">:</span> [<span class="st">"blue"</span>]             <span class="co">// named color</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="gradient-two-colors-auto-interpolated" class="level3">
 <h3 class="anchored" data-anchor-id="gradient-two-colors-auto-interpolated">Gradient (two colors, auto-interpolated)</h3>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>colorscheme<span class="op">:</span> [<span class="st">"5"</span><span class="op">,</span> <span class="st">"#ffffcc"</span><span class="op">,</span> <span class="st">"#253494"</span>]   <span class="co">// 5 classes, yellow → dark blue</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>colorscheme<span class="op">:</span> [<span class="st">"#fee5d9"</span><span class="op">,</span> <span class="st">"#a50f15"</span>]        <span class="co">// implied 2-class gradient</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>colorscheme<span class="op">:</span> [<span class="st">"5"</span><span class="op">,</span> <span class="st">"#ffffcc"</span><span class="op">,</span> <span class="st">"#253494"</span>]   <span class="co">// 5 classes, yellow → dark blue</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>colorscheme<span class="op">:</span> [<span class="st">"#fee5d9"</span><span class="op">,</span> <span class="st">"#a50f15"</span>]        <span class="co">// implied 2-class gradient</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>The first element can be a number (class count) or omitted; iXMaps infers it from the array length.</p>
+<div class="callout callout-style-simple callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Important</span>This form takes at most 2 anchor colors — not n
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><code>["N", colorA, colorB, ...]</code> is <em>not</em> a piecewise multi-stop gradient. Extra hex strings past the 2nd don’t add more anchor points; they’re read as the <em>shape</em> parameters described below. If you pass 5 explicit hex colors here expecting the ramp to pass through all 5, only the first two are used as the sweep’s start/end — the rest are silently ignored as malformed shape keywords. For an explicit multi-anchor ramp with <strong>no</strong> interpolation, use <a href="#multi-stop-palette">Multi-stop palette</a> below instead (one color per class, no smoothing) — or the 3-color form immediately below for a <em>smoothed</em> start → middle → end ramp.</p>
+</div>
+</div>
+</section>
+<section id="gradient-with-an-explicit-middle-color-3-color-sweep" class="level3">
+<h3 class="anchored" data-anchor-id="gradient-with-an-explicit-middle-color-3-color-sweep">Gradient with an explicit middle color (3-color sweep)</h3>
+<p>A <code>CHOROPLETH</code> gradient isn’t limited to a straight 2-color interpolation — iXMaps always sweeps through an implicit <strong>third, middle color</strong> between the start and end, computed automatically unless you override it:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>colorscheme<span class="op">:</span> [<span class="st">"24"</span><span class="op">,</span> <span class="st">"#c94f35"</span><span class="op">,</span> <span class="st">"#4f9153"</span>]              <span class="co">// red → auto middle (a pale, near-white tone) → green</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>colorscheme<span class="op">:</span> [<span class="st">"24"</span><span class="op">,</span> <span class="st">"#c94f35"</span><span class="op">,</span> <span class="st">"#4f9153"</span><span class="op">,</span> <span class="st">"#f2d16b"</span>]   <span class="co">// red → #f2d16b (yellow) → green — explicit middle</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<ul>
+<li>3rd array element = the middle color, in one of two forms:
+<ul>
+<li><p><strong>A hex string</strong> — used as the middle color directly (e.g.&nbsp;<code>"#f2d16b"</code> above). This is how to get a proper red→yellow→green-style diverging ramp from a single <code>.style()</code> call, without precomputing colors yourself.</p></li>
+<li><p><strong>A shape keyword</strong> controlling <em>how</em> the sweep is weighted across the N classes:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Keyword</th>
+<th>Shape</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>linear</code></td>
+<td>Straight interpolation, uniform step size — pure <code>colorA → colorB</code></td>
+</tr>
+<tr class="even">
+<td><code>dynamic</code> / <code>auto</code> (default)</td>
+<td>Middle color computed automatically, weighted so low values expand</td>
+</tr>
+<tr class="odd">
+<td><code>2low</code> / <code>3low</code></td>
+<td>Low end of the range expanded (75/25 split)</td>
+</tr>
+<tr class="even">
+<td><code>2high</code> / <code>3high</code></td>
+<td>High end of the range expanded (23/77 split)</td>
+</tr>
+<tr class="odd">
+<td><code>2narrow</code> / <code>3narrow</code></td>
+<td>Compressed mid-range</td>
+</tr>
+<tr class="even">
+<td><code>2wide</code> / <code>3wide</code></td>
+<td>Expanded mid-range</td>
+</tr>
+</tbody>
+</table>
+<div class="callout callout-style-simple callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span><code>2xxx</code> vs <code>3xxx</code> — two colors or three?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Each pair shares the same split-ratio shape — the <code>2</code>/<code>3</code> prefix doesn’t change the shape itself. It documents <em>whether a middle color follows</em>: <code>2low</code>/<code>2high</code>/<code>2narrow</code>/<code>2wide</code> are for a plain two-color sweep with an auto-computed midpoint; <code>3low</code>/<code>3high</code>/<code>3narrow</code>/<code>3wide</code> signal that you’re supplying an explicit middle color as the <em>next</em> parameter instead:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>colorscheme<span class="op">:</span> [<span class="st">"24"</span><span class="op">,</span> <span class="st">"#c94f35"</span><span class="op">,</span> <span class="st">"#4f9153"</span><span class="op">,</span> <span class="st">"3low"</span><span class="op">,</span> <span class="st">"#f2d16b"</span>]   <span class="co">// explicit middle: #f2d16b</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div></li>
+</ul></li>
+<li>4th array element (optional) — a second shape/tuning slot: another hex to override the middle color a different way, <code>"shift"</code> to nudge the sequence by one step, <code>"warm"</code>/<code>"cold"</code> for a warm cream or white mid-tone shorthand, or a repeat of a shape keyword.</li>
+<li>Omit the middle color entirely and iXMaps computes a sensible one automatically (generally a pale near-white/yellow tone) — reasonable for a quick look, but pass an explicit hex whenever the ramp needs to hit a specific hue (as in the red→yellow→green example above).</li>
+</ul>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Diverging-looking sequential ramp in one line — no manual color math</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">type</span>(<span class="st">"CHOROPLETH|EQUIDISTANT"</span>)</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">style</span>({ <span class="dt">colorscheme</span><span class="op">:</span> [<span class="st">"24"</span><span class="op">,</span> <span class="st">"#c94f35"</span><span class="op">,</span> <span class="st">"#4f9153"</span><span class="op">,</span> <span class="st">"#f2d16b"</span>] })</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="multi-stop-palette" class="level3">
 <h3 class="anchored" data-anchor-id="multi-stop-palette">Multi-stop palette</h3>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>colorscheme<span class="op">:</span> [<span class="st">"#ffffcc"</span><span class="op">,</span><span class="st">"#c7e9b4"</span><span class="op">,</span><span class="st">"#41b6c4"</span><span class="op">,</span><span class="st">"#2c7fb8"</span><span class="op">,</span><span class="st">"#253494"</span>]  <span class="co">// 5 explicit colors</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>colorscheme<span class="op">:</span> [<span class="st">"#ffffcc"</span><span class="op">,</span><span class="st">"#c7e9b4"</span><span class="op">,</span><span class="st">"#41b6c4"</span><span class="op">,</span><span class="st">"#2c7fb8"</span><span class="op">,</span><span class="st">"#253494"</span>]  <span class="co">// 5 explicit colors</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>No leading count, no interpolation — each color maps 1:1 to a class in order (5 colors → 5 classes), same as the general rule in <a href="#continuous-vs-discrete-classification">Continuous vs.&nbsp;discrete classification</a> above. Pair with an explicit <code>ranges</code> array to control exactly where those 5 class breaks fall (see <a href="./theme_styles.html#classification-and-ranges">Explicit class breaks</a>). This is the right tool for a genuinely custom multi-hue palette with more than 3 named anchor colors — the gradient forms above only sweep through up to 3 (start, middle, end); beyond that, list every class color explicitly here instead.</p>
 </section>
-<section id="named-palettes" class="level3">
-<h3 class="anchored" data-anchor-id="named-palettes">Named palettes</h3>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>colorscheme<span class="op">:</span> [<span class="st">"5"</span><span class="op">,</span> <span class="st">"tableau10"</span>]   <span class="co">// 5 classes from Tableau 10</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>colorscheme<span class="op">:</span> [<span class="st">"7"</span><span class="op">,</span> <span class="st">"viridis"</span>]     <span class="co">// 7 classes viridis</span></span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>colorscheme<span class="op">:</span> [<span class="st">"7"</span><span class="op">,</span> <span class="st">"plasma"</span>]      <span class="co">// 7 classes plasma</span></span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>colorscheme<span class="op">:</span> [<span class="st">"100"</span><span class="op">,</span> <span class="st">"tableau"</span>]   <span class="co">// auto-palette, 100 classes</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="predefined-colorschemes" class="level2">
+<h2 class="anchored" data-anchor-id="predefined-colorschemes">Predefined colorschemes</h2>
+<p>Instead of generating a gradient, name a built-in palette. There are two families: <strong>qualitative</strong> palettes (a fixed list of distinct hues, best for <code>CATEGORICAL</code> data) and <strong>sequential</strong> colormaps (a smooth, perceptually-even ramp, best for continuous data).</p>
+<section id="qualitative-palettes" class="level3">
+<h3 class="anchored" data-anchor-id="qualitative-palettes">Qualitative palettes</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>colorscheme<span class="op">:</span> [<span class="st">"5"</span><span class="op">,</span> <span class="st">"tableau10"</span>]        <span class="co">// 5 colors from tableau10</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>colorscheme<span class="op">:</span> [<span class="st">"5"</span><span class="op">,</span> <span class="st">"tableau10"</span><span class="op">,</span> <span class="st">"3"</span>]   <span class="co">// 5 colors starting at index 3</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Palette</th>
+<th>Character</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>tableau</code> / <code>tableau10</code> / <code>tableau20</code></td>
+<td>Standard Tableau qualitative sets (10 or 20 distinct hues)</td>
+</tr>
+<tr class="even">
+<td><code>office</code></td>
+<td>MS-Office-style palette</td>
+</tr>
+<tr class="odd">
+<td><code>mineral</code></td>
+<td>Muted earth-tone palette</td>
+</tr>
+<tr class="even">
+<td><code>pastel</code></td>
+<td>Soft, low-saturation palette</td>
+</tr>
+<tr class="odd">
+<td><code>harvest</code></td>
+<td>Warm autumnal palette</td>
+</tr>
+<tr class="even">
+<td><code>fruit</code></td>
+<td>Bright, saturated palette</td>
+</tr>
+<tr class="odd">
+<td><code>kmeans</code> / <code>kmeansp</code></td>
+<td>High-distinctiveness palettes generated for cluster visualization</td>
+</tr>
+<tr class="even">
+<td><code>pimp</code></td>
+<td>High-saturation, high-contrast palette</td>
+</tr>
+<tr class="odd">
+<td><code>intense</code></td>
+<td>Deep, saturated palette</td>
+</tr>
+<tr class="even">
+<td><code>fluo</code></td>
+<td>Bright neon-toned palette</td>
+</tr>
+</tbody>
+</table>
+<p>An optional 3rd array element offsets the starting index into the palette; requesting more colors than the palette has repeats it cyclically:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>colorscheme<span class="op">:</span> [<span class="st">"100"</span><span class="op">,</span> <span class="st">"tableau"</span>]   <span class="co">// auto-palette, wraps around after 20 colors</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="sequential-perceptually-uniform-colormaps" class="level3">
+<h3 class="anchored" data-anchor-id="sequential-perceptually-uniform-colormaps">Sequential (perceptually uniform) colormaps</h3>
+<p>For continuous data where perceptual uniformity matters (equal steps in value should look like equal steps in color), use one of the standard sequential colormaps instead:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>colorscheme<span class="op">:</span> [<span class="st">"9"</span><span class="op">,</span> <span class="st">"viridis"</span>]   <span class="co">// dark purple → teal → yellow</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>colorscheme<span class="op">:</span> [<span class="st">"9"</span><span class="op">,</span> <span class="st">"plasma"</span>]    <span class="co">// indigo → magenta → yellow</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>colorscheme<span class="op">:</span> [<span class="st">"9"</span><span class="op">,</span> <span class="st">"magma"</span>]     <span class="co">// black → purple/red → pale yellow</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Unlike the qualitative palettes above, these work for <em>any</em> number of classes — colors are resampled evenly across the colormap’s full range rather than sliced from a fixed list, so <code>["3", "viridis"]</code> and <code>["256", "viridis"]</code> both produce correctly-spanning results, not a truncated or repeating subset.</p>
+<div class="callout callout-style-simple callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>The real matplotlib-derived colormaps
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><code>viridis</code>, <code>plasma</code>, and <code>magma</code> here are the same perceptually-uniform, colorblind-friendly colormaps used across matplotlib, D3, and most modern data-viz tooling — not an approximation. Created by Nathaniel J. Smith, Stéfan van der Walt, and Eric Firing, and released under CC0 (public domain).</p>
+</div>
+</div>
+</section>
+<section id="spectrum-hue-wheel-generator" class="level3">
+<h3 class="anchored" data-anchor-id="spectrum-hue-wheel-generator">Spectrum (hue-wheel) generator</h3>
+<p>A continuous rainbow-style generator, distinct from the palettes above — walks a hue wheel between two angles instead of picking from a fixed color list:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>colorscheme<span class="op">:</span> [<span class="st">"24"</span><span class="op">,</span> <span class="st">"spectrum"</span><span class="op">,</span> <span class="st">"pastel"</span><span class="op">,</span> <span class="st">"0"</span><span class="op">,</span> <span class="st">"300"</span>]</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="co">//             classCount, "spectrum", style, hueStart, hueEnd</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><code>hueStart</code>/<code>hueEnd</code> default to <code>270</code>/<code>0</code> if omitted. The third slot selects a style preset: <code>default</code> (full saturation/value), <code>pastel</code>, <code>soft</code>, <code>hard</code>, <code>light</code>, or <code>pale</code>.</p>
+<div class="callout callout-style-simple callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Warning</span>Avoid the <code>work</code> preset
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>A <code>colorstyle: "work"</code> preset exists in the code but is currently broken — it produces invalid colors. Use one of the presets listed above instead.</p>
+</div>
+</div>
+<p>To change a <code>spectrum</code> colorscheme’s style preset at runtime without touching anything else, see <a href="#changing-colors-at-runtime">Changing colors at runtime</a> below.</p>
+</section>
+<section id="ready-made-gradient-recipes" class="level3">
+<h3 class="anchored" data-anchor-id="ready-made-gradient-recipes">Ready-made gradient recipes</h3>
+<p>The framework also ships a curated library of full recipe strings (<code>color1, color2, shape, mid-color</code>) as convenient starting points — prepend a class count to use one, e.g. <code>"7,#ffeeee,#dd0000,dynamic,cold"</code> for a 7-class red ramp. These are the same presets shown in the legacy visual theme-configurator’s color picker; see <code>ui/js/tools/colorselect.js</code> for the full list if you want to browse or copy one.</p>
 </section>
 <section id="categorical-color-binding" class="level3">
 <h3 class="anchored" data-anchor-id="categorical-color-binding">CATEGORICAL color binding</h3>
 <p>For categorical data, the <code>values</code> array pins specific categories to specific colors (in the same order as <code>colorscheme</code>):</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">type</span>(<span class="st">"CHART|BUBBLE|CATEGORICAL"</span>)</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">style</span>({</span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">colorscheme</span><span class="op">:</span> [<span class="st">"#4fc3f7"</span><span class="op">,</span> <span class="st">"#ffb300"</span><span class="op">,</span> <span class="st">"#ef5350"</span>]<span class="op">,</span></span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">values</span><span class="op">:</span>      [<span class="st">"low"</span><span class="op">,</span>     <span class="st">"medium"</span><span class="op">,</span>  <span class="st">"high"</span>]<span class="op">,</span>    <span class="co">// strings — not numbers!</span></span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">showdata</span><span class="op">:</span>    <span class="st">"true"</span></span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>})</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb15"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">type</span>(<span class="st">"CHART|BUBBLE|CATEGORICAL"</span>)</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">style</span>({</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">colorscheme</span><span class="op">:</span> [<span class="st">"#4fc3f7"</span><span class="op">,</span> <span class="st">"#ffb300"</span><span class="op">,</span> <span class="st">"#ef5350"</span>]<span class="op">,</span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">values</span><span class="op">:</span>      [<span class="st">"low"</span><span class="op">,</span>     <span class="st">"medium"</span><span class="op">,</span>  <span class="st">"high"</span>]    <span class="co">// strings — not numbers!</span></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>})</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="callout callout-style-simple callout-warning callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -518,55 +724,124 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Always cast values to strings: <code>["1","2","3"]</code> not <code>[1,2,3]</code>.</p>
 </div>
 </div>
+<div class="callout callout-style-simple callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Sort categories alphabetically instead of by data order
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Add <code>ORDER</code> to the type string (<code>CATEGORICAL|ORDER</code>) to assign colors to alphabetically-sorted category values, instead of the order they happen to appear in the data.</p>
+</div>
+</div>
+<p>A second, independent binding mechanism exists for when the color category should come from a <em>different</em> field than the one driving the display/label:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb16"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">style</span>({</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>    <span class="dt">colorfield</span><span class="op">:</span>   <span class="st">"region_type"</span><span class="op">,</span>                    <span class="co">// raw data field driving color</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">colorvalues</span><span class="op">:</span>  [<span class="st">"urban"</span><span class="op">,</span> <span class="st">"rural"</span><span class="op">,</span> <span class="st">"coastal"</span>]<span class="op">,</span>     <span class="co">// fixes color-slot order, like `values` does</span></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">colorscheme</span><span class="op">:</span>  [<span class="st">"#4fc3f7"</span><span class="op">,</span> <span class="st">"#ffb300"</span><span class="op">,</span> <span class="st">"#ef5350"</span>]</span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>})</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><code>colorfield</code> also accepts the special value <code>"$index$"</code>, which colors each row by its row index rather than any field value — useful for arbitrary per-row color assignment unrelated to any real data column.</p>
 </section>
 <section id="diverging-scales" class="level3">
 <h3 class="anchored" data-anchor-id="diverging-scales">Diverging scales</h3>
 <p>Use an even number of colors and set <code>rangecentervalue</code>:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">style</span>({</span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>    <span class="dt">colorscheme</span><span class="op">:</span>      [<span class="st">"#d73027"</span><span class="op">,</span><span class="st">"#f46d43"</span><span class="op">,</span><span class="st">"#fdae61"</span><span class="op">,</span><span class="st">"#abd9e9"</span><span class="op">,</span><span class="st">"#74add1"</span><span class="op">,</span><span class="st">"#4575b4"</span>]<span class="op">,</span></span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">rangecentervalue</span><span class="op">:</span> <span class="dv">0</span><span class="op">,</span></span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">showdata</span><span class="op">:</span>         <span class="st">"true"</span></span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>})</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb17"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">style</span>({</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>    <span class="dt">colorscheme</span><span class="op">:</span>      [<span class="st">"#d73027"</span><span class="op">,</span><span class="st">"#f46d43"</span><span class="op">,</span><span class="st">"#fdae61"</span><span class="op">,</span><span class="st">"#abd9e9"</span><span class="op">,</span><span class="st">"#74add1"</span><span class="op">,</span><span class="st">"#4575b4"</span>]<span class="op">,</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">rangecentervalue</span><span class="op">:</span> <span class="dv">0</span></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>})</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>The range is symmetrized around the center value regardless of class-count parity — an odd class count still works fine (one class straddles the center); an even count is a visual-design choice for a clean split either side of center, not a requirement.</p>
 </section>
 <section id="flow-line-gradients" class="level3">
 <h3 class="anchored" data-anchor-id="flow-line-gradients">Flow line gradients</h3>
 <p>For <code>CHART|VECTOR|BEZIER|GRADIENT</code>, use <code>linecolor</code> as a two-element array — not <code>colorscheme</code>:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">type</span>(<span class="st">"CHART|VECTOR|BEZIER|POINTER|GRADIENT"</span>)</span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">style</span>({</span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">linecolor</span><span class="op">:</span>  [<span class="st">"#00aabb"</span><span class="op">,</span> <span class="st">"#ff4400"</span>]<span class="op">,</span>  <span class="co">// origin color → destination color</span></span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">showdata</span><span class="op">:</span>   <span class="st">"true"</span></span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>})</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb18"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">type</span>(<span class="st">"CHART|VECTOR|BEZIER|POINTER|GRADIENT"</span>)</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">style</span>({</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">linecolor</span><span class="op">:</span>  [<span class="st">"#00aabb"</span><span class="op">,</span> <span class="st">"#ff4400"</span>]  <span class="co">// origin color → destination color</span></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>})</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="composecolor-multi-field-color-blending" class="level3">
+<h3 class="anchored" data-anchor-id="composecolor-multi-field-color-blending">COMPOSECOLOR (multi-field color blending)</h3>
+<p>For layers driven by several numeric fields at once, <code>COMPOSECOLOR</code> blends each field’s own base color into a single composite, weighted by that field’s value — instead of picking one “dominant” field’s color like plain <code>DOMINANT</code> does (see <a href="./map_types.html">Multi-field coloring modifiers</a>):</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb19"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">type</span>(<span class="st">"CHOROPLETH|DOMINANT|COMPOSECOLOR"</span>)</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">style</span>({</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">colorscheme</span><span class="op">:</span> [<span class="st">"#d73027"</span><span class="op">,</span> <span class="st">"#1a9850"</span><span class="op">,</span> <span class="st">"#4575b4"</span>]<span class="op">,</span>   <span class="co">// one base color per field</span></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">brightness</span><span class="op">:</span>  <span class="fl">0.7</span></span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>})</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Two blending modes, selected by an additional type flag:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Mode</th>
+<th>Type</th>
+<th>Behavior</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Additive (default)</td>
+<td><code>COMPOSECOLOR</code></td>
+<td>Light-mixing — colors combine like overlapping light sources (adding channels, brighter where multiple fields are high)</td>
+</tr>
+<tr class="even">
+<td>Subtractive</td>
+<td><code>COMPOSECOLOR\|SUBTRACTIVE</code></td>
+<td>Pigment-mixing — colors combine like overlapping ink/paint (darker where multiple fields are high)</td>
+</tr>
+</tbody>
+</table>
+<p><code>brightness</code> (0–1) tunes the overall intensity of the resulting blend — lower values produce more muted composites, higher values push toward saturated combined hues.</p>
+<div class="callout callout-style-simple callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>When to reach for this
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><code>COMPOSECOLOR</code> is well suited to genuinely multivariate choropleths — e.g.&nbsp;three demographic shares per polygon — where you want one glance to convey “which mix of factors dominates here” without needing a legend per field.</p>
+</div>
+</div>
 </section>
 <section id="data-driven-colorschemes" class="level3">
 <h3 class="anchored" data-anchor-id="data-driven-colorschemes">Data-driven colorschemes</h3>
 <p>Every format above is a <strong>static</strong> palette, fixed when you write <code>.style({...})</code>. For a palette <strong>computed from the layer’s own data</strong> — e.g.&nbsp;color assigned by matching each class’s label against a pattern, once the classes are actually known — pass a function reference instead of colors:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">style</span>({ <span class="dt">colorscheme</span><span class="op">:</span> <span class="st">"ixmaps.colorScheme_speedmap"</span> })</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb20"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">style</span>({ <span class="dt">colorscheme</span><span class="op">:</span> <span class="st">"ixmaps.colorScheme_speedmap"</span> })</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Define the function on the <code>ixmaps</code> namespace (same convention as <code>userdraw</code> — see <a href="./user_charts.html">Custom Charts</a>). This is a real, shipping example — a <code>CATEGORICAL</code> speed-limit layer where the color depends on the text of each class label, not a fixed palette:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>ixmaps<span class="op">.</span><span class="at">colorScheme_speedmap</span> <span class="op">=</span> <span class="kw">function</span> (theme) {</span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">// theme.szLabelA     — one label per class, in class order</span></span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>    <span class="co">// theme.colorScheme  — mutate in place: one hex string per class</span></span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> (<span class="kw">var</span> i <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> i <span class="op">&lt;</span> theme<span class="op">.</span><span class="at">szLabelA</span><span class="op">.</span><span class="at">length</span><span class="op">;</span> i<span class="op">++</span>) {</span>
-<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> (theme<span class="op">.</span><span class="at">szLabelA</span>[i]<span class="op">.</span><span class="fu">match</span>(<span class="ss">/</span><span class="sc">^(</span><span class="ss">45</span><span class="sc">|</span><span class="ss">50</span><span class="sc">|</span><span class="ss">55</span><span class="sc">|</span><span class="ss">60</span><span class="sc">|</span><span class="ss">65</span><span class="sc">|</span><span class="ss">70</span><span class="sc">|</span><span class="ss">75</span><span class="sc">)</span><span class="ss"> mph/i</span>)) {</span>
-<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>            theme<span class="op">.</span><span class="at">colorScheme</span>[i] <span class="op">=</span> <span class="st">"#CE517F"</span><span class="op">;</span></span>
-<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>        } <span class="cf">else</span> <span class="cf">if</span> (theme<span class="op">.</span><span class="at">szLabelA</span>[i]<span class="op">.</span><span class="fu">match</span>(<span class="ss">/</span><span class="sc">^</span><span class="ss">40 mph/i</span>)) {</span>
-<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>            theme<span class="op">.</span><span class="at">colorScheme</span>[i] <span class="op">=</span> <span class="st">"#CC6166"</span><span class="op">;</span></span>
-<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>        } <span class="cf">else</span> <span class="cf">if</span> (theme<span class="op">.</span><span class="at">szLabelA</span>[i]<span class="op">.</span><span class="fu">match</span>(<span class="ss">/</span><span class="sc">^</span><span class="ss">30/i</span>)) {</span>
-<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>            theme<span class="op">.</span><span class="at">colorScheme</span>[i] <span class="op">=</span> <span class="st">"#D0A148"</span><span class="op">;</span></span>
-<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>        }</span>
-<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>        <span class="co">// ... remaining bands, then a fallback for unmatched labels</span></span>
-<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a>    }</span>
-<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a>}<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb21"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>ixmaps<span class="op">.</span><span class="at">colorScheme_speedmap</span> <span class="op">=</span> <span class="kw">function</span> (theme) {</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">// theme.szLabelA     — one label per class, in class order</span></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>    <span class="co">// theme.colorScheme  — mutate in place: one hex string per class</span></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> (<span class="kw">var</span> i <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> i <span class="op">&lt;</span> theme<span class="op">.</span><span class="at">szLabelA</span><span class="op">.</span><span class="at">length</span><span class="op">;</span> i<span class="op">++</span>) {</span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> (theme<span class="op">.</span><span class="at">szLabelA</span>[i]<span class="op">.</span><span class="fu">match</span>(<span class="ss">/</span><span class="sc">^(</span><span class="ss">45</span><span class="sc">|</span><span class="ss">50</span><span class="sc">|</span><span class="ss">55</span><span class="sc">|</span><span class="ss">60</span><span class="sc">|</span><span class="ss">65</span><span class="sc">|</span><span class="ss">70</span><span class="sc">|</span><span class="ss">75</span><span class="sc">)</span><span class="ss"> mph/i</span>)) {</span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>            theme<span class="op">.</span><span class="at">colorScheme</span>[i] <span class="op">=</span> <span class="st">"#CE517F"</span><span class="op">;</span></span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>        } <span class="cf">else</span> <span class="cf">if</span> (theme<span class="op">.</span><span class="at">szLabelA</span>[i]<span class="op">.</span><span class="fu">match</span>(<span class="ss">/</span><span class="sc">^</span><span class="ss">40 mph/i</span>)) {</span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a>            theme<span class="op">.</span><span class="at">colorScheme</span>[i] <span class="op">=</span> <span class="st">"#CC6166"</span><span class="op">;</span></span>
+<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a>        } <span class="cf">else</span> <span class="cf">if</span> (theme<span class="op">.</span><span class="at">szLabelA</span>[i]<span class="op">.</span><span class="fu">match</span>(<span class="ss">/</span><span class="sc">^</span><span class="ss">30/i</span>)) {</span>
+<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a>            theme<span class="op">.</span><span class="at">colorScheme</span>[i] <span class="op">=</span> <span class="st">"#D0A148"</span><span class="op">;</span></span>
+<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a>        }</span>
+<span id="cb21-13"><a href="#cb21-13" aria-hidden="true" tabindex="-1"></a>        <span class="co">// ... remaining bands, then a fallback for unmatched labels</span></span>
+<span id="cb21-14"><a href="#cb21-14" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb21-15"><a href="#cb21-15" aria-hidden="true" tabindex="-1"></a>}<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Load the required helper script and reference the layer as usual:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>ixmaps<span class="op">.</span><span class="fu">Map</span>(<span class="st">"map_div"</span><span class="op">,</span> { <span class="co">/* ... */</span> })</span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">require</span>(<span class="st">"../../ui/js/tools/colorscheme.js"</span>)   <span class="co">// ColorScheme.createColorScheme(), used below</span></span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">layer</span>(ixmaps<span class="op">.</span><span class="fu">layer</span>(<span class="st">"osm"</span><span class="op">,</span> layer <span class="kw">=&gt;</span> layer</span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>        <span class="op">.</span><span class="fu">data</span>({ <span class="dt">type</span><span class="op">:</span> <span class="st">"ext"</span><span class="op">,</span> <span class="dt">name</span><span class="op">:</span> <span class="st">"OSM_dataquery_stressmap"</span> })</span>
-<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>        <span class="op">.</span><span class="fu">binding</span>({ <span class="dt">position</span><span class="op">:</span> <span class="st">"geometry"</span><span class="op">,</span> <span class="dt">id</span><span class="op">:</span> <span class="st">"id"</span><span class="op">,</span> <span class="dt">value</span><span class="op">:</span> <span class="st">"maxspeed"</span> })</span>
-<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>        <span class="op">.</span><span class="fu">type</span>(<span class="st">"CHART|FEATURES|CATEGORICAL|LINES"</span>)</span>
-<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>        <span class="op">.</span><span class="fu">style</span>({ <span class="dt">colorscheme</span><span class="op">:</span> <span class="st">"ixmaps.colorScheme_speedmap"</span><span class="op">,</span> <span class="dt">linewidth</span><span class="op">:</span> <span class="st">"3"</span> })</span>
-<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>        <span class="op">.</span><span class="fu">meta</span>({ <span class="dt">title</span><span class="op">:</span> <span class="st">"Speed limits"</span> })</span>
-<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>    ))<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb22"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>ixmaps<span class="op">.</span><span class="fu">Map</span>(<span class="st">"map_div"</span><span class="op">,</span> { <span class="co">/* ... */</span> })</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">require</span>(<span class="st">"../../ui/js/tools/colorscheme.js"</span>)   <span class="co">// ColorScheme.createColorScheme(), used below</span></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">layer</span>(ixmaps<span class="op">.</span><span class="fu">layer</span>(<span class="st">"osm"</span><span class="op">,</span> layer <span class="kw">=&gt;</span> layer</span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>        <span class="op">.</span><span class="fu">data</span>({ <span class="dt">type</span><span class="op">:</span> <span class="st">"ext"</span><span class="op">,</span> <span class="dt">name</span><span class="op">:</span> <span class="st">"OSM_dataquery_stressmap"</span> })</span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>        <span class="op">.</span><span class="fu">binding</span>({ <span class="dt">position</span><span class="op">:</span> <span class="st">"geometry"</span><span class="op">,</span> <span class="dt">id</span><span class="op">:</span> <span class="st">"id"</span><span class="op">,</span> <span class="dt">value</span><span class="op">:</span> <span class="st">"maxspeed"</span> })</span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>        <span class="op">.</span><span class="fu">type</span>(<span class="st">"CHART|FEATURES|CATEGORICAL|LINES"</span>)</span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>        <span class="op">.</span><span class="fu">style</span>({ <span class="dt">colorscheme</span><span class="op">:</span> <span class="st">"ixmaps.colorScheme_speedmap"</span><span class="op">,</span> <span class="dt">linewidth</span><span class="op">:</span> <span class="st">"3"</span> })</span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>        <span class="op">.</span><span class="fu">meta</span>({ <span class="dt">title</span><span class="op">:</span> <span class="st">"Speed limits"</span> })</span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a>    ))<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>iXMaps calls the function once the theme’s classes are resolved (<code>theme.szLabelA</code> populated), then reads <code>theme.colorScheme[i]</code> to paint each class — so this is the way to base color on values the layer only knows after loading (its actual set of categories, quantile breaks, etc.). To start from a named palette and only override specific entries, <code>ColorScheme.createColorScheme(...)</code> (from the same <code>colorscheme.js</code> tool) returns a color array you can index into before selectively overwriting entries — see <code>ixmaps.colorScheme_surfacemap</code> alongside <code>colorScheme_speedmap</code> in the source above for that combined pattern.</p>
 <div class="callout callout-style-simple callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -581,7 +856,105 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p><code>colorscheme: "ixmaps.myFunc"</code> works as a bare string (<code>["ixmaps.myFunc"]</code> also works — both are normalized the same way). Never pass an inline function body as the string — the property parser splits on <code>,</code> and <code>|</code>, which corrupts multi-statement source.</p>
 </div>
 </div>
+<div class="callout callout-style-simple callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Warning</span>Where the function must live
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>A <strong>dotted</strong> reference (<code>"ixmaps.colorScheme_speedmap"</code>) is resolved against iXMaps’ own internal namespace. A <strong>bare, undotted</strong> function name is instead resolved against the <em>outer embedding page’s</em> <code>window</code> — so if you define your callback as a plain global function (not namespaced under <code>ixmaps.</code>), reference it by its bare name, not a dotted path to it.</p>
+</div>
+</div>
 <p>A plain JS array built dynamically <em>before</em> the layer is defined works too — <code>colorscheme: buildPalette(n)</code> is just a normal array by the time <code>.style()</code> sees it — but it can’t reflect anything about data this same layer hasn’t loaded yet. Use the function form for anything that depends on the layer’s own resolved classes.</p>
+</section>
+<section id="fallback-color-for-unmatched-items" class="level3">
+<h3 class="anchored" data-anchor-id="fallback-color-for-unmatched-items">Fallback color for unmatched items</h3>
+<p>Use <code>nodatacolor</code> for any item with no matching class or value:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb23"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">style</span>({ <span class="dt">nodatacolor</span><span class="op">:</span> <span class="st">"#eeeeee"</span> })</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="changing-colors-at-runtime" class="level3">
+<h3 class="anchored" data-anchor-id="changing-colors-at-runtime">Changing colors at runtime</h3>
+<p><code>map.Api.changeThemeStyle(...)</code> recognizes a few additional properties not available at initial <code>.style()</code> definition time — useful for building interactive controls (dropdowns, sliders) that change an existing theme’s coloring live. See the <a href="./api_documentation.html#runtime-api">API Reference</a> for the general <code>changeThemeStyle</code> mechanism; these are the color-specific properties it accepts:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb24"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>map<span class="op">.</span><span class="at">Api</span><span class="op">.</span><span class="fu">changeThemeStyle</span>(<span class="st">"colorscheme:spectrum,pastel;classes:10"</span>)<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Property</th>
+<th>Effect</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>colorscheme</code></td>
+<td>Replace the gradient/palette (class count carries over from the current theme)</td>
+</tr>
+<tr class="even">
+<td><code>classes</code></td>
+<td>Change the number of classes, keeping the same colors/generator</td>
+</tr>
+<tr class="odd">
+<td><code>colorstyle</code></td>
+<td>Change the style preset of a <code>spectrum</code> colorscheme without touching anything else</td>
+</tr>
+<tr class="even">
+<td><code>colordef</code></td>
+<td>Set the fully-resolved color array directly, bypassing all gradient/palette generation</td>
+</tr>
+<tr class="odd">
+<td><code>colorschemegeneration</code></td>
+<td>Live-update just the gradient’s mid-color (<code>warm</code>/<code>cold</code>/an explicit color)</td>
+</tr>
+</tbody>
+</table>
+<hr>
+</section>
+</section>
+<section id="dynamic-opacity" class="level2">
+<h2 class="anchored" data-anchor-id="dynamic-opacity">Dynamic opacity</h2>
+<p>Independent of <code>colorscheme</code>, a layer’s fill/stroke opacity can be driven dynamically by data — letting a map show “how much” alongside “which color class” in the same fill. Add a <code>DOPACITY*</code> type key (see <a href="./map_types.html">Dynamic opacity modifiers</a> for the full list) and tune it with the <code>dopacitypow</code>/<code>dopacityscale</code> style properties (see <a href="./theme_styles.html">Dynamic opacity properties</a>):</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb25"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">type</span>(<span class="st">"CHOROPLETH|QUANTILE|DOPACITYMAX"</span>)</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">style</span>({ <span class="dt">dopacitypow</span><span class="op">:</span> <span class="fl">1.5</span> })</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<section id="value-binding-alphafield" class="level3">
+<h3 class="anchored" data-anchor-id="value-binding-alphafield">Value binding — <code>alphafield</code></h3>
+<p>By default, <code>DOPACITY*</code> derives opacity from the same value driving the color class. To drive opacity from a <strong>different field</strong> entirely, set <code>alphafield</code>:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb26"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">style</span>({</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>    <span class="dt">alphafield</span><span class="op">:</span>  <span class="st">"population_density"</span><span class="op">,</span></span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">dopacitypow</span><span class="op">:</span> <span class="fl">1.5</span></span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>})</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>When <code>alphafield</code> is set, opacity is computed purely from that field’s own min/max range across the layer — completely decoupled from whatever field is driving the color classification.</p>
+</section>
+<section id="special-case-density-normalized-opacity" class="level3">
+<h3 class="anchored" data-anchor-id="special-case-density-normalized-opacity">Special case — density-normalized opacity</h3>
+<p>Two distinct “density” mechanisms exist, easy to confuse:</p>
+<p><strong>Classification density</strong> — add <code>DENSITY</code> to the type string to convert the <em>classification value itself</em> into a per-area density (value ÷ polygon area) before it’s classified into color classes. This changes what the map’s colors mean (raw totals vs.&nbsp;density), not just the opacity.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb27"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">type</span>(<span class="st">"CHOROPLETH|QUANTILE|DENSITY"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>Opacity density</strong> — a separate, narrower mechanism: set <code>alphafield100</code> to the literal string <code>"$density$"</code> alongside <code>alphafield</code> on a <code>CHOROPLETH</code> (not <code>CHART</code>) layer. This normalizes the <em>opacity-driving</em> field by polygon area before computing <code>DOPACITY*</code> opacity — so a small dense polygon and a large sparse polygon with the same raw <code>alphafield</code> total get proportionally different opacity, reflecting true density rather than raw magnitude:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb28"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">type</span>(<span class="st">"CHOROPLETH|QUANTILE|DOPACITYMAX"</span>)</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">style</span>({</span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">alphafield</span><span class="op">:</span>    <span class="st">"incident_count"</span><span class="op">,</span></span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">alphafield100</span><span class="op">:</span> <span class="st">"$density$"</span></span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>})</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="callout callout-style-simple callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Use this when raw counts would mislead
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>This is the right tool when comparing polygons of very different sizes — e.g.&nbsp;incident counts across postal-code zones of wildly different areas — where opacity should reflect concentration, not just absolute magnitude.</p>
+</div>
+</div>
 <hr>
 </section>
 </section>

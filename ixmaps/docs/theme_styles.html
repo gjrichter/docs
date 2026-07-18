@@ -535,7 +535,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <tr class="even">
 <td><code>rangecentervalue</code></td>
 <td>number</td>
-<td>Diverging scale center. Requires an <strong>even</strong> number of colors</td>
+<td>Diverging scale center — symmetrizes the range around this value regardless of class-count parity; an <strong>even</strong> color count is a visual-design choice for a clean split either side of center, not a requirement</td>
 </tr>
 <tr class="odd">
 <td><code>values</code></td>
@@ -627,11 +627,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="dynamic-opacity-properties" class="level2">
 <h2 class="anchored" data-anchor-id="dynamic-opacity-properties">Dynamic opacity properties</h2>
 <table class="caption-top table">
-<colgroup>
-<col style="width: 34%">
-<col style="width: 20%">
-<col style="width: 44%">
-</colgroup>
 <thead>
 <tr class="header">
 <th>Property</th>
@@ -651,9 +646,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <td>Multiplier stretching the opacity range</td>
 </tr>
 <tr class="odd">
-<td><code>dopacityramp</code></td>
+<td><code>~~dopacityramp~~</code></td>
 <td>string</td>
-<td>Ramp type for dynamic opacity: <code>"linear"</code> (default) or <code>"exponential"</code></td>
+<td><strong>Reserved, currently has no effect</strong> — parsed but never read by the rendering code</td>
+</tr>
+<tr class="even">
+<td><code>alphafield100</code></td>
+<td>string</td>
+<td>Normalizes <code>alphafield</code> before computing opacity; the special value <code>"$density$"</code> divides it by polygon area — see <a href="./colors_classification.html#dynamic-opacity">Colors &amp; Classification</a></td>
 </tr>
 </tbody>
 </table>
@@ -1140,99 +1140,129 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <td>Data field driving DOPACITY alpha channel</td>
 </tr>
 <tr class="even">
+<td><code>alphafield100</code></td>
+<td>string</td>
+<td>Normalizes <code>alphafield</code> before opacity is computed; <code>"$density$"</code> divides by polygon area — see <a href="./colors_classification.html#dynamic-opacity">Colors &amp; Classification</a></td>
+</tr>
+<tr class="odd">
 <td><code>alphavalueunits</code></td>
 <td>string</td>
 <td>Units label for the alpha value field</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><code>autoopacity</code></td>
 <td>boolean</td>
 <td>Automatic opacity scaling</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><code>autoscale</code></td>
 <td>boolean</td>
 <td>Automatic scale adjustment</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><code>autosize</code></td>
 <td>boolean</td>
 <td>Automatic size adjustment</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><code>blur</code></td>
 <td>number</td>
 <td>Gaussian blur radius in pixels</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><code>bordercolor</code></td>
 <td>string</td>
 <td>Background box border color</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><code>borderradius</code></td>
 <td>number</td>
 <td>Background box corner radius in pixels</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><code>borderstyle</code></td>
 <td>string</td>
 <td>Background box border style, e.g.&nbsp;<code>"solid"</code></td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><code>borderwidth</code></td>
 <td>number</td>
 <td>Background box border width</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><code>boxcolor</code></td>
 <td>string</td>
 <td>Background box fill color</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><code>boxlower</code></td>
 <td>string</td>
 <td>Scale below which the box disappears</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><code>boxmargin</code></td>
 <td>number</td>
 <td>Background box padding in pixels</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><code>boxopacity</code></td>
 <td>number</td>
 <td>Background box fill opacity</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><code>boxupper</code></td>
 <td>string</td>
 <td>Scale above which the box disappears, e.g.&nbsp;<code>"1:250000"</code></td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><code>brightness</code></td>
 <td>number</td>
 <td>Brightness multiplier</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><code>centerpart</code></td>
 <td>string</td>
 <td>Center part flag</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><code>chartupper</code></td>
 <td>string</td>
 <td>Hide chart when scale denominator &gt; this value</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><code>chartlower</code></td>
 <td>string</td>
 <td>Hide chart when scale denominator &lt; this value</td>
 </tr>
+<tr class="odd">
+<td><code>colordef</code></td>
+<td>array / string</td>
+<td><strong>Runtime only</strong> (<code>changeThemeStyle</code>) — sets the fully-resolved color array directly, bypassing gradient/palette generation</td>
+</tr>
 <tr class="even">
+<td><code>colorfield</code></td>
+<td>string</td>
+<td>Binds color to a raw data field’s value, independent of the display/label field — see <a href="./colors_classification.html#categorical-color-binding">Colors &amp; Classification</a></td>
+</tr>
+<tr class="odd">
 <td><code>colorscheme</code></td>
 <td>array / string</td>
-<td>Color palette — single hex, gradient array, or named scheme</td>
+<td>Color palette — single hex, gradient array, or named scheme — see <a href="./colors_classification.html">Colors &amp; Classification</a></td>
+</tr>
+<tr class="even">
+<td><code>colorschemegeneration</code></td>
+<td>string</td>
+<td><strong>Runtime only</strong> (<code>changeThemeStyle</code>) — live-updates the gradient’s mid-color (<code>"warm"</code> / <code>"cold"</code> / an explicit hex)</td>
+</tr>
+<tr class="odd">
+<td><code>colorstyle</code></td>
+<td>string</td>
+<td>Style preset for a <code>spectrum</code> colorscheme, e.g.&nbsp;<code>"pastel"</code> — see <a href="./colors_classification.html#predefined-colorschemes">Colors &amp; Classification</a></td>
+</tr>
+<tr class="even">
+<td><code>colorvalues</code></td>
+<td>array</td>
+<td>Fixes the value → color order for <code>colorfield</code>, the same way <code>values</code> does for <code>CATEGORICAL</code></td>
 </tr>
 <tr class="odd">
 <td><code>dasharray</code></td>
@@ -1260,9 +1290,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <td>Power curve exponent for DOPACITY mapping</td>
 </tr>
 <tr class="even">
-<td><code>dopacityramp</code></td>
+<td><code>~~dopacityramp~~</code></td>
 <td>string</td>
-<td>DOPACITY ramp: <code>"linear"</code> (default) or <code>"exponential"</code></td>
+<td><strong>Reserved, currently has no effect</strong> — parsed but never read by the rendering code</td>
 </tr>
 <tr class="odd">
 <td><code>dopacityscale</code></td>
@@ -1552,7 +1582,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <tr class="even">
 <td><code>rangecentervalue</code></td>
 <td>number</td>
-<td>Diverging scale center value — requires even color count</td>
+<td>Diverging scale center — symmetrizes regardless of class-count parity; even color count is a design choice, not a requirement</td>
 </tr>
 <tr class="odd">
 <td><code>rangescale</code></td>

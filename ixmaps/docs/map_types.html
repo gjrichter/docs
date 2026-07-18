@@ -769,10 +769,27 @@ base   shape  sizing  coloring  effect  labels  visibility</code></pre>
 </tr>
 <tr class="odd">
 <td><code>DOPACITYMEAN</code></td>
-<td>Dynamic opacity for use with <code>DOMINANT</code> / <code>PERCENTOFMEAN</code></td>
+<td>Opacity from percent deviation from the field’s mean — for use with <code>DOMINANT</code> / <code>PERCENTOFMEAN</code></td>
+</tr>
+<tr class="even">
+<td><code>DOPACITYLOGMEAN</code></td>
+<td>Like <code>DOPACITYMEAN</code> but log-scaled</td>
+</tr>
+<tr class="odd">
+<td><code>DOPACITYPOWMEAN</code></td>
+<td>Like <code>DOPACITYMEAN</code>, power-curved via <code>dopacitypow</code> (same formula as <code>DOPACITYMEAN</code> in the current implementation)</td>
+</tr>
+<tr class="even">
+<td><code>DOPACITYLOGMAX</code></td>
+<td>Value-over-max ratio, log-scaled — for <code>DOMINANT</code>-style multi-field themes</td>
+</tr>
+<tr class="odd">
+<td><code>DOPACITYPOWMAX</code></td>
+<td>Value-over-max ratio, power-curved (tunable with <code>dopacitypow</code>)</td>
 </tr>
 </tbody>
 </table>
+<p>See <a href="./colors_classification.html#dynamic-opacity">Colors &amp; Classification</a> for how these combine with <code>alphafield</code> and the density-normalized special case.</p>
 <p><strong>Chart composition modifiers:</strong></p>
 <table class="caption-top table">
 <colgroup>
