@@ -79,11 +79,63 @@ colorscheme: ["#fee5d9", "#a50f15"]        // implied 2-class gradient
 
 The first element can be a number (class count) or omitted; iXMaps infers it from the array length.
 
+:::{.callout-important}
+## This form takes at most 2 anchor colors — not n
+`["N", colorA, colorB, ...]` is *not* a piecewise multi-stop gradient. Extra hex strings past the
+2nd don't add more anchor points; they're read as the *shape* parameters described below. If you
+pass 5 explicit hex colors here expecting the ramp to pass through all 5, only the first two are
+used as the sweep's start/end — the rest are silently ignored as malformed shape keywords. For an
+explicit multi-anchor ramp with **no** interpolation, use [Multi-stop palette](#multi-stop-palette)
+below instead (one color per class, no smoothing) — or the 3-color form immediately below for a
+*smoothed* start → middle → end ramp.
+:::
+
+### Gradient with an explicit middle color (3-color sweep)
+
+A `CHOROPLETH` gradient isn't limited to a straight 2-color interpolation — iXMaps always sweeps
+through an implicit **third, middle color** between the start and end, computed automatically
+unless you override it:
+
+```javascript
+colorscheme: ["24", "#c94f35", "#4f9153"]              // red → auto middle (a pale, near-white tone) → green
+colorscheme: ["24", "#c94f35", "#4f9153", "#f2d16b"]   // red → #f2d16b (yellow) → green — explicit middle
+```
+
+- 3rd array element = the middle color, in one of two forms:
+  - **A hex string** — used as the middle color directly (e.g. `"#f2d16b"` above). This is how to
+    get a proper red→yellow→green-style diverging ramp from a single `.style()` call, without
+    precomputing colors yourself.
+  - **A shape keyword** controlling *how* the sweep is weighted across the N classes, instead of
+    supplying a color: `linear` (uniform step size, no computed middle — pure `colorA → colorB`),
+    `dynamic`/`auto` (default; middle color computed automatically, weighted so low values expand),
+    `2low`/`2high`/`3low`/`3high` (shifts where the midpoint falls along the sweep), `2narrow`/
+    `3narrow` (compresses the middle range), `2wide`/`3wide` (expands the middle range).
+- 4th array element (optional) — a second shape/tuning slot: another hex to override the middle
+  color a different way, `"shift"` to nudge the sequence by one step, or a repeat of a shape
+  keyword.
+- Omit the middle color entirely and iXMaps computes a sensible one automatically (generally a
+  pale near-white/yellow tone) — reasonable for a quick look, but pass an explicit hex whenever the
+  ramp needs to hit a specific hue (as in the red→yellow→green example above).
+
+```javascript
+// Diverging-looking sequential ramp in one line — no manual color math
+.type("CHOROPLETH|EQUIDISTANT")
+.style({ colorscheme: ["24", "#c94f35", "#4f9153", "#f2d16b"], showdata: "true" })
+```
+
 ### Multi-stop palette
 
 ```javascript
 colorscheme: ["#ffffcc","#c7e9b4","#41b6c4","#2c7fb8","#253494"]  // 5 explicit colors
 ```
+
+No leading count, no interpolation — each color maps 1:1 to a class in order (5 colors → 5
+classes), same as the general rule in [Continuous vs. discrete classification](#continuous-vs-discrete-classification)
+above. Pair with an explicit `ranges` array to control exactly where those 5 class breaks fall
+(see [Explicit class breaks](theme_styles.qmd#classification-and-ranges)). This is the right tool
+for a genuinely custom multi-hue palette with more than 3 named anchor colors — the gradient forms
+above only sweep through up to 3 (start, middle, end); beyond that, list every class color
+explicitly here instead.
 
 ### Named palettes
 
