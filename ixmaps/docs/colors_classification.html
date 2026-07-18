@@ -933,15 +933,35 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="special-case-density-normalized-opacity" class="level3">
 <h3 class="anchored" data-anchor-id="special-case-density-normalized-opacity">Special case — density-normalized opacity</h3>
+<div class="callout callout-style-simple callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Important</span>Both mechanisms below require a bound area field — polygon area is never computed automatically
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>“Density” here always means <em>value ÷ a number iXMaps read from your data</em>, not a geometric area computed from the shape’s coordinates. The <code>FEATURE</code> layer providing the geometry must have a <strong>shape-area data field</strong> (e.g.&nbsp;km², in whatever unit you want density expressed in) bound via <code>.binding({ size: "area_field_name" })</code>:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb27"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>myMap<span class="op">.</span><span class="fu">layer</span>(<span class="st">"regions"</span>)</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">data</span>({ <span class="dt">url</span><span class="op">:</span> GEO_URL<span class="op">,</span> <span class="dt">type</span><span class="op">:</span> <span class="st">"topojson"</span> })</span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">binding</span>({ <span class="dt">geo</span><span class="op">:</span> <span class="st">"geometry"</span><span class="op">,</span> <span class="dt">id</span><span class="op">:</span> <span class="st">"region_id"</span><span class="op">,</span> <span class="dt">size</span><span class="op">:</span> <span class="st">"area_km2"</span> })</span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">type</span>(<span class="st">"FEATURE"</span>)</span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">style</span>({ <span class="dt">colorscheme</span><span class="op">:</span> [<span class="st">"none"</span>] })</span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">define</span>()<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Without this, every polygon’s area silently defaults to <code>1</code>, so both <code>DENSITY</code> and <code>alphafield100:"$density$"</code> divide by 1 for every shape — the map still renders, but “density” is meaningless (identical to the raw value) instead of an error you’d notice.</p>
+</div>
+</div>
 <p>Two distinct “density” mechanisms exist, easy to confuse:</p>
 <p><strong>Classification density</strong> — add <code>DENSITY</code> to the type string to convert the <em>classification value itself</em> into a per-area density (value ÷ polygon area) before it’s classified into color classes. This changes what the map’s colors mean (raw totals vs.&nbsp;density), not just the opacity.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb27"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">type</span>(<span class="st">"CHOROPLETH|QUANTILE|DENSITY"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb28"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">type</span>(<span class="st">"CHOROPLETH|QUANTILE|DENSITY"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Opacity density</strong> — a separate, narrower mechanism: set <code>alphafield100</code> to the literal string <code>"$density$"</code> alongside <code>alphafield</code> on a <code>CHOROPLETH</code> (not <code>CHART</code>) layer. This normalizes the <em>opacity-driving</em> field by polygon area before computing <code>DOPACITY*</code> opacity — so a small dense polygon and a large sparse polygon with the same raw <code>alphafield</code> total get proportionally different opacity, reflecting true density rather than raw magnitude:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb28"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">type</span>(<span class="st">"CHOROPLETH|QUANTILE|DOPACITYMAX"</span>)</span>
-<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">style</span>({</span>
-<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">alphafield</span><span class="op">:</span>    <span class="st">"incident_count"</span><span class="op">,</span></span>
-<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">alphafield100</span><span class="op">:</span> <span class="st">"$density$"</span></span>
-<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>})</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb29"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">type</span>(<span class="st">"CHOROPLETH|QUANTILE|DOPACITYMAX"</span>)</span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">style</span>({</span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">alphafield</span><span class="op">:</span>    <span class="st">"incident_count"</span><span class="op">,</span></span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">alphafield100</span><span class="op">:</span> <span class="st">"$density$"</span></span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>})</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="callout callout-style-simple callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">

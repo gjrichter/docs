@@ -471,6 +471,27 @@ the layer — completely decoupled from whatever field is driving the color clas
 
 ### Special case — density-normalized opacity
 
+::: {.callout-important}
+## Both mechanisms below require a bound area field — polygon area is never computed automatically
+"Density" here always means *value ÷ a number iXMaps read from your data*, not a geometric area
+computed from the shape's coordinates. The `FEATURE` layer providing the geometry must have a
+**shape-area data field** (e.g. km², in whatever unit you want density expressed in) bound via
+`.binding({ size: "area_field_name" })`:
+
+```javascript
+myMap.layer("regions")
+    .data({ url: GEO_URL, type: "topojson" })
+    .binding({ geo: "geometry", id: "region_id", size: "area_km2" })
+    .type("FEATURE")
+    .style({ colorscheme: ["none"] })
+    .define();
+```
+
+Without this, every polygon's area silently defaults to `1`, so both `DENSITY` and
+`alphafield100:"$density$"` divide by 1 for every shape — the map still renders, but "density" is
+meaningless (identical to the raw value) instead of an error you'd notice.
+:::
+
 Two distinct "density" mechanisms exist, easy to confuse:
 
 **Classification density** — add `DENSITY` to the type string to convert the *classification
