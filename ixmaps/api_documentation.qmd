@@ -383,12 +383,30 @@ myMap.then(api => {
 |------|--------|
 | `"set"` | Replace the property value |
 | `"remove"` | Delete the property entirely |
-| `"factor"` | Multiply the current numeric value by the given factor |
-| `"set\|silent"` | Set without triggering a redraw |
+| `"factor"` | Multiply the current numeric value by the given value |
+| `"add"` / `"delta"` | Add the given value to the current numeric value |
+| `"pow"` | Raise the current numeric value to the given power (not for `scale`) |
+| `"set\|silent"` | Set without the "... processing ..." message (`silent`, `fast` and `direct` are equivalent) — the theme is still redrawn |
+
+`factor`, `add`/`delta` and `pow` apply to numeric properties (`scale`, `opacity`, `fillopacity`, `valuescale`, `linewidth`, `gridwidthpx`, `normalsizevalue`, `maxcharts`, …); any other property is simply set. `scale` acts as a resize factor on the drawn charts: `"scale:0"` is ignored and leaves the theme unchanged.
+
+#### All themes at once
+
+Pass `null` as the theme name to change **every theme on the map except FEATURE themes** (base geometries are left alone) — no `meta.name` needed:
+
+```javascript
+myMap.then(api => api.changeThemeStyle(null, "scale:1.5", "set"));
+
+// the global form, as used by chart-size sliders
+// (the leading null is the map; two identical leading arguments are shifted)
+ixmaps.changeThemeStyle(null, null, "scale:" + slider.value, "set");
+```
+
+This is the usual way to wire a single "chart size" slider that resizes all chart themes together.
 
 :::{.callout-important}
 ## Requires `name` in `.meta()`
-`changeThemeStyle` finds themes by the `name` key in `.meta()`. Without it, the call silently has no effect.
+`changeThemeStyle` with a theme name finds the theme by the `name` key in `.meta()`. Without it, the call silently has no effect. (The `null` form above needs no name.)
 :::
 
 ### `api.removeTheme(name)`

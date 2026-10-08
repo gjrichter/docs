@@ -248,4 +248,16 @@ myMap.then(api => api.changeThemeStyle("layerName", "scale:0.9", "factor"));
 
 // Grow grid cells by 10 %:
 myMap.then(api => api.changeThemeStyle("layerName", "gridwidthpx:1.1", "factor"));
+
+// All chart themes at once (null = every theme except FEATURE themes):
+myMap.then(api => api.changeThemeStyle(null, "scale:1.5", "set"));
 ```
+
+A single chart-size slider for the whole map uses the all-themes form with `"set"`, so the slider value *is* the scale (a `"factor"` call would compound on every input event):
+
+```html
+<input type="range" min="0.2" max="3" step="0.1" value="1"
+       oninput="ixmaps.changeThemeStyle(null, null, 'scale:' + this.value, 'set')">
+```
+
+`"scale:0"` is ignored; FEATURE themes (base geometries) are never resized.
