@@ -1053,6 +1053,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>    api<span class="op">.</span><span class="fu">changeThemeStyle</span>(<span class="st">"cities"</span><span class="op">,</span> <span class="st">"gridwidthpx:1.1"</span><span class="op">,</span> <span class="st">"factor"</span>)<span class="op">;</span> <span class="co">// multiply by 1.1</span></span>
 <span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>})<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <table class="caption-top table">
+<colgroup>
+<col style="width: 42%">
+<col style="width: 57%">
+</colgroup>
 <thead>
 <tr class="header">
 <th>Mode</th>
@@ -1070,14 +1074,32 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </tr>
 <tr class="odd">
 <td><code>"factor"</code></td>
-<td>Multiply the current numeric value by the given factor</td>
+<td>Multiply the current numeric value by the given value</td>
+</tr>
+<tr class="even">
+<td><code>"add"</code> / <code>"delta"</code></td>
+<td>Add the given value to the current numeric value</td>
+</tr>
+<tr class="odd">
+<td><code>"pow"</code></td>
+<td>Raise the current numeric value to the given power (not for <code>scale</code>)</td>
 </tr>
 <tr class="even">
 <td><code>"set\|silent"</code></td>
-<td>Set without triggering a redraw</td>
+<td>Set without the “… processing …” message (<code>silent</code>, <code>fast</code> and <code>direct</code> are equivalent) — the theme is still redrawn</td>
 </tr>
 </tbody>
 </table>
+<p><code>factor</code>, <code>add</code>/<code>delta</code> and <code>pow</code> apply to numeric properties (<code>scale</code>, <code>opacity</code>, <code>fillopacity</code>, <code>valuescale</code>, <code>linewidth</code>, <code>gridwidthpx</code>, <code>normalsizevalue</code>, <code>maxcharts</code>, …); any other property is simply set. <code>scale</code> acts as a resize factor on the drawn charts: <code>"scale:0"</code> is ignored and leaves the theme unchanged.</p>
+<section id="all-themes-at-once" class="level4">
+<h4 class="anchored" data-anchor-id="all-themes-at-once">All themes at once</h4>
+<p>Pass <code>null</code> as the theme name to change <strong>every theme on the map except FEATURE themes</strong> (base geometries are left alone) — no <code>meta.name</code> needed:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb22"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>myMap<span class="op">.</span><span class="fu">then</span>(api <span class="kw">=&gt;</span> api<span class="op">.</span><span class="fu">changeThemeStyle</span>(<span class="kw">null</span><span class="op">,</span> <span class="st">"scale:1.5"</span><span class="op">,</span> <span class="st">"set"</span>))<span class="op">;</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="co">// the global form, as used by chart-size sliders</span></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a><span class="co">// (the leading null is the map; two identical leading arguments are shifted)</span></span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>ixmaps<span class="op">.</span><span class="fu">changeThemeStyle</span>(<span class="kw">null</span><span class="op">,</span> <span class="kw">null</span><span class="op">,</span> <span class="st">"scale:"</span> <span class="op">+</span> slider<span class="op">.</span><span class="at">value</span><span class="op">,</span> <span class="st">"set"</span>)<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>This is the usual way to wire a single “chart size” slider that resizes all chart themes together.</p>
 <div class="callout callout-style-simple callout-important callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -1088,60 +1110,61 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p><code>changeThemeStyle</code> finds themes by the <code>name</code> key in <code>.meta()</code>. Without it, the call silently has no effect.</p>
+<p><code>changeThemeStyle</code> with a theme name finds the theme by the <code>name</code> key in <code>.meta()</code>. Without it, the call silently has no effect. (The <code>null</code> form above needs no name.)</p>
 </div>
 </div>
+</section>
 </section>
 <section id="api.removethemename" class="level3">
 <h3 class="anchored" data-anchor-id="api.removethemename"><code>api.removeTheme(name)</code></h3>
 <p>Remove a layer by its <code>meta.name</code>. Use this before redefining an overlay to prevent stacking:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb22"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="kw">let</span> ACTIVE <span class="op">=</span> <span class="kw">null</span><span class="op">;</span></span>
-<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">showYear</span>(year) {</span>
-<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> themeName <span class="op">=</span> <span class="st">"year-"</span> <span class="op">+</span> year<span class="op">;</span></span>
-<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> prev <span class="op">=</span> ACTIVE<span class="op">;</span></span>
-<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>    myMap<span class="op">.</span><span class="fu">then</span>(api <span class="kw">=&gt;</span> {</span>
-<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> (prev) { <span class="cf">try</span> { api<span class="op">.</span><span class="fu">removeTheme</span>(prev)<span class="op">;</span> } <span class="cf">catch</span>(e) {} }</span>
-<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>        myMap<span class="op">.</span><span class="fu">layer</span>(<span class="st">"countries"</span>)</span>
-<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a>            <span class="op">.</span><span class="fu">data</span>({ <span class="dt">obj</span><span class="op">:</span> yearData[year]<span class="op">,</span> <span class="dt">type</span><span class="op">:</span> <span class="st">"json"</span> })</span>
-<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a>            <span class="op">.</span><span class="fu">binding</span>({ <span class="dt">geo</span><span class="op">:</span> <span class="st">"lat|lon"</span><span class="op">,</span> <span class="dt">value</span><span class="op">:</span> <span class="st">"metric"</span> })</span>
-<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a>            <span class="op">.</span><span class="fu">type</span>(<span class="st">"CHART|BUBBLE|SIZE|VALUES"</span>)</span>
-<span id="cb22-12"><a href="#cb22-12" aria-hidden="true" tabindex="-1"></a>            <span class="op">.</span><span class="fu">style</span>({ <span class="dt">colorscheme</span><span class="op">:</span> [<span class="st">"#0066cc"</span>]<span class="op">,</span> <span class="dt">showdata</span><span class="op">:</span> <span class="st">"true"</span> })</span>
-<span id="cb22-13"><a href="#cb22-13" aria-hidden="true" tabindex="-1"></a>            <span class="op">.</span><span class="fu">meta</span>({ <span class="dt">name</span><span class="op">:</span> themeName<span class="op">,</span> <span class="dt">tooltip</span><span class="op">:</span> <span class="st">"{{name}}: {{metric}}"</span> })</span>
-<span id="cb22-14"><a href="#cb22-14" aria-hidden="true" tabindex="-1"></a>            <span class="op">.</span><span class="fu">define</span>()<span class="op">;</span></span>
-<span id="cb22-15"><a href="#cb22-15" aria-hidden="true" tabindex="-1"></a>        ACTIVE <span class="op">=</span> themeName<span class="op">;</span></span>
-<span id="cb22-16"><a href="#cb22-16" aria-hidden="true" tabindex="-1"></a>    })<span class="op">;</span></span>
-<span id="cb22-17"><a href="#cb22-17" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb23"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="kw">let</span> ACTIVE <span class="op">=</span> <span class="kw">null</span><span class="op">;</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">showYear</span>(year) {</span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> themeName <span class="op">=</span> <span class="st">"year-"</span> <span class="op">+</span> year<span class="op">;</span></span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> prev <span class="op">=</span> ACTIVE<span class="op">;</span></span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>    myMap<span class="op">.</span><span class="fu">then</span>(api <span class="kw">=&gt;</span> {</span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> (prev) { <span class="cf">try</span> { api<span class="op">.</span><span class="fu">removeTheme</span>(prev)<span class="op">;</span> } <span class="cf">catch</span>(e) {} }</span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>        myMap<span class="op">.</span><span class="fu">layer</span>(<span class="st">"countries"</span>)</span>
+<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a>            <span class="op">.</span><span class="fu">data</span>({ <span class="dt">obj</span><span class="op">:</span> yearData[year]<span class="op">,</span> <span class="dt">type</span><span class="op">:</span> <span class="st">"json"</span> })</span>
+<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a>            <span class="op">.</span><span class="fu">binding</span>({ <span class="dt">geo</span><span class="op">:</span> <span class="st">"lat|lon"</span><span class="op">,</span> <span class="dt">value</span><span class="op">:</span> <span class="st">"metric"</span> })</span>
+<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a>            <span class="op">.</span><span class="fu">type</span>(<span class="st">"CHART|BUBBLE|SIZE|VALUES"</span>)</span>
+<span id="cb23-12"><a href="#cb23-12" aria-hidden="true" tabindex="-1"></a>            <span class="op">.</span><span class="fu">style</span>({ <span class="dt">colorscheme</span><span class="op">:</span> [<span class="st">"#0066cc"</span>]<span class="op">,</span> <span class="dt">showdata</span><span class="op">:</span> <span class="st">"true"</span> })</span>
+<span id="cb23-13"><a href="#cb23-13" aria-hidden="true" tabindex="-1"></a>            <span class="op">.</span><span class="fu">meta</span>({ <span class="dt">name</span><span class="op">:</span> themeName<span class="op">,</span> <span class="dt">tooltip</span><span class="op">:</span> <span class="st">"{{name}}: {{metric}}"</span> })</span>
+<span id="cb23-14"><a href="#cb23-14" aria-hidden="true" tabindex="-1"></a>            <span class="op">.</span><span class="fu">define</span>()<span class="op">;</span></span>
+<span id="cb23-15"><a href="#cb23-15" aria-hidden="true" tabindex="-1"></a>        ACTIVE <span class="op">=</span> themeName<span class="op">;</span></span>
+<span id="cb23-16"><a href="#cb23-16" aria-hidden="true" tabindex="-1"></a>    })<span class="op">;</span></span>
+<span id="cb23-17"><a href="#cb23-17" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="ixmaps.hidethemename-ixmaps.showthemename" class="level3">
 <h3 class="anchored" data-anchor-id="ixmaps.hidethemename-ixmaps.showthemename"><code>ixmaps.hideTheme(name)</code> / <code>ixmaps.showTheme(name)</code></h3>
 <p>Toggle layer visibility by <code>meta.name</code>. For initially hidden layers, use <code>visible: false</code> in <code>.style()</code>:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb23"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>myMap<span class="op">.</span><span class="fu">layer</span>(<span class="st">"overlay"</span>)</span>
-<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">style</span>({ <span class="op">...,</span> <span class="dt">visible</span><span class="op">:</span> <span class="kw">false</span> })</span>
-<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">meta</span>({ <span class="dt">name</span><span class="op">:</span> <span class="st">"overlay"</span> })</span>
-<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">define</span>()<span class="op">;</span></span>
-<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a><span class="co">// Later:</span></span>
-<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>ixmaps<span class="op">.</span><span class="fu">showTheme</span>(<span class="st">"overlay"</span>)<span class="op">;</span></span>
-<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>ixmaps<span class="op">.</span><span class="fu">hideTheme</span>(<span class="st">"overlay"</span>)<span class="op">;</span></span>
-<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a><span class="co">// Checkbox toggle:</span></span>
-<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a><span class="co">// &lt;input type="checkbox" onchange="this.checked ? ixmaps.showTheme('overlay') : ixmaps.hideTheme('overlay')"&gt;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb24"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>myMap<span class="op">.</span><span class="fu">layer</span>(<span class="st">"overlay"</span>)</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">style</span>({ <span class="op">...,</span> <span class="dt">visible</span><span class="op">:</span> <span class="kw">false</span> })</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">meta</span>({ <span class="dt">name</span><span class="op">:</span> <span class="st">"overlay"</span> })</span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">define</span>()<span class="op">;</span></span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a><span class="co">// Later:</span></span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>ixmaps<span class="op">.</span><span class="fu">showTheme</span>(<span class="st">"overlay"</span>)<span class="op">;</span></span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a>ixmaps<span class="op">.</span><span class="fu">hideTheme</span>(<span class="st">"overlay"</span>)<span class="op">;</span></span>
+<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a><span class="co">// Checkbox toggle:</span></span>
+<span id="cb24-11"><a href="#cb24-11" aria-hidden="true" tabindex="-1"></a><span class="co">// &lt;input type="checkbox" onchange="this.checked ? ixmaps.showTheme('overlay') : ixmaps.hideTheme('overlay')"&gt;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="ixmaps.getzoom-ixmaps.getcenter" class="level3">
 <h3 class="anchored" data-anchor-id="ixmaps.getzoom-ixmaps.getcenter"><code>ixmaps.getZoom()</code> / <code>ixmaps.getCenter()</code></h3>
 <p>Global helpers — call directly without <code>.then()</code>:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb24"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> z <span class="op">=</span> ixmaps<span class="op">.</span><span class="fu">getZoom</span>()<span class="op">;</span></span>
-<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> c <span class="op">=</span> ixmaps<span class="op">.</span><span class="fu">getCenter</span>()<span class="op">;</span>  <span class="co">// { lat, lng }</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb25"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> z <span class="op">=</span> ixmaps<span class="op">.</span><span class="fu">getZoom</span>()<span class="op">;</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> c <span class="op">=</span> ixmaps<span class="op">.</span><span class="fu">getCenter</span>()<span class="op">;</span>  <span class="co">// { lat, lng }</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="api.getbounds" class="level3">
 <h3 class="anchored" data-anchor-id="api.getbounds"><code>api.getBounds()</code></h3>
 <p>Returns a flat 4-element array <code>[swLat, swLng, neLat, neLng]</code>:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb25"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>myMap<span class="op">.</span><span class="fu">then</span>(<span class="kw">function</span>(m) {</span>
-<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> bounds <span class="op">=</span> m<span class="op">.</span><span class="fu">getBounds</span>()<span class="op">;</span></span>
-<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="op">!</span>bounds <span class="op">||</span> bounds<span class="op">.</span><span class="at">length</span> <span class="op">!==</span> <span class="dv">4</span>) <span class="cf">return</span><span class="op">;</span></span>
-<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> [swLat<span class="op">,</span> swLng<span class="op">,</span> neLat<span class="op">,</span> neLng] <span class="op">=</span> bounds<span class="op">;</span></span>
-<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>})<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb26"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>myMap<span class="op">.</span><span class="fu">then</span>(<span class="kw">function</span>(m) {</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> bounds <span class="op">=</span> m<span class="op">.</span><span class="fu">getBounds</span>()<span class="op">;</span></span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="op">!</span>bounds <span class="op">||</span> bounds<span class="op">.</span><span class="at">length</span> <span class="op">!==</span> <span class="dv">4</span>) <span class="cf">return</span><span class="op">;</span></span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> [swLat<span class="op">,</span> swLng<span class="op">,</span> neLat<span class="op">,</span> neLng] <span class="op">=</span> bounds<span class="op">;</span></span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>})<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <hr>
 </section>
 </section>
@@ -1154,23 +1177,23 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="geometry-sources-quick-reference" class="level2">
 <h2 class="anchored" data-anchor-id="geometry-sources-quick-reference">Geometry sources (quick reference)</h2>
 <p><strong>World countries (GISCO):</strong></p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb26"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">data</span>({ <span class="dt">url</span><span class="op">:</span> <span class="st">"https://gisco-services.ec.europa.eu/distribution/v2/countries/topojson/CNTR_RG_60M_2020_4326.json"</span><span class="op">,</span> <span class="dt">type</span><span class="op">:</span> <span class="st">"topojson"</span> })</span>
-<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">binding</span>({ <span class="dt">geo</span><span class="op">:</span> <span class="st">"geometry"</span><span class="op">,</span> <span class="dt">id</span><span class="op">:</span> <span class="st">"CNTR_ID"</span><span class="op">,</span> <span class="dt">title</span><span class="op">:</span> <span class="st">"NAME_ENGL"</span> })</span>
-<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a><span class="co">// Scales: 60M (world) · 20M · 10M · 3M · 1M (country)</span></span>
-<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a><span class="co">// ⚠️ Join field is CNTR_ID, NOT CNTR_CODE</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb27"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">data</span>({ <span class="dt">url</span><span class="op">:</span> <span class="st">"https://gisco-services.ec.europa.eu/distribution/v2/countries/topojson/CNTR_RG_60M_2020_4326.json"</span><span class="op">,</span> <span class="dt">type</span><span class="op">:</span> <span class="st">"topojson"</span> })</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">binding</span>({ <span class="dt">geo</span><span class="op">:</span> <span class="st">"geometry"</span><span class="op">,</span> <span class="dt">id</span><span class="op">:</span> <span class="st">"CNTR_ID"</span><span class="op">,</span> <span class="dt">title</span><span class="op">:</span> <span class="st">"NAME_ENGL"</span> })</span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a><span class="co">// Scales: 60M (world) · 20M · 10M · 3M · 1M (country)</span></span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a><span class="co">// ⚠️ Join field is CNTR_ID, NOT CNTR_CODE</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Italy municipalities (ISTAT 2024-compatible):</strong></p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb27"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">data</span>({ <span class="dt">url</span><span class="op">:</span> <span class="st">"https://raw.githubusercontent.com/gjrichter/geo/0153a0e14da5dae877b8c94d6deb11f210d4660a/italy/boundaries/italy_istat_municipalities_4326_500m.topojson"</span><span class="op">,</span> <span class="dt">type</span><span class="op">:</span> <span class="st">"topojson"</span> })</span>
-<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">binding</span>({ <span class="dt">geo</span><span class="op">:</span> <span class="st">"geometry"</span><span class="op">,</span> <span class="dt">id</span><span class="op">:</span> <span class="st">"com_istat_code_num"</span><span class="op">,</span> <span class="dt">title</span><span class="op">:</span> <span class="st">"name"</span> })</span>
-<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a><span class="co">// com_istat_code_num = integer 28001 (use for joins with ISTAT CSVs)</span></span>
-<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a><span class="co">// com_istat_code     = zero-padded string "028001"</span></span>
-<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a><span class="co">// ⚠️ Add flushPaintShape: 1000000 to .options() for all ~8000 polygons</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb28"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">data</span>({ <span class="dt">url</span><span class="op">:</span> <span class="st">"https://raw.githubusercontent.com/gjrichter/geo/0153a0e14da5dae877b8c94d6deb11f210d4660a/italy/boundaries/italy_istat_municipalities_4326_500m.topojson"</span><span class="op">,</span> <span class="dt">type</span><span class="op">:</span> <span class="st">"topojson"</span> })</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">binding</span>({ <span class="dt">geo</span><span class="op">:</span> <span class="st">"geometry"</span><span class="op">,</span> <span class="dt">id</span><span class="op">:</span> <span class="st">"com_istat_code_num"</span><span class="op">,</span> <span class="dt">title</span><span class="op">:</span> <span class="st">"name"</span> })</span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a><span class="co">// com_istat_code_num = integer 28001 (use for joins with ISTAT CSVs)</span></span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a><span class="co">// com_istat_code     = zero-padded string "028001"</span></span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a><span class="co">// ⚠️ Add flushPaintShape: 1000000 to .options() for all ~8000 polygons</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Germany LAU municipalities:</strong></p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb28"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">data</span>({ <span class="dt">url</span><span class="op">:</span> <span class="st">"https://cdn.jsdelivr.net/gh/gjrichter/geo@028b3fe/lau/germany_lau_2021_4326.topojson"</span><span class="op">,</span> <span class="dt">type</span><span class="op">:</span> <span class="st">"topojson"</span> })</span>
-<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">binding</span>({ <span class="dt">geo</span><span class="op">:</span> <span class="st">"geometry"</span><span class="op">,</span> <span class="dt">id</span><span class="op">:</span> <span class="st">"LAU_ID"</span><span class="op">,</span> <span class="dt">title</span><span class="op">:</span> <span class="st">"LAU_NAME"</span> })</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb29"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">data</span>({ <span class="dt">url</span><span class="op">:</span> <span class="st">"https://cdn.jsdelivr.net/gh/gjrichter/geo@028b3fe/lau/germany_lau_2021_4326.topojson"</span><span class="op">,</span> <span class="dt">type</span><span class="op">:</span> <span class="st">"topojson"</span> })</span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">binding</span>({ <span class="dt">geo</span><span class="op">:</span> <span class="st">"geometry"</span><span class="op">,</span> <span class="dt">id</span><span class="op">:</span> <span class="st">"LAU_ID"</span><span class="op">,</span> <span class="dt">title</span><span class="op">:</span> <span class="st">"LAU_NAME"</span> })</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>NUTS1–3 (Eurostat):</strong></p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb29"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">data</span>({ <span class="dt">url</span><span class="op">:</span> <span class="st">"https://gisco-services.ec.europa.eu/distribution/v2/nuts/topojson/NUTS_RG_60M_2021_4326_LEVL_1.json"</span><span class="op">,</span> <span class="dt">type</span><span class="op">:</span> <span class="st">"topojson"</span> })</span>
-<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">binding</span>({ <span class="dt">geo</span><span class="op">:</span> <span class="st">"geometry"</span><span class="op">,</span> <span class="dt">id</span><span class="op">:</span> <span class="st">"NUTS_ID"</span><span class="op">,</span> <span class="dt">title</span><span class="op">:</span> <span class="st">"NUTS_NAME"</span> })</span>
-<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a><span class="co">// For a single country: .filter('WHERE CNTR_CODE == "DE"')</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb30"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">data</span>({ <span class="dt">url</span><span class="op">:</span> <span class="st">"https://gisco-services.ec.europa.eu/distribution/v2/nuts/topojson/NUTS_RG_60M_2021_4326_LEVL_1.json"</span><span class="op">,</span> <span class="dt">type</span><span class="op">:</span> <span class="st">"topojson"</span> })</span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">binding</span>({ <span class="dt">geo</span><span class="op">:</span> <span class="st">"geometry"</span><span class="op">,</span> <span class="dt">id</span><span class="op">:</span> <span class="st">"NUTS_ID"</span><span class="op">,</span> <span class="dt">title</span><span class="op">:</span> <span class="st">"NUTS_NAME"</span> })</span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a><span class="co">// For a single country: .filter('WHERE CNTR_CODE == "DE"')</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 
 
 </section>
